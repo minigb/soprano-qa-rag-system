@@ -1,0 +1,46 @@
+{
+  "corpus_schema_version": 4,
+  "dataset_root": "/home/minhee/soprano-qa-dataset-database-collect",
+  "input_fingerprint": "6ed510fb39a7f44a8cfc1a55b56dc953e3d3b59cfcf9320e5b6fc5029ea625fb",
+  "corpus_sha256": "378fab503c1314be9b5d9f8dc80e8a3c84ae33a8e9b8f6ff851fd103fd686ed7",
+  "total_records": 211,
+  "retrievable_records": 210,
+  "records_by_evidence_type": {
+    "expert_annotation": 110,
+    "web_database": 101
+  },
+  "records_by_piece": {
+    "die-forelle": 47,
+    "in-flowery-clouds": 35,
+    "la-capinera": 47,
+    "nella-fantasia": 27,
+    "una-voce-poco-fa": 55
+  },
+  "records_by_measure_scope": {
+    "global": 140,
+    "local": 61,
+    "multi_range": 10
+  },
+  "expert_records_by_question_source": {
+    "expert": 78,
+    "none": 32
+  },
+  "web_records_by_usage_class": {
+    "research_conditional": 20,
+    "research_open": 81
+  },
+  "excluded_from_retrieval": [
+    {
+      "id": "sqa-0072",
+      "reason": "placeholder_request_not_expert_evidence",
+      "source_ids": [
+        "kim-nella-fantasia-01"
+      ]
+    }
+  ],
+  "web_export_files": [
+    "research-open.jsonl",
+    "research-conditional.jsonl"
+  ],
+  "overrides_applied": 0
+}

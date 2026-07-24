@@ -1,1 +1,9 @@
 .vscode/
+# Local model artifacts
+models/*.gguf
+models/*.bin
+models/*.safetensors
+
+# Python cache
+__pycache__/
+*.pyc
