@@ -7,10 +7,11 @@ question; omit the range when the question concerns the whole song.
 See [Measure-aware RAG pipeline](docs/measure-aware-rag.md) for the complete
 request, corpus, range-routing, database-evidence, ranking, and generation flow.
 
-The system combines two separately provenanced evidence lineages from:
+The system combines two separately provenanced evidence lineages from the
+dataset repository's `main` checkout:
 
 ```text
-../soprano-qa-dataset-database-collect
+../soprano-qa-dataset
 ```
 
 The default is resolved relative to this repository through
@@ -79,6 +80,10 @@ The default generated snapshot contains 211 records, of which 210 are
 retrievable. One expert source item whose text is only a request for web
 research remains present for lineage and stable IDs but is explicitly marked
 non-retrievable.
+
+The expert annotations, web-database exports, score, audio, and alignment data
+now live in that one repository; a separate `database-collect` worktree is not
+required at runtime.
 
 To use another compatible dataset checkout, set
 `SOPRANO_QA_RAG_DATASET_ROOT` or edit `config/settings.json`. Corpus statistics

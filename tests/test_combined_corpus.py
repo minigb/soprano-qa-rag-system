@@ -62,7 +62,7 @@ class CombinedCorpusTests(unittest.TestCase):
             settings["model_path"],
             os.path.join(PROJECT_ROOT, "models", "Qwen3-8B-Q4_K_M.gguf"),
         )
-        self.assertTrue(settings["dataset_root"].endswith("soprano-qa-dataset-database-collect"))
+        self.assertTrue(settings["dataset_root"].endswith("soprano-qa-dataset"))
 
     def test_combines_only_answer_eligible_lineages(self) -> None:
         self.assertEqual(self.stats["corpus_schema_version"], 4)
@@ -72,7 +72,7 @@ class CombinedCorpusTests(unittest.TestCase):
             self.stats["corpus_sha256"],
             file_sha256(self.build_settings["corpus_path"]),
         )
-        self.assertTrue(self.stats["dataset_root"].endswith("soprano-qa-dataset-database-collect"))
+        self.assertTrue(self.stats["dataset_root"].endswith("soprano-qa-dataset"))
         self.assertEqual(self.stats["total_records"], 211)
         self.assertEqual(self.stats["retrievable_records"], 210)
         self.assertEqual(
