@@ -10,8 +10,12 @@ request, corpus, range-routing, database-evidence, ranking, and generation flow.
 The system combines two separately provenanced evidence lineages from:
 
 ```text
-/home/minhee/soprano-qa-dataset-database-collect
+../soprano-qa-dataset-database-collect
 ```
+
+The default is resolved relative to this repository through
+`config/settings.json`, so it does not depend on the shell's working
+directory.
 
 - 110 consolidated human-expert annotation units, including 71 with one or
   more exact measure ranges and 39 with no specific measure.
@@ -77,7 +81,7 @@ research remains present for lineage and stable IDs but is explicitly marked
 non-retrievable.
 
 To use another compatible dataset checkout, set
-`SOPRANO_QA_DATASET_ROOT` or edit `config/settings.json`. Corpus statistics
+`SOPRANO_QA_RAG_DATASET_ROOT` or edit `config/settings.json`. Corpus statistics
 store the resolved dataset root and a SHA-256 fingerprint of both expert
 consolidation/spellcheck phases, every canonical web source/claim/chunk,
 facts-only release-audit, selected web-export, and override file. The builder
@@ -90,6 +94,9 @@ an override cannot
 silently reuse a corpus from another checkout and a stale or corrupt corpus
 cannot be blessed by current stats. Corpus and stats files are individually
 published with atomic replacements.
+
+Relative `SOPRANO_QA_RAG_DATASET_ROOT` and `SOPRANO_QA_MODEL_PATH` overrides
+are resolved from this repository, not from the shell's working directory.
 
 ## Ask a measure-specific question
 
@@ -184,13 +191,38 @@ names may influence ranking only after semantic topic/question/answer text
 qualifies a record; they cannot establish relevance by themselves.
 
 If no evidence has meaningful textual overlap, retrieval returns no chunks.
-The generation path then reports insufficient evidence without invoking the
-model. The model cites short labels such as `[E1]`; the application validates
-and deterministically maps them to exact corpus IDs such as `[sqa-0058]` and
-`[webchunk-cecff2bace03ab67e32d]`, repairs an unambiguous mistyped opaque ID,
-and removes unknown citations. If the local model omits labels entirely, the
-answer is preserved and receives a deterministic `제공된 검색 근거` footer listing
-the exact records that were supplied as context.
+Generation then uses a separate, explicitly ungrounded internal-knowledge
+prompt. The response contains no corpus citations or evidence notices and is
+identified by `answer_basis: internal_knowledge`. A grounded model can also
+signal that loose lexical matches do not answer the core question, which
+routes through the same fallback.
+
+For supported questions, the model cites short labels such as `[E1]`; the
+application validates and deterministically maps them to exact corpus IDs such
+as `[sqa-0058]` and `[webchunk-cecff2bace03ab67e32d]`, repairs an unambiguous
+mistyped opaque ID, and removes unknown citations. If the local model omits
+labels entirely, the answer is preserved and receives a deterministic
+`제공된 검색 근거` footer listing the exact records supplied as context.
+
+## Service API
+
+Applications in sibling repositories can use the reusable service facade:
+
+```python
+from soprano_qa.service import ask
+
+result = ask(
+    piece_id="die-forelle",
+    question="피아노 반주에서 두 번째 박의 악센트는 무엇을 나타내는가?",
+    measure_range=(2, 5),
+    generate=True,
+)
+```
+
+The service owns corpus refresh, retrieval, local-model serialization,
+citation validation, internal-knowledge fallback, and answer provenance. A web
+application should adapt this result rather than copy the pipeline
+implementation.
 
 ## Recurring features
 
@@ -223,6 +255,6 @@ same-piece/topic lineage, rights partition filtering and territorial notices,
 input/output fingerprints, corrupt-corpus recovery, strict integer and natural
 language range contracts, canonical web claim/source/asset lineage, placeholder
 exclusion, inclusive and disjoint measure matching, compound evidence coverage,
-whole-song routing, Korean inflection handling, citation sanitization, current
-model-download compatibility, and safe abstention for unsupported or
-out-of-domain questions.
+whole-song routing, Korean inflection handling, citation sanitization,
+internal-knowledge fallback, current model-download compatibility, and safe
+retrieval rejection for unsupported or out-of-domain questions.

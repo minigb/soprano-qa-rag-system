@@ -185,6 +185,16 @@ class ParseMeasureRangesTests(unittest.TestCase):
             },
         )
 
+    def test_second_beat_paraphrase_uses_allowlisted_canonical_forms(self) -> None:
+        query, _ = query_components(
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 나타내는가?",
+            "die-forelle",
+        )
+        self.assertEqual(
+            [group[0] for group in token_groups(query)],
+            ["피아노", "반주", "번째", "박자", "악센트", "나타낸"],
+        )
+
     def test_question_measure_contract_accepts_covered_mentions(self) -> None:
         self.assertTrue(ranges_cover([[28, 29], [30, 32]], [[28, 30]]))
         self.assertEqual(

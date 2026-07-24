@@ -297,6 +297,13 @@ QUERY_SCAFFOLD_SUFFIXES = (
 QUERY_TOKEN_NORMALIZATIONS = {
     "딕션": "발음",
     "관할권별": "관할권",
+    # The one-syllable stem in "박의" is intentionally outside the generic
+    # particle stripper. Canonicalize this exact morphology without relaxing
+    # the full-concept coverage gate.
+    "박의": "박자",
+    # The annotation uses the inflection "나타낸다"; its indexed variants
+    # include "나타낸", which is a safe common form for this paraphrase.
+    "나타내는": "나타낸",
     "바뀌": "변화",
     "바뀌는": "변화",
     "바뀌나요": "변화",

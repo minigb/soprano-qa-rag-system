@@ -12,6 +12,7 @@ import re
 from typing import Any, Callable, Dict, List
 
 from soprano_qa.corpus import (
+    PIECES,
     SONG_ORDER,
     build_corpus,
     corpus_input_fingerprint,
@@ -37,7 +38,9 @@ Use only the retrieved evidence below. It has two explicitly labeled lineages:
 - expert_annotation: human expert performance commentary.
 - web_database: externally collected background or performance evidence with source provenance.
 Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-If the evidence is insufficient, say what is missing and answer only the supported part.
+If the evidence does not answer the core question at all, output exactly
+<NO_GROUNDED_ANSWER> and nothing else. If only a secondary part is unsupported, answer the
+supported core and briefly say what is missing.
 Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
 commentary into a universal fact about every version of the work.
 For a measure-range query, never apply advice from another measure. General evidence may add context,
@@ -51,6 +54,31 @@ Do not hide or contradict source attribution and license conditions; the applica
 evidence notices after the answer for every retrieved web record.
 Keep the answer concise and practical for a singer.
 """
+INTERNAL_KNOWLEDGE_SYSTEM_PROMPT = """You are a soprano performance QA assistant.
+
+Answer in Korean.
+Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
+No matching corpus evidence is available for this question. Answer directly from your pretrained
+general musical knowledge instead. The user's exact question is authoritative: do not replace it
+with a nearby singing topic, and ignore piece or measure metadata when it is not relevant. Never
+claim that you inspected the score, annotation database, or selected measures. If the answer
+depends on a particular edition, score marking, or exact bar, state that limitation briefly and
+provide only safe general guidance. Do not invent exact measure facts, quotations, sources, or
+bibliographic details. For a generic technique question, explain the named technique itself rather
+than redirecting to the selected piece's diction or interpretation.
+Do not emit evidence labels, corpus IDs, or citations such as [E1], [sqa-0001], or [webchunk-*].
+Do not respond with a corpus-insufficiency refusal; make a useful best-effort answer while clearly
+qualifying uncertainty when needed.
+Keep the answer concise and practical for a singer.
+"""
+OLD_INSUFFICIENT_EVIDENCE_MESSAGE = (
+    "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다."
+)
+NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
+NO_CORPUS_EVIDENCE_MESSAGE = "검색된 코퍼스 근거가 없습니다."
+INTERNAL_GENERATION_UNAVAILABLE_MESSAGE = (
+    "로컬 LLM을 사용할 수 없어 일반 지식 답변을 생성하지 못했습니다."
+)
 GENERATED_SUMMARY_ATTRIBUTION = "Soprano QA database project"
 CC_BY_4_URL = "https://creativecommons.org/licenses/by/4.0/"
 
@@ -160,6 +188,90 @@ Retrieved evidence
     ]
 
 
+def build_internal_knowledge_messages(
+    piece: str | None,
+    measures: str,
+    question: str,
+) -> List[Dict[str, str]]:
+    """Build a separate, explicitly ungrounded prompt for no-hit questions."""
+
+    piece_metadata = PIECES.get(piece or "", {})
+    user_prompt = """User context
+piece_id: {piece_id}
+title: {title}
+work: {work}
+composer: {composer}
+selected_measure_range: {measures}
+question: {question}
+/no_think
+
+Answer from internal general musical knowledge. The selected range is user context only, not
+evidence that you have inspected those measures. Answer the exact question rather than substituting
+a related corpus topic.
+""".format(
+        piece_id=piece or "(not specified)",
+        title=piece_metadata.get("title") or "(unknown)",
+        work=piece_metadata.get("work") or "(unknown)",
+        composer=piece_metadata.get("composer") or "(unknown)",
+        measures=measures or "(none; whole-song question)",
+        question=question,
+    )
+    return [
+        {"role": "system", "content": INTERNAL_KNOWLEDGE_SYSTEM_PROMPT},
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+def finalize_internal_knowledge_answer(answer: str) -> str:
+    """Remove corpus-style provenance claims from an ungrounded model answer."""
+
+    finalized = answer.replace(OLD_INSUFFICIENT_EVIDENCE_MESSAGE, "")
+    finalized = finalized.replace(NO_GROUNDED_ANSWER_SENTINEL, "")
+    citation_label = (
+        r"(?:E(?:vidence)?\s*[0-9]+|sqa-[0-9]+|"
+        r"webchunk-[A-Za-z0-9*-]+)"
+    )
+    finalized = re.sub(
+        r"[\[【]\s*"
+        r"(?:(?:출처|근거|source|citation)\s*[:：-]?\s*)?"
+        + citation_label
+        + r"(?:\s*[,;，、]\s*"
+        + citation_label
+        + r")*\s*[\]】]",
+        "",
+        finalized,
+        flags=re.IGNORECASE,
+    )
+    finalized = re.sub(
+        r"\b(?:sqa-[0-9]+|webchunk-[A-Za-z0-9*-]+)\b",
+        "",
+        finalized,
+        flags=re.IGNORECASE,
+    )
+    finalized = re.sub(r"[ \t]+\n", "\n", finalized)
+    finalized = re.sub(r"\n{3,}", "\n\n", finalized).strip()
+    return finalized
+
+
+def is_grounded_insufficiency_answer(answer: str) -> bool:
+    """Recognize the grounded model's no-answer signal and legacy refusal."""
+
+    normalized = re.sub(r"\s+", "", answer)
+    if NO_GROUNDED_ANSWER_SENTINEL.lower() in normalized.lower():
+        return True
+    legacy_refusal = re.sub(r"\s+", "", OLD_INSUFFICIENT_EVIDENCE_MESSAGE)
+    return legacy_refusal in normalized
+
+
+def build_extractive_answer(results: List[Any]) -> str:
+    if not results:
+        return NO_CORPUS_EVIDENCE_MESSAGE
+    return "\n\n".join(
+        "%s [%s]" % (result.record["answer"].strip(), result.record["id"])
+        for result in results[:3]
+    )
+
+
 def is_context_overflow_error(exc: ValueError) -> bool:
     message = str(exc).lower()
     return "context window" in message and (
@@ -182,6 +294,8 @@ def generate_with_context_retry(
 
     search_limit = top_k
     context_limited = False
+    last_results: List[Any] = []
+    last_messages = build_messages(piece, measures, query, [])
     while search_limit > 0:
         results = index.search(
             query=query,
@@ -192,7 +306,11 @@ def generate_with_context_retry(
         )
         messages = build_messages(piece, measures, query, results)
         if not results:
+            if context_limited and last_results:
+                return "", last_results, last_messages, context_limited
             return "", results, messages, context_limited
+        last_results = results
+        last_messages = messages
         try:
             return generator(messages), results, messages, context_limited
         except ValueError as exc:
@@ -200,7 +318,7 @@ def generate_with_context_retry(
                 raise
             context_limited = True
             search_limit = len(results) - 1
-    return "", [], build_messages(piece, measures, query, []), context_limited
+    return "", last_results, last_messages, context_limited
 
 
 def build_evidence_notices(results: List[Any]) -> List[Dict[str, Any]]:
@@ -442,6 +560,8 @@ def main() -> None:
 
     records = load_corpus(settings["corpus_path"])
     index = BM25Index(records)
+    generation_mode = "retrieval_only" if args.no_generate else "llm"
+    answer_basis = "retrieval_only" if args.no_generate else "retrieved_evidence"
     if args.no_generate:
         results = index.search(
             query=args.question,
@@ -471,14 +591,46 @@ def main() -> None:
             top_k=args.top_k,
             generator=run_generation,
         )
-        if not results:
-            answer = (
-                "검색 근거가 모델 컨텍스트 한도를 초과하여 안전하게 답변하지 못했습니다."
-                if context_limited
-                else "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다."
+        if (
+            is_grounded_insufficiency_answer(raw_answer)
+            or (
+                not context_limited
+                and (
+                    not results
+                    or not raw_answer.strip()
+                )
             )
-        else:
+        ):
+            messages = build_internal_knowledge_messages(
+                args.piece,
+                args.measures,
+                args.question,
+            )
+            answer = finalize_internal_knowledge_answer(
+                run_generation(messages)
+            )
+            results = []
+            if answer:
+                answer_basis = "internal_knowledge"
+            else:
+                answer = INTERNAL_GENERATION_UNAVAILABLE_MESSAGE
+                answer_basis = "generation_unavailable"
+                generation_mode = "unavailable"
+        elif context_limited and not raw_answer:
+            if results:
+                answer = build_extractive_answer(results)
+                answer_basis = "retrieval_extractive"
+                generation_mode = "extractive"
+            else:
+                answer = "검색 근거가 모델 컨텍스트 한도를 초과하여 안전하게 답변하지 못했습니다."
+                answer_basis = "generation_unavailable"
+                generation_mode = "unavailable"
+        elif results:
             answer = finalize_answer_citations(raw_answer, results)
+        else:
+            answer = INTERNAL_GENERATION_UNAVAILABLE_MESSAGE
+            answer_basis = "generation_unavailable"
+            generation_mode = "unavailable"
     evidence_notices = build_evidence_notices(results)
 
     if args.json:
@@ -493,6 +645,8 @@ def main() -> None:
                         "top_k": args.top_k,
                     },
                     "answer": answer,
+                    "generation_mode": generation_mode,
+                    "answer_basis": answer_basis,
                     "evidence_notices": evidence_notices,
                     "results": [
                         {

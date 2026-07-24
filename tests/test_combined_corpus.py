@@ -244,6 +244,28 @@ class CombinedCorpusTests(unittest.TestCase):
         }
         self.assertTrue(notice_ids.issubset({result.record["id"] for result in results}))
 
+    def test_context_overflow_preserves_last_full_coverage_result_set(self) -> None:
+        def always_overflow(_messages):
+            raise ValueError(
+                "Requested tokens (9000) exceed context window of 8192"
+            )
+
+        raw_answer, results, messages, context_limited = generate_with_context_retry(
+            self.index,
+            query="발음과 분위기",
+            piece="die-forelle",
+            measure_ranges=[],
+            measures="",
+            topic=None,
+            top_k=2,
+            generator=always_overflow,
+        )
+
+        self.assertEqual(raw_answer, "")
+        self.assertTrue(context_limited)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(messages[1]["content"].count("Evidence "), 2)
+
     def test_web_chunk_lineage_rejects_unknown_claims_and_wrong_piece_sources(self) -> None:
         settings = load_settings()
         source_index = build_web_source_index(settings["dataset_root"])
