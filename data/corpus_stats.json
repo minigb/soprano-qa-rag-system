@@ -1,40 +1,139 @@
 {
-  "corpus_schema_version": 4,
+  "corpus_schema_version": 6,
   "dataset_root": "/home/minhee/soprano-qa-dataset",
-  "input_fingerprint": "22db938aec27de1fd20addb0a06d73646d652ca2d98837ccb1bf8514eadd0010",
-  "corpus_sha256": "378fab503c1314be9b5d9f8dc80e8a3c84ae33a8e9b8f6ff851fd103fd686ed7",
-  "total_records": 211,
-  "retrievable_records": 210,
+  "input_fingerprint": "e3c6fefa57bb6b7022fcc5f58449ed95566da3d7eab1622e3225ea83676cde11",
+  "corpus_sha256": "866e0b03c31c89bb698efc8570474ca7de53c886c84bc0afe22b0ca0661cbe0a",
+  "total_records": 223,
+  "retrievable_records": 223,
   "records_by_evidence_type": {
-    "expert_annotation": 110,
+    "expert_annotation": 122,
     "web_database": 101
   },
   "records_by_piece": {
-    "die-forelle": 47,
-    "in-flowery-clouds": 35,
-    "la-capinera": 47,
-    "nella-fantasia": 27,
-    "una-voce-poco-fa": 55
+    "die-forelle": 51,
+    "in-flowery-clouds": 38,
+    "la-capinera": 52,
+    "nella-fantasia": 25,
+    "una-voce-poco-fa": 57
   },
   "records_by_measure_scope": {
-    "global": 140,
-    "local": 61,
-    "multi_range": 10
+    "global": 159,
+    "local": 36,
+    "multi_range": 28
   },
   "expert_records_by_question_source": {
-    "expert": 78,
-    "none": 32
+    "none": 122
+  },
+  "expert_records_by_rewrite_status": {
+    "needs_review": 13,
+    "ready": 109
+  },
+  "expert_records_by_measure_status": {
+    "specific": 64,
+    "unspecified": 3,
+    "whole_piece": 55
+  },
+  "expert_records_by_retrieval_exclusion_reason": {},
+  "expert_records_by_retrieval_review_warning": {
+    "rewrite_review_pending": 13
   },
   "web_records_by_usage_class": {
     "research_conditional": 20,
     "research_open": 81
   },
-  "excluded_from_retrieval": [
+  "excluded_from_retrieval": [],
+  "expert_retrieval_review_warnings": [
     {
-      "id": "sqa-0072",
-      "reason": "placeholder_request_not_expert_evidence",
+      "id": "una-voce-poco-fa-ku-004",
+      "warning": "rewrite_review_pending",
       "source_ids": [
-        "kim-nella-fantasia-01"
+        "kim-una-voce-poco-fa-03",
+        "kim-una-voce-poco-fa-20"
+      ]
+    },
+    {
+      "id": "una-voce-poco-fa-ku-011",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "kim-una-voce-poco-fa-08"
+      ]
+    },
+    {
+      "id": "una-voce-poco-fa-ku-021",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "kim-una-voce-poco-fa-16"
+      ]
+    },
+    {
+      "id": "una-voce-poco-fa-ku-026",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-una-voce-poco-fa-04"
+      ]
+    },
+    {
+      "id": "la-capinera-ku-022",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-la-capinera-04"
+      ]
+    },
+    {
+      "id": "la-capinera-ku-024",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-la-capinera-06"
+      ]
+    },
+    {
+      "id": "die-forelle-ku-004",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-die-forelle-01"
+      ]
+    },
+    {
+      "id": "die-forelle-ku-018",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-die-forelle-08"
+      ]
+    },
+    {
+      "id": "in-flowery-clouds-ku-001",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "kim-in-flowery-clouds-01"
+      ]
+    },
+    {
+      "id": "in-flowery-clouds-ku-008",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "kim-in-flowery-clouds-07",
+        "yeon-in-flowery-clouds-08"
+      ]
+    },
+    {
+      "id": "in-flowery-clouds-ku-011",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "kim-in-flowery-clouds-10"
+      ]
+    },
+    {
+      "id": "in-flowery-clouds-ku-018",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-in-flowery-clouds-06"
+      ]
+    },
+    {
+      "id": "in-flowery-clouds-ku-020",
+      "warning": "rewrite_review_pending",
+      "source_ids": [
+        "yeon-in-flowery-clouds-09"
       ]
     }
   ],

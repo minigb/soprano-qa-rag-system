@@ -6,6 +6,7 @@ import os
 import tempfile
 import unittest
 from types import SimpleNamespace
+from unittest import mock
 
 from soprano_qa.answer import (
     build_context,
@@ -28,10 +29,13 @@ from soprano_qa.corpus import (
     normalize_ranges,
     resolve_claim_assets,
     validate_claim_asset_rights,
-    validate_spellcheck_lineage,
+    validate_expert_review_document,
     validate_web_chunk_lineage,
 )
-from soprano_qa.retrieval import BM25Index
+from soprano_qa.retrieval import (
+    BM25Index,
+    is_broad_performance_guidance_query,
+)
 from soprano_qa.settings import PROJECT_ROOT, load_settings
 
 
@@ -64,8 +68,8 @@ class CombinedCorpusTests(unittest.TestCase):
         )
         self.assertTrue(settings["dataset_root"].endswith("soprano-qa-dataset"))
 
-    def test_combines_only_answer_eligible_lineages(self) -> None:
-        self.assertEqual(self.stats["corpus_schema_version"], 4)
+    def test_combines_reviewed_expert_and_answer_eligible_web_lineages(self) -> None:
+        self.assertEqual(self.stats["corpus_schema_version"], 6)
         self.assertEqual(len(self.stats["input_fingerprint"]), 64)
         self.assertEqual(len(self.stats["corpus_sha256"]), 64)
         self.assertEqual(
@@ -73,18 +77,46 @@ class CombinedCorpusTests(unittest.TestCase):
             file_sha256(self.build_settings["corpus_path"]),
         )
         self.assertTrue(self.stats["dataset_root"].endswith("soprano-qa-dataset"))
-        self.assertEqual(self.stats["total_records"], 211)
-        self.assertEqual(self.stats["retrievable_records"], 210)
+        self.assertEqual(self.stats["total_records"], 223)
+        self.assertEqual(self.stats["retrievable_records"], 223)
         self.assertEqual(
             self.stats["records_by_evidence_type"],
-            {"expert_annotation": 110, "web_database": 101},
+            {"expert_annotation": 122, "web_database": 101},
+        )
+        self.assertEqual(
+            self.stats["expert_records_by_rewrite_status"],
+            {"needs_review": 13, "ready": 109},
+        )
+        self.assertEqual(
+            self.stats["expert_records_by_measure_status"],
+            {
+                "specific": 64,
+                "unspecified": 3,
+                "whole_piece": 55,
+            },
+        )
+        self.assertEqual(
+            self.stats["expert_records_by_retrieval_exclusion_reason"],
+            {},
+        )
+        self.assertEqual(
+            self.stats["expert_records_by_retrieval_review_warning"],
+            {"rewrite_review_pending": 13},
+        )
+        self.assertEqual(
+            len(self.stats["expert_retrieval_review_warnings"]),
+            13,
+        )
+        self.assertEqual(
+            self.stats["expert_records_by_question_source"],
+            {"none": 122},
         )
         self.assertEqual(
             self.stats["web_records_by_usage_class"],
             {"research_conditional": 20, "research_open": 81},
         )
         self.assertNotIn("catalog_only", self.stats["web_records_by_usage_class"])
-        self.assertEqual(len({record["id"] for record in self.records}), 211)
+        self.assertEqual(len({record["id"] for record in self.records}), 223)
         self.assertTrue(all(record.get("relevance_text") for record in self.records))
         expert_source_ids = {
             source_id
@@ -92,7 +124,7 @@ class CombinedCorpusTests(unittest.TestCase):
             if record["evidence_type"] == "expert_annotation"
             for source_id in record["source_ids"]
         }
-        self.assertEqual(len(expert_source_ids), 135)
+        self.assertEqual(len(expert_source_ids), 132)
 
     def test_strict_measure_ranges_reject_lossy_values(self) -> None:
         for invalid in ([[1.9, 4]], [[True, 2]], [["1", 2]]):
@@ -102,7 +134,7 @@ class CombinedCorpusTests(unittest.TestCase):
 
     def test_feature_overrides_require_safe_targets_and_consistent_scope(self) -> None:
         record = {
-            "id": "sqa-test",
+            "id": "die-forelle-ku-999",
             "source_ids": ["expert-source-1"],
             "topic": "호흡",
             "answer": "호흡을 준비한다.",
@@ -117,7 +149,7 @@ class CombinedCorpusTests(unittest.TestCase):
                 [copy.deepcopy(record)],
                 [
                     {
-                        "id": "sqa-test",
+                        "id": "die-forelle-ku-999",
                         "measure_range": [[1, 2]],
                         "measure_scope": "global",
                     }
@@ -126,7 +158,7 @@ class CombinedCorpusTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Recurring"):
             apply_overrides(
                 [copy.deepcopy(record)],
-                [{"id": "sqa-test", "measure_scope": "recurring"}],
+                [{"id": "die-forelle-ku-999", "measure_scope": "recurring"}],
             )
         recurring = copy.deepcopy(record)
         self.assertEqual(
@@ -134,7 +166,7 @@ class CombinedCorpusTests(unittest.TestCase):
                 [recurring],
                 [
                     {
-                        "id": "sqa-test",
+                        "id": "die-forelle-ku-999",
                         "measure_range": [[4, 4], [12, 12]],
                         "measure_scope": "recurring",
                     }
@@ -146,12 +178,15 @@ class CombinedCorpusTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "Unknown feature override fields"):
             apply_overrides(
                 [copy.deepcopy(record)],
-                [{"id": "sqa-test", "measure_ranges": [[1, 2]]}],
+                [{"id": "die-forelle-ku-999", "measure_ranges": [[1, 2]]}],
             )
         with self.assertRaisesRegex(ValueError, "at least one mutation"):
-            apply_overrides([copy.deepcopy(record)], [{"id": "sqa-test"}])
+            apply_overrides(
+                [copy.deepcopy(record)],
+                [{"id": "die-forelle-ku-999"}],
+            )
         second_record = copy.deepcopy(record)
-        second_record["id"] = "sqa-test-2"
+        second_record["id"] = "die-forelle-ku-998"
         with self.assertRaisesRegex(ValueError, "ambiguous"):
             apply_overrides(
                 [copy.deepcopy(record), second_record],
@@ -163,29 +198,190 @@ class CombinedCorpusTests(unittest.TestCase):
                 ],
             )
 
-    def test_spellcheck_phase_cannot_change_expert_structure(self) -> None:
-        phase2 = [
-            {
-                "source_ids": ["expert-1"],
-                "topic": "발음",
-                "measure_range": [[1, 2]],
-                "question": "두번째 음은?",
-                "question_source": "expert",
-                "answer": "두번째 음을 준비한다.",
-            }
+    def test_expert_records_use_reviewed_knowledge_unit_contract(self) -> None:
+        expert_records = [
+            record
+            for record in self.records
+            if record["evidence_type"] == "expert_annotation"
         ]
-        phase3 = copy.deepcopy(phase2)
-        phase3[0]["question"] = "두 번째 음은?"
-        phase3[0]["answer"] = "두 번째 음을 준비한다."
-        validate_spellcheck_lineage(phase2, phase3, "phase2.json", "phase3.json")
-        forged = copy.deepcopy(phase3)
-        forged[0]["measure_range"] = [[3, 4]]
-        with self.assertRaisesRegex(ValueError, "structural field measure_range"):
-            validate_spellcheck_lineage(phase2, forged, "phase2.json", "phase3.json")
-        duplicate = copy.deepcopy(phase3)
-        duplicate[0]["source_ids"] = ["expert-1", "expert-1"]
-        with self.assertRaisesRegex(ValueError, "source_ids"):
-            validate_spellcheck_lineage(duplicate, duplicate, "phase2.json", "phase3.json")
+        review_dir = os.path.join(
+            self.build_settings["dataset_root"],
+            "expert_curation",
+            "review",
+        )
+        reviewed_units = {}
+        reviewed_sources = {}
+        reviewed_source_unit_ids = {}
+        for filename in sorted(os.listdir(review_dir)):
+            if not filename.endswith(".json"):
+                continue
+            with open(
+                os.path.join(review_dir, filename),
+                encoding="utf-8",
+            ) as review_file:
+                review = json.load(review_file)
+            reviewed_sources.update(
+                {
+                    source["source_id"]: source
+                    for source in review["source_annotations"]
+                }
+            )
+            for unit in review["knowledge_units"]:
+                reviewed_units[unit["knowledge_unit_id"]] = unit
+                for source_id in unit["source_ids"]:
+                    reviewed_source_unit_ids.setdefault(
+                        source_id,
+                        [],
+                    ).append(unit["knowledge_unit_id"])
+        self.assertEqual(
+            {record["id"] for record in expert_records},
+            set(reviewed_units),
+        )
+        for record in expert_records:
+            with self.subTest(record_id=record["id"]):
+                unit = reviewed_units[record["id"]]
+                self.assertRegex(
+                    record["id"],
+                    r"^[a-z0-9]+(?:-[a-z0-9]+)*-ku-[0-9]{3}$",
+                )
+                self.assertEqual(record["answer"], unit["answer"])
+                self.assertEqual(record["source_ids"], unit["source_ids"])
+                self.assertEqual(
+                    record["measure_range_hints"],
+                    unit["measure_range_hints"],
+                )
+                self.assertEqual(
+                    record["rewrite_status"],
+                    unit["rewrite_status"],
+                )
+                self.assertEqual(
+                    record["rewrite_notes"],
+                    unit["rewrite_notes"],
+                )
+                self.assertEqual(
+                    record["measure_status"],
+                    unit["measure_status"],
+                )
+                self.assertEqual(
+                    record["measure_notes"],
+                    unit["measure_notes"],
+                )
+                self.assertEqual(record["question"], "")
+                self.assertEqual(record["question_source"], "none")
+                self.assertEqual(record["topic"], "")
+                source_context = [
+                    {
+                        "source_id": source_id,
+                        "question": reviewed_sources[source_id]["question"],
+                        "answer": reviewed_sources[source_id]["answer"],
+                        "legacy_measure_range_hints": normalize_ranges(
+                            reviewed_sources[source_id][
+                                "legacy_measure_ranges"
+                            ]
+                        ),
+                        "linked_knowledge_unit_ids": (
+                            reviewed_source_unit_ids[source_id]
+                        ),
+                    }
+                    for source_id in unit["source_ids"]
+                ]
+                aliases = []
+                for source in source_context:
+                    question = source["question"].strip()
+                    if question and question not in aliases:
+                        aliases.append(question)
+                self.assertEqual(
+                    record["source_answer_context"],
+                    source_context,
+                )
+                self.assertEqual(record["retrieval_aliases"], aliases)
+                expected_relevance_text = "\n".join(
+                    [record["answer"]] + aliases
+                )
+                self.assertEqual(
+                    record["relevance_text"],
+                    expected_relevance_text,
+                )
+                self.assertEqual(
+                    record["retrieval_text"],
+                    expected_relevance_text,
+                )
+                self.assertTrue(record["retrieval_eligible"])
+                self.assertEqual(record["retrieval_exclusion_reason"], "")
+                if (
+                    record["rewrite_status"] == "needs_review"
+                    and record["measure_status"] == "waiting_for_review"
+                ):
+                    expected_review_warning = (
+                        "rewrite_and_measure_review_pending"
+                    )
+                elif record["rewrite_status"] == "needs_review":
+                    expected_review_warning = "rewrite_review_pending"
+                elif record["measure_status"] == "waiting_for_review":
+                    expected_review_warning = "measure_review_pending"
+                else:
+                    expected_review_warning = ""
+                self.assertEqual(
+                    record["retrieval_review_warning"],
+                    expected_review_warning,
+                )
+                if record["measure_status"] == "specific":
+                    self.assertEqual(
+                        record["measure_range"],
+                        unit["measure_ranges"],
+                    )
+                else:
+                    self.assertEqual(record["measure_range"], [])
+
+    def test_expert_review_validation_rejects_unsafe_runtime_inputs(self) -> None:
+        piece_id = "die-forelle"
+        review_path = os.path.join(
+            self.build_settings["dataset_root"],
+            "expert_curation",
+            "review",
+            piece_id + ".json",
+        )
+        with open(review_path, encoding="utf-8") as review_file:
+            valid_review = json.load(review_file)
+        self.assertEqual(
+            len(
+                validate_expert_review_document(
+                    copy.deepcopy(valid_review),
+                    review_path,
+                    piece_id,
+                )
+            ),
+            20,
+        )
+
+        unsafe_cases = []
+
+        extra_question = copy.deepcopy(valid_review)
+        extra_question["knowledge_units"][0]["question"] = "검색 질문"
+        unsafe_cases.append(("keys", extra_question))
+
+        absolute_measure = copy.deepcopy(valid_review)
+        absolute_measure["knowledge_units"][0]["answer"] += " 28마디에서 적용한다."
+        unsafe_cases.append(("absolute measure locator", absolute_measure))
+
+        pending_with_range = copy.deepcopy(valid_review)
+        pending_with_range["knowledge_units"][1]["measure_status"] = (
+            "waiting_for_review"
+        )
+        unsafe_cases.append(("only specific status", pending_with_range))
+
+        unknown_source = copy.deepcopy(valid_review)
+        unknown_source["knowledge_units"][0]["source_ids"] = ["kim-die-forelle-99"]
+        unsafe_cases.append(("unknown source_ids", unknown_source))
+
+        for expected_error, unsafe_review in unsafe_cases:
+            with self.subTest(expected_error=expected_error):
+                with self.assertRaisesRegex(ValueError, expected_error):
+                    validate_expert_review_document(
+                        unsafe_review,
+                        review_path,
+                        piece_id,
+                    )
 
     def test_current_stats_cannot_bless_a_corrupt_corpus(self) -> None:
         settings = dict(load_settings())
@@ -198,7 +394,7 @@ class CombinedCorpusTests(unittest.TestCase):
             ensure_corpus(settings, rebuild=False)
             with open(settings["corpus_path"], encoding="utf-8") as f:
                 rebuilt = json.load(f)
-            self.assertEqual(len(rebuilt), 211)
+            self.assertEqual(len(rebuilt), 223)
             with open(settings["stats_path"], encoding="utf-8") as f:
                 rebuilt_stats = json.load(f)
             self.assertEqual(
@@ -223,16 +419,22 @@ class CombinedCorpusTests(unittest.TestCase):
                 )
             return "grounded answer [E1]"
 
-        raw_answer, results, messages, context_limited = generate_with_context_retry(
-            self.index,
-            query="음악 곡 노래 작품 가사 표현 연주",
-            piece="die-forelle",
-            measure_ranges=[],
-            measures="",
-            topic=None,
-            top_k=1000,
-            generator=fake_generator,
-        )
+        with mock.patch(
+            "soprano_qa.answer.select_generation_evidence",
+            side_effect=lambda results: results,
+        ):
+            raw_answer, results, messages, context_limited = (
+                generate_with_context_retry(
+                    self.index,
+                    query="발음",
+                    piece="die-forelle",
+                    measure_ranges=[],
+                    measures="",
+                    topic=None,
+                    top_k=1000,
+                    generator=fake_generator,
+                )
+            )
         self.assertTrue(results)
         self.assertTrue(context_limited)
         self.assertGreater(attempted_counts[0], 2)
@@ -244,7 +446,7 @@ class CombinedCorpusTests(unittest.TestCase):
         }
         self.assertTrue(notice_ids.issubset({result.record["id"] for result in results}))
 
-    def test_context_overflow_preserves_last_full_coverage_result_set(self) -> None:
+    def test_context_overflow_preserves_last_nonempty_result_set(self) -> None:
         def always_overflow(_messages):
             raise ValueError(
                 "Requested tokens (9000) exceed context window of 8192"
@@ -252,7 +454,7 @@ class CombinedCorpusTests(unittest.TestCase):
 
         raw_answer, results, messages, context_limited = generate_with_context_retry(
             self.index,
-            query="발음과 분위기",
+            query="발음",
             piece="die-forelle",
             measure_ranges=[],
             measures="",
@@ -263,8 +465,8 @@ class CombinedCorpusTests(unittest.TestCase):
 
         self.assertEqual(raw_answer, "")
         self.assertTrue(context_limited)
-        self.assertEqual(len(results), 2)
-        self.assertEqual(messages[1]["content"].count("Evidence "), 2)
+        self.assertEqual(len(results), 1)
+        self.assertEqual(messages[1]["content"].count("Evidence "), 1)
 
     def test_web_chunk_lineage_rejects_unknown_claims_and_wrong_piece_sources(self) -> None:
         settings = load_settings()
@@ -559,16 +761,69 @@ class CombinedCorpusTests(unittest.TestCase):
                 self.assertTrue(record["claim_ids"])
                 self.assertTrue(all(source["url"] for source in record["sources"]))
 
-    def test_placeholder_is_preserved_but_not_retrievable(self) -> None:
-        placeholder = next(record for record in self.records if record["id"] == "sqa-0072")
-        self.assertEqual(placeholder["answer"], "기존 웹 자료를 부탁한다.")
-        self.assertFalse(placeholder["retrieval_eligible"])
-        results = self.index.search(
-            "기존 웹 자료를 부탁한다",
-            piece="nella-fantasia",
+    def test_excluded_source_is_absent_and_completed_scope_is_safe(self) -> None:
+        expert_records = [
+            record
+            for record in self.records
+            if record["evidence_type"] == "expert_annotation"
+        ]
+        self.assertNotIn(
+            "kim-nella-fantasia-01",
+            {
+                source_id
+                for record in expert_records
+                for source_id in record["source_ids"]
+            },
+        )
+        self.assertFalse(
+            any(
+                record["answer"] == "기존 웹 자료를 부탁한다."
+                for record in expert_records
+            )
+        )
+        reviewed = next(
+            record
+            for record in expert_records
+            if record["id"] == "una-voce-poco-fa-ku-027"
+        )
+        self.assertEqual(reviewed["rewrite_status"], "ready")
+        self.assertEqual(reviewed["measure_status"], "specific")
+        self.assertEqual(reviewed["measure_range"], [[56, 56]])
+        self.assertTrue(reviewed["retrieval_eligible"])
+        self.assertEqual(
+            reviewed["retrieval_review_warning"],
+            "",
+        )
+        self.assertEqual(reviewed["retrieval_exclusion_reason"], "")
+        unscoped = self.index.search(
+            "이중모음은 어디에 음가를 붙여 부르나요?",
+            piece="una-voce-poco-fa",
             top_k=20,
         )
-        self.assertNotIn("sqa-0072", [result.record["id"] for result in results])
+        local_example = next(
+            result
+            for result in unscoped
+            if result.record["id"] == "una-voce-poco-fa-ku-027"
+        )
+        self.assertEqual(
+            local_example.scope_match,
+            "local_example",
+        )
+        ranged = self.index.search(
+            "이중모음은 어디에 음가를 붙여 부르나요?",
+            piece="una-voce-poco-fa",
+            measure_ranges=[[6, 6]],
+            top_k=20,
+        )
+        other_range = next(
+            result
+            for result in ranged
+            if result.record["id"] == "una-voce-poco-fa-ku-027"
+        )
+        self.assertEqual(
+            other_range.scope_match,
+            "other_range_context",
+        )
 
     def test_measure_query_uses_overlap_and_general_context_only(self) -> None:
         results = self.index.search(
@@ -577,20 +832,51 @@ class CombinedCorpusTests(unittest.TestCase):
             measure_ranges=[[28, 30]],
             top_k=10,
         )
-        self.assertEqual(results[0].record["id"], "sqa-0058")
+        self.assertEqual(results[0].record["id"], "die-forelle-ku-010")
         for result in results:
             if result.record["measure_range"]:
                 self.assertEqual(result.scope_match, "overlaps_query_range")
 
     def test_multi_range_search_checks_every_pair(self) -> None:
         results = self.index.search(
-            "이중모음과 꾸밈음은 어떻게 부르나요?",
-            piece="una-voce-poco-fa",
-            measure_ranges=[[6, 6]],
+            "두 번째 박자의 악센트는 무엇을 표현하나요?",
+            piece="die-forelle",
+            measure_ranges=[[2, 2]],
             top_k=10,
         )
-        matched = [result.record for result in results if result.scope_match == "overlaps_query_range"]
-        self.assertIn([[56, 56], [6, 6]], [record["measure_range"] for record in matched])
+        matched = [
+            result.record
+            for result in results
+            if result.scope_match == "overlaps_query_range"
+        ]
+        self.assertIn(
+            [[2, 27], [41, 54]],
+            [record["measure_range"] for record in matched],
+        )
+
+    def test_confirmed_nonoverlap_is_retained_as_other_range_context(
+        self,
+    ) -> None:
+        results = self.index.search(
+            "두 번째 박자의 악센트는 무엇을 표현하나요?",
+            piece="die-forelle",
+            measure_ranges=[[28, 40]],
+            top_k=10,
+        )
+        context = next(
+            result
+            for result in results
+            if result.record["id"] == "die-forelle-ku-002"
+        )
+
+        self.assertEqual(context.scope_match, "other_range_context")
+        self.assertEqual(context.measure_score, -1.0)
+        self.assertTrue(
+            any(
+                result.scope_match == "global_context"
+                for result in results
+            )
+        )
 
     def test_whole_song_web_identity_and_safe_abstention(self) -> None:
         identity = self.index.search(
@@ -661,6 +947,88 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertEqual(ranged, [])
         self.assertEqual(whole_song, [])
 
+    def test_three_piece_annotator_paraphrases_retrieve_linked_evidence(self) -> None:
+        inventory_root = os.path.join(
+            self.build_settings["dataset_root"],
+            "expert_curation",
+            "evaluation_questions",
+        )
+        pieces = ("die-forelle", "in-flowery-clouds", "la-capinera")
+        question_count = 0
+        range_case_count = 0
+        for piece in pieces:
+            with open(
+                os.path.join(inventory_root, "%s.json" % piece),
+                encoding="utf-8",
+            ) as inventory_file:
+                questions = json.load(inventory_file)["questions"]
+            for question in questions:
+                question_count += 1
+                expected_ids = set(question["knowledge_unit_ids"])
+                inference_ranges = question["inference_measure_ranges"] or [None]
+                for inference_range in inference_ranges:
+                    range_case_count += 1
+                    with self.subTest(
+                        source_id=question["source_id"],
+                        inference_range=inference_range,
+                    ):
+                        results = self.index.search(
+                            question["paraphrased_question"],
+                            piece=piece,
+                            measure_ranges=(
+                                [inference_range]
+                                if inference_range is not None
+                                else None
+                            ),
+                            top_k=6,
+                        )
+                        self.assertTrue(
+                            expected_ids
+                            & {result.record["id"] for result in results}
+                        )
+                        is_broad = (
+                            inference_range is None
+                            and is_broad_performance_guidance_query(
+                                question["paraphrased_question"],
+                                piece,
+                            )
+                        )
+                        if not is_broad:
+                            self.assertIn(
+                                results[0].record["id"],
+                                expected_ids,
+                            )
+        self.assertEqual(question_count, 40)
+        self.assertEqual(range_case_count, 52)
+
+    def test_candidate_local_gate_rejects_39_cross_piece_ood_pairs(self) -> None:
+        pieces = ("die-forelle", "in-flowery-clouds", "la-capinera")
+        unsupported_questions = (
+            "2022년 FIFA 월드컵 우승팀은 어디인가?",
+            "프랑스 수도는 어디인가?",
+            "오늘 서울 날씨와 기온은 어떤가?",
+            "한국 대통령은 누구인가?",
+            "삼성전자 주가는 얼마인가?",
+            "파스타 면을 몇 분 삶아야 할까?",
+            "양자역학의 불확정성 원리는 무엇인가?",
+            "서울에서 부산까지 기차 시간표는?",
+            "파이썬 리스트를 정렬하는 코드는?",
+            "축구 경기에서 오프사이드 규칙은?",
+            "반주와 국제관계는 어떤 관련이 있을까?",
+            "음악 형식과 형식주의 철학은 같은가?",
+            "가사와 우주 탐사의 관계는 무엇인가?",
+        )
+        rejection_count = 0
+        for piece in pieces:
+            for question in unsupported_questions:
+                with self.subTest(piece=piece, question=question):
+                    self.assertEqual(
+                        self.index.search(question, piece=piece, top_k=6),
+                        [],
+                    )
+                    rejection_count += 1
+        self.assertEqual(rejection_count, 39)
+
     def test_provenance_names_and_english_ood_queries_abstain(self) -> None:
         for question in (
             "What is the capital of France?",
@@ -680,36 +1048,31 @@ class CombinedCorpusTests(unittest.TestCase):
         )
         self.assertEqual(supported[0].record["id"], "webchunk-cecff2bace03ab67e32d")
 
-    def test_compound_questions_cover_each_real_concept(self) -> None:
-        compound = self.index.search(
-            "송어의 발음과 형식을 알려 주세요",
-            piece="die-forelle",
-            top_k=6,
-        )
-        topics = {result.record["topic"] for result in compound}
-        self.assertIn("발음과 딕션", topics)
-        self.assertIn("시와 유절가곡 형식", topics)
+    def test_compound_questions_require_one_candidate_to_cover_every_concept(
+        self,
+    ) -> None:
         for phrasing in (
+            "송어의 발음과 형식을 알려 주세요",
             "발음하고 형식도 말해 주세요",
             "발음 및 형식은요?",
             "발음과 형식에 관해 알려 주세요",
             "발음과 형식을 같이 알려 주세요",
         ):
             with self.subTest(phrasing=phrasing):
-                phrased_results = self.index.search(
-                    phrasing,
-                    piece="die-forelle",
-                    top_k=6,
+                self.assertEqual(
+                    self.index.search(
+                        phrasing,
+                        piece="die-forelle",
+                        top_k=6,
+                    ),
+                    [],
                 )
-                phrased_topics = {result.record["topic"] for result in phrased_results}
-                self.assertIn("발음과 딕션", phrased_topics)
-                self.assertIn("시와 유절가곡 형식", phrased_topics)
         one_chunk = self.index.search(
-            "발음과 리듬을 어떻게 맞추나요?",
+            "템포가 빠르고 단어의 악센트와 마디의 강박·약박",
             piece="die-forelle",
             top_k=1,
         )
-        self.assertEqual(one_chunk[0].record["id"], "sqa-0071")
+        self.assertEqual(one_chunk[0].record["id"], "die-forelle-ku-009")
         for unsupported in (
             "가사 의미없는질문",
             "반주 국제관계는 무엇인가요?",
@@ -734,7 +1097,10 @@ class CombinedCorpusTests(unittest.TestCase):
                     measure_ranges=[[28, 30]],
                     top_k=6,
                 )
-                self.assertEqual(results[0].record["id"], "sqa-0058")
+                self.assertEqual(
+                    results[0].record["id"],
+                    "die-forelle-ku-010",
+                )
         for question in (
             "6마디를 어떻게 발음해야 할까요?",
             "6마디에서 발음하는 방법을 알려 주세요.",
@@ -747,13 +1113,16 @@ class CombinedCorpusTests(unittest.TestCase):
                     measure_ranges=[[6, 6]],
                     top_k=1,
                 )
-                self.assertEqual(results[0].record["id"], "sqa-0032")
+                self.assertNotIn(
+                    "una-voce-poco-fa-ku-027",
+                    [result.record["id"] for result in results],
+                )
         form = self.index.search(
             "이 곡의 형식은 어떻게 구성되어 있나요?",
             piece="die-forelle",
             top_k=3,
         )
-        self.assertEqual(form[0].record["id"], "sqa-0065")
+        self.assertEqual(form[0].record["id"], "die-forelle-ku-007")
 
     def test_generic_identity_and_creator_paraphrases_route_correctly(self) -> None:
         identity_questions = (
@@ -803,29 +1172,21 @@ class CombinedCorpusTests(unittest.TestCase):
                     self.assertTrue(implicit)
                     self.assertEqual(implicit[0].record["topic"], "creator_profiles")
 
-    def test_measure_scope_priority_survives_compound_coverage(self) -> None:
+    def test_measure_scope_priority_survives_candidate_local_coverage(self) -> None:
         ranged = self.index.search(
-            "6마디의 발음과 딕션은 어떻게 하나요?",
-            piece="una-voce-poco-fa",
-            measure_ranges=[[6, 6]],
+            "2마디의 두 번째 박자 악센트는 무엇을 표현하나요?",
+            piece="die-forelle",
+            measure_ranges=[[2, 2]],
             top_k=2,
         )
-        self.assertEqual(ranged[0].record["id"], "sqa-0032")
+        self.assertEqual(ranged[0].record["id"], "die-forelle-ku-002")
         self.assertEqual(ranged[0].scope_match, "overlaps_query_range")
         whole_song = self.index.search(
             "발음과 분위기",
             piece="die-forelle",
             top_k=6,
         )
-        self.assertEqual(whole_song[0].scope_match, "general_evidence")
-        self.assertEqual(
-            self.index.search(
-                "발음과 분위기",
-                piece="die-forelle",
-                top_k=1,
-            ),
-            [],
-        )
+        self.assertEqual(whole_song, [])
 
     def test_short_inflected_korean_topics_still_retrieve(self) -> None:
         form = self.index.search("형식은 무엇인가요?", piece="die-forelle", top_k=3)
@@ -833,11 +1194,21 @@ class CombinedCorpusTests(unittest.TestCase):
         natural_form = self.index.search("형식이 어떻게 되나요?", piece="die-forelle", top_k=3)
         natural_pronunciation = self.index.search("발음이 궁금해요", piece="die-forelle", top_k=3)
         genre = self.index.search("이 작품의 장르는 뭐예요?", piece="die-forelle", top_k=3)
-        self.assertEqual(form[0].record["id"], "sqa-0065")
-        self.assertIn(pronunciation[0].record["id"], {"sqa-0060", "sqa-0061"})
-        self.assertEqual(pronunciation[0].record["topic"], "발음과 딕션")
-        self.assertEqual(natural_form[0].record["id"], "sqa-0065")
-        self.assertEqual(natural_pronunciation[0].record["topic"], "발음과 딕션")
+        self.assertEqual(form[0].record["id"], "die-forelle-ku-007")
+        self.assertIn(
+            pronunciation[0].record["id"],
+            {
+                "die-forelle-ku-005",
+                "die-forelle-ku-006",
+                "die-forelle-ku-009",
+            },
+        )
+        self.assertEqual(pronunciation[0].record["evidence_type"], "expert_annotation")
+        self.assertEqual(natural_form[0].record["id"], "die-forelle-ku-007")
+        self.assertEqual(
+            natural_pronunciation[0].record["evidence_type"],
+            "expert_annotation",
+        )
         self.assertEqual(genre[0].record["topic"], "genre_and_form")
         for polite_form in (
             "어떤 형식이에요?",
@@ -854,9 +1225,7 @@ class CombinedCorpusTests(unittest.TestCase):
             piece="die-forelle",
             top_k=6,
         )
-        connective_topics = {result.record["topic"] for result in connective}
-        self.assertIn("발음과 딕션", connective_topics)
-        self.assertIn("시와 유절가곡 형식", connective_topics)
+        self.assertEqual(connective, [])
 
     def test_title_only_boilerplate_abstains(self) -> None:
         results = self.index.search(
@@ -900,7 +1269,10 @@ class CombinedCorpusTests(unittest.TestCase):
             piece="die-forelle",
             top_k=3,
         )
-        self.assertEqual(imagery[0].record["id"], "sqa-0057")
+        self.assertIn(
+            "die-forelle-ku-002",
+            [result.record["id"] for result in imagery],
+        )
 
     def test_context_formats_both_provenance_families(self) -> None:
         expert = self.index.search(
@@ -917,6 +1289,8 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertIn("citation_label: E1", context)
         self.assertIn("evidence_type: expert_annotation", context)
         self.assertIn("expert_source_ids:", context)
+        self.assertIn("measure_status:", context)
+        self.assertIn("expert_source_answer", context)
         self.assertIn("evidence_type: web_database", context)
         self.assertIn("web_source_ids:", context)
         self.assertIn("web_source:", context)
@@ -948,12 +1322,13 @@ class CombinedCorpusTests(unittest.TestCase):
         grouped = finalize_answer_citations("근거입니다. [E1, E2]", expert + web)
         self.assertEqual(
             grouped,
-            "근거입니다. [sqa-0065] [webchunk-cecff2bace03ab67e32d]",
+            "근거입니다. [die-forelle-ku-007] "
+            "[webchunk-cecff2bace03ab67e32d]",
         )
         spaced = finalize_answer_citations("근거입니다. [ E1 ]", expert + web)
-        self.assertEqual(spaced, "근거입니다. [sqa-0065]")
+        self.assertEqual(spaced, "근거입니다. [die-forelle-ku-007]")
         trailing = finalize_answer_citations("근거입니다. [E1;]", expert + web)
-        self.assertEqual(trailing, "근거입니다. [sqa-0065]")
+        self.assertEqual(trailing, "근거입니다. [die-forelle-ku-007]")
         uncited = finalize_answer_citations("근거입니다.", web)
         self.assertEqual(
             uncited,
@@ -965,7 +1340,7 @@ class CombinedCorpusTests(unittest.TestCase):
             "근거입니다.\n\n제공된 검색 근거: [webchunk-cecff2bace03ab67e32d]",
         )
         malformed = finalize_answer_citations(
-            "근거입니다. [websrc-fake] [sqa-ABC] [A]",
+            "근거입니다. [websrc-fake] [die-forelle-ku-ABC] [A]",
             web,
         )
         self.assertEqual(
@@ -987,7 +1362,10 @@ class CombinedCorpusTests(unittest.TestCase):
             expert,
         )
         self.assertNotIn(expert_source_id, provenance_citation)
-        self.assertIn("제공된 검색 근거: [sqa-0065]", provenance_citation)
+        self.assertIn(
+            "제공된 검색 근거: [die-forelle-ku-007]",
+            provenance_citation,
+        )
         grouped_provenance = finalize_answer_citations(
             "근거입니다. [%s]" % ", ".join(expert[0].record["source_ids"]),
             expert,

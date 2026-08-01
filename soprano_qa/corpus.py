@@ -193,11 +193,54 @@ FACTS_OVERLAP_REVIEW_STATUSES = {
     "indeterminate",
 }
 
-# This source record is an explicit request for web research, not expert evidence.
-# It remains in the corpus for lineage and stable IDs but is never retrieved.
-UNUSABLE_EXPERT_UNITS = {
-    ("kim-nella-fantasia-01",): "placeholder_request_not_expert_evidence",
+EXPERT_REVIEW_SCHEMA_VERSION = "1.0"
+EXPERT_REVIEW_TOP_LEVEL_KEYS = (
+    "schema_version",
+    "piece_id",
+    "source_files",
+    "source_annotations",
+    "knowledge_units",
+)
+EXPERT_SOURCE_KEYS = (
+    "source_id",
+    "annotator",
+    "source_text",
+    "question",
+    "answer",
+    "legacy_measure_ranges",
+    "curation_status",
+    "curation_notes",
+)
+EXPERT_UNIT_KEYS = (
+    "knowledge_unit_id",
+    "source_ids",
+    "answer",
+    "rewrite_status",
+    "rewrite_notes",
+    "measure_range_hints",
+    "measure_status",
+    "measure_ranges",
+    "measure_notes",
+)
+EXPERT_ANNOTATORS = ("kim", "yeon")
+EXPERT_SOURCE_STATUSES = {"included", "excluded_unanswerable"}
+EXPERT_REWRITE_STATUSES = {"ready", "needs_review"}
+EXPERT_MEASURE_STATUSES = {
+    "waiting_for_review",
+    "specific",
+    "whole_piece",
+    "unspecified",
 }
+ABSOLUTE_MEASURE_LOCATOR_RE = re.compile(
+    r"(?:"
+    r"\d+(?:\s*(?:[-~–—,/·]|및|과|와)\s*\d+)*"
+    r"\s*[\])}]?\s*(?:번째\s*)?마디"
+    r"|첫\s*마디"
+    r"|\bmm?\.\s*\d+(?:\s*[-~–—]\s*\d+)?"
+    r"|\bmeasures?\s+\d+(?:\s*[-~–—]\s*\d+)?"
+    r")",
+    re.IGNORECASE,
+)
 
 
 def load_json(path: str) -> Any:
@@ -257,17 +300,14 @@ def file_sha256(path: str) -> str:
 def corpus_input_paths(settings: Dict[str, Any]) -> List[tuple[str, str]]:
     dataset_root = os.path.realpath(settings["dataset_root"])
     paths: List[tuple[str, str]] = []
-    annotation_dir = os.path.join(dataset_root, "annotation", "json")
-    for directory, dirnames, filenames in os.walk(annotation_dir):
-        dirnames.sort()
-        for filename in sorted(filenames):
-            if filename.endswith(".json"):
-                path = os.path.join(directory, filename)
-                paths.append((os.path.relpath(path, dataset_root), path))
-    for phase in ("2-consolidation", "3-spellcheck"):
-        for song in SONG_ORDER:
-            path = os.path.join(dataset_root, "paraphrase", phase, song + ".json")
-            paths.append((os.path.relpath(path, dataset_root), path))
+    for song in SONG_ORDER:
+        path = os.path.join(
+            dataset_root,
+            "expert_curation",
+            "review",
+            song + ".json",
+        )
+        paths.append((os.path.relpath(path, dataset_root), path))
     for record_file in ("sources.jsonl", "claims.jsonl", "chunks.jsonl"):
         record_path = os.path.join(dataset_root, "database", "records", record_file)
         paths.append((os.path.relpath(record_path, dataset_root), record_path))
@@ -308,37 +348,6 @@ def corpus_input_fingerprint(settings: Dict[str, Any]) -> str:
     return digest.hexdigest()
 
 
-def iter_source_records(dataset_root: str) -> Iterable[Dict[str, Any]]:
-    annotation_json_dir = os.path.join(dataset_root, "annotation", "json")
-    for annotator in sorted(os.listdir(annotation_json_dir)):
-        annotator_dir = os.path.join(annotation_json_dir, annotator)
-        if not os.path.isdir(annotator_dir):
-            continue
-        for name in sorted(os.listdir(annotator_dir)):
-            if not name.endswith(".json"):
-                continue
-            for record in load_json(os.path.join(annotator_dir, name)):
-                indexed_record = dict(record)
-                indexed_record["_piece"] = name[:-5]
-                yield indexed_record
-
-
-def build_source_index(dataset_root: str) -> Dict[str, Dict[str, Any]]:
-    source_index: Dict[str, Dict[str, Any]] = {}
-    for record in iter_source_records(dataset_root):
-        source_id = record["id"]
-        if source_id in source_index:
-            raise ValueError("Duplicate expert source id: %s" % source_id)
-        expected_prefix = "%s-%s-" % (record["annotator"], record["_piece"])
-        if not source_id.startswith(expected_prefix):
-            raise ValueError(
-                "Expert source id %s does not match annotator/piece %s"
-                % (source_id, expected_prefix)
-            )
-        source_index[source_id] = record
-    return source_index
-
-
 def normalize_ranges(ranges: Sequence[Sequence[int]]) -> List[List[int]]:
     normalized: List[List[int]] = []
     for item in ranges:
@@ -377,15 +386,17 @@ def semantic_relevance_text(record: Dict[str, Any]) -> str:
     """Text allowed to establish answer relevance, excluding provenance labels."""
 
     question = record.get("question") or ""
+    topic = record.get("topic") or ""
     parts = [
-        record["topic"],
-        WEB_TOPIC_SEARCH_TERMS.get(record["topic"], ""),
+        topic,
+        WEB_TOPIC_SEARCH_TERMS.get(topic, ""),
         record.get("knowledge_scope") or "",
         question,
         question,
         record["answer"],
         record.get("applicability_note") or "",
     ]
+    parts.extend(str(alias) for alias in record.get("retrieval_aliases", []))
     for subtopic in record.get("subtopics", []):
         parts.append(str(subtopic))
         parts.append(WEB_SUBTOPIC_SEARCH_TERMS.get(str(subtopic), ""))
@@ -499,101 +510,326 @@ def apply_overrides(records: List[Dict[str, Any]], overrides: List[Dict[str, Any
     return applied
 
 
-def expert_exclusion_reason(source_ids: List[str], answer: str) -> str:
-    reason = UNUSABLE_EXPERT_UNITS.get(tuple(source_ids), "")
-    if reason and answer.strip() != "기존 웹 자료를 부탁한다.":
-        raise ValueError("Known expert placeholder changed; review its retrieval policy")
-    return reason
-
-
-def validate_expert_unit(unit: Any, path: str, unit_index: int) -> None:
-    required_fields = {
-        "source_ids",
-        "topic",
-        "measure_range",
-        "question",
-        "question_source",
-        "answer",
-    }
-    if not isinstance(unit, dict) or set(unit) != required_fields:
-        raise ValueError("Invalid expert unit fields in %s unit %d" % (path, unit_index))
-    source_ids = unit["source_ids"]
-    if (
-        not isinstance(source_ids, list)
-        or not source_ids
-        or any(not isinstance(source_id, str) or not source_id for source_id in source_ids)
-        or len(source_ids) != len(set(source_ids))
-    ):
-        raise ValueError("Invalid expert source_ids in %s unit %d" % (path, unit_index))
-    if not isinstance(unit["topic"], str) or not unit["topic"].strip():
-        raise ValueError("Invalid expert topic in %s unit %d" % (path, unit_index))
-    normalize_ranges(unit["measure_range"])
-    if unit["question_source"] not in {"expert", "none"}:
-        raise ValueError("Invalid question_source in %s unit %d" % (path, unit_index))
-    if not isinstance(unit["question"], str) or not isinstance(unit["answer"], str):
-        raise ValueError("Expert question and answer must be strings in %s" % path)
-    if not unit["answer"].strip():
-        raise ValueError("Expert answer must not be empty in %s unit %d" % (path, unit_index))
-    if (unit["question_source"] == "none") != (not unit["question"].strip()):
-        raise ValueError(
-            "Expert question_source contradicts question in %s unit %d"
-            % (path, unit_index)
-        )
-
-
-def validate_spellcheck_lineage(
-    phase2_units: Any,
-    phase3_units: Any,
-    phase2_path: str,
-    phase3_path: str,
+def expect_exact_keys(
+    value: Any,
+    expected_keys: Sequence[str],
+    *,
+    label: str,
 ) -> None:
-    if not isinstance(phase2_units, list) or not isinstance(phase3_units, list):
-        raise ValueError("Expert consolidation and spellcheck files must be JSON lists")
-    if len(phase2_units) != len(phase3_units):
+    if not isinstance(value, dict) or tuple(value) != tuple(expected_keys):
         raise ValueError(
-            "Spellcheck unit count differs from consolidation: %s vs %s"
-            % (phase2_path, phase3_path)
+            "%s keys must be exactly %r in that order"
+            % (label, list(expected_keys))
         )
-    structural_fields = ("source_ids", "topic", "measure_range", "question_source")
-    for unit_index, (phase2_unit, phase3_unit) in enumerate(
-        zip(phase2_units, phase3_units),
-        start=1,
-    ):
-        validate_expert_unit(phase2_unit, phase2_path, unit_index)
-        validate_expert_unit(phase3_unit, phase3_path, unit_index)
-        for field in structural_fields:
-            if phase2_unit[field] != phase3_unit[field]:
+
+
+def validate_review_ranges(
+    value: Any,
+    *,
+    label: str,
+    require_sorted_nonoverlapping: bool = True,
+) -> List[List[int]]:
+    if not isinstance(value, list):
+        raise ValueError("%s must be a list" % label)
+    for index, item in enumerate(value):
+        if not isinstance(item, list):
+            raise ValueError("%s/%d must be a [start, end] list" % (label, index))
+    ranges = normalize_ranges(value)
+    if require_sorted_nonoverlapping:
+        previous_end = 0
+        for index, (start, end) in enumerate(ranges):
+            if start <= previous_end:
                 raise ValueError(
-                    "Spellcheck changed structural field %s in %s unit %d"
-                    % (field, phase3_path, unit_index)
+                    "%s/%d ranges must be sorted and non-overlapping"
+                    % (label, index)
                 )
+            previous_end = end
+    return ranges
+
+
+def union_source_ranges(
+    source_records: Sequence[Dict[str, Any]],
+) -> List[List[int]]:
+    ranges = sorted(
+        {
+            tuple(item)
+            for source_record in source_records
+            for item in source_record["legacy_measure_ranges"]
+        }
+    )
+    merged: List[List[int]] = []
+    for start, end in ranges:
+        if merged and start <= merged[-1][1] + 1:
+            merged[-1][1] = max(merged[-1][1], end)
+        else:
+            merged.append([start, end])
+    return merged
+
+
+def validate_expert_review_document(
+    value: Any,
+    path: str,
+    piece_id: str,
+) -> Dict[str, Dict[str, Any]]:
+    label = str(path)
+    expect_exact_keys(value, EXPERT_REVIEW_TOP_LEVEL_KEYS, label=label)
+    if value["schema_version"] != EXPERT_REVIEW_SCHEMA_VERSION:
+        raise ValueError("%s has unsupported expert review schema_version" % label)
+    if value["piece_id"] != piece_id:
+        raise ValueError("%s piece_id does not match its filename" % label)
+    expected_source_files = [
+        "annotation/original_txt/%s/%s.txt" % (annotator, piece_id)
+        for annotator in EXPERT_ANNOTATORS
+    ]
+    if value["source_files"] != expected_source_files:
+        raise ValueError("%s source_files do not match piece %s" % (label, piece_id))
+
+    source_values = value["source_annotations"]
+    if not isinstance(source_values, list) or not source_values:
+        raise ValueError("%s source_annotations must be a non-empty list" % label)
+    source_index: Dict[str, Dict[str, Any]] = {}
+    source_order: Dict[str, int] = {}
+    annotator_counts = Counter()
+    previous_annotator_index = 0
+    for source_position, source in enumerate(source_values):
+        source_label = "%s/source_annotations/%d" % (label, source_position)
+        expect_exact_keys(source, EXPERT_SOURCE_KEYS, label=source_label)
+        annotator = source["annotator"]
+        if annotator not in EXPERT_ANNOTATORS:
+            raise ValueError("%s has invalid annotator %r" % (source_label, annotator))
+        annotator_index = EXPERT_ANNOTATORS.index(annotator)
+        if annotator_index < previous_annotator_index:
+            raise ValueError("%s source annotations are out of annotator order" % label)
+        previous_annotator_index = annotator_index
+        annotator_counts[annotator] += 1
+        expected_source_id = "%s-%s-%02d" % (
+            annotator,
+            piece_id,
+            annotator_counts[annotator],
+        )
+        if source["source_id"] != expected_source_id:
+            raise ValueError(
+                "%s source_id must be %s" % (source_label, expected_source_id)
+            )
+        for field in ("source_text", "question", "answer"):
+            if not isinstance(source[field], str):
+                raise ValueError("%s/%s must be a string" % (source_label, field))
+        if not source["source_text"].strip():
+            raise ValueError("%s/source_text must not be empty" % source_label)
+        validate_review_ranges(
+            source["legacy_measure_ranges"],
+            label="%s/legacy_measure_ranges" % source_label,
+            require_sorted_nonoverlapping=False,
+        )
+        if source["curation_status"] not in EXPERT_SOURCE_STATUSES:
+            raise ValueError("%s has invalid curation_status" % source_label)
+        if not isinstance(source["curation_notes"], str):
+            raise ValueError("%s/curation_notes must be a string" % source_label)
+        if (
+            source["curation_status"] == "excluded_unanswerable"
+            and not source["curation_notes"].strip()
+        ):
+            raise ValueError("%s excluded source requires curation_notes" % source_label)
+        source_id = source["source_id"]
+        if source_id in source_index:
+            raise ValueError("%s has duplicate source_id %s" % (label, source_id))
+        source_index[source_id] = source
+        source_order[source_id] = source_position
+    if set(annotator_counts) != set(EXPERT_ANNOTATORS):
+        raise ValueError("%s must preserve sources from every annotator" % label)
+
+    units = value["knowledge_units"]
+    if not isinstance(units, list) or not units:
+        raise ValueError("%s knowledge_units must be a non-empty list" % label)
+    unit_id_pattern = re.compile(r"^%s-ku-\d{3}$" % re.escape(piece_id))
+    seen_unit_ids = set()
+    covered_source_ids = set()
+    for unit_position, unit in enumerate(units):
+        unit_label = "%s/knowledge_units/%d" % (label, unit_position)
+        expect_exact_keys(unit, EXPERT_UNIT_KEYS, label=unit_label)
+        unit_id = unit["knowledge_unit_id"]
+        if not isinstance(unit_id, str) or not unit_id_pattern.fullmatch(unit_id):
+            raise ValueError("%s has invalid knowledge_unit_id %r" % (unit_label, unit_id))
+        if unit_id in seen_unit_ids:
+            raise ValueError("%s has duplicate knowledge_unit_id %s" % (label, unit_id))
+        seen_unit_ids.add(unit_id)
+
+        source_ids = unit["source_ids"]
+        if (
+            not isinstance(source_ids, list)
+            or not source_ids
+            or any(not isinstance(source_id, str) or not source_id for source_id in source_ids)
+            or len(source_ids) != len(set(source_ids))
+        ):
+            raise ValueError("%s/source_ids must be unique non-empty strings" % unit_label)
+        unknown_source_ids = [
+            source_id for source_id in source_ids if source_id not in source_index
+        ]
+        if unknown_source_ids:
+            raise ValueError(
+                "%s has unknown source_ids %r" % (unit_label, unknown_source_ids)
+            )
+        if source_ids != sorted(source_ids, key=source_order.__getitem__):
+            raise ValueError(
+                "%s source_ids must follow source annotation order" % unit_label
+            )
+        excluded_source_ids = [
+            source_id
+            for source_id in source_ids
+            if source_index[source_id]["curation_status"] != "included"
+        ]
+        if excluded_source_ids:
+            raise ValueError(
+                "%s links excluded source_ids %r" % (unit_label, excluded_source_ids)
+            )
+        covered_source_ids.update(source_ids)
+
+        if not isinstance(unit["answer"], str) or not unit["answer"].strip():
+            raise ValueError("%s/answer must be a non-empty string" % unit_label)
+        measure_locator = ABSOLUTE_MEASURE_LOCATOR_RE.search(unit["answer"])
+        if measure_locator:
+            raise ValueError(
+                "%s answer contains absolute measure locator %r"
+                % (unit_label, measure_locator.group())
+            )
+        if unit["rewrite_status"] not in EXPERT_REWRITE_STATUSES:
+            raise ValueError("%s has invalid rewrite_status" % unit_label)
+        if not isinstance(unit["rewrite_notes"], str):
+            raise ValueError("%s/rewrite_notes must be a string" % unit_label)
+        if (
+            unit["rewrite_status"] == "needs_review"
+            and not unit["rewrite_notes"].strip()
+        ):
+            raise ValueError("%s needs_review requires rewrite_notes" % unit_label)
+
+        hints = validate_review_ranges(
+            unit["measure_range_hints"],
+            label="%s/measure_range_hints" % unit_label,
+        )
+        expected_hints = union_source_ranges(
+            [source_index[source_id] for source_id in source_ids]
+        )
+        if hints != expected_hints:
+            raise ValueError(
+                "%s measure_range_hints do not match source legacy ranges"
+                % unit_label
+            )
+        measure_status = unit["measure_status"]
+        if measure_status not in EXPERT_MEASURE_STATUSES:
+            raise ValueError("%s has invalid measure_status" % unit_label)
+        ranges = validate_review_ranges(
+            unit["measure_ranges"],
+            label="%s/measure_ranges" % unit_label,
+        )
+        if measure_status == "specific" and not ranges:
+            raise ValueError("%s specific status requires measure_ranges" % unit_label)
+        if measure_status != "specific" and ranges:
+            raise ValueError(
+                "%s only specific status may have measure_ranges" % unit_label
+            )
+        if not isinstance(unit["measure_notes"], str):
+            raise ValueError("%s/measure_notes must be a string" % unit_label)
+
+    included_source_ids = {
+        source_id
+        for source_id, source in source_index.items()
+        if source["curation_status"] == "included"
+    }
+    missing_source_ids = sorted(included_source_ids - covered_source_ids)
+    if missing_source_ids:
+        raise ValueError(
+            "%s included sources are not covered by knowledge units: %r"
+            % (label, missing_source_ids)
+        )
+    excluded_source_ids = set(source_index) - included_source_ids
+    unexpectedly_covered = sorted(excluded_source_ids & covered_source_ids)
+    if unexpectedly_covered:
+        raise ValueError(
+            "%s excluded sources are covered by knowledge units: %r"
+            % (label, unexpectedly_covered)
+        )
+    return source_index
+
+
+def load_expert_review_documents(dataset_root: str) -> Dict[str, Dict[str, Any]]:
+    review_dir = os.path.join(dataset_root, "expert_curation", "review")
+    documents: Dict[str, Dict[str, Any]] = {}
+    for piece_id in SONG_ORDER:
+        path = os.path.join(review_dir, piece_id + ".json")
+        value = load_json(path)
+        validate_expert_review_document(value, path, piece_id)
+        documents[piece_id] = value
+    return documents
+
+
+def build_source_index(dataset_root: str) -> Dict[str, Dict[str, Any]]:
+    source_index: Dict[str, Dict[str, Any]] = {}
+    for piece_id, document in load_expert_review_documents(dataset_root).items():
+        for source in document["source_annotations"]:
+            source_id = source["source_id"]
+            if source_id in source_index:
+                raise ValueError("Duplicate expert source id: %s" % source_id)
+            indexed_source = dict(source)
+            indexed_source["_piece"] = piece_id
+            source_index[source_id] = indexed_source
+    return source_index
+
+
+def expert_review_warning(rewrite_status: str, measure_status: str) -> str:
+    rewrite_pending = rewrite_status != "ready"
+    measure_pending = measure_status == "waiting_for_review"
+    if rewrite_pending and measure_pending:
+        return "rewrite_and_measure_review_pending"
+    if rewrite_pending:
+        return "rewrite_review_pending"
+    if measure_pending:
+        return "measure_review_pending"
+    return ""
 
 
 def build_expert_records(
     dataset_root: str,
     source_index: Dict[str, Dict[str, Any]],
 ) -> List[Dict[str, Any]]:
-    phase3_dir = os.path.join(dataset_root, "paraphrase", "3-spellcheck")
     records: List[Dict[str, Any]] = []
-    covered_source_ids = set()
-    next_id = 1
+    documents = load_expert_review_documents(dataset_root)
+    expected_source_ids = {
+        source["source_id"]
+        for document in documents.values()
+        for source in document["source_annotations"]
+    }
+    if set(source_index) != expected_source_ids:
+        raise ValueError("Expert source index does not exactly match review documents")
+    for song, document in documents.items():
+        for source in document["source_annotations"]:
+            expected_source = dict(source)
+            expected_source["_piece"] = song
+            if source_index[source["source_id"]] != expected_source:
+                raise ValueError(
+                    "Expert source index differs from review source %s"
+                    % source["source_id"]
+                )
+
     for song in SONG_ORDER:
-        path = os.path.join(phase3_dir, song + ".json")
-        units = load_json(path)
-        phase2_path = os.path.join(
+        document = documents[song]
+        source_knowledge_unit_ids: Dict[str, List[str]] = {}
+        for document_unit in document["knowledge_units"]:
+            for document_source_id in document_unit["source_ids"]:
+                source_knowledge_unit_ids.setdefault(
+                    document_source_id,
+                    [],
+                ).append(document_unit["knowledge_unit_id"])
+        path = os.path.join(
             dataset_root,
-            "paraphrase",
-            "2-consolidation",
+            "expert_curation",
+            "review",
             song + ".json",
         )
-        phase2_units = load_json(phase2_path)
-        validate_spellcheck_lineage(phase2_units, units, phase2_path, path)
         piece = PIECES[song]
-        for unit_index, unit in enumerate(units, start=1):
+        for unit_index, unit in enumerate(document["knowledge_units"], start=1):
             source_ids = list(unit["source_ids"])
-            missing = [source_id for source_id in source_ids if source_id not in source_index]
-            if missing:
-                raise ValueError("%s has unknown source ids: %r" % (path, missing))
+            retrieval_aliases = []
+            source_answer_context = []
             for source_id in source_ids:
                 source_record = source_index[source_id]
                 if source_record["_piece"] != song:
@@ -601,16 +837,38 @@ def build_expert_records(
                         "%s links source %s from piece %s"
                         % (path, source_id, source_record["_piece"])
                     )
-                if source_record["topic"] != unit["topic"]:
-                    raise ValueError(
-                        "%s links source %s from topic %r into topic %r"
-                        % (path, source_id, source_record["topic"], unit["topic"])
-                    )
-                covered_source_ids.add(source_id)
-            measure_range = normalize_ranges(unit.get("measure_range", []))
-            exclusion_reason = expert_exclusion_reason(source_ids, unit["answer"])
+                if source_record["curation_status"] != "included":
+                    raise ValueError("%s links excluded source %s" % (path, source_id))
+                source_question = source_record["question"].strip()
+                if source_question and source_question not in retrieval_aliases:
+                    retrieval_aliases.append(source_question)
+                source_answer_context.append(
+                    {
+                        "source_id": source_id,
+                        "question": source_record["question"],
+                        "answer": source_record["answer"],
+                        "legacy_measure_range_hints": normalize_ranges(
+                            source_record["legacy_measure_ranges"]
+                        ),
+                        "linked_knowledge_unit_ids": list(
+                            source_knowledge_unit_ids[source_id]
+                        ),
+                    }
+                )
+
+            measure_status = unit["measure_status"]
+            measure_range = (
+                normalize_ranges(unit["measure_ranges"])
+                if measure_status == "specific"
+                else []
+            )
+            rewrite_status = unit["rewrite_status"]
+            review_warning = expert_review_warning(
+                rewrite_status,
+                measure_status,
+            )
             record = {
-                "id": "sqa-%04d" % next_id,
+                "id": unit["knowledge_unit_id"],
                 "evidence_type": "expert_annotation",
                 "piece": song,
                 "piece_title": piece["title"],
@@ -619,29 +877,30 @@ def build_expert_records(
                 "genre": piece["genre"],
                 "language": piece["language"],
                 "unit_index": unit_index,
-                "topic": unit["topic"],
+                "topic": "",
                 "measure_range": measure_range,
                 "measure_scope": default_measure_scope(measure_range),
+                "measure_range_hints": normalize_ranges(unit["measure_range_hints"]),
+                "measure_status": measure_status,
+                "measure_notes": unit["measure_notes"],
                 "features": [],
                 "applicability_note": "",
-                "question": unit.get("question", ""),
-                "question_source": unit.get("question_source", "none"),
+                "question": "",
+                "question_source": "none",
+                "retrieval_aliases": retrieval_aliases,
+                "source_answer_context": source_answer_context,
                 "answer": unit["answer"],
+                "rewrite_status": rewrite_status,
+                "rewrite_notes": unit["rewrite_notes"],
                 "source_ids": source_ids,
                 "annotators": annotators_from_sources(source_ids, source_index),
-                "retrieval_eligible": not bool(exclusion_reason),
-                "retrieval_exclusion_reason": exclusion_reason,
+                "retrieval_eligible": True,
+                "retrieval_exclusion_reason": "",
+                "retrieval_review_warning": review_warning,
             }
             record["relevance_text"] = semantic_relevance_text(record)
             record["retrieval_text"] = retrieval_text(record)
             records.append(record)
-            next_id += 1
-    uncovered_source_ids = sorted(set(source_index) - covered_source_ids)
-    if uncovered_source_ids:
-        raise ValueError(
-            "Expert source records missing from consolidated corpus: %r"
-            % uncovered_source_ids
-        )
     return records
 
 
@@ -1635,8 +1894,19 @@ def build_stats(
     corpus_sha256: str,
 ) -> Dict[str, Any]:
     excluded = [record for record in records if not record.get("retrieval_eligible", True)]
+    expert_records = [
+        record for record in records if record["evidence_type"] == "expert_annotation"
+    ]
+    excluded_expert_records = [
+        record for record in expert_records if not record["retrieval_eligible"]
+    ]
+    warned_expert_records = [
+        record
+        for record in expert_records
+        if record.get("retrieval_review_warning")
+    ]
     return {
-        "corpus_schema_version": 4,
+        "corpus_schema_version": 6,
         "dataset_root": os.path.realpath(dataset_root),
         "input_fingerprint": input_fingerprint,
         "corpus_sha256": corpus_sha256,
@@ -1653,8 +1923,29 @@ def build_stats(
             sorted(
                 Counter(
                     record["question_source"]
-                    for record in records
-                    if record["evidence_type"] == "expert_annotation"
+                    for record in expert_records
+                ).items()
+            )
+        ),
+        "expert_records_by_rewrite_status": dict(
+            sorted(Counter(record["rewrite_status"] for record in expert_records).items())
+        ),
+        "expert_records_by_measure_status": dict(
+            sorted(Counter(record["measure_status"] for record in expert_records).items())
+        ),
+        "expert_records_by_retrieval_exclusion_reason": dict(
+            sorted(
+                Counter(
+                    record["retrieval_exclusion_reason"]
+                    for record in excluded_expert_records
+                ).items()
+            )
+        ),
+        "expert_records_by_retrieval_review_warning": dict(
+            sorted(
+                Counter(
+                    record["retrieval_review_warning"]
+                    for record in warned_expert_records
                 ).items()
             )
         ),
@@ -1674,6 +1965,14 @@ def build_stats(
                 "source_ids": record.get("source_ids", []),
             }
             for record in excluded
+        ],
+        "expert_retrieval_review_warnings": [
+            {
+                "id": record["id"],
+                "warning": record["retrieval_review_warning"],
+                "source_ids": record.get("source_ids", []),
+            }
+            for record in warned_expert_records
         ],
         "web_export_files": list(web_export_files),
         "overrides_applied": overrides_applied,
