@@ -4,6 +4,30 @@ This local, read-only viewer presents the selected paraphrased questions and
 their saved retrieval and generation results from
 `three_piece_results.json`.
 
+## Five-piece qualitative run
+
+The completed five-piece annotations can be evaluated separately without
+pretending that the older schema-1.1 inventories have the strict claim-scope
+contract used below. The first command saves real range-aware pipeline
+answers and linked expert references; the second runs conservative local
+LLM-as-a-judge triage whose default completed-run gate is 90%:
+
+```bash
+conda run -n soprano-qa python \
+  evaluation/run_five_piece_qualitative.py --generate
+
+conda run -n recsys-chall python \
+  evaluation/judge_five_piece_qualitative.py
+```
+
+Both commands checkpoint each case and resume safely. Their default artifacts
+are `five_piece_qualitative.json` and
+`five_piece_qualitative_judged.json`. Retrieval ranks remain diagnostics;
+the qualitative judge evaluates final-answer fidelity against the expert
+source and range-applicable linked knowledge units. This protocol is useful
+for all-five coverage and manual review, but it is intentionally distinct
+from the stricter schema-1.3 protocol below.
+
 ## Reproducible three-piece reliability evaluation
 
 `run_question_evaluation.py` evaluates all 40 annotator questions (51
