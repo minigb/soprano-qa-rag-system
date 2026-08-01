@@ -7,6 +7,7 @@ from typing import Any, Dict, List, Optional
 
 from soprano_qa.retrieval import (
     BM25Index,
+    answer_relation_query_concepts,
     extract_question_measure_ranges,
     is_broad_performance_guidance_query,
     parse_measure_ranges,
@@ -189,14 +190,122 @@ class ParseMeasureRangesTests(unittest.TestCase):
             },
         )
 
-    def test_second_beat_paraphrase_uses_allowlisted_canonical_forms(self) -> None:
-        query, _ = query_components(
+    def test_terminal_answer_relations_are_classified_as_soft_intent(self) -> None:
+        base_concepts = [
+            "피아노",
+            "반주",
+            "번째",
+            "박자",
+            "악센트",
+        ]
+        questions = (
             "피아노 반주에서 두 번째 박의 악센트는 무엇을 나타내는가?",
-            "die-forelle",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 의미하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 표현하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 상징하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 가리키는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 보여주는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 드러내는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무슨 뜻인가?",
+            (
+                "피아노 반주에서 두 번째 박의 악센트는 무엇을 "
+                "의미하는지 알려 주세요."
+            ),
+            (
+                "피아노 반주에서 두 번째 박의 악센트가 어떤 뜻인지 "
+                "궁금합니다."
+            ),
+        )
+        for question in questions:
+            with self.subTest(question=question):
+                concepts = semantic_concepts(
+                    question,
+                    "die-forelle",
+                    query=True,
+                )
+                self.assertEqual(concepts[:-1], base_concepts)
+                self.assertEqual(
+                    answer_relation_query_concepts(question, concepts),
+                    {concepts[-1]},
+                )
+
+    def test_answer_predicate_rule_preserves_content_uses(self) -> None:
+        noun_concepts = semantic_concepts(
+            "가사의 의미",
+            None,
+            query=True,
+        )
+        self.assertIn("의미", noun_concepts)
+        self.assertEqual(
+            answer_relation_query_concepts("가사의 의미", noun_concepts),
+            set(),
+        )
+        performance_question = "분위기를 어떻게 표현해야 하나요?"
+        performance_concepts = semantic_concepts(
+            performance_question,
+            None,
+            query=True,
+        )
+        self.assertIn("표현", performance_concepts)
+        self.assertEqual(
+            answer_relation_query_concepts(
+                performance_question,
+                performance_concepts,
+            ),
+            set(),
+        )
+        concepts = semantic_concepts(
+            "악센트는 국제관계를 의미하는가?",
+            None,
+            query=True,
+        )
+        self.assertIn("국제관계", concepts)
+        self.assertIn("의미하", concepts)
+        self.assertEqual(
+            answer_relation_query_concepts(
+                "악센트는 국제관계를 의미하는가?",
+                concepts,
+            ),
+            set(),
+        )
+        multi_relation_question = (
+            "표현주의 음악은 무엇을 의미하는가?"
+        )
+        multi_relation_concepts = semantic_concepts(
+            multi_relation_question,
+            None,
+            query=True,
+        )
+        self.assertIn("표현주", multi_relation_concepts)
+        self.assertEqual(
+            answer_relation_query_concepts(
+                multi_relation_question,
+                multi_relation_concepts,
+            ),
+            {multi_relation_concepts[-1]},
+        )
+        self.assertNotIn(
+            "표현주",
+            answer_relation_query_concepts(
+                multi_relation_question,
+                multi_relation_concepts,
+            ),
+        )
+        unsupported = (
+            "피아노 반주 악센트는 무엇을 의미없는질문이라고 하는가?"
+        )
+        unsupported_concepts = semantic_concepts(
+            unsupported,
+            None,
+            query=True,
         )
         self.assertEqual(
-            [group[0] for group in token_groups(query)],
-            ["피아노", "반주", "번째", "박자", "악센트", "나타낸"],
+            answer_relation_query_concepts(
+                unsupported,
+                unsupported_concepts,
+            ),
+            set(),
         )
         natural_query, _ = query_components(
             "피아노 파트에서 두 번째 박의 악센트는 무엇을 표현할까?",
@@ -710,6 +819,210 @@ class MeasureAwareSearchTests(unittest.TestCase):
             index.search("pronunciation unsupported", piece="test-piece", top_k=2),
             [],
         )
+
+    def test_korean_answer_relation_uses_a_single_anchored_fallback(self) -> None:
+        relevant = make_record(
+            "relevant",
+            [[2, 5]],
+            text=(
+                "피아노 반주 두 번째 박자 악센트는 송어의 움직임을 "
+                "표현한다"
+            ),
+        )
+        unrelated = make_record(
+            "unrelated",
+            [[2, 5]],
+            text="피아노 반주 박자는 국제관계를 설명한다",
+        )
+        index = BM25Index([relevant, unrelated])
+
+        results = index.search(
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
+            piece="test-piece",
+            measure_ranges=[[2, 5]],
+            top_k=6,
+        )
+
+        self.assertEqual(
+            [result.record["id"] for result in results],
+            ["relevant"],
+        )
+        self.assertEqual(results[0].semantic_match_type, "answer_relation_fallback")
+        self.assertAlmostEqual(results[0].concept_coverage, 5 / 6)
+        self.assertEqual(results[0].alias_score, 0.0)
+
+    def test_answer_relation_fallback_keeps_content_concepts_strict(self) -> None:
+        relevant = make_record(
+            "relevant",
+            [[2, 5]],
+            text="피아노 반주 두 번째 박자 악센트는 움직임을 표현한다",
+        )
+        index = BM25Index([relevant])
+
+        self.assertEqual(
+            index.search(
+                (
+                    "피아노 반주 두 번째 박자 악센트와 국제관계는 "
+                    "무엇을 의미하는가?"
+                ),
+                piece="test-piece",
+                measure_ranges=[[2, 5]],
+                top_k=6,
+            ),
+            [],
+        )
+
+    def test_noun_meaning_does_not_enable_relation_fallback(self) -> None:
+        index = BM25Index(
+            [
+                make_record(
+                    "representation",
+                    [],
+                    text="가사가 봄의 장면을 나타낸다",
+                )
+            ]
+        )
+
+        self.assertEqual(
+            index.search(
+                "가사의 의미",
+                piece="test-piece",
+                top_k=6,
+            ),
+            [],
+        )
+
+    def test_alias_only_concepts_cannot_establish_relation_fallback(self) -> None:
+        record = make_record(
+            "alias-only",
+            [[2, 5]],
+            text="작곡가의 생애와 작품 연도를 소개한다",
+        )
+        alias = "피아노 반주 두 번째 박자 악센트는 움직임을 표현한다"
+        record["retrieval_aliases"] = [alias]
+        record["relevance_text"] = f"{record['answer']}\n{alias}"
+
+        results = BM25Index([record]).search(
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
+            piece="test-piece",
+            measure_ranges=[[2, 5]],
+            top_k=6,
+        )
+
+        self.assertEqual(results, [])
+
+    def test_relation_fallback_requires_explanation_in_answer_content(self) -> None:
+        records = [
+            make_record(
+                "global",
+                [],
+                text="피아노 반주 두 번째 박자 악센트",
+            ),
+            make_record(
+                "other-range",
+                [[30, 32]],
+                text="피아노 반주 두 번째 박자 악센트",
+            ),
+        ]
+        index = BM25Index(records)
+        question = (
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?"
+        )
+
+        self.assertEqual(
+            index.search(question, piece="test-piece", top_k=6),
+            [],
+        )
+        self.assertEqual(
+            index.search(
+                question,
+                piece="test-piece",
+                measure_ranges=[[2, 5]],
+                top_k=6,
+            ),
+            [],
+        )
+
+    def test_relation_nouns_do_not_count_as_answer_relations(self) -> None:
+        cases = (
+            ("표현주의 음악", "표현주의 음악은 무엇을 묘사하는가?"),
+            (
+                "음악적 표현 기호",
+                "음악적 표현 기호는 무엇을 묘사하는가?",
+            ),
+            ("반주에 대한 설명", "반주는 무엇을 묘사하는가?"),
+            ("악센트의 의미", "악센트는 무엇을 묘사하는가?"),
+        )
+        for answer, question in cases:
+            with self.subTest(question=question):
+                index = BM25Index(
+                    [make_record("noun-only", [[2, 5]], text=answer)]
+                )
+                self.assertEqual(
+                    index.search(
+                        question,
+                        piece="test-piece",
+                        measure_ranges=[[2, 5]],
+                        top_k=6,
+                    ),
+                    [],
+                )
+
+    def test_relation_fallback_prefers_answer_side_content_coverage(self) -> None:
+        strong = make_record(
+            "strong",
+            [[2, 5]],
+            text="피아노 반주 악센트는 움직임을 표현한다",
+        )
+        weak = make_record(
+            "weak",
+            [[2, 5]],
+            text="피아노 반주는 작곡가의 생각을 표현한다",
+        )
+        repeated_alias = " ".join(
+            ["피아노 반주 악센트"] * 8
+        )
+        weak["retrieval_aliases"] = ["피아노 반주 악센트"]
+        weak["relevance_text"] = f"{weak['answer']}\n{repeated_alias}"
+        weak["retrieval_text"] = weak["relevance_text"]
+
+        results = BM25Index([weak, strong]).search(
+            "피아노 반주 악센트는 무엇을 묘사하는가?",
+            piece="test-piece",
+            measure_ranges=[[2, 5]],
+            top_k=6,
+        )
+
+        self.assertEqual(
+            [result.record["id"] for result in results],
+            ["strong"],
+        )
+        self.assertEqual(results[0].content_concept_coverage, 1.0)
+
+    def test_strict_same_scope_match_suppresses_relation_fallback(self) -> None:
+        strict = make_record(
+            "strict",
+            [[2, 5]],
+            text="피아노 반주 두 번째 박자 악센트는 움직임을 묘사한다",
+        )
+        fallback = make_record(
+            "fallback",
+            [[2, 5]],
+            text=(
+                "피아노 피아노 반주 반주 두 번째 박자 악센트는 "
+                "움직임을 표현한다"
+            ),
+        )
+
+        results = BM25Index([fallback, strict]).search(
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
+            piece="test-piece",
+            measure_ranges=[[2, 5]],
+            top_k=6,
+        )
+
+        self.assertEqual([result.record["id"] for result in results], ["strict"])
+        self.assertEqual(results[0].semantic_match_type, "strict")
 
 
 if __name__ == "__main__":

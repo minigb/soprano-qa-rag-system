@@ -93,19 +93,135 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertTrue(result["has_selected_range_grounding"])
         self.assertIn("[die-forelle-ku-010]", result["answer"])
 
-    def test_korean_paraphrase_retrieves_second_beat_accent_answer(self) -> None:
+    def test_korean_synonyms_retrieve_the_same_second_beat_evidence(self) -> None:
+        questions = (
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 나타내는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 의미하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 표현하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 상징하는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 가리키는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 보여주는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무엇을 드러내는가?",
+            "피아노 반주에서 두 번째 박의 악센트는 무슨 뜻인가?",
+            (
+                "피아노 반주에서 두 번째 박의 악센트는 무엇을 "
+                "의미하는지 알려 주세요."
+            ),
+            (
+                "피아노 반주에서 두 번째 박의 악센트가 어떤 뜻인지 "
+                "궁금합니다."
+            ),
+        )
+        for question in questions:
+            with self.subTest(question=question):
+                result = qa.ask(
+                    piece_id="die-forelle",
+                    question=question,
+                    measure_range=(2, 5),
+                    generate=False,
+                )
+                self.assertEqual(
+                    [evidence["id"] for evidence in result["evidence"]],
+                    ["die-forelle-ku-002"],
+                )
+                self.assertEqual(
+                    result["evidence"][0]["id"],
+                    "die-forelle-ku-002",
+                )
+                self.assertEqual(
+                    result["evidence"][0]["scope_match"],
+                    "overlaps_query_range",
+                )
+                self.assertIn("송어가 뛰어노는 모습", result["answer"])
+
+    def test_korean_relation_fallback_reranks_explanatory_units(self) -> None:
+        cases = (
+            (
+                "la-capinera",
+                "59-62마디의 악센트는 무엇을 의미하는가?",
+                (59, 62),
+                "la-capinera-ku-023",
+            ),
+            (
+                "una-voce-poco-fa",
+                "14-15마디의 겹점 리듬은 무엇을 의미하는가?",
+                (14, 15),
+                "una-voce-poco-fa-ku-004",
+            ),
+        )
+        for piece_id, question, measure_range, expected_id in cases:
+            with self.subTest(question=question):
+                result = qa.ask(
+                    piece_id=piece_id,
+                    question=question,
+                    measure_range=measure_range,
+                    generate=False,
+                )
+                self.assertEqual(
+                    [evidence["id"] for evidence in result["evidence"]],
+                    [expected_id],
+                )
+                self.assertEqual(
+                    result["evidence"][0]["semantic_match_type"],
+                    "answer_relation_fallback",
+                )
+                self.assertEqual(
+                    result["evidence"][0]["answer_relation_score"],
+                    1.0,
+                )
+
+    def test_relation_fallback_does_not_promote_alias_only_global_context(
+        self,
+    ) -> None:
         result = qa.ask(
             piece_id="die-forelle",
-            question="피아노 반주에서 두 번째 박의 악센트는 무엇을 나타내는가?",
-            measure_range=(2, 5),
+            question=(
+                "피아노 반주에서 두 번째 박의 악센트는 무엇을 "
+                "의미하는가?"
+            ),
+            measure_range=(28, 40),
             generate=False,
         )
 
         self.assertEqual(
-            result["evidence"][0]["id"],
-            "die-forelle-ku-002",
+            [evidence["id"] for evidence in result["evidence"]],
+            ["die-forelle-ku-002"],
         )
-        self.assertIn("송어가 뛰어노는 모습", result["answer"])
+        self.assertEqual(
+            result["evidence"][0]["scope_match"],
+            "other_range_context",
+        )
+        self.assertEqual(result["answer_basis"], "retrieved_secondary_context")
+        self.assertFalse(result["has_primary_grounding"])
+
+    def test_terminal_answer_predicates_preserve_definition_queries(self) -> None:
+        cases = (
+            (
+                "nella-fantasia",
+                "D.S. al Coda는 무엇을 의미하는가?",
+                "nella-fantasia-ku-012",
+            ),
+            (
+                "la-capinera",
+                "vuò(vuo’)는 무엇을 의미하는가?",
+                "la-capinera-ku-017",
+            ),
+            (
+                "una-voce-poco-fa",
+                "꾸밈음의 사선 표시는 무엇을 의미하는가?",
+                "una-voce-poco-fa-ku-008",
+            ),
+        )
+        for piece_id, question, expected_id in cases:
+            with self.subTest(question=question):
+                result = qa.ask(
+                    piece_id=piece_id,
+                    question=question,
+                    measure_range=None,
+                    generate=False,
+                )
+                self.assertEqual(result["evidence"][0]["id"], expected_id)
 
     def test_natural_piano_part_paraphrase_retrieves_annotated_ranges(
         self,

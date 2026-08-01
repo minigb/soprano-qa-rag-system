@@ -88,9 +88,20 @@ Retrieval proceeds in this order:
 
 1. Keep only records for the selected piece.
 2. Apply the selected measure range.
-3. Check that each candidate covers the question's main semantic concepts.
-4. Rank eligible candidates with BM25 and expert-question alias matching.
-5. Select a small set of records that collectively covers the question.
+3. Check that each candidate covers the question's musical/content concepts.
+4. Treat a terminal Korean answer relation such as `의미하다`, `표현하다`,
+   or `상징하다` as a soft intent concept when the remaining content concepts
+   are fully covered.
+5. Rank eligible candidates with BM25, concept coverage, answer-relation
+   support, and expert-question alias matching.
+6. Select a small set of records that collectively covers the question.
+
+The soft relation path is deliberately separate from expert-question alias
+matching: aliases remain strict because a positive alias match is authoritative
+for evidence selection. A range-overlapping soft match may replace a merely
+global surface-form hit, but the soft path returns only its best explanatory
+record. Noun uses such as `가사의 의미`, performance requests such as
+`어떻게 표현해야 하나요?`, and unmatched content concepts remain strict.
 
 ### When a measure range is selected
 
@@ -185,7 +196,12 @@ unconfirmed locations rather than printing competing measure numbers.
 
 The question is normalized before matching: piece names, measure expressions,
 and generic question wording are removed from the lexical query. Korean
-concept normalization and BM25 are then used together.
+concept normalization and BM25 are then used together. Structured output also
+reports `concept_coverage`, `content_concept_coverage`,
+`answer_relation_score`, and `semantic_match_type`, making strict and soft
+matches distinguishable. Alias-enriched concepts can help find candidates, but
+a soft match also requires explanatory language and content anchors in the
+knowledge-unit answer itself.
 
 Range overlap alone is never enough. A record must also be semantically
 relevant to the question.

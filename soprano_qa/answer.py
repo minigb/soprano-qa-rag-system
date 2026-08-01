@@ -2227,6 +2227,16 @@ def main() -> None:
                             "text_score": result.text_score,
                             "measure_score": result.measure_score,
                             "piece_score": result.piece_score,
+                            "concept_coverage": result.concept_coverage,
+                            "content_concept_coverage": (
+                                result.content_concept_coverage
+                            ),
+                            "answer_relation_score": (
+                                result.answer_relation_score
+                            ),
+                            "semantic_match_type": (
+                                result.semantic_match_type
+                            ),
                             "scope_match": result.scope_match,
                             "generation_role": scope_evidence_role(
                                 result.scope_match

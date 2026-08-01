@@ -170,6 +170,16 @@ def _result_to_evidence(
         "text_score": round(result.text_score, 6),
         "measure_score": round(result.measure_score, 6),
         "alias_score": round(result.alias_score, 6),
+        "concept_coverage": round(result.concept_coverage, 6),
+        "content_concept_coverage": round(
+            result.content_concept_coverage,
+            6,
+        ),
+        "answer_relation_score": round(
+            result.answer_relation_score,
+            6,
+        ),
+        "semantic_match_type": result.semantic_match_type,
         "source_ids": record.get("source_ids", []),
         "web_source_ids": record.get("web_source_ids", []),
         "claim_ids": record.get("claim_ids", []),

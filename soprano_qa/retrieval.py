@@ -444,6 +444,58 @@ CONCEPT_PARTICLE_RE = re.compile(
     r"은요|는요|이요|가요|도요|이랑|하고|으로|에서|에게|부터|"
     r"까지|은|는|이|가|을|를|의|와|과|랑|에|도|만|로)\b"
 )
+TERMINAL_MEANING_REQUEST_RE = re.compile(
+    r"(?:무엇|무얼|뭘|뭐)\s*(?:을|를)?\s*"
+    r"(?:의미|뜻)(?:하|합|할)"
+    r"[가-힣]*\s*[?？.]?\s*$"
+)
+TERMINAL_REPRESENTATION_REQUEST_RE = re.compile(
+    r"(?:무엇|무얼|뭘|뭐)\s*(?:을|를)?\s*"
+    r"나타(?:내|냅|낼)"
+    r"[가-힣]*\s*[?？.]?\s*$"
+)
+KOREAN_ANSWER_RELATION_REQUEST_RE = re.compile(
+    r"(?:"
+    r"(?:무엇|무얼|뭘|뭐)\s*(?:을|를)?\s*"
+    r"(?:"
+    r"(?:의미|뜻|표현|묘사|상징|시사|암시|반영|전달|말|설명)"
+    r"(?:하|한|합|할|해|했)"
+    r"|나타(?:내|낸|냅|낼)"
+    r"|가리키|보여주|드러내"
+    r")"
+    r"[가-힣]*"
+    r"|(?:무슨|어떤)\s*(?:뜻|의미)"
+    r"(?:인가요|인가|인지|일까요|일까|입니까|예요|에요|이죠)?"
+    r"(?=\s|[?？.]|$)"
+    r"|(?:뜻|의미)(?:은|는|이|가)?\s*(?:무엇|뭐)[가-힣]*"
+    r")"
+)
+KOREAN_ANSWER_RELATION_ROOTS = (
+    "의미",
+    "뜻",
+    "나타내",
+    "나타낸",
+    "표현",
+    "묘사",
+    "상징",
+    "가리키",
+    "보여주",
+    "드러내",
+    "시사",
+    "암시",
+    "반영",
+    "전달",
+    "말하",
+    "설명",
+)
+KOREAN_ANSWER_RELATION_STATEMENT_RE = re.compile(
+    r"(?:"
+    r"(?:의미|뜻|표현|묘사|상징|시사|암시|반영|전달|말|설명)"
+    r"(?:하|한|합|할|해|했|이|인)"
+    r"|나타(?:내|낸|냅|낼)"
+    r"|가리키|보여주|드러내"
+    r")[가-힣]*"
+)
 CONCEPT_PRODUCTIVE_SUFFIXES = (
     "하려면",
     "하면서",
@@ -482,7 +534,9 @@ CONCEPT_PREDICATE_SUFFIXES = (
     "는",
     "지",
 )
-CONCEPT_GATE_SCORE_WEIGHT = 20.0
+ALIAS_SCORE_WEIGHT = 20.0
+CONCEPT_COVERAGE_SCORE_WEIGHT = 4.0
+MIN_FALLBACK_CONTENT_COVERAGE = 2 / 3
 BROAD_PERFORMANCE_SUBJECT_TERMS = (
     "가창",
     "가창자",
@@ -1005,7 +1059,15 @@ def semantic_concepts(
 ) -> List[str]:
     """Extract stable concepts for candidate-local semantic coverage."""
 
+    answer_relation_request = bool(
+        query and KOREAN_ANSWER_RELATION_REQUEST_RE.search(text.lower())
+    )
     if query:
+        # Canonicalize common terminal relations before general cleanup removes
+        # endings such as "하나요". Relation wording may be soft at retrieval;
+        # the remaining musical concepts still use strict coverage.
+        text = TERMINAL_MEANING_REQUEST_RE.sub(" 의미 ", text)
+        text = TERMINAL_REPRESENTATION_REQUEST_RE.sub(" 나타내 ", text)
         text, _ = query_components(text, piece)
     normalized = CONCEPT_PARTICLE_RE.sub(r"\1", text.lower())
     output = []
@@ -1021,6 +1083,10 @@ def semantic_concepts(
             and is_query_scaffolding(surface)
             and surface not in QUERY_TOKEN_NORMALIZATIONS
             and surface not in CONCEPT_WORD_NORMALIZATIONS
+            and not (
+                answer_relation_request
+                and is_answer_relation_concept(concept)
+            )
         ):
             continue
         if not concept or (
@@ -1065,6 +1131,74 @@ def concepts_are_covered(
     return bool(query_concepts) and all(
         concept_matches(concept, document_concepts)
         for concept in query_concepts
+    )
+
+
+def concept_coverage(
+    query_concepts: Sequence[str],
+    document_concepts: set[str],
+) -> float:
+    """Return the fraction of query concepts supported by one record."""
+
+    if not query_concepts:
+        return 0.0
+    matched = sum(
+        concept_matches(concept, document_concepts)
+        for concept in query_concepts
+    )
+    return matched / len(query_concepts)
+
+
+def is_answer_relation_concept(concept: str) -> bool:
+    """Return whether a normalized concept expresses an answer relation."""
+
+    return any(
+        concept.startswith(root) or root.startswith(concept)
+        for root in KOREAN_ANSWER_RELATION_ROOTS
+    )
+
+
+def answer_relation_query_concepts(
+    query: str,
+    query_concepts: Sequence[str],
+) -> set[str]:
+    """Return Korean answer-relation predicates that may be soft evidence.
+
+    In questions such as ``악센트는 무엇을 상징하는가?``, ``상징하다``
+    expresses the requested answer relation rather than the musical subject.
+    It should help ranking when present in a record, but a synonymous answer
+    need not repeat that exact verb. The interrogative shape keeps noun uses
+    such as ``가사의 의미`` on the normal strict path.
+    """
+
+    if not KOREAN_ANSWER_RELATION_REQUEST_RE.search(query.lower()):
+        return set()
+    relation_concepts = [
+        concept
+        for concept in query_concepts
+        if is_answer_relation_concept(concept)
+    ]
+    # Only the final relation concept belongs to the interrogative predicate.
+    # Earlier words such as "표현주의" may be genuine content concepts.
+    return {relation_concepts[-1]} if relation_concepts else set()
+
+
+def has_answer_relation_statement(
+    answer: str,
+    document_concepts: set[str],
+    required_query_concepts: Sequence[str] = (),
+) -> bool:
+    """Return whether answer content adds a distinct relation concept."""
+
+    return bool(
+        KOREAN_ANSWER_RELATION_STATEMENT_RE.search(answer.lower())
+    ) and any(
+        is_answer_relation_concept(concept)
+        for concept in document_concepts
+        if not any(
+            concept_matches(required, {concept})
+            for required in required_query_concepts
+        )
     )
 
 
@@ -1405,6 +1539,10 @@ class SearchResult:
     piece_score: float
     scope_match: str
     alias_score: float = 0.0
+    concept_coverage: float = 0.0
+    content_concept_coverage: float = 0.0
+    answer_relation_score: float = 0.0
+    semantic_match_type: str = "strict"
 
 
 class BM25Index:
@@ -1431,6 +1569,16 @@ class BM25Index:
                     record.get("relevance_text")
                     or record.get("retrieval_text")
                     or record["answer"],
+                    record.get("piece"),
+                    query=False,
+                )
+            )
+            for record in records
+        ]
+        self.content_concepts = [
+            set(
+                semantic_concepts(
+                    record["answer"],
                     record.get("piece"),
                     query=False,
                 )
@@ -1645,6 +1793,9 @@ class BM25Index:
                 # Broad wording is not an authoritative source-question
                 # alias. Keep this zero so generation retains a diverse set.
                 alias_score=0.0,
+                concept_coverage=1.0,
+                content_concept_coverage=1.0,
+                semantic_match_type="broad_guidance",
             )
             pools[pool].append((result, facets))
 
@@ -1706,6 +1857,15 @@ class BM25Index:
         real_query, intent_anchors = query_components(query, piece)
         real_query_groups = token_groups(real_query)
         query_concepts = semantic_concepts(query, piece, query=True)
+        soft_relation_concepts = answer_relation_query_concepts(
+            query,
+            query_concepts,
+        )
+        required_query_concepts = [
+            concept
+            for concept in query_concepts
+            if concept not in soft_relation_concepts
+        ]
         intent_query_groups = [token_variants(anchor) for anchor in intent_anchors]
         query_groups = real_query_groups + intent_query_groups
         query_terms = list(
@@ -1713,7 +1873,12 @@ class BM25Index:
         )
         if not query_groups:
             return []
-        candidates: List[tuple[SearchResult, set[int], set[int]]] = []
+        strict_candidates: List[
+            tuple[SearchResult, set[int], set[int]]
+        ] = []
+        relation_fallback_candidates: List[
+            tuple[SearchResult, set[int], set[int]]
+        ] = []
         for idx, record in enumerate(self.records):
             if not record.get("retrieval_eligible", True):
                 continue
@@ -1734,6 +1899,39 @@ class BM25Index:
                 query_concepts,
                 self.document_concepts[idx],
             )
+            coverage = concept_coverage(
+                query_concepts,
+                self.document_concepts[idx],
+            )
+            content_coverage = concept_coverage(
+                required_query_concepts,
+                self.content_concepts[idx],
+            )
+            relation_support = (
+                1.0
+                if soft_relation_concepts
+                and has_answer_relation_statement(
+                    record["answer"],
+                    self.content_concepts[idx],
+                    required_query_concepts,
+                )
+                else 0.0
+            )
+            relation_fallback = (
+                bool(soft_relation_concepts)
+                and bool(required_query_concepts)
+                and not candidate_covers_query
+                and relation_support > 0
+                and content_coverage >= MIN_FALLBACK_CONTENT_COVERAGE
+                and concepts_are_covered(
+                    required_query_concepts,
+                    self.document_concepts[idx],
+                )
+                and (
+                    scope_match == "overlaps_query_range"
+                    or len(required_query_concepts) >= 2
+                )
+            )
             alias = self.alias_score(query_concepts, idx)
             matched_real_groups = {
                 group_index
@@ -1752,30 +1950,96 @@ class BM25Index:
                 )
             }
             if query_concepts:
-                if not candidate_covers_query:
+                if not candidate_covers_query and not relation_fallback:
                     continue
                 matched_real_groups = set(range(len(real_query_groups)))
             if not matched_real_groups and not matched_intent_groups:
                 continue
+            if relation_fallback and len(matched_intent_groups) != len(
+                intent_query_groups
+            ):
+                continue
             text = self.text_score_terms(query_terms, idx)
             measure = measure_boost(record, measure_ranges)
             piece_boost = 1.0 if piece and record["piece"] == piece else 0.0
-            total = text + measure + alias * CONCEPT_GATE_SCORE_WEIGHT
-            candidates.append(
+            if relation_fallback:
+                # A partial source-question alias is never authoritative.
+                alias = 0.0
+            total = (
+                text
+                + measure
+                + alias * ALIAS_SCORE_WEIGHT
+                + (
+                    coverage * CONCEPT_COVERAGE_SCORE_WEIGHT
+                    if relation_fallback
+                    else 0.0
+                )
+            )
+            target_candidates = (
+                relation_fallback_candidates
+                if relation_fallback
+                else strict_candidates
+            )
+            target_candidates.append(
                 (
                     SearchResult(
-                        record,
-                        total,
-                        text,
-                        measure,
-                        piece_boost,
-                        scope_match,
-                        alias,
+                        record=record,
+                        score=total,
+                        text_score=text,
+                        measure_score=measure,
+                        piece_score=piece_boost,
+                        scope_match=scope_match,
+                        alias_score=alias,
+                        concept_coverage=coverage,
+                        content_concept_coverage=content_coverage,
+                        answer_relation_score=relation_support,
+                        semantic_match_type=(
+                            "answer_relation_fallback"
+                            if relation_fallback
+                            else "strict"
+                        ),
                     ),
                     matched_real_groups,
                     matched_intent_groups,
                 )
             )
+        strict_overlap_exists = any(
+            result.scope_match == "overlaps_query_range"
+            for result, _, _ in strict_candidates
+        )
+        fallback_overlap = [
+            candidate
+            for candidate in relation_fallback_candidates
+            if (
+                candidate[0].scope_match == "overlaps_query_range"
+                and candidate[0].answer_relation_score > 0
+            )
+        ]
+        using_relation_fallback = False
+        if measure_ranges and fallback_overlap and not strict_overlap_exists:
+            # A confirmed, strongly anchored local paraphrase is more useful
+            # than an exact surface-form hit that is only global context.
+            candidates = fallback_overlap
+            using_relation_fallback = True
+        elif strict_candidates:
+            candidates = strict_candidates
+        elif relation_fallback_candidates:
+            best_scope = max(
+                scope_priority(candidate[0].scope_match, bool(measure_ranges))
+                for candidate in relation_fallback_candidates
+            )
+            candidates = [
+                candidate
+                for candidate in relation_fallback_candidates
+                if scope_priority(
+                    candidate[0].scope_match,
+                    bool(measure_ranges),
+                )
+                == best_scope
+            ]
+            using_relation_fallback = True
+        else:
+            candidates = []
         covered_real_groups = {
             group_index
             for _, matched_groups, _ in candidates
@@ -1795,6 +2059,17 @@ class BM25Index:
                 scope_priority(candidate[0].scope_match, bool(measure_ranges)),
                 candidate[0].alias_score > 0,
                 candidate[0].alias_score,
+                (
+                    candidate[0].answer_relation_score
+                    if using_relation_fallback
+                    else 0.0
+                ),
+                (
+                    candidate[0].content_concept_coverage
+                    if using_relation_fallback
+                    else 0.0
+                ),
+                candidate[0].concept_coverage,
                 candidate[0].score,
                 candidate[0].text_score,
                 candidate[0].record["id"],
@@ -1830,6 +2105,19 @@ class BM25Index:
                     for result in selected_results
                 ),
                 sum(result.alias_score for result in selected_results),
+                sum(
+                    result.answer_relation_score
+                    for result in selected_results
+                )
+                if using_relation_fallback
+                else 0.0,
+                sum(
+                    result.content_concept_coverage
+                    for result in selected_results
+                )
+                if using_relation_fallback
+                else 0.0,
+                sum(result.concept_coverage for result in selected_results),
                 sum(result.score for result in selected_results),
                 sum(result.text_score for result in selected_results),
                 tuple(-index for index in indices),
@@ -1861,6 +2149,11 @@ class BM25Index:
                 for result in selected
             ):
                 return []
+        if using_relation_fallback:
+            # Search results are already generation evidence in the current
+            # pipeline. Keep the fallback narrow until a separate semantic
+            # reranker is introduced.
+            return selected[:1]
         selected_ids = {result.record["id"] for result in selected}
         for result, _, _ in candidates:
             if len(selected) >= top_k:
@@ -1962,7 +2255,9 @@ def format_result(result: SearchResult, rank: int) -> str:
     record = result.record
     return (
         "[%d] %s | %s | %s | %s | score %.2f "
-        "(text %.2f, scope %.2f)\nQ: %s\nA: %s%s"
+        "(text %.2f, scope %.2f, concepts %.2f, content %.2f, "
+        "relation %.2f, %s)"
+        "\nQ: %s\nA: %s%s"
         % (
             rank,
             record["id"],
@@ -1972,6 +2267,10 @@ def format_result(result: SearchResult, rank: int) -> str:
             result.score,
             result.text_score,
             result.measure_score,
+            result.concept_coverage,
+            result.content_concept_coverage,
+            result.answer_relation_score,
+            result.semantic_match_type,
             record.get("question") or "(standalone tip)",
             record["answer"],
             format_web_sources(record),
