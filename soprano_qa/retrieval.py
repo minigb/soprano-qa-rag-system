@@ -13,6 +13,7 @@ from typing import Any, Dict, List, Sequence
 
 
 TOKEN_RE = re.compile(r"[0-9]+|[A-Za-zÀ-ÖØ-öø-ÿ]+|[가-힣]+")
+MUSICAL_SINGLE_LETTER_TOKENS = {"p", "f"}
 RANGE_DASHES = str.maketrans({"–": "-", "—": "-", "−": "-", "‒": "-"})
 PIECE_TITLE_ALIASES = {
     "die-forelle": [
@@ -297,6 +298,9 @@ QUERY_SCAFFOLD_SUFFIXES = (
 QUERY_TOKEN_NORMALIZATIONS = {
     "딕션": "발음",
     "관할권별": "관할권",
+    # In this vocal-score corpus, "피아노 파트" refers to the accompaniment
+    # material indexed by the expert answers as "반주" or "반주부".
+    "파트": "반주",
     # The one-syllable stem in "박의" is intentionally outside the generic
     # particle stripper. Canonicalize this exact morphology without relaxing
     # the full-concept coverage gate.
@@ -315,8 +319,393 @@ QUERY_TOKEN_STEM_RES = (
     re.compile(r"^([가-힣]{2,}?)(?:이에요|예요|에요|인가요|입니까|일까요)$"),
     re.compile(r"^([가-힣]{2,})하려면$"),
     re.compile(r"^([가-힣]{2,})할지$"),
+    re.compile(r"^([가-힣]{2,})할까$"),
     re.compile(r"^([가-힣]{2,})해야$"),
     re.compile(r"^([가-힣]{2,})하$"),
+)
+CONCEPT_STOP_WORDS = {
+    "해야",
+    "할까",
+    "좋을까",
+    "무엇일까",
+    "무엇이며",
+    "무엇",
+    "것이",
+    "정도",
+    "있을까",
+    "경우",
+    "혹은",
+    "수가",
+    "하는",
+    "하면",
+    "한가",
+    "될지",
+    "더욱",
+    "위해",
+    "통해",
+    "이유",
+    "왜",
+    # Question framing and relational words do not identify musical evidence.
+    # Keeping them in the full-concept gate makes a natural paraphrase fail
+    # merely because an expert used a different interrogative construction.
+    "같은",
+    "서로",
+    "대신",
+    "방식",
+    "적절",
+    "처리",
+    "기준",
+    "익히",
+    "익히려면",
+    "곳에",
+}
+CONCEPT_WORD_NORMALIZATIONS: Dict[str, str] = {}
+
+
+def register_concept_forms(forms: str, concept: str) -> None:
+    for form in forms.split():
+        CONCEPT_WORD_NORMALIZATIONS[form] = concept
+
+
+register_concept_forms(
+    "악보 악보마다 스코어 표기 표시 표시된 기보 기보된 유무",
+    "악보기보",
+)
+register_concept_forms("다르면 다를 다를까 다른 다르다 달라 다르게", "차이")
+register_concept_forms("어려울 어려운 어렵다 쉽지 쉬운 쉽다", "난도")
+register_concept_forms("들리 들릴 들린다 들리는 들리지", "소리")
+register_concept_forms("소리", "소리")
+register_concept_forms("않은 않은데 않으면 않는 않다 않았지 않았", "않")
+register_concept_forms("높으면 높은데 높은 높지", "높")
+register_concept_forms("없다면 없는데 없다 없는 없을", "없")
+register_concept_forms(
+    "부르려면 부르기 부르는 부른다 부른 부를 부를까 불러 불러도 불러야",
+    "부르",
+)
+register_concept_forms("바뀔 바뀌는 바뀐 바뀌", "변화")
+register_concept_forms("따라야 따라가야 따라가야할까", "따라")
+register_concept_forms("조정하거나 조정해 조정해도", "조정")
+register_concept_forms("편곡해 편곡해도", "편곡")
+register_concept_forms("될까 되지 잘되지", "되")
+register_concept_forms("끊겨 끊기 끊기는 끊어지게 끊어질", "끊")
+register_concept_forms("나올까 나오는", "나오")
+register_concept_forms("느리게 느린", "느리")
+register_concept_forms(
+    "자연스럽게 자연스러울까 자연스럽다",
+    "자연스럽",
+)
+register_concept_forms("그어진 그어져있을때 그어져", "그어")
+register_concept_forms("맞춰 맞춰서", "맞추")
+register_concept_forms(
+    "붙여야 붙여 붙이는 붙일지 붙일 붙일까 붙여부를까 위치 두고 배치",
+    "배치",
+)
+register_concept_forms("노래해야", "노래")
+register_concept_forms("끌어야", "끌")
+register_concept_forms("뒤의", "이후")
+register_concept_forms("빠르게", "빠르")
+register_concept_forms("나타나는 나타낸다 나타낸 나타내는 나타내", "나타내")
+register_concept_forms("뜻일까", "뜻")
+register_concept_forms("많지 많은데 많지만", "많")
+register_concept_forms("음의 음이 음이나 음은 음을", "음표")
+register_concept_forms("길이 길게 끄는", "지속")
+register_concept_forms("달라질까 달라지면 달라지는", "변화")
+register_concept_forms("이전 처음", "처음")
+register_concept_forms("들어갈 들어가면 들어가는 들어가", "들어가")
+register_concept_forms("곳에서 곳에서는 곳은 대목", "구간")
+register_concept_forms("잡아야 잡아가나요 잡아가 잡는", "박자잡기")
+register_concept_forms("성별이나 성별", "성별")
+register_concept_forms("제한 제한이 구분", "구분")
+register_concept_forms("선율 멜로디", "멜로디")
+register_concept_forms("나누는 나누기 나누어 나누", "구분")
+register_concept_forms(
+    "올라갈 올라가야 올라가야하 올라가는 도약 도약음",
+    "도약",
+)
+register_concept_forms("부족 부족할 모자라 모자라면", "모자라")
+register_concept_forms("겹부점 겹점", "겹점")
+register_concept_forms("사용한 사용했 사용", "사용")
+register_concept_forms("앞에 처음에 처음", "처음")
+register_concept_forms("적힌 써있는 써있 기재된", "기재")
+register_concept_forms("글은 글", "글")
+register_concept_forms("내용일까 내용 이야기 이야기인", "이야기")
+register_concept_forms("셋잇단음표 3연음보 연음보 3연음", "연음")
+register_concept_forms("빠른 빠르게 빠르", "빠르")
+register_concept_forms("박이 박자", "박자")
+register_concept_forms("구간 대목", "구간")
+register_concept_forms("전반 전체적 전체", "전체")
+register_concept_forms("테크닉이나 테크닉", "테크닉")
+register_concept_forms("해석 표현", "표현")
+register_concept_forms("의미 뭘까 뜻", "의미")
+register_concept_forms("바꿀까 바꿔야 바꾸 바꾸어 변환 전환 변화", "변화")
+
+CONCEPT_PARTICLE_RE = re.compile(
+    r"([가-힣]{2,}?)(?:에게서|으로는|에서는|부터는|까지는|마다|"
+    r"은요|는요|이요|가요|도요|이랑|하고|으로|에서|에게|부터|"
+    r"까지|은|는|이|가|을|를|의|와|과|랑|에|도|만|로)\b"
+)
+CONCEPT_PRODUCTIVE_SUFFIXES = (
+    "하려면",
+    "하면서",
+    "하거나",
+    "해서",
+    "해도",
+    "해야",
+    "하게",
+    "하는",
+    "한다",
+    "하다",
+    "할까",
+    "할지",
+)
+CONCEPT_PREDICATE_SUFFIXES = (
+    "었을까",
+    "았을까",
+    "을까요",
+    "을까",
+    "나요",
+    "는지",
+    "다면",
+    "으면",
+    "은데",
+    "는데",
+    "거나",
+    "도록",
+    "어서",
+    "아서",
+    "하게",
+    "하는",
+    "한다",
+    "하다",
+    "해",
+    "게",
+    "는",
+    "지",
+)
+CONCEPT_GATE_SCORE_WEIGHT = 20.0
+BROAD_PERFORMANCE_SUBJECT_TERMS = (
+    "가창",
+    "가창자",
+    "성악가",
+    "노래",
+    "부르",
+    "불러",
+    "singer",
+    "sing",
+    "perform",
+)
+BROAD_PERFORMANCE_ADVICE_TERMS = (
+    "유의",
+    "주의",
+    "중요",
+    "잘 부르",
+    "어떻게 부르",
+    "어떻게 불러",
+    "어떻게 노래",
+    "어떤 점",
+    "점",
+    "점은",
+    "점에",
+    "신경",
+    "포인트",
+    "팁",
+    "사항",
+    "조언",
+    "법",
+    "알려",
+    "focus",
+    "give me",
+    "advice",
+    "keep in mind",
+    "consider",
+    "tip",
+    "what should",
+    "how should",
+)
+BROAD_PERFORMANCE_GENERIC_CONCEPT_PREFIXES = (
+    "가창",
+    "성악가",
+    "노래",
+    "부르",
+    "입장",
+    "관점",
+    "유의",
+    "주의",
+    "중요",
+    "가장",
+    "전체",
+    "전반",
+    "신경",
+    "써",
+    "포인트",
+    "팁",
+    "사항",
+    "조언",
+    "법",
+    "알려",
+    "줘",
+    "위한",
+    "필요",
+    "잘",
+    "점",
+    "singer",
+    "sing",
+    "perform",
+    "performance",
+    "keep",
+    "mind",
+    "focus",
+    "give",
+    "work",
+    "consider",
+    "advice",
+    "tip",
+    "what",
+    "how",
+    "main",
+    "overall",
+    "general",
+    "should",
+    "this",
+    "piece",
+)
+BROAD_PERFORMANCE_EXPLICIT_PIECE_SCOPE_TERMS = (
+    "이 곡",
+    "이 노래",
+    "이 작품",
+    "곡 전체",
+    "곡 전반",
+    "노래 전체",
+    "노래 전반",
+    "작품 전체",
+    "작품 전반",
+    "this piece",
+    "this work",
+    "this song",
+    "the piece",
+    "the work",
+    "the song",
+    "overall",
+    "general",
+)
+PERFORMANCE_GUIDANCE_FACETS = {
+    "tone_color": (
+        "음색",
+        "탄력",
+        "밝고",
+        "밝은",
+        "깔끔",
+        "가볍",
+    ),
+    "vocal_technique": (
+        "고음",
+        "높은음",
+        "저음",
+        "낮은음",
+        "발성",
+        "호흡",
+        "숨",
+        "공명",
+        "음역",
+        "포지션",
+        "레가토",
+        "프레이즈",
+        "도약",
+        "음정",
+        "소리",
+        "음색",
+        "기교",
+        "트릴",
+        "콜로라투라",
+    ),
+    "diction": (
+        "발음",
+        "딕션",
+        "가사",
+        "단어",
+        "강세",
+        "악센트",
+        "모음",
+        "자음",
+        "연음",
+        "텍스트",
+    ),
+    "rhythm_and_timing": (
+        "리듬",
+        "박자",
+        "강박",
+        "약박",
+        "악센트",
+        "템포",
+        "진입",
+        "페르마타",
+        "부점",
+        "셋잇단",
+        "쉼표",
+    ),
+    "interpretation": (
+        "음악",
+        "음악적",
+        "해석",
+        "표현",
+        "분위기",
+        "다이나믹",
+        "크레센도",
+        "디미뉴엔도",
+        "피아노",
+        "반주",
+        "선율",
+        "멜로디",
+        "프레이즈",
+        "가사",
+        "이야기",
+        "장면",
+        "조성",
+        "형식",
+        "캐릭터",
+        "색채",
+    ),
+}
+PERFORMANCE_GUIDANCE_ACTION_TERMS = (
+    "주의",
+    "유의",
+    "중요",
+    "연습",
+    "집중",
+    "고려",
+    "생각하며",
+    "생각하고",
+    "도움",
+    "좋다",
+    "좋겠다",
+    "해야",
+    "하도록",
+    "유지",
+    "살려",
+    "정확",
+    "명료",
+    "노래한다",
+    "부른다",
+    "부르는 것이",
+    "표현한다",
+    "표현해야",
+    "나타내어",
+    "드러내어",
+)
+PERFORMANCE_GUIDANCE_STRONG_ACTION_TERMS = (
+    "주의",
+    "유의",
+    "중요",
+)
+PERFORMANCE_GUIDANCE_NEGATIVE_TERMS = (
+    "출생",
+    "사망",
+    "생애",
+    "약력",
+    "음악사",
+    "가곡의 왕",
+    "불린다",
+    "작곡 연도",
 )
 MEASURE_MENTION_RE = re.compile(
     r"[0-9]+\s*(?:[-–—−‒~～]\s*[0-9]+\s*)?(?:번째\s*)?마디"
@@ -475,7 +864,11 @@ def token_groups(text: str) -> List[List[str]]:
             if stem_match:
                 token = stem_match.group(1)
                 break
-        if len(token) == 1 and not token.isdigit():
+        if (
+            len(token) == 1
+            and not token.isdigit()
+            and token not in MUSICAL_SINGLE_LETTER_TOKENS
+        ):
             continue
         if token in seen_tokens or is_query_scaffolding(token):
             continue
@@ -489,7 +882,12 @@ def tokenize(text: str) -> List[str]:
     normalized_text = KOREAN_PARTICLE_RE.sub(r"\1", text.lower())
     for match in TOKEN_RE.finditer(normalized_text):
         token = match.group(0)
-        if len(token) == 1 and not token.isdigit():
+        token = QUERY_TOKEN_NORMALIZATIONS.get(token, token)
+        if (
+            len(token) == 1
+            and not token.isdigit()
+            and token not in MUSICAL_SINGLE_LETTER_TOKENS
+        ):
             continue
         tokens.extend(token_variants(token))
     return tokens
@@ -579,6 +977,226 @@ def strip_piece_aliases(query: str, piece: str | None) -> str:
     if intent_anchors:
         stripped += " " + " ".join(intent_anchors)
     return stripped
+
+
+def canonical_concept_word(word: str) -> str:
+    def finish(value: str) -> str:
+        value = QUERY_TOKEN_NORMALIZATIONS.get(value, value)
+        value = CONCEPT_WORD_NORMALIZATIONS.get(value, value)
+        return "" if value in CONCEPT_STOP_WORDS else value
+
+    word = finish(word)
+    if not word:
+        return ""
+    for suffix in CONCEPT_PRODUCTIVE_SUFFIXES:
+        if word.endswith(suffix) and len(word) > len(suffix):
+            return finish(word[: -len(suffix)])
+    for suffix in CONCEPT_PREDICATE_SUFFIXES:
+        if word.endswith(suffix) and len(word) - len(suffix) >= 2:
+            return finish(word[: -len(suffix)])
+    return finish(word)
+
+
+def semantic_concepts(
+    text: str,
+    piece: str | None,
+    *,
+    query: bool,
+) -> List[str]:
+    """Extract stable concepts for candidate-local semantic coverage."""
+
+    if query:
+        text, _ = query_components(text, piece)
+    normalized = CONCEPT_PARTICLE_RE.sub(r"\1", text.lower())
+    output = []
+    for match in TOKEN_RE.finditer(normalized):
+        surface = match.group(0)
+        concept = canonical_concept_word(surface)
+        # Some surface forms (for example "부를" and "자연스럽게")
+        # appear in the broad query-scaffolding allowlist but also have a
+        # deliberate domain concept mapping. Preserve those mapped concepts;
+        # discard only scaffolding that remained semantically unchanged.
+        if (
+            query
+            and is_query_scaffolding(surface)
+            and surface not in QUERY_TOKEN_NORMALIZATIONS
+            and surface not in CONCEPT_WORD_NORMALIZATIONS
+        ):
+            continue
+        if not concept or (
+            len(concept) == 1
+            and not concept.isdigit()
+            and concept not in MUSICAL_SINGLE_LETTER_TOKENS
+        ):
+            continue
+        if concept not in output:
+            output.append(concept)
+    # A named rhythmic figure already carries the generic "rhythm" concept.
+    # Requiring both words would reject an expert answer that says "겹점"
+    # without redundantly repeating "리듬".
+    if query and "리듬" in output and {"부점", "겹점"}.intersection(output):
+        output.remove("리듬")
+    return output
+
+
+def concept_matches(
+    query_concept: str,
+    document_concepts: set[str],
+) -> bool:
+    if query_concept in document_concepts:
+        return True
+    minimum = 2 if re.fullmatch(r"[가-힣]+", query_concept) else 4
+    maximum_extension = 2 if re.fullmatch(r"[가-힣]+", query_concept) else 3
+    return len(query_concept) >= minimum and any(
+        len(document_concept) >= minimum
+        and abs(len(query_concept) - len(document_concept)) <= maximum_extension
+        and (
+            query_concept.startswith(document_concept)
+            or document_concept.startswith(query_concept)
+        )
+        for document_concept in document_concepts
+    )
+
+
+def concepts_are_covered(
+    query_concepts: Sequence[str],
+    document_concepts: set[str],
+) -> bool:
+    return bool(query_concepts) and all(
+        concept_matches(concept, document_concepts)
+        for concept in query_concepts
+    )
+
+
+def is_broad_performance_guidance_query(
+    query: str,
+    piece: str | None,
+) -> bool:
+    """Recognize an intentionally broad request for singer guidance.
+
+    This is deliberately narrower than a generic "performance" keyword
+    fallback. A concrete musical concept such as ``고음`` or ``발음`` keeps
+    the query on the normal full-concept retrieval path.
+    """
+
+    if not piece:
+        return False
+    lowered = query.lower()
+    concepts = semantic_concepts(query, piece, query=True)
+    subject_concept_prefixes = (
+        "가창",
+        "성악가",
+        "노래",
+        "부르",
+        "singer",
+        "sing",
+        "perform",
+    )
+    if not (
+        any(term in lowered for term in BROAD_PERFORMANCE_SUBJECT_TERMS)
+        or any(
+            concept.startswith(prefix)
+            for concept in concepts
+            for prefix in subject_concept_prefixes
+        )
+    ):
+        return False
+    if not any(term in lowered for term in BROAD_PERFORMANCE_ADVICE_TERMS):
+        return False
+    if not concepts:
+        return False
+
+    def is_generic(concept: str) -> bool:
+        return any(
+            concept.startswith(prefix)
+            or prefix.startswith(concept)
+            for prefix in BROAD_PERFORMANCE_GENERIC_CONCEPT_PREFIXES
+        )
+
+    def is_guidance_facet(concept: str) -> bool:
+        return any(
+            concept.startswith(term)
+            or term.startswith(concept)
+            for terms in PERFORMANCE_GUIDANCE_FACETS.values()
+            for term in terms
+        )
+
+    if all(is_generic(concept) for concept in concepts):
+        return True
+    explicitly_piece_wide = any(
+        term in lowered
+        for term in BROAD_PERFORMANCE_EXPLICIT_PIECE_SCOPE_TERMS
+    ) or any(
+        alias.lower() in lowered
+        for alias in PIECE_TITLE_ALIASES.get(piece, [])
+    )
+    return explicitly_piece_wide and all(
+        is_generic(concept) or is_guidance_facet(concept)
+        for concept in concepts
+    )
+
+
+def performance_guidance_query_facets(query: str) -> set[str]:
+    """Return optional musical facets requested by a broad guidance query."""
+
+    lowered = query.lower()
+    return {
+        facet
+        for facet, terms in PERFORMANCE_GUIDANCE_FACETS.items()
+        if any(term in lowered for term in terms)
+    }
+
+
+def performance_guidance_query_terms(query: str) -> set[str]:
+    """Return explicit facet terms that must remain relevant to the answer."""
+
+    lowered = query.lower()
+    return {
+        term
+        for terms in PERFORMANCE_GUIDANCE_FACETS.values()
+        for term in terms
+        if term in lowered
+    }
+
+
+def performance_guidance_profile(
+    record: Dict[str, Any],
+) -> tuple[float, set[str]]:
+    """Score practical singer guidance and return its musical facets."""
+
+    text = str(record.get("answer") or "").lower()
+    facets = {
+        facet
+        for facet, terms in PERFORMANCE_GUIDANCE_FACETS.items()
+        if any(term in text for term in terms)
+    }
+    action_terms = {
+        term
+        for term in PERFORMANCE_GUIDANCE_ACTION_TERMS
+        if term in text
+    }
+    if not facets or not action_terms:
+        return 0.0, set()
+    strong_action_score = 3.0 * sum(
+        term in text
+        for term in PERFORMANCE_GUIDANCE_STRONG_ACTION_TERMS
+    )
+    repeated_range_score = min(
+        3.0,
+        max(0, len(record.get("measure_range") or []) - 1),
+    )
+    negative_score = 6.0 * sum(
+        term in text
+        for term in PERFORMANCE_GUIDANCE_NEGATIVE_TERMS
+    )
+    score = (
+        4.0 * len(facets)
+        + 2.0 * min(4, len(action_terms))
+        + strong_action_score
+        + repeated_range_score
+        - negative_score
+    )
+    return max(0.0, score), facets
 
 
 def parse_measure_ranges(text: str) -> List[List[int]]:
@@ -786,6 +1404,7 @@ class SearchResult:
     measure_score: float
     piece_score: float
     scope_match: str
+    alias_score: float = 0.0
 
 
 class BM25Index:
@@ -806,6 +1425,37 @@ class BM25Index:
         self.avgdl = sum(self.doc_lens) / max(1, len(self.doc_lens))
         self.term_freqs = [Counter(tokens) for tokens in self.doc_tokens]
         self.relevance_term_freqs = [Counter(tokens) for tokens in self.relevance_tokens]
+        self.document_concepts = [
+            set(
+                semantic_concepts(
+                    record.get("relevance_text")
+                    or record.get("retrieval_text")
+                    or record["answer"],
+                    record.get("piece"),
+                    query=False,
+                )
+            )
+            for record in records
+        ]
+        self.alias_concepts = [
+            [
+                set(
+                    semantic_concepts(
+                        str(alias),
+                        record.get("piece"),
+                        # Retrieval aliases are authoritative source questions,
+                        # so normalize them with the same question scaffolding
+                        # and score-location removal used for user queries.
+                        # Measure applicability remains a separate hard scope
+                        # check and must not dilute semantic alias specificity.
+                        query=True,
+                    )
+                )
+                for alias in record.get("retrieval_aliases", [])
+                if str(alias).strip()
+            ]
+            for record in records
+        ]
         doc_freq: Counter[str] = Counter()
         for tokens in self.doc_tokens:
             doc_freq.update(set(tokens))
@@ -832,6 +1482,207 @@ class BM25Index:
             score += self.idf.get(term, 0.0) * (tf * (self.k1 + 1) / denom)
         return score
 
+    def alias_score(
+        self,
+        query_concepts: Sequence[str],
+        idx: int,
+    ) -> float:
+        return max(
+            (
+                min(1.0, len(query_concepts) / max(1, len(alias)))
+                for alias in self.alias_concepts[idx]
+                if concepts_are_covered(query_concepts, alias)
+            ),
+            default=0.0,
+        )
+
+    @staticmethod
+    def _diverse_guidance_order(
+        candidates: List[tuple[SearchResult, set[str]]],
+    ) -> List[SearchResult]:
+        """Prefer candidates that add a new singing-performance facet."""
+
+        remaining = list(candidates)
+        selected: List[SearchResult] = []
+        covered_facets: set[str] = set()
+        while remaining:
+            best_index = max(
+                range(len(remaining)),
+                key=lambda index: (
+                    len(remaining[index][1] - covered_facets),
+                    remaining[index][0].score,
+                    remaining[index][0].text_score,
+                    remaining[index][0].record["id"],
+                ),
+            )
+            result, facets = remaining.pop(best_index)
+            selected.append(result)
+            covered_facets.update(facets)
+        return selected
+
+    @staticmethod
+    def _expand_guidance_source_siblings(
+        selected: List[SearchResult],
+        ranked_candidates: List[SearchResult],
+        *,
+        top_k: int,
+    ) -> List[SearchResult]:
+        """Keep complementary KUs split from a selected expert source.
+
+        Expert curation may split one broad annotator answer into several
+        independent knowledge units (for example tone colour and diction).
+        Once one such unit is selected on musical relevance, its same-scope
+        siblings remain legitimate complementary evidence.  Expanding only
+        along shared immutable source IDs avoids combining arbitrary records
+        merely to cover a vague broad question.
+        """
+
+        output: List[SearchResult] = []
+        seen_ids: set[str] = set()
+        for result in selected:
+            record_id = result.record["id"]
+            if record_id not in seen_ids:
+                output.append(result)
+                seen_ids.add(record_id)
+            source_ids = set(result.record.get("source_ids") or [])
+            if source_ids:
+                siblings = [
+                    sibling
+                    for sibling in ranked_candidates
+                    if sibling.record["id"] not in seen_ids
+                    and sibling.scope_match == result.scope_match
+                    and source_ids.intersection(
+                        sibling.record.get("source_ids") or []
+                    )
+                ]
+                siblings.sort(
+                    key=lambda sibling: (
+                        set(sibling.record.get("source_ids") or [])
+                        == source_ids,
+                        -len(sibling.record.get("source_ids") or []),
+                    ),
+                    reverse=True,
+                )
+                for sibling in siblings:
+                    sibling_id = sibling.record["id"]
+                    output.append(sibling)
+                    seen_ids.add(sibling_id)
+                    if len(output) >= top_k:
+                        return output
+            if len(output) >= top_k:
+                return output
+        return output[:top_k]
+
+    def _search_broad_performance_guidance(
+        self,
+        *,
+        query: str,
+        piece: str,
+        topic: str | None,
+        top_k: int,
+    ) -> List[SearchResult]:
+        """Return a scope-balanced set of expert singer guidance.
+
+        Whole-piece records establish general claims. Confirmed local records
+        are interleaved as measure-bound examples. Pending or unspecified
+        records are used only when no confirmed guidance exists.
+        """
+
+        if top_k < 1:
+            return []
+        requested_facets = performance_guidance_query_facets(query)
+        requested_terms = performance_guidance_query_terms(query)
+        pools: Dict[str, List[tuple[SearchResult, set[str]]]] = {
+            "whole": [],
+            "local": [],
+            "provisional": [],
+        }
+        for record in self.records:
+            if not record.get("retrieval_eligible", True):
+                continue
+            if record.get("piece") != piece:
+                continue
+            if record.get("evidence_type") != "expert_annotation":
+                continue
+            if topic and topic not in record.get("topic", ""):
+                continue
+            guidance_score, facets = performance_guidance_profile(record)
+            if guidance_score <= 0:
+                continue
+            answer_text = str(record.get("answer") or "").lower()
+            matched_requested_terms = {
+                term
+                for term in requested_terms
+                if term in answer_text
+            }
+            if requested_terms and not matched_requested_terms:
+                continue
+            matched_requested_facets = facets & requested_facets
+            guidance_score += (
+                6.0 * len(matched_requested_facets)
+                + 4.0 * len(matched_requested_terms)
+            )
+            scope_match = measure_scope_match(record, [])
+            if scope_match == "general_evidence":
+                pool = "whole"
+            elif scope_match == "local_example":
+                pool = "local"
+            elif scope_match in {
+                "unscoped_pending_review",
+                "unspecified_scope",
+            }:
+                pool = "provisional"
+            else:
+                continue
+            measure = measure_boost(record, [])
+            result = SearchResult(
+                record=record,
+                score=guidance_score + measure,
+                text_score=guidance_score,
+                measure_score=measure,
+                piece_score=1.0,
+                scope_match=scope_match,
+                # Broad wording is not an authoritative source-question
+                # alias. Keep this zero so generation retains a diverse set.
+                alias_score=0.0,
+            )
+            pools[pool].append((result, facets))
+
+        whole = self._diverse_guidance_order(pools["whole"])
+        local = self._diverse_guidance_order(pools["local"])
+        provisional = self._diverse_guidance_order(
+            pools["provisional"]
+        )
+        confirmed: List[SearchResult] = []
+        if whole and local:
+            local_limit = min(3, (top_k + 1) // 2)
+            local = local[:local_limit]
+            whole_index = 0
+            local_index = 0
+            while len(confirmed) < top_k and (
+                whole_index < len(whole)
+                or local_index < len(local)
+            ):
+                if whole_index < len(whole):
+                    confirmed.append(whole[whole_index])
+                    whole_index += 1
+                    if len(confirmed) >= top_k:
+                        break
+                if local_index < len(local):
+                    confirmed.append(local[local_index])
+                    local_index += 1
+        elif whole:
+            confirmed = whole
+        elif local:
+            confirmed = local[: min(3, top_k)]
+        if confirmed:
+            return self._expand_guidance_source_siblings(
+                confirmed,
+                [*whole, *local],
+                top_k=top_k,
+            )
+        return provisional[:top_k]
+
     def search(
         self,
         query: str,
@@ -841,8 +1692,20 @@ class BM25Index:
         top_k: int = 8,
     ) -> List[SearchResult]:
         measure_ranges = measure_ranges or []
+        if (
+            not measure_ranges
+            and piece
+            and is_broad_performance_guidance_query(query, piece)
+        ):
+            return self._search_broad_performance_guidance(
+                query=query,
+                piece=piece,
+                topic=topic,
+                top_k=top_k,
+            )
         real_query, intent_anchors = query_components(query, piece)
         real_query_groups = token_groups(real_query)
+        query_concepts = semantic_concepts(query, piece, query=True)
         intent_query_groups = [token_variants(anchor) for anchor in intent_anchors]
         query_groups = real_query_groups + intent_query_groups
         query_terms = list(
@@ -859,27 +1722,56 @@ class BM25Index:
             if topic and topic not in record["topic"]:
                 continue
             scope_match = measure_scope_match(record, measure_ranges)
-            if measure_ranges and scope_match == "outside_query_range":
+            if scope_match in {
+                "unscoped_pending_context",
+                "unspecified_context",
+            }:
+                # These records remain searchable without a selected range,
+                # but they have no confirmed location that can be compared
+                # with a range-selected request.
                 continue
+            candidate_covers_query = concepts_are_covered(
+                query_concepts,
+                self.document_concepts[idx],
+            )
+            alias = self.alias_score(query_concepts, idx)
             matched_real_groups = {
                 group_index
                 for group_index, group in enumerate(real_query_groups)
-                if group[0] in self.relevance_term_freqs[idx]
+                if any(
+                    variant in self.relevance_term_freqs[idx]
+                    for variant in group
+                )
             }
             matched_intent_groups = {
                 group_index
                 for group_index, group in enumerate(intent_query_groups)
-                if group[0] in self.relevance_term_freqs[idx]
+                if any(
+                    variant in self.relevance_term_freqs[idx]
+                    for variant in group
+                )
             }
+            if query_concepts:
+                if not candidate_covers_query:
+                    continue
+                matched_real_groups = set(range(len(real_query_groups)))
             if not matched_real_groups and not matched_intent_groups:
                 continue
             text = self.text_score_terms(query_terms, idx)
             measure = measure_boost(record, measure_ranges)
             piece_boost = 1.0 if piece and record["piece"] == piece else 0.0
-            total = text + measure
+            total = text + measure + alias * CONCEPT_GATE_SCORE_WEIGHT
             candidates.append(
                 (
-                    SearchResult(record, total, text, measure, piece_boost, scope_match),
+                    SearchResult(
+                        record,
+                        total,
+                        text,
+                        measure,
+                        piece_boost,
+                        scope_match,
+                        alias,
+                    ),
                     matched_real_groups,
                     matched_intent_groups,
                 )
@@ -901,6 +1793,8 @@ class BM25Index:
         candidates.sort(
             key=lambda candidate: (
                 scope_priority(candidate[0].scope_match, bool(measure_ranges)),
+                candidate[0].alias_score > 0,
+                candidate[0].alias_score,
                 candidate[0].score,
                 candidate[0].text_score,
                 candidate[0].record["id"],
@@ -935,6 +1829,7 @@ class BM25Index:
                     scope_priority(result.scope_match, bool(measure_ranges))
                     for result in selected_results
                 ),
+                sum(result.alias_score for result in selected_results),
                 sum(result.score for result in selected_results),
                 sum(result.text_score for result in selected_results),
                 tuple(-index for index in indices),
@@ -956,13 +1851,16 @@ class BM25Index:
         if selected_indices is None:
             return []
         selected = [candidates[index][0] for index in selected_indices]
-        preferred_scope = (
-            "overlaps_query_range" if measure_ranges else "general_evidence"
-        )
-        if any(
-            result.scope_match == preferred_scope for result, _, _ in candidates
-        ) and not any(result.scope_match == preferred_scope for result in selected):
-            return []
+        if measure_ranges:
+            preferred_scope = "overlaps_query_range"
+            if any(
+                result.scope_match == preferred_scope
+                for result, _, _ in candidates
+            ) and not any(
+                result.scope_match == preferred_scope
+                for result in selected
+            ):
+                return []
         selected_ids = {result.record["id"] for result in selected}
         for result, _, _ in candidates:
             if len(selected) >= top_k:
@@ -975,30 +1873,80 @@ class BM25Index:
 
 def scope_priority(scope_match: str, has_query_range: bool) -> int:
     if has_query_range:
-        return 2 if scope_match == "overlaps_query_range" else 1
-    return 1 if scope_match == "general_evidence" else 0
+        return {
+            "overlaps_query_range": 3,
+            "global_context": 2,
+            "other_range_context": 1,
+            "unscoped_pending_context": 0,
+            "unspecified_context": 0,
+        }.get(scope_match, 0)
+    return {
+        # Without a selected range, semantic/source-question specificity
+        # remains the primary authority. Scope confidence is expressed by
+        # ``measure_boost`` rather than allowing a generic whole-piece record
+        # to displace an exact pending annotator-question match.
+        "general_evidence": 1,
+        "local_example": 1,
+        "unscoped_pending_review": 1,
+        "unspecified_scope": 1,
+    }.get(scope_match, 0)
+
+
+def scope_evidence_role(scope_match: str) -> str:
+    """Return the prompt/output role implied by a scope relationship."""
+
+    return {
+        "overlaps_query_range": "selected_range_support",
+        "global_context": "general_context",
+        "other_range_context": "other_range_context_only",
+        "unscoped_pending_context": "unconfirmed_scope_context_only",
+        "unspecified_context": "unconfirmed_scope_context_only",
+        "general_evidence": "general_support",
+        "unscoped_pending_review": "unconfirmed_scope_support",
+        "unspecified_scope": "unconfirmed_scope_support",
+        "local_example": "local_example",
+    }.get(scope_match, "context")
 
 
 def measure_scope_match(record: Dict[str, Any], query_ranges: List[List[int]]) -> str:
     record_ranges = record.get("measure_range") or []
+    measure_status = record.get("measure_status")
     if not query_ranges:
+        if measure_status == "waiting_for_review":
+            return "unscoped_pending_review"
+        if measure_status == "unspecified":
+            return "unspecified_scope"
         return "general_evidence" if not record_ranges else "local_example"
+    if measure_status == "waiting_for_review":
+        return "unscoped_pending_context"
+    if measure_status == "unspecified":
+        return "unspecified_context"
     if not record_ranges:
         return "global_context"
     if ranges_overlap(record_ranges, query_ranges):
         return "overlaps_query_range"
-    return "outside_query_range"
+    return "other_range_context"
 
 
 def measure_boost(record: Dict[str, Any], query_ranges: List[List[int]]) -> float:
     if not query_ranges:
-        return 1.5 if not (record.get("measure_range") or []) else -0.25
+        if record.get("measure_status") in {
+            "waiting_for_review",
+            "unspecified",
+        }:
+            return 0.0
+        return 1.5 if not (record.get("measure_range") or []) else 0.75
+    if record.get("measure_status") in {
+        "waiting_for_review",
+        "unspecified",
+    }:
+        return -1.25
     record_ranges = record.get("measure_range") or []
     if not record_ranges:
         return 0.25
     if ranges_overlap(record_ranges, query_ranges):
         return 6.0 if record.get("measure_scope") == "recurring" else 5.0
-    return float("-inf")
+    return -1.0
 
 
 def format_measure_range(ranges: Sequence[Sequence[int]]) -> str:

@@ -100,6 +100,38 @@ python scripts/ask.py \
 Omit `--measures` for a whole-work question. Add `--json` for structured
 retrieval, evidence, rights, citation, and answer metadata.
 
+To inspect the selected evaluation results in a local qualitative-review
+workspace, run:
+
+```bash
+python3 evaluation/server.py
+```
+
+Then open `http://127.0.0.1:8766/`. The page keeps manual ratings and notes in
+the browser and can export them as JSON; it does not modify the inference
+snapshot. The schema-8/v13 evaluation treats generated-answer reliability as
+the primary quality outcome. Curator-scoped target claims are `R` items and are
+the only completeness targets; expert claims from the records actually
+retrieved for generation are corpus-authenticated, range-checked `S` items
+that may support candidate factuality but can never replace a missing `R`
+item. An independent required-claim NLI gate always checks curator-split
+atomic `R` coverage. Whenever authenticated `S` context exists, it also checks
+every covered non-atomic `direct_required` or `mixed_or_ambiguous` `R`,
+preventing paraphrased or unlinked `S` factuality from being transferred into
+`R` completeness. The 25-control judge calibration exercises this boundary.
+An exact leading `검토 주의:` disclosure is reconstructed from authenticated
+corpus metadata, validated, and stripped exactly once before candidate `C`
+segmentation and every downstream semantic, normalized-full-answer,
+atomic-claim, range, and NLI check. Its separate
+`review_disclosure_validation` audit is visible in the viewer. Missing,
+mismatched, non-leading, extra, unexpected, or untrusted disclosures block an
+automatic pass, and a disclosure-only response supplies no `C` coverage.
+Judge JSON remains strict: only a single decoder-pointed invalid `\'` escape
+may have that backslash removed on retry, with the raw output retained and the
+normalization audited; arbitrary malformed JSON is still rejected. Exact
+source and knowledge-unit retrieval remain secondary diagnostics. See
+[evaluation/README.md](evaluation/README.md) for details.
+
 Applications can import the service facade while this repository is on
 `PYTHONPATH`:
 
@@ -132,8 +164,45 @@ database records. Measure-scoped questions prioritize overlapping expert
 evidence; unsupported questions can use a clearly marked internal-knowledge
 fallback without corpus citations.
 
-See [docs/measure-aware-rag.md](docs/measure-aware-rag.md) for the detailed
-retrieval, provenance, rights, range-routing, and citation design.
+Expert records come from the sibling dataset's active
+`expert_curation/review/*.json` files. All included knowledge units remain
+searchable, including units awaiting rewrite or measure review, but pending
+states and review notes travel with the evidence and are shown to the model.
+An unreviewed measure is never treated as a confirmed range: it may support an
+unscoped query, but it is excluded from a range-selected query. A
+semantically relevant record with a confirmed non-overlapping range is kept
+as lower-ranked `other_range_context_only`: it remains inspectable and can
+help detect a range mismatch, but it cannot ground, broaden, or receive an
+automatic citation in the selected-range answer. Original annotator questions
+are retained as retrieval aliases, and verbatim source answers are supplied
+as authoritative context for grounded generation. Strongest range-applicable
+alias matches remain primary; up to two confirmed other-range alias matches
+may follow as explicitly secondary context. Source-level legacy range hints
+are retained as non-authoritative disambiguation metadata for merged
+multi-range units, while confirmed knowledge-unit ranges remain the only
+routing authority. If one raw source was split across several knowledge
+units, its full Q&A stays in the corpus for lineage but is withheld from any
+single-unit prompt, preventing a claim assigned to an out-of-range sibling
+unit from leaking back into the answer.
+
+Unresolved rewrite and measure-review states are not hidden in prompt
+metadata. The answer carries a deterministic Korean review disclosure before
+the LLM-generated content, including unresolved rewrite notes, unconfirmed
+scope, and possible wrong-piece warnings. This prevents a fluent answer from
+presenting a provisional annotation as a settled score fact.
+Evidence with a pending rewrite receives a second grounded compliance pass:
+the warning prefix alone is not accepted if the body later restates one side
+of a documented timing, location, notation, or causality conflict as settled.
+An unseen code/UI-style CamelCase token in generated Korean triggers a
+grounded rewrite retry, which catches visible decoding corruptions before the
+answer is returned.
+Changes to the review files invalidate the corpus fingerprint, so the next
+query rebuilds and reloads the local artifact automatically. No data copy into
+the demo repository is required.
+
+See
+[docs/rag-llm-pipeline-method.md](docs/rag-llm-pipeline-method.md) for the
+retrieval, measure-routing, prompt construction, and generation design.
 
 To run the web application, continue with the
 [demo setup](https://github.com/minigb/soprano-qa-demo#setup).

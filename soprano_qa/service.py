@@ -12,13 +12,18 @@ from typing import Optional
 
 from soprano_qa.answer import (
     INTERNAL_GENERATION_UNAVAILABLE_MESSAGE,
+    answer_overgeneralizes_local_examples,
+    answer_references_secondary_evidence,
     build_extractive_answer,
     build_internal_knowledge_messages,
     build_evidence_notices,
     ensure_corpus,
+    expert_prompt_factuality_material,
     finalize_answer_citations,
     finalize_internal_knowledge_answer,
     generate_with_context_retry,
+    has_primary_grounding,
+    has_selected_range_grounding,
     is_grounded_insufficiency_answer,
 )
 from soprano_qa.llm import generate as generate_llm
@@ -27,6 +32,7 @@ from soprano_qa.retrieval import (
     SearchResult,
     format_measure_range,
     load_corpus,
+    scope_evidence_role,
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
@@ -109,22 +115,28 @@ def corpus_stats() -> dict:
 def _result_to_evidence(
     result: SearchResult,
     *,
-    has_measure_range: bool,
+    measure_ranges: list[list[int]],
 ) -> dict:
     record = result.record
-    measure_ranges = record.get("measure_range") or []
-    if has_measure_range:
+    record_measure_ranges = record.get("measure_range") or []
+    if measure_ranges:
         in_requested_scope = result.scope_match == "overlaps_query_range"
     else:
-        in_requested_scope = result.scope_match == "general_evidence"
+        in_requested_scope = result.scope_match in {
+            "general_evidence",
+            "local_example",
+            "unscoped_pending_review",
+            "unspecified_scope",
+        }
 
     inherited_attributions = [
         item["attribution"]
         for item in record.get("inherited_licenses", [])
         if item.get("attribution")
     ]
-    return {
+    evidence = {
         "id": record["id"],
+        "piece_id": record.get("piece"),
         "kind": (
             "expert"
             if record.get("evidence_type") == "expert_annotation"
@@ -135,14 +147,29 @@ def _result_to_evidence(
         "topic": record.get("topic", ""),
         "question": record.get("question", ""),
         "text": record["answer"],
-        "measure_ranges": measure_ranges,
-        "is_local": bool(measure_ranges),
+        "measure_ranges": record_measure_ranges,
+        "is_local": bool(record_measure_ranges),
         "measure_scope": record.get("measure_scope"),
+        "measure_status": record.get("measure_status"),
+        "measure_notes": record.get("measure_notes", ""),
+        "rewrite_status": record.get("rewrite_status"),
+        "rewrite_notes": record.get("rewrite_notes", ""),
+        "retrieval_review_warning": record.get(
+            "retrieval_review_warning",
+            "",
+        ),
         "scope_match": result.scope_match,
+        "generation_role": scope_evidence_role(result.scope_match),
+        "selected_range_claim_authority": (
+            result.scope_match == "overlaps_query_range"
+            if measure_ranges
+            else None
+        ),
         "in_requested_scope": in_requested_scope,
         "score": round(result.score, 6),
         "text_score": round(result.text_score, 6),
         "measure_score": round(result.measure_score, 6),
+        "alias_score": round(result.alias_score, 6),
         "source_ids": record.get("source_ids", []),
         "web_source_ids": record.get("web_source_ids", []),
         "claim_ids": record.get("claim_ids", []),
@@ -150,6 +177,14 @@ def _result_to_evidence(
         "generated_text_license": record.get("generated_text_license"),
         "attributions": inherited_attributions,
     }
+    if record.get("evidence_type") == "expert_annotation":
+        evidence["generation_expert_authority"] = (
+            expert_prompt_factuality_material(
+                record,
+                measure_ranges,
+            )
+        )
+    return evidence
 
 
 def _generation_unavailable_answer() -> str:
@@ -163,7 +198,15 @@ def ask(
     measure_range: Optional[tuple[int, int]],
     generate: bool,
     top_k: int = 6,
+    allow_internal_knowledge: bool = True,
 ) -> dict:
+    """Answer a question, optionally allowing an ungrounded true-no-hit fallback.
+
+    Internal knowledge is considered only when retrieval returns no evidence.
+    Retrieved evidence is never discarded because generation refuses or
+    returns an empty answer.
+    """
+
     measure_ranges = (
         [[measure_range[0], measure_range[1]]]
         if measure_range is not None
@@ -205,15 +248,16 @@ def ask(
                         generator=run_generation,
                     )
                 )
-                if (
+                grounded_answer_unusable = (
                     is_grounded_insufficiency_answer(raw_answer)
                     or (
                         not context_limited
-                        and (
-                            not results
-                            or not raw_answer.strip()
-                        )
+                        and not raw_answer.strip()
                     )
+                )
+                if (
+                    not results
+                    and allow_internal_knowledge
                 ):
                     raw_answer = run_generation(
                         build_internal_knowledge_messages(
@@ -222,7 +266,6 @@ def ask(
                             question,
                         )
                     )
-                    results = []
                     used_internal_knowledge = True
             if used_internal_knowledge:
                 answer = finalize_internal_knowledge_answer(raw_answer)
@@ -235,6 +278,19 @@ def ask(
                     answer_basis = "generation_unavailable"
                     generation_fallback_reason = (
                         "local model returned no usable answer"
+                    )
+            elif results and grounded_answer_unusable:
+                answer = build_extractive_answer(results)
+                generation_mode = "extractive"
+                if measure_ranges and not has_primary_grounding(results):
+                    answer_basis = "retrieved_secondary_context"
+                    generation_fallback_reason = (
+                        "only other-range context retrieved"
+                    )
+                else:
+                    answer_basis = "retrieval_extractive"
+                    generation_fallback_reason = (
+                        "grounded model returned no usable answer"
                     )
             elif context_limited and not raw_answer:
                 if results:
@@ -250,15 +306,45 @@ def ask(
                     generation_mode = "unavailable"
                     answer_basis = "generation_unavailable"
             elif not results:
-                # Defensive fallback: ordinary no-hit generation is handled
-                # by the internal-knowledge branch above.
-                answer = _generation_unavailable_answer()
+                answer = build_extractive_answer(results)
                 generation_mode = "unavailable"
-                answer_basis = "generation_unavailable"
+                answer_basis = "no_corpus_evidence"
+                generation_fallback_reason = (
+                    "internal knowledge fallback disabled"
+                )
             else:
-                answer = finalize_answer_citations(raw_answer, results)
-                generation_mode = "llm"
-                answer_basis = "retrieved_evidence"
+                secondary_citation_rejected = (
+                    answer_references_secondary_evidence(
+                        raw_answer,
+                        results,
+                    )
+                )
+                local_scope_rejected = (
+                    answer_overgeneralizes_local_examples(
+                        raw_answer,
+                        results,
+                    )
+                )
+                answer = (
+                    build_extractive_answer(results)
+                    if local_scope_rejected
+                    else finalize_answer_citations(raw_answer, results)
+                )
+                if secondary_citation_rejected:
+                    generation_mode = "extractive"
+                    answer_basis = "retrieval_extractive"
+                    generation_fallback_reason = (
+                        "secondary evidence citation rejected"
+                    )
+                elif local_scope_rejected:
+                    generation_mode = "extractive"
+                    answer_basis = "retrieval_extractive"
+                    generation_fallback_reason = (
+                        "unsupported local-example generalization rejected"
+                    )
+                else:
+                    generation_mode = "llm"
+                    answer_basis = "retrieved_evidence"
         except Exception as exc:  # keep consumers usable without CUDA
             print(
                 "[qa] local generation failed; using extractive retrieval: "
@@ -275,6 +361,8 @@ def ask(
             )
             if results:
                 answer = build_extractive_answer(results)
+                if measure_ranges and not has_primary_grounding(results):
+                    answer_basis = "retrieved_secondary_context"
             else:
                 answer = _generation_unavailable_answer()
                 generation_mode = "unavailable"
@@ -295,6 +383,8 @@ def ask(
         )
         if results:
             answer = build_extractive_answer(results)
+            if measure_ranges and not has_primary_grounding(results):
+                answer_basis = "retrieved_secondary_context"
         elif generate:
             answer = _generation_unavailable_answer()
             generation_mode = "unavailable"
@@ -312,12 +402,22 @@ def ask(
         "answer_basis": answer_basis,
         "generation_fallback_reason": generation_fallback_reason,
         "context_limited": context_limited,
+        "has_primary_grounding": has_primary_grounding(results),
+        "has_selected_range_grounding": (
+            has_selected_range_grounding(results)
+            if measure_ranges
+            else None
+        ),
+        "has_confirmed_local_examples": any(
+            result.scope_match == "local_example"
+            for result in results
+        ),
         "pipeline": "soprano_qa",
         "model": status,
         "evidence": [
             _result_to_evidence(
                 result,
-                has_measure_range=bool(measure_ranges),
+                measure_ranges=measure_ranges,
             )
             for result in results
         ],

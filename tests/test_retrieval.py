@@ -8,9 +8,12 @@ from typing import Any, Dict, List, Optional
 from soprano_qa.retrieval import (
     BM25Index,
     extract_question_measure_ranges,
+    is_broad_performance_guidance_query,
     parse_measure_ranges,
     query_components,
     ranges_cover,
+    scope_evidence_role,
+    semantic_concepts,
     token_groups,
     tokenize,
     validate_question_measure_contract,
@@ -34,6 +37,7 @@ def make_record(
         "retrieval_text": text,
         "measure_range": measure_range,
         "measure_scope": "local" if measure_range else "global",
+        "measure_status": "specific" if measure_range else "whole_piece",
         "evidence_type": evidence_type,
     }
     if retrieval_eligible is not None:
@@ -194,6 +198,73 @@ class ParseMeasureRangesTests(unittest.TestCase):
             [group[0] for group in token_groups(query)],
             ["피아노", "반주", "번째", "박자", "악센트", "나타낸"],
         )
+        natural_query, _ = query_components(
+            "피아노 파트에서 두 번째 박의 악센트는 무엇을 표현할까?",
+            "die-forelle",
+        )
+        self.assertEqual(
+            [group[0] for group in token_groups(natural_query)],
+            ["피아노", "반주", "번째", "박자", "악센트", "표현"],
+        )
+
+    def test_annotator_paraphrases_use_bidirectional_concept_families(self) -> None:
+        equivalent_pairs = (
+            ("페르마타 표기", "페르마타 유무"),
+            ("음의 길이가 다르면", "음이 길게 들리는 차이"),
+            ("분위기는 달라질까", "분위기가 변화한다"),
+            ("이전 박자로 돌아온다", "처음 박자로 돌아온다"),
+            ("기교가 들어갈 때", "기교가 들어가면"),
+            ("반주가 없는 곳에서 박자를 잡아야", "반주가 없는 대목에서 박자를 잡아가나요"),
+        )
+        for paraphrase, source_wording in equivalent_pairs:
+            with self.subTest(paraphrase=paraphrase):
+                paraphrase_concepts = set(
+                    semantic_concepts(paraphrase, None, query=True)
+                )
+                source_concepts = set(
+                    semantic_concepts(source_wording, None, query=False)
+                )
+                self.assertTrue(paraphrase_concepts)
+                self.assertTrue(paraphrase_concepts.issubset(source_concepts))
+
+    def test_question_scaffolding_is_rechecked_after_stemming(self) -> None:
+        self.assertEqual(
+            semantic_concepts(
+                "박자는 어떻게 처리할까?",
+                "una-voce-poco-fa",
+                query=True,
+            ),
+            ["박자"],
+        )
+
+    def test_completed_five_piece_annotations_share_natural_concepts(self) -> None:
+        equivalent_pairs = (
+            ("성별이나 성부의 제한", "성별 구분 없이 성부를 지정"),
+            ("셋잇단음표에서 모음을 붙일까", "3연음보에서 모음의 위치"),
+            ("겹부점 리듬을 사용한 이유", "겹점 리듬을 사용했을까"),
+            ("악보의 표기와 영상에서 들리는 방식", "악보와 영상의 소리"),
+            ("단어를 나누는 방식", "단어 구분"),
+        )
+        for paraphrase, source_wording in equivalent_pairs:
+            with self.subTest(paraphrase=paraphrase):
+                paraphrase_concepts = set(
+                    semantic_concepts(paraphrase, None, query=True)
+                )
+                source_concepts = set(
+                    semantic_concepts(source_wording, None, query=False)
+                )
+                self.assertTrue(paraphrase_concepts)
+                self.assertTrue(paraphrase_concepts.issubset(source_concepts))
+
+    def test_named_dotted_figure_does_not_require_redundant_rhythm_word(self) -> None:
+        self.assertEqual(
+            semantic_concepts(
+                "일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유",
+                None,
+                query=True,
+            ),
+            ["일반적인", "부점", "겹점", "사용"],
+        )
 
     def test_question_measure_contract_accepts_covered_mentions(self) -> None:
         self.assertTrue(ranges_cover([[28, 29], [30, 32]], [[28, 30]]))
@@ -224,7 +295,28 @@ class MeasureAwareSearchTests(unittest.TestCase):
     def test_document_tokenization_preserves_term_frequency(self) -> None:
         self.assertEqual(tokenize("breath breath breath"), ["breath"] * 3)
 
-    def test_ranged_search_keeps_overlap_and_global_but_excludes_other_local(self) -> None:
+    def test_dynamic_p_is_a_musical_concept_not_discarded_noise(self) -> None:
+        exact = make_record(
+            "exact-dynamic",
+            [],
+            text="멜로디 반주 악보 표기 p로 시작한다",
+        )
+        distractor = make_record(
+            "other-marking",
+            [],
+            text="멜로디 반주 악보 표기를 해석한다",
+        )
+        index = BM25Index([exact, distractor])
+        self.assertEqual(
+            result_ids(
+                index,
+                query="멜로디 파트에 p가 표시된 이유는 무엇일까?",
+                piece="test-piece",
+            ),
+            ["exact-dynamic"],
+        )
+
+    def test_ranged_search_retains_other_local_as_secondary_context(self) -> None:
         records = [
             make_record("overlap", [[10, 12]]),
             make_record("global", []),
@@ -239,8 +331,39 @@ class MeasureAwareSearchTests(unittest.TestCase):
             top_k=10,
         )
 
-        self.assertEqual(set(ids), {"overlap", "global"})
-        self.assertNotIn("other-local", ids)
+        self.assertEqual(ids, ["overlap", "global", "other-local"])
+        results = BM25Index(records).search(
+            query="breath phrasing",
+            piece="test-piece",
+            measure_ranges=[[11, 11]],
+            top_k=10,
+        )
+        self.assertEqual(
+            [result.scope_match for result in results],
+            [
+                "overlaps_query_range",
+                "global_context",
+                "other_range_context",
+            ],
+        )
+        self.assertEqual(results[-1].measure_score, -1.0)
+
+    def test_ranged_search_still_excludes_unconfirmed_locations(self) -> None:
+        pending = make_record("pending", [])
+        pending["measure_status"] = "waiting_for_review"
+        unspecified = make_record("unspecified", [])
+        unspecified["measure_status"] = "unspecified"
+        confirmed_other = make_record("confirmed-other", [[30, 32]])
+
+        ids = result_ids(
+            BM25Index([pending, unspecified, confirmed_other]),
+            query="breath phrasing",
+            piece="test-piece",
+            measure_ranges=[[11, 11]],
+            top_k=10,
+        )
+
+        self.assertEqual(ids, ["confirmed-other"])
 
     def test_no_range_ranks_global_above_equally_relevant_local(self) -> None:
         records = [
@@ -257,6 +380,236 @@ class MeasureAwareSearchTests(unittest.TestCase):
 
         self.assertEqual([result.record["id"] for result in results], ["global", "local"])
         self.assertGreater(results[0].measure_score, results[1].measure_score)
+
+    def test_broad_singer_question_keeps_confirmed_local_examples(self) -> None:
+        whole = make_record(
+            "whole-guidance",
+            [],
+            text=(
+                "곡 전체에서는 명료한 발음과 자연스러운 호흡을 "
+                "유지하며 노래하는 것이 중요하다."
+            ),
+        )
+        local = make_record(
+            "local-guidance",
+            [[63, 63], [82, 83]],
+            text=(
+                "고음이 강박에 놓이지 않은 경우에는 단어의 강세와 "
+                "음악적 강세에 유의해 고음을 유연하게 노래해야 한다."
+            ),
+        )
+        pending = make_record(
+            "pending-guidance",
+            [],
+            text="프레이즈와 호흡에 유의하며 연습하는 것이 중요하다.",
+        )
+        pending["measure_status"] = "waiting_for_review"
+        distractor = make_record(
+            "web-biography",
+            [],
+            text="작곡가의 출생과 생애를 설명한다.",
+            evidence_type="web_database",
+        )
+        index = BM25Index([whole, local, pending, distractor])
+        question = (
+            "이 노래를 부를 때 가창자의 입장에서 유의해야 할 "
+            "점은 무엇인가?"
+        )
+
+        self.assertTrue(
+            is_broad_performance_guidance_query(
+                question,
+                "test-piece",
+            )
+        )
+        for natural_variant in (
+            "이 곡은 어떻게 불러야 할까?",
+            "이 곡을 부를 때 가장 유의할 점은?",
+            "이 곡을 노래할 때 중요한 가창 포인트는?",
+            "이 곡에서 가창자가 신경 써야 할 사항은?",
+            "이 곡을 잘 부르기 위한 팁은?",
+            "이 곡을 부르는 법을 알려줘",
+            "이 작품의 전반적인 가창 조언을 줘",
+            "How should I sing this piece?",
+            "What should a singer focus on in this work?",
+            "Give me overall singing advice for this piece.",
+        ):
+            with self.subTest(natural_variant=natural_variant):
+                self.assertTrue(
+                    is_broad_performance_guidance_query(
+                        natural_variant,
+                        "test-piece",
+                    )
+                )
+        results = index.search(
+            question,
+            piece="test-piece",
+            top_k=6,
+        )
+
+        self.assertEqual(
+            {result.record["id"] for result in results},
+            {"whole-guidance", "local-guidance"},
+        )
+        local_result = next(
+            result
+            for result in results
+            if result.record["id"] == "local-guidance"
+        )
+        self.assertEqual(local_result.scope_match, "local_example")
+        self.assertEqual(
+            scope_evidence_role(local_result.scope_match),
+            "local_example",
+        )
+        self.assertEqual(local_result.alias_score, 0.0)
+        self.assertFalse(
+            is_broad_performance_guidance_query(
+                "고음을 부를 때 어떤 점에 유의해야 할까?",
+                "test-piece",
+            )
+        )
+
+    def test_no_range_prefers_confirmed_local_over_pending_scope(self) -> None:
+        local = make_record("local", [[10, 12]])
+        pending = make_record("pending", [])
+        pending["measure_status"] = "waiting_for_review"
+
+        results = BM25Index([pending, local]).search(
+            query="breath phrasing",
+            piece="test-piece",
+            top_k=10,
+        )
+
+        self.assertEqual(
+            [result.record["id"] for result in results],
+            ["local", "pending"],
+        )
+
+    def test_broad_singer_question_can_request_a_musical_facet(
+        self,
+    ) -> None:
+        breathing = make_record(
+            "breathing",
+            [[10, 12]],
+            text=(
+                "호흡과 울림을 유지하도록 주의하고 충분히 "
+                "연습하는 것이 중요하다."
+            ),
+        )
+        expression = make_record(
+            "expression",
+            [[20, 22]],
+            text=(
+                "반주의 분위기와 음악적 해석을 생각하며 장면을 "
+                "섬세하게 표현하는 것이 중요하다."
+            ),
+        )
+        diction = make_record(
+            "diction",
+            [[30, 31]],
+            text=(
+                "자음과 모음을 명료하게 발음하도록 주의하는 것이 "
+                "중요하다."
+            ),
+        )
+        index = BM25Index([breathing, expression, diction])
+
+        expectations = {
+            "이 곡을 부를 때 호흡에 유의해야 할 점은?": {
+                "breathing"
+            },
+            "이 곡을 부를 때 표현에 유의해야 할 점은?": {
+                "expression"
+            },
+            "이 곡을 부를 때 음악적으로 유의해야 할 점은?": {
+                "expression"
+            },
+        }
+        for question, expected_ids in expectations.items():
+            with self.subTest(question=question):
+                self.assertTrue(
+                    is_broad_performance_guidance_query(
+                        question,
+                        "test-piece",
+                    )
+                )
+                results = index.search(
+                    question,
+                    piece="test-piece",
+                    top_k=10,
+                )
+                self.assertEqual(
+                    {result.record["id"] for result in results},
+                    expected_ids,
+                )
+                self.assertTrue(
+                    all(
+                        result.scope_match == "local_example"
+                        for result in results
+                    )
+                )
+
+        self.assertFalse(
+            is_broad_performance_guidance_query(
+                "고음을 부를 때 어떤 점에 유의해야 할까?",
+                "test-piece",
+            )
+        )
+
+    def test_broad_guidance_keeps_complementary_same_source_units(self) -> None:
+        general = make_record(
+            "general",
+            [],
+            text="자음과 모음의 악센트에 유의해 노래하는 것이 중요하다.",
+        )
+        tone = make_record(
+            "tone",
+            [],
+            text="탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 중요하다.",
+        )
+        diction = make_record(
+            "diction-sibling",
+            [],
+            text="딕션의 장단을 정확히 공부해 단어를 표현해야 한다.",
+        )
+        tone["source_ids"] = ["expert-source"]
+        diction["source_ids"] = ["expert-source"]
+
+        ids = result_ids(
+            BM25Index([general, tone, diction]),
+            query="이 곡을 잘 부르려면 무엇에 유의해야 할까?",
+            piece="test-piece",
+            top_k=3,
+        )
+
+        self.assertIn("tone", ids)
+        self.assertIn("diction-sibling", ids)
+
+    def test_broad_local_only_results_are_capped_at_three_examples(
+        self,
+    ) -> None:
+        records = [
+            make_record(
+                f"local-{index}",
+                [[index, index]],
+                text=(
+                    "고음과 프레이즈를 연습할 때 강박에 유의하고 "
+                    "명료한 발음을 유지하는 것이 중요하다."
+                ),
+            )
+            for index in range(1, 6)
+        ]
+
+        results = BM25Index(records).search(
+            query="이 곡을 부르는 법을 알려줘",
+            piece="test-piece",
+            top_k=10,
+        )
+
+        self.assertEqual(len(results), 3)
+        self.assertTrue(
+            all(result.scope_match == "local_example" for result in results)
+        )
 
     def test_ineligible_records_are_skipped_and_missing_flag_defaults_true(self) -> None:
         records = [
@@ -316,7 +669,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
             top_k=10,
         )
 
-        self.assertEqual(ids, ["web-global"])
+        self.assertEqual(ids, ["web-global", "unrelated-local"])
 
     def test_provenance_metadata_cannot_establish_semantic_relevance(self) -> None:
         record = make_record("semantic", [], text="genre and form")
@@ -329,7 +682,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
             ["semantic"],
         )
 
-    def test_compound_queries_use_minimal_full_coverage(self) -> None:
+    def test_compound_queries_require_candidate_local_full_coverage(self) -> None:
         records = [
             make_record("pronunciation", [], text="pronunciation"),
             make_record("form", [], text="form"),
@@ -337,15 +690,12 @@ class MeasureAwareSearchTests(unittest.TestCase):
         ]
         index = BM25Index(records)
         self.assertEqual(
-            set(
-                result_ids(
-                    index,
-                    query="pronunciation form",
-                    piece="test-piece",
-                    top_k=2,
-                )
+            index.search(
+                "pronunciation form",
+                piece="test-piece",
+                top_k=2,
             ),
-            {"pronunciation", "form"},
+            [],
         )
         self.assertEqual(
             result_ids(
