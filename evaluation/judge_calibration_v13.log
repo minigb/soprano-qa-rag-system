@@ -1,0 +1,46 @@
+
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]
+Loading weights:   7%|▋         | 26/398 [00:00<00:01, 251.51it/s]
+Loading weights:  13%|█▎        | 52/398 [00:00<00:01, 234.34it/s]
+Loading weights:  19%|█▉        | 76/398 [00:00<00:01, 214.59it/s]
+Loading weights:  26%|██▌       | 102/398 [00:00<00:01, 223.87it/s]
+Loading weights:  31%|███▏      | 125/398 [00:00<00:01, 216.43it/s]
+Loading weights:  37%|███▋      | 147/398 [00:00<00:01, 215.65it/s]
+Loading weights:  42%|████▏     | 169/398 [00:00<00:01, 212.82it/s]
+Loading weights:  48%|████▊     | 192/398 [00:00<00:00, 213.77it/s]
+Loading weights:  55%|█████▌    | 220/398 [00:00<00:00, 231.06it/s]
+Loading weights:  62%|██████▏   | 245/398 [00:01<00:00, 231.10it/s]
+Loading weights:  68%|██████▊   | 269/398 [00:01<00:00, 211.59it/s]
+Loading weights:  73%|███████▎  | 291/398 [00:01<00:00, 209.24it/s]
+Loading weights:  79%|███████▊  | 313/398 [00:01<00:00, 211.52it/s]
+Loading weights:  86%|████████▌ | 342/398 [00:01<00:00, 233.09it/s]
+Loading weights:  92%|█████████▏| 366/398 [00:01<00:00, 224.33it/s]
+Loading weights:  98%|█████████▊| 389/398 [00:01<00:00, 223.88it/s]
+Loading weights: 100%|██████████| 398/398 [00:01<00:00, 223.68it/s]
+
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 201/201 [00:00<00:00, 2201.94it/s]
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:  25%|██▌       | 78/310 [00:00<00:00, 777.56it/s]
+Loading weights:  61%|██████▏   | 190/310 [00:00<00:00, 973.75it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 1032.16it/s]
+
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 201/201 [00:00<00:00, 2464.48it/s]
+{
+  "total_controls": 25,
+  "completed_controls": 25,
+  "matched_controls": 25,
+  "required_matches": 25,
+  "accuracy": 1.0,
+  "minimum_accuracy": 1.0,
+  "quality_gate_passed": true,
+  "actual_verdicts": {
+    "fail": 10,
+    "human_review": 11,
+    "pass": 4
+  },
+  "frame_errors": 0,
+  "mismatched_control_ids": []
+}

@@ -1,0 +1,727 @@
+{
+  "accuracy": 1.0,
+  "actual_verdicts": {
+    "fail": 10,
+    "human_review": 11,
+    "pass": 4
+  },
+  "completed_controls": 25,
+  "frame_errors": 0,
+  "matched_controls": 25,
+  "minimum_accuracy": 1.0,
+  "mismatched_control_ids": [],
+  "quality_gate_passed": true,
+  "required_matches": 25,
+  "total_controls": 25
+}
+{
+  "questions": 40,
+  "inference_cases": 51,
+  "phases": {
+    "retrieval": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    },
+    "generate": {
+      "status": "pending",
+      "completed_cases": 0,
+      "error_cases": 0
+    },
+    "judge": {
+      "status": "pending",
+      "completed_cases": 0,
+      "error_cases": 0
+    }
+  },
+  "primary_metric": {
+    "name": "semantically_reliable_rag_llm_answer",
+    "judged_cases": 0,
+    "passed_cases": 0,
+    "case_pass_rate": null,
+    "completed_case_pass_rate": null,
+    "end_to_end_case_pass_rate": 0.0,
+    "completed_questions": 0,
+    "passed_questions": 0,
+    "question_pass_rate": null,
+    "completed_question_pass_rate": null,
+    "end_to_end_question_pass_rate": 0.0,
+    "by_piece": {
+      "die-forelle": {
+        "inference_cases": 11,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "in-flowery-clouds": {
+        "inference_cases": 10,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "la-capinera": {
+        "inference_cases": 30,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 20,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      }
+    }
+  },
+  "answer_quality_metric": {
+    "name": "expert_claim_semantic_fidelity_before_curation_gate",
+    "statuses": {},
+    "judged_cases": 0,
+    "passed_cases": 0,
+    "case_pass_rate": null,
+    "completed_case_pass_rate": null,
+    "end_to_end_case_pass_rate": 0.0,
+    "question_statuses": {
+      "pending": 40
+    },
+    "completed_questions": 0,
+    "passed_questions": 0,
+    "question_pass_rate": null,
+    "completed_question_pass_rate": null,
+    "end_to_end_question_pass_rate": 0.0,
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {},
+        "inference_cases": 11,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 10
+        },
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {},
+        "inference_cases": 10,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 10
+        },
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "la-capinera": {
+        "case_statuses": {},
+        "inference_cases": 30,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 20
+        },
+        "questions": 20,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      }
+    }
+  },
+  "semantic_judge": {
+    "statuses": {},
+    "passed_cases": 0,
+    "pass_rate": null,
+    "question_statuses": {
+      "pending": 40
+    },
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 10
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 10
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      },
+      "la-capinera": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 20
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      }
+    }
+  },
+  "retrieval_diagnostics": {
+    "completed_cases": 51,
+    "target_source_grounded_cases": 51,
+    "any_expected_knowledge_unit_cases": 51,
+    "all_expected_knowledge_unit_cases": 51,
+    "all_range_applicable_knowledge_unit_cases": 51
+  },
+  "generation_diagnostics": {
+    "completed_cases": 0,
+    "answer_basis": {},
+    "generation_mode": {},
+    "target_source_grounded_cases": 0
+  }
+}
+{
+  "questions": 40,
+  "inference_cases": 51,
+  "phases": {
+    "retrieval": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    },
+    "generate": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    },
+    "judge": {
+      "status": "pending",
+      "completed_cases": 0,
+      "error_cases": 0
+    }
+  },
+  "primary_metric": {
+    "name": "semantically_reliable_rag_llm_answer",
+    "judged_cases": 0,
+    "passed_cases": 0,
+    "case_pass_rate": null,
+    "completed_case_pass_rate": null,
+    "end_to_end_case_pass_rate": 0.0,
+    "completed_questions": 0,
+    "passed_questions": 0,
+    "question_pass_rate": null,
+    "completed_question_pass_rate": null,
+    "end_to_end_question_pass_rate": 0.0,
+    "by_piece": {
+      "die-forelle": {
+        "inference_cases": 11,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "in-flowery-clouds": {
+        "inference_cases": 10,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "la-capinera": {
+        "inference_cases": 30,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "questions": 20,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      }
+    }
+  },
+  "answer_quality_metric": {
+    "name": "expert_claim_semantic_fidelity_before_curation_gate",
+    "statuses": {},
+    "judged_cases": 0,
+    "passed_cases": 0,
+    "case_pass_rate": null,
+    "completed_case_pass_rate": null,
+    "end_to_end_case_pass_rate": 0.0,
+    "question_statuses": {
+      "pending": 40
+    },
+    "completed_questions": 0,
+    "passed_questions": 0,
+    "question_pass_rate": null,
+    "completed_question_pass_rate": null,
+    "end_to_end_question_pass_rate": 0.0,
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {},
+        "inference_cases": 11,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 10
+        },
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {},
+        "inference_cases": 10,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 10
+        },
+        "questions": 10,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      },
+      "la-capinera": {
+        "case_statuses": {},
+        "inference_cases": 30,
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "completed_case_pass_rate": null,
+        "end_to_end_case_pass_rate": 0.0,
+        "question_statuses": {
+          "pending": 20
+        },
+        "questions": 20,
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null,
+        "completed_question_pass_rate": null,
+        "end_to_end_question_pass_rate": 0.0
+      }
+    }
+  },
+  "semantic_judge": {
+    "statuses": {},
+    "passed_cases": 0,
+    "pass_rate": null,
+    "question_statuses": {
+      "pending": 40
+    },
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 10
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 10
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      },
+      "la-capinera": {
+        "case_statuses": {},
+        "judged_cases": 0,
+        "passed_cases": 0,
+        "case_pass_rate": null,
+        "question_statuses": {
+          "pending": 20
+        },
+        "completed_questions": 0,
+        "passed_questions": 0,
+        "question_pass_rate": null
+      }
+    }
+  },
+  "retrieval_diagnostics": {
+    "completed_cases": 51,
+    "target_source_grounded_cases": 51,
+    "any_expected_knowledge_unit_cases": 51,
+    "all_expected_knowledge_unit_cases": 51,
+    "all_range_applicable_knowledge_unit_cases": 51
+  },
+  "generation_diagnostics": {
+    "completed_cases": 51,
+    "answer_basis": {
+      "retrieved_evidence": 51
+    },
+    "generation_mode": {
+      "llm": 51
+    },
+    "target_source_grounded_cases": 51
+  }
+}
+
+Loading weights:   0%|          | 0/398 [00:00<?, ?it/s]
+Loading weights:   0%|          | 1/398 [00:00<00:49,  8.03it/s]
+Loading weights:   7%|▋         | 27/398 [00:00<00:02, 138.19it/s]
+Loading weights:  13%|█▎        | 51/398 [00:00<00:01, 181.26it/s]
+Loading weights:  18%|█▊        | 71/398 [00:00<00:01, 183.24it/s]
+Loading weights:  24%|██▍       | 97/398 [00:00<00:01, 208.24it/s]
+Loading weights:  31%|███       | 124/398 [00:00<00:01, 223.00it/s]
+Loading weights:  37%|███▋      | 147/398 [00:00<00:01, 210.01it/s]
+Loading weights:  42%|████▏     | 169/398 [00:00<00:01, 208.65it/s]
+Loading weights:  48%|████▊     | 192/398 [00:00<00:00, 209.11it/s]
+Loading weights:  55%|█████▍    | 218/398 [00:01<00:00, 221.93it/s]
+Loading weights:  61%|██████    | 241/398 [00:01<00:00, 223.67it/s]
+Loading weights:  66%|██████▋   | 264/398 [00:01<00:00, 213.62it/s]
+Loading weights:  73%|███████▎  | 291/398 [00:01<00:00, 225.92it/s]
+Loading weights:  79%|███████▉  | 314/398 [00:01<00:00, 221.62it/s]
+Loading weights:  85%|████████▌ | 339/398 [00:01<00:00, 228.23it/s]
+Loading weights:  91%|█████████ | 362/398 [00:01<00:00, 228.69it/s]
+Loading weights:  97%|█████████▋| 388/398 [00:01<00:00, 232.78it/s]
+Loading weights: 100%|██████████| 398/398 [00:01<00:00, 213.04it/s]
+
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 201/201 [00:00<00:00, 3094.76it/s]
+
+Loading weights:   0%|          | 0/310 [00:00<?, ?it/s]
+Loading weights:  38%|███▊      | 119/310 [00:00<00:00, 1178.57it/s]
+Loading weights:  76%|███████▋  | 237/310 [00:00<00:00, 1165.29it/s]
+Loading weights: 100%|██████████| 310/310 [00:00<00:00, 1177.65it/s]
+
+Loading weights:   0%|          | 0/201 [00:00<?, ?it/s]
+Loading weights: 100%|██████████| 201/201 [00:00<00:00, 2756.37it/s]
+Quality gate failed: expert-claim semantic-fidelity RAG+LLM case pass rate 39.2% < 80.0%
+ERROR conda.cli.main_run:execute(148): `conda run python /home/minhee/soprano-qa-rag-system/evaluation/run_question_evaluation.py --phase judge --dataset-root /home/minhee/soprano-qa-dataset --output /home/minhee/soprano-qa-rag-system/evaluation/three_piece_results.json --judge-backend transformers --judge-model-path /home/minhee/.cache/huggingface/hub/models--Qwen--Qwen3-4B/snapshots/1cfa9a7208912126459214e8b04321603b3df60c --judge-max-tokens 2048 --range-embedding-model-path /home/minhee/.cache/huggingface/hub/models--Qwen--Qwen3-Embedding-0.6B/snapshots/97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3 --range-nli-model-path /home/minhee/.cache/huggingface/hub/models--chunwoolee0--klue_nli_roberta_base_model/snapshots/d025228dc83570f814626c2b32980d514c65875d --range-nli-threshold 0.8 --range-embedding-delta-threshold 0.05 --judge-calibration /home/minhee/soprano-qa-rag-system/evaluation/judge_calibration_results.json` failed. (See above for error)
+{
+  "questions": 40,
+  "inference_cases": 51,
+  "phases": {
+    "retrieval": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    },
+    "generate": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    },
+    "judge": {
+      "status": "complete",
+      "completed_cases": 51,
+      "error_cases": 0
+    }
+  },
+  "primary_metric": {
+    "name": "semantically_reliable_rag_llm_answer",
+    "judged_cases": 51,
+    "passed_cases": 20,
+    "case_pass_rate": 0.392157,
+    "completed_case_pass_rate": 0.392157,
+    "end_to_end_case_pass_rate": 0.392157,
+    "completed_questions": 40,
+    "passed_questions": 11,
+    "question_pass_rate": 0.275,
+    "completed_question_pass_rate": 0.275,
+    "end_to_end_question_pass_rate": 0.275,
+    "by_piece": {
+      "die-forelle": {
+        "inference_cases": 11,
+        "judged_cases": 11,
+        "passed_cases": 4,
+        "case_pass_rate": 0.363636,
+        "completed_case_pass_rate": 0.363636,
+        "end_to_end_case_pass_rate": 0.363636,
+        "questions": 10,
+        "completed_questions": 10,
+        "passed_questions": 4,
+        "question_pass_rate": 0.4,
+        "completed_question_pass_rate": 0.4,
+        "end_to_end_question_pass_rate": 0.4
+      },
+      "in-flowery-clouds": {
+        "inference_cases": 10,
+        "judged_cases": 10,
+        "passed_cases": 1,
+        "case_pass_rate": 0.1,
+        "completed_case_pass_rate": 0.1,
+        "end_to_end_case_pass_rate": 0.1,
+        "questions": 10,
+        "completed_questions": 10,
+        "passed_questions": 1,
+        "question_pass_rate": 0.1,
+        "completed_question_pass_rate": 0.1,
+        "end_to_end_question_pass_rate": 0.1
+      },
+      "la-capinera": {
+        "inference_cases": 30,
+        "judged_cases": 30,
+        "passed_cases": 15,
+        "case_pass_rate": 0.5,
+        "completed_case_pass_rate": 0.5,
+        "end_to_end_case_pass_rate": 0.5,
+        "questions": 20,
+        "completed_questions": 20,
+        "passed_questions": 6,
+        "question_pass_rate": 0.3,
+        "completed_question_pass_rate": 0.3,
+        "end_to_end_question_pass_rate": 0.3
+      }
+    }
+  },
+  "answer_quality_metric": {
+    "name": "expert_claim_semantic_fidelity_before_curation_gate",
+    "statuses": {
+      "fail": 1,
+      "human_review": 30,
+      "pass": 20
+    },
+    "judged_cases": 51,
+    "passed_cases": 20,
+    "case_pass_rate": 0.392157,
+    "completed_case_pass_rate": 0.392157,
+    "end_to_end_case_pass_rate": 0.392157,
+    "question_statuses": {
+      "fail": 1,
+      "human_review": 28,
+      "pass": 11
+    },
+    "completed_questions": 40,
+    "passed_questions": 11,
+    "question_pass_rate": 0.275,
+    "completed_question_pass_rate": 0.275,
+    "end_to_end_question_pass_rate": 0.275,
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {
+          "human_review": 7,
+          "pass": 4
+        },
+        "inference_cases": 11,
+        "judged_cases": 11,
+        "passed_cases": 4,
+        "case_pass_rate": 0.363636,
+        "completed_case_pass_rate": 0.363636,
+        "end_to_end_case_pass_rate": 0.363636,
+        "question_statuses": {
+          "human_review": 6,
+          "pass": 4
+        },
+        "questions": 10,
+        "completed_questions": 10,
+        "passed_questions": 4,
+        "question_pass_rate": 0.4,
+        "completed_question_pass_rate": 0.4,
+        "end_to_end_question_pass_rate": 0.4
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {
+          "fail": 1,
+          "human_review": 8,
+          "pass": 1
+        },
+        "inference_cases": 10,
+        "judged_cases": 10,
+        "passed_cases": 1,
+        "case_pass_rate": 0.1,
+        "completed_case_pass_rate": 0.1,
+        "end_to_end_case_pass_rate": 0.1,
+        "question_statuses": {
+          "fail": 1,
+          "human_review": 8,
+          "pass": 1
+        },
+        "questions": 10,
+        "completed_questions": 10,
+        "passed_questions": 1,
+        "question_pass_rate": 0.1,
+        "completed_question_pass_rate": 0.1,
+        "end_to_end_question_pass_rate": 0.1
+      },
+      "la-capinera": {
+        "case_statuses": {
+          "human_review": 15,
+          "pass": 15
+        },
+        "inference_cases": 30,
+        "judged_cases": 30,
+        "passed_cases": 15,
+        "case_pass_rate": 0.5,
+        "completed_case_pass_rate": 0.5,
+        "end_to_end_case_pass_rate": 0.5,
+        "question_statuses": {
+          "human_review": 14,
+          "pass": 6
+        },
+        "questions": 20,
+        "completed_questions": 20,
+        "passed_questions": 6,
+        "question_pass_rate": 0.3,
+        "completed_question_pass_rate": 0.3,
+        "end_to_end_question_pass_rate": 0.3
+      }
+    }
+  },
+  "semantic_judge": {
+    "statuses": {
+      "fail": 1,
+      "human_review": 30,
+      "pass": 20
+    },
+    "passed_cases": 20,
+    "pass_rate": 0.392157,
+    "question_statuses": {
+      "fail": 1,
+      "human_review": 28,
+      "pass": 11
+    },
+    "by_piece": {
+      "die-forelle": {
+        "case_statuses": {
+          "human_review": 7,
+          "pass": 4
+        },
+        "judged_cases": 11,
+        "passed_cases": 4,
+        "case_pass_rate": 0.363636,
+        "question_statuses": {
+          "human_review": 6,
+          "pass": 4
+        },
+        "completed_questions": 10,
+        "passed_questions": 4,
+        "question_pass_rate": 0.4
+      },
+      "in-flowery-clouds": {
+        "case_statuses": {
+          "fail": 1,
+          "human_review": 8,
+          "pass": 1
+        },
+        "judged_cases": 10,
+        "passed_cases": 1,
+        "case_pass_rate": 0.1,
+        "question_statuses": {
+          "fail": 1,
+          "human_review": 8,
+          "pass": 1
+        },
+        "completed_questions": 10,
+        "passed_questions": 1,
+        "question_pass_rate": 0.1
+      },
+      "la-capinera": {
+        "case_statuses": {
+          "human_review": 15,
+          "pass": 15
+        },
+        "judged_cases": 30,
+        "passed_cases": 15,
+        "case_pass_rate": 0.5,
+        "question_statuses": {
+          "human_review": 14,
+          "pass": 6
+        },
+        "completed_questions": 20,
+        "passed_questions": 6,
+        "question_pass_rate": 0.3
+      }
+    }
+  },
+  "retrieval_diagnostics": {
+    "completed_cases": 51,
+    "target_source_grounded_cases": 51,
+    "any_expected_knowledge_unit_cases": 51,
+    "all_expected_knowledge_unit_cases": 51,
+    "all_range_applicable_knowledge_unit_cases": 51
+  },
+  "generation_diagnostics": {
+    "completed_cases": 51,
+    "answer_basis": {
+      "retrieved_evidence": 51
+    },
+    "generation_mode": {
+      "llm": 51
+    },
+    "target_source_grounded_cases": 51
+  }
+}
