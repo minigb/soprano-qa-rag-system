@@ -7,6 +7,7 @@ from typing import Any, Dict
 
 from soprano_qa.answer import (
     answer_overgeneralizes_local_examples,
+    answer_references_secondary_evidence,
     build_extractive_answer,
     build_messages,
     build_review_constraints,
@@ -15,8 +16,10 @@ from soprano_qa.answer import (
     ensure_review_disclosure,
     expert_prompt_factuality_material,
     finalize_answer_citations,
+    finalize_internal_knowledge_answer,
     generate_with_context_retry,
     has_primary_grounding,
+    is_grounded_insufficiency_answer,
     select_extractive_fallback_evidence,
     select_generation_evidence,
     suspicious_generation_tokens,
@@ -838,7 +841,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self.assertIn("다른 구간의 관련 주석", secondary_only)
         self.assertIn("다른 구간 답변", secondary_only)
 
-    def test_secondary_citations_are_removed_from_answer_and_footer(
+    def test_secondary_citations_are_removed_and_no_footer_is_added(
         self,
     ) -> None:
         overlap = make_result("die-forelle-ku-001")
@@ -856,7 +859,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             ),
             [overlap, other_range],
         )
-        automatic_footer = finalize_answer_citations(
+        uncited_answer = finalize_answer_citations(
             "인용을 생략한 답변",
             [overlap, other_range],
         )
@@ -865,10 +868,70 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self.assertNotIn("[die-forelle-ku-002]", explicit)
         self.assertIn("선택 범위의 근거", explicit)
         self.assertNotIn("다른 구간의 강약 교대", explicit)
-        self.assertIn("[die-forelle-ku-001]", automatic_footer)
-        self.assertNotIn(
-            "[die-forelle-ku-002]",
-            automatic_footer,
+        self.assertEqual(uncited_answer, "인용을 생략한 답변")
+        self.assertNotIn("제공된 검색 근거", uncited_answer)
+        self.assertNotIn("[die-forelle-ku-001]", uncited_answer)
+        self.assertNotIn("[die-forelle-ku-002]", uncited_answer)
+
+    def test_generated_evidence_footer_variants_are_removed(self) -> None:
+        primary = make_result("die-forelle-ku-001")
+        secondary = make_result(
+            "die-forelle-ku-002",
+            scope_match="other_range_context",
+        )
+        cases = (
+            "답변입니다. 제공된 검색 근거: [E1]",
+            "답변입니다. **제공된 검색 근거：** [E1]",
+            "답변입니다.\n- 제공된   검색   근거: [E1]",
+            "답변입니다.\n### 제공된 검색 근거:\n[E1] [E2]",
+            "답변입니다.\n**제공된 검색 근거:**\n[Evidence 1]",
+            "답변입니다.\n1. 제공된 검색 근거:\n[E1]",
+            "답변입니다.\n• 제공된 검색 근거:\n[E1]",
+            "답변입니다.\n제공된 검색 근거:\n[Evidence no. 1] [근거 2]",
+            "답변입니다.\n“제공된 검색 근거”: [E1]",
+            "답변입니다.\n제공된 **검색 근거**: [E1]",
+            "답변입니다.\n**제공된** 검색 근거: [E1]",
+            "답변입니다.\n제공된 *검색* 근거: [E1]",
+        )
+
+        for answer in cases:
+            with self.subTest(answer=answer):
+                self.assertEqual(
+                    finalize_answer_citations(
+                        answer,
+                        [primary, secondary],
+                    ),
+                    "답변입니다.",
+                )
+                self.assertFalse(
+                    answer_references_secondary_evidence(
+                        answer,
+                        [primary, secondary],
+                    )
+                )
+
+        formatted_cases = {
+            "**답변입니다.** 제공된 검색 근거: [E1]": "**답변입니다.**",
+            "_답변입니다._ 제공된 검색 근거: [E1]": "_답변입니다._",
+            "`답변입니다.` 제공된 검색 근거: [E1]": "`답변입니다.`",
+        }
+        for answer, expected in formatted_cases.items():
+            with self.subTest(answer=answer):
+                self.assertEqual(
+                    finalize_answer_citations(answer, [primary]),
+                    expected,
+                )
+
+        self.assertEqual(
+            finalize_internal_knowledge_answer(
+                "일반 답변입니다. **제공된 검색 근거：** [E1]"
+            ),
+            "일반 답변입니다.",
+        )
+        self.assertTrue(
+            is_grounded_insufficiency_answer(
+                "\"제공된 검색 근거\":\n[Evidence no. 1] [근거 2]"
+            )
         )
 
     def test_secondary_citation_variants_trigger_safe_fallback(self) -> None:

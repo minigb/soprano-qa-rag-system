@@ -1330,24 +1330,14 @@ class CombinedCorpusTests(unittest.TestCase):
         trailing = finalize_answer_citations("근거입니다. [E1;]", expert + web)
         self.assertEqual(trailing, "근거입니다. [die-forelle-ku-007]")
         uncited = finalize_answer_citations("근거입니다.", web)
-        self.assertEqual(
-            uncited,
-            "근거입니다.\n\n제공된 검색 근거: [webchunk-cecff2bace03ab67e32d]",
-        )
+        self.assertEqual(uncited, "근거입니다.")
         unknown = finalize_answer_citations("근거입니다. [E99]", web)
-        self.assertEqual(
-            unknown,
-            "근거입니다.\n\n제공된 검색 근거: [webchunk-cecff2bace03ab67e32d]",
-        )
+        self.assertEqual(unknown, "근거입니다.")
         malformed = finalize_answer_citations(
             "근거입니다. [websrc-fake] [die-forelle-ku-ABC] [A]",
             web,
         )
-        self.assertEqual(
-            malformed,
-            "근거입니다.   [A]\n\n제공된 검색 근거: "
-            "[webchunk-cecff2bace03ab67e32d]",
-        )
+        self.assertEqual(malformed, "근거입니다.   [A]")
         prefixed = finalize_answer_citations(
             "근거입니다. [1] [출처: E99] [Source: webchunk-not-retrieved]",
             web,
@@ -1355,23 +1345,25 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertNotIn("[1]", prefixed)
         self.assertNotIn("E99", prefixed)
         self.assertNotIn("not-retrieved", prefixed)
-        self.assertIn("제공된 검색 근거: [webchunk-cecff2bace03ab67e32d]", prefixed)
+        self.assertEqual(prefixed, "근거입니다.")
         expert_source_id = expert[0].record["source_ids"][0]
         provenance_citation = finalize_answer_citations(
             "근거입니다. [%s]" % expert_source_id,
             expert,
         )
         self.assertNotIn(expert_source_id, provenance_citation)
-        self.assertIn(
-            "제공된 검색 근거: [die-forelle-ku-007]",
-            provenance_citation,
-        )
+        self.assertEqual(provenance_citation, "근거입니다.")
         grouped_provenance = finalize_answer_citations(
             "근거입니다. [%s]" % ", ".join(expert[0].record["source_ids"]),
             expert,
         )
         for source_id in expert[0].record["source_ids"]:
             self.assertNotIn(source_id, grouped_provenance)
+        model_footer = finalize_answer_citations(
+            "근거입니다.\n\n제공된 검색 근거: [E1]",
+            web,
+        )
+        self.assertEqual(model_footer, "근거입니다.")
 
     def test_conditional_web_evidence_has_deterministic_rights_notice(self) -> None:
         for rights_question in (

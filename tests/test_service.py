@@ -794,6 +794,40 @@ class ServicePipelineTests(unittest.TestCase):
             "grounded model returned no usable answer",
         )
 
+    def test_footer_only_grounded_answer_uses_extractive_evidence(self) -> None:
+        available = {
+            "path": "/tmp/model.gguf",
+            "checkpoint_exists": True,
+            "llama_cpp_available": True,
+        }
+        with (
+            mock.patch.object(qa, "model_status", return_value=available),
+            mock.patch.object(
+                qa,
+                "generate_llm",
+                return_value=(
+                    "\"제공된 검색 근거\":\n"
+                    "[Evidence no. 1] [근거 2]"
+                ),
+            ) as generate,
+        ):
+            result = qa.ask(
+                piece_id="die-forelle",
+                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
+                measure_range=(28, 30),
+                generate=True,
+            )
+
+        generate.assert_called_once()
+        self.assertEqual(result["generation_mode"], "extractive")
+        self.assertEqual(result["answer_basis"], "retrieval_extractive")
+        self.assertIn("[die-forelle-ku-010]", result["answer"])
+        self.assertNotIn("제공된 검색 근거", result["answer"])
+        self.assertEqual(
+            result["generation_fallback_reason"],
+            "grounded model returned no usable answer",
+        )
+
     def test_no_hit_can_disable_internal_knowledge_fallback(self) -> None:
         available = {
             "path": "/tmp/model.gguf",

@@ -140,6 +140,61 @@ OPAQUE_CITATION_ID_PATTERN = (
     + EXPERT_RECORD_ID_PATTERN
     + r"|sqa-[0-9]+|webchunk-[A-Za-z0-9*-]+)"
 )
+EVIDENCE_FOOTER_LABEL_RE = re.compile(
+    r"제공된[\s*_~`]*검색[\s*_~`]*근거[\s*_~`]*[:：]?"
+)
+
+
+def _remove_evidence_footer(answer: str) -> str:
+    """Remove user-facing retrieved-evidence footer variants."""
+
+    cleaned_lines: List[str] = []
+    for line in answer.splitlines():
+        match = EVIDENCE_FOOTER_LABEL_RE.search(line)
+        if match:
+            # Preserve substantive prose before an inline footer while
+            # dropping Markdown/list decoration that belongs to the label.
+            prefix = line[: match.start()].rstrip()
+            if (
+                not any(character.isalnum() for character in prefix)
+                or re.fullmatch(r"[\W_]*\d+[.)][\W_]*", prefix)
+            ):
+                prefix = ""
+            else:
+                prefix = re.sub(
+                    r"\s+[-+*>#]+$",
+                    "",
+                    prefix,
+                ).rstrip()
+                for marker in (
+                    "```",
+                    "***",
+                    "___",
+                    "~~",
+                    "**",
+                    "__",
+                    "`",
+                    "*",
+                    "_",
+                ):
+                    if not prefix.endswith(marker):
+                        continue
+                    preceding = prefix[: -len(marker)]
+                    if preceding.count(marker) % 2 == 0:
+                        prefix = preceding.rstrip()
+                    break
+            if prefix:
+                cleaned_lines.append(prefix)
+            # A footer is terminal metadata. Dropping the complete remainder
+            # also prevents uncommon citation spellings on continuation lines
+            # from becoming orphaned user-facing IDs.
+            break
+        cleaned_lines.append(line)
+    cleaned = "\n".join(cleaned_lines)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
 SOURCE_MEASURE_LOCATOR_RE = re.compile(
     r"(?<!\d)"
     r"\d+\s*(?:[-–—~]\s*\d+)?"
@@ -324,7 +379,8 @@ def _answer_claims(answer: str) -> List[str]:
     """Split generated prose into citation-bearing claim-sized lines."""
 
     claims: List[str] = []
-    for line in unicodedata.normalize("NFKC", answer).splitlines():
+    sanitized_answer = _remove_evidence_footer(answer)
+    for line in unicodedata.normalize("NFKC", sanitized_answer).splitlines():
         line = ANSWER_LIST_PREFIX_RE.sub("", line.strip())
         if (
             not line
@@ -605,8 +661,7 @@ def answer_overgeneralizes_local_examples(
         ):
             return True
 
-    # The citation finalizer otherwise attributes an unlabeled answer to all
-    # retrieved records. With local examples in the prompt that would make it
+    # With local examples in the prompt, an unlabeled answer makes it
     # impossible to tell which claim came from which range, so require the
     # model to identify at least one actual evidence item in the answer body.
     if local_indices and body_claims and not body_citations:
@@ -1550,6 +1605,7 @@ def finalize_internal_knowledge_answer(answer: str) -> str:
 
     finalized = answer.replace(OLD_INSUFFICIENT_EVIDENCE_MESSAGE, "")
     finalized = finalized.replace(NO_GROUNDED_ANSWER_SENTINEL, "")
+    finalized = _remove_evidence_footer(finalized)
     citation_label = (
         r"(?:E(?:vidence)?\s*[0-9]+|" + OPAQUE_CITATION_ID_PATTERN + r")"
     )
@@ -1578,6 +1634,8 @@ def finalize_internal_knowledge_answer(answer: str) -> str:
 def is_grounded_insufficiency_answer(answer: str) -> bool:
     """Recognize the grounded model's no-answer signal and legacy refusal."""
 
+    if answer.strip() and not _remove_evidence_footer(answer):
+        return True
     normalized = re.sub(r"\s+", "", answer)
     if NO_GROUNDED_ANSWER_SENTINEL.lower() in normalized.lower():
         return True
@@ -2066,6 +2124,7 @@ def answer_references_secondary_evidence(
 ) -> bool:
     """Detect an explicit reference to context that cannot ground the answer."""
 
+    answer = _remove_evidence_footer(answer)
     primary_results = primary_grounding_results(results)
     record_id_by_label = [
         (
@@ -2149,6 +2208,7 @@ def answer_references_secondary_evidence(
 
 
 def finalize_answer_citations(answer: str, results: List[Any]) -> str:
+    answer = _remove_evidence_footer(answer)
     all_record_ids = [result.record["id"] for result in results]
     if not all_record_ids:
         return answer
@@ -2275,13 +2335,9 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         if not generated_text:
             return "생성된 답변에서 유효한 내용을 확인하지 못했습니다."
         # Some local-model generations follow the evidence but omit the label.
-        # Preserve that useful answer while adding a deterministic disclosure of
-        # every retrieved record supplied to the model. Invalid model-produced
-        # labels have already been removed above.
-        evidence_footer = "제공된 검색 근거: " + " ".join(
-            "[%s]" % record_id for record_id in record_ids
-        )
-        return generated_text + "\n\n" + evidence_footer
+        # Preserve that useful answer without adding record IDs to user-facing
+        # prose; callers receive the retrieved evidence as separate metadata.
+        return generated_text
     return finalized.strip()
 
 
