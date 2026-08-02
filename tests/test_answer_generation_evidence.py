@@ -17,6 +17,7 @@ from soprano_qa.answer import (
     finalize_answer_citations,
     generate_with_context_retry,
     has_primary_grounding,
+    select_extractive_fallback_evidence,
     select_generation_evidence,
     suspicious_generation_tokens,
 )
@@ -34,6 +35,10 @@ def make_result(
     measure_notes: str = "",
     review_warning: str = "",
     scope_match: str = "overlaps_query_range",
+    source_ids: list[str] | None = None,
+    score: float = 1.0,
+    text_score: float = 1.0,
+    semantic_match_type: str = "strict",
 ) -> SearchResult:
     record: Dict[str, Any] = {
         "id": record_id,
@@ -43,7 +48,7 @@ def make_result(
         "topic": "performance",
         "measure_range": [[2, 5]],
         "measure_scope": "local",
-        "source_ids": ["kim-die-forelle-01"],
+        "source_ids": source_ids or ["kim-die-forelle-01"],
         "annotators": ["kim"],
         "rewrite_status": rewrite_status,
         "rewrite_notes": rewrite_notes,
@@ -56,12 +61,13 @@ def make_result(
     }
     return SearchResult(
         record=record,
-        score=1.0,
-        text_score=1.0,
+        score=score,
+        text_score=text_score,
         measure_score=0.0,
         piece_score=1.0,
         scope_match=scope_match,
         alias_score=alias_score,
+        semantic_match_type=semantic_match_type,
     )
 
 
@@ -124,6 +130,323 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
 
         self.assertEqual(selected, [overlap, stronger_other_range])
         self.assertTrue(has_primary_grounding(selected))
+
+    def test_extractive_fallback_prefers_expert_anchor_over_web_evidence(
+        self,
+    ) -> None:
+        web = make_result(
+            "web",
+            evidence_type="web_database",
+            scope_match="general_evidence",
+        )
+        expert = make_result(
+            "expert",
+            scope_match="general_evidence",
+            source_ids=["source-direct"],
+        )
+
+        self.assertEqual(
+            select_extractive_fallback_evidence([web, expert]),
+            [expert],
+        )
+
+    def test_extractive_fallback_preserves_ranked_local_example(
+        self,
+    ) -> None:
+        local = make_result(
+            "local",
+            scope_match="local_example",
+            source_ids=["source-local"],
+        )
+        general = make_result(
+            "general",
+            scope_match="general_evidence",
+            source_ids=["source-general"],
+        )
+
+        self.assertEqual(
+            select_extractive_fallback_evidence([local, general]),
+            [local],
+        )
+
+    def test_local_rejection_keeps_a_near_tied_dense_contender(
+        self,
+    ) -> None:
+        generic = make_result(
+            "generic",
+            scope_match="general_evidence",
+            source_ids=["generic-source"],
+            score=0.62,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        direct = make_result(
+            "direct",
+            scope_match="general_evidence",
+            source_ids=["direct-source"],
+            score=0.54,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        sibling = make_result(
+            "generic-sibling",
+            scope_match="general_evidence",
+            source_ids=["generic-source"],
+            score=0.51,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+
+        selected = select_extractive_fallback_evidence(
+            [generic, direct, sibling],
+            exclude_local_examples=True,
+        )
+
+        self.assertEqual(selected, [generic, direct, sibling])
+
+    def test_dense_fallback_can_reanchor_on_directness_signal(self) -> None:
+        generic = [
+            make_result(
+                f"generic-{index}",
+                scope_match="general_evidence",
+                source_ids=[f"generic-source-{index}"],
+                score=0.60 - index * 0.02,
+                semantic_match_type="dense",
+            )
+            for index in range(5)
+        ]
+        direct = make_result(
+            "direct-concept-match",
+            scope_match="unspecified_scope",
+            source_ids=["direct-source"],
+            score=0.44,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        direct.concept_coverage = 0.25
+
+        selected = select_extractive_fallback_evidence(
+            [*generic, direct]
+        )
+
+        self.assertEqual(selected[0], direct)
+        self.assertEqual(selected, [direct, generic[0]])
+
+    def test_artifact_shaped_old_omissions_keep_direct_expected_units(
+        self,
+    ) -> None:
+        web = make_result(
+            "web-distractor",
+            evidence_type="web_database",
+            scope_match="general_evidence",
+            source_ids=[],
+            score=0.548,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        generic = make_result(
+            "generic-difficulty",
+            scope_match="general_evidence",
+            source_ids=["generic"],
+            score=0.544,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        interrupted_phrase = make_result(
+            "die-forelle-ku-006",
+            scope_match="unspecified_scope",
+            source_ids=["kim-die-forelle-04"],
+            score=0.444,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        interrupted_phrase.concept_coverage = 0.142857
+        interrupted_phrase.content_concept_coverage = 0.142857
+
+        self.assertEqual(
+            select_extractive_fallback_evidence(
+                [web, generic, interrupted_phrase]
+            ),
+            [interrupted_phrase, generic],
+        )
+
+        difficult_generic = make_result(
+            "die-forelle-ku-009",
+            scope_match="general_evidence",
+            source_ids=["generic-difficulty"],
+            score=0.625,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        difficult_generic.concept_coverage = 0.5
+        difficult_generic.content_concept_coverage = 0.5
+        difficult_direct = make_result(
+            "die-forelle-ku-011",
+            scope_match="general_evidence",
+            source_ids=["kim-die-forelle-08"],
+            score=0.544,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        unrelated_local = make_result(
+            "die-forelle-ku-010",
+            scope_match="local_example",
+            source_ids=["kim-die-forelle-07"],
+            score=0.513,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        unrelated_local.concept_coverage = 0.5
+        unrelated_local.content_concept_coverage = 0.5
+
+        selected = select_extractive_fallback_evidence(
+            [difficult_generic, difficult_direct, unrelated_local],
+            exclude_local_examples=True,
+        )
+        self.assertEqual(selected, [difficult_generic, difficult_direct])
+
+    def test_meter_return_fallback_anchors_whole_piece_unit_only(self) -> None:
+        m39_local = make_result(
+            "in-flowery-clouds-ku-008",
+            scope_match="local_example",
+            source_ids=["meter-change"],
+            score=0.597,
+            text_score=0.0,
+            semantic_match_type="dense",
+            review_warning="rewrite_review_pending",
+        )
+        m39_local.concept_coverage = 0.25
+        m39_local.content_concept_coverage = 0.25
+        meter_return = make_result(
+            "in-flowery-clouds-ku-011",
+            scope_match="general_evidence",
+            source_ids=["meter-return"],
+            score=0.517,
+            text_score=0.0,
+            semantic_match_type="dense",
+            review_warning="rewrite_review_pending",
+        )
+        meter_return.concept_coverage = 0.75
+        meter_return.content_concept_coverage = 0.75
+        m19_local = make_result(
+            "in-flowery-clouds-ku-006",
+            scope_match="local_example",
+            source_ids=["breath-example"],
+            score=0.455,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+
+        self.assertEqual(
+            select_extractive_fallback_evidence(
+                [m39_local, meter_return, m19_local]
+            ),
+            [meter_return],
+        )
+
+    def test_transposition_fallback_omits_fermata_warning(self) -> None:
+        transposition = make_result(
+            "in-flowery-clouds-ku-007",
+            scope_match="general_evidence",
+            source_ids=["transposition"],
+            score=0.702,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        transposition.concept_coverage = 0.428571
+        transposition.content_concept_coverage = 0.142857
+        optional_note = make_result(
+            "in-flowery-clouds-ku-013",
+            scope_match="general_evidence",
+            source_ids=["optional-note"],
+            score=0.599,
+            text_score=0.0,
+            semantic_match_type="dense",
+        )
+        fermata = make_result(
+            "in-flowery-clouds-ku-001",
+            scope_match="local_example",
+            source_ids=["fermata"],
+            score=0.560,
+            text_score=0.0,
+            semantic_match_type="dense",
+            review_warning="rewrite_review_pending",
+        )
+
+        selected = select_extractive_fallback_evidence(
+            [transposition, optional_note, fermata]
+        )
+
+        self.assertEqual(selected, [transposition, optional_note])
+        self.assertFalse(
+            any(
+                result.record.get("retrieval_review_warning")
+                for result in selected
+            )
+        )
+
+    def test_broad_fallback_reanchors_and_keeps_same_source_bundle(
+        self,
+    ) -> None:
+        distractor = make_result(
+            "distractor",
+            scope_match="general_evidence",
+            source_ids=["source-other"],
+            score=21.5,
+            semantic_match_type="broad_guidance",
+        )
+        local = make_result(
+            "local",
+            scope_match="local_example",
+            source_ids=["source-local"],
+            score=23.0,
+            semantic_match_type="broad_guidance",
+        )
+        sibling_one = make_result(
+            "sibling-one",
+            scope_match="general_evidence",
+            source_ids=["source-bundle"],
+            score=18.5,
+            semantic_match_type="broad_guidance",
+        )
+        sibling_two = make_result(
+            "sibling-two",
+            scope_match="general_evidence",
+            source_ids=["source-bundle"],
+            score=16.5,
+            semantic_match_type="broad_guidance",
+        )
+        anchor = make_result(
+            "anchor",
+            scope_match="general_evidence",
+            source_ids=["source-bundle", "source-secondary"],
+            score=22.5,
+            semantic_match_type="broad_guidance",
+        )
+
+        self.assertEqual(
+            select_extractive_fallback_evidence(
+                [distractor, local, sibling_one, sibling_two, anchor]
+            ),
+            [anchor, sibling_one, sibling_two],
+        )
+
+    def test_extractive_fallback_keeps_unscoped_direct_anchor(self) -> None:
+        direct = make_result(
+            "direct",
+            scope_match="unspecified_scope",
+            source_ids=["source-direct"],
+        )
+        general = make_result(
+            "general",
+            scope_match="general_evidence",
+            source_ids=["source-other"],
+        )
+
+        self.assertEqual(
+            select_extractive_fallback_evidence([direct, general]),
+            [direct],
+        )
 
     def test_other_range_context_is_capped_at_two_records(self) -> None:
         overlap = make_result("overlap", alias_score=0.0)
@@ -580,6 +903,37 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                     finalized.lower(),
                 )
 
+    def test_secondary_citation_fallback_uses_compact_selection(self) -> None:
+        primary = [
+            make_result(
+                f"primary-{index}",
+                scope_match="overlaps_query_range",
+                source_ids=[f"source-{index}"],
+            )
+            for index in range(4)
+        ]
+        other_range = make_result(
+            "other-range",
+            scope_match="other_range_context",
+            source_ids=["other-source"],
+        )
+
+        finalized = finalize_answer_citations(
+            "다른 구간의 위험 주장 [E5]",
+            [*primary, other_range],
+        )
+
+        cited_primary = [
+            result.record["id"]
+            for result in primary
+            if f'[{result.record["id"]}]' in finalized
+        ]
+        self.assertEqual(
+            cited_primary,
+            [primary[0].record["id"], primary[1].record["id"]],
+        )
+        self.assertNotIn("다른 구간의 위험 주장", finalized)
+
     def test_music_and_korean_counts_are_not_secondary_citations(self) -> None:
         overlap = make_result("die-forelle-ku-001")
         other_range = make_result(
@@ -815,6 +1169,110 @@ class GenerationArtifactRepairTests(unittest.TestCase):
 
 
 class ReviewConstraintPromptTests(unittest.TestCase):
+    def test_unrelated_warning_is_not_added_to_cited_safe_evidence(
+        self,
+    ) -> None:
+        safe = make_result(
+            "safe",
+            scope_match="general_evidence",
+        )
+        warning = make_result(
+            "unrelated-warning",
+            rewrite_status="needs_review",
+            rewrite_notes="다른 음정 표기를 확인해야 한다.",
+            review_warning="rewrite_review_pending",
+            scope_match="local_example",
+        )
+
+        class FixedIndex:
+            @staticmethod
+            def search(**_kwargs):
+                return [safe, warning]
+
+        unrelated_disclosure = build_review_disclosure([warning])
+        answer, _results, _messages, _limited = (
+            generate_with_context_retry(
+                FixedIndex(),
+                query="전주는 어떻게 선택할까?",
+                piece="die-forelle",
+                measure_ranges=[],
+                measures="",
+                topic=None,
+                top_k=6,
+                generator=lambda _messages: (
+                    unrelated_disclosure
+                    + "\n\n안전한 근거의 답변이다. [E1]"
+                ),
+            )
+        )
+
+        self.assertEqual(answer, "안전한 근거의 답변이다. [E1]")
+        self.assertNotIn("검토 주의:", answer)
+        self.assertNotIn("다른 음정", answer)
+
+    def test_unusable_citation_with_warning_candidate_fails_closed(
+        self,
+    ) -> None:
+        safe = make_result(
+            "safe",
+            scope_match="general_evidence",
+        )
+        warning = make_result(
+            "warning",
+            rewrite_status="needs_review",
+            rewrite_notes="표기를 확인해야 한다.",
+            review_warning="rewrite_review_pending",
+            scope_match="local_example",
+        )
+
+        class FixedIndex:
+            @staticmethod
+            def search(**_kwargs):
+                return [safe, warning]
+
+        answer, _results, _messages, _limited = (
+            generate_with_context_retry(
+                FixedIndex(),
+                query="조성을 바꿔도 될까?",
+                piece="in-flowery-clouds",
+                measure_ranges=[],
+                measures="",
+                topic=None,
+                top_k=6,
+                generator=lambda _messages: "조성을 바꿀 수 있다. [E99]",
+            )
+        )
+
+        self.assertIn("<NO_GROUNDED_ANSWER>", answer)
+
+    def test_warning_candidates_make_uncited_draft_fail_closed(self) -> None:
+        warning = make_result(
+            "warning",
+            rewrite_status="needs_review",
+            rewrite_notes="표기를 확인해야 한다.",
+            review_warning="rewrite_review_pending",
+        )
+
+        class FixedIndex:
+            @staticmethod
+            def search(**_kwargs):
+                return [warning]
+
+        answer, _results, _messages, _limited = (
+            generate_with_context_retry(
+                FixedIndex(),
+                query="표현은 어떻게 할까?",
+                piece="die-forelle",
+                measure_ranges=[[2, 5]],
+                measures="2-5",
+                topic=None,
+                top_k=6,
+                generator=lambda _messages: "인용 없는 답변이다.",
+            )
+        )
+
+        self.assertIn("<NO_GROUNDED_ANSWER>", answer)
+
     def test_needs_review_draft_gets_compliance_repair_pass(self) -> None:
         warning = make_result(
             "in-flowery-clouds-ku-warning",
@@ -883,6 +1341,8 @@ class ReviewConstraintPromptTests(unittest.TestCase):
         )[1]["content"]
 
         self.assertIn("MANDATORY REVIEW CONSTRAINTS", constraints)
+        self.assertIn("actually\nuses and cites", constraints)
+        self.assertIn("answer omits", constraints)
         self.assertIn("rewrite_status: needs_review", constraints)
         self.assertIn("원문 주장 사이의 정확성 충돌을 확인해야 함", constraints)
         self.assertIn("measure_status: waiting_for_review", constraints)

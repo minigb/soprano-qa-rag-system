@@ -87,6 +87,27 @@ def input_file_records(paths: Iterable[Path]) -> list[dict[str, str]]:
     return records
 
 
+def embedding_model_record(path: Path) -> dict[str, Any]:
+    """Describe an optional GGUF checkpoint without requiring its presence."""
+
+    resolved = path.resolve()
+    if resolved.is_file():
+        return {
+            "path": str(resolved),
+            "checkpoint_exists": True,
+            "kind": "file",
+            "backend": "llama-cpp-embedding",
+            "sha256": file_sha256(resolved),
+        }
+    return {
+        "path": str(resolved),
+        "checkpoint_exists": resolved.exists(),
+        "kind": "directory" if resolved.is_dir() else "missing",
+        "backend": "llama-cpp-embedding",
+        "sha256": None,
+    }
+
+
 def ranges_overlap(left: Sequence[int], right: Sequence[int]) -> bool:
     return left[0] <= right[1] and right[0] <= left[1]
 
@@ -557,6 +578,7 @@ def build_input_fingerprint(
     input_files: Sequence[Mapping[str, str]],
     generate: bool,
     top_k: int,
+    retrieval_embedding_model: Mapping[str, Any] | None = None,
 ) -> str:
     payload = {
         "artifact_type": ARTIFACT_TYPE,
@@ -565,6 +587,11 @@ def build_input_fingerprint(
         "generate": generate,
         "top_k": top_k,
         "input_files": list(input_files),
+        "retrieval_embedding_model": (
+            dict(retrieval_embedding_model)
+            if retrieval_embedding_model is not None
+            else None
+        ),
     }
     return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
@@ -577,6 +604,7 @@ def new_snapshot(
     input_fingerprint: str,
     generate: bool,
     top_k: int,
+    retrieval_embedding_model: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     now = utc_now()
     snapshot = {
@@ -614,6 +642,11 @@ def new_snapshot(
             "top_k": top_k,
             "input_fingerprint": input_fingerprint,
             "input_files": input_files,
+            "retrieval_embedding_model": (
+                dict(retrieval_embedding_model)
+                if retrieval_embedding_model is not None
+                else None
+            ),
         },
         "questions": questions,
         "summary": {},
@@ -796,6 +829,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         Path(__file__).resolve(),
         PROJECT_ROOT / "soprano_qa" / "answer.py",
         PROJECT_ROOT / "soprano_qa" / "corpus.py",
+        PROJECT_ROOT / "soprano_qa" / "dense.py",
         PROJECT_ROOT / "soprano_qa" / "retrieval.py",
         PROJECT_ROOT / "soprano_qa" / "service.py",
         PROJECT_ROOT / "soprano_qa" / "settings.py",
@@ -804,10 +838,14 @@ def main(argv: Sequence[str] | None = None) -> int:
         Path(settings["stats_path"]),
     ]
     input_files = input_file_records([*dataset_paths, *implementation_paths])
+    retrieval_embedding_model = embedding_model_record(
+        Path(settings["embedding_model_path"])
+    )
     input_fingerprint = build_input_fingerprint(
         input_files=input_files,
         generate=arguments.generate,
         top_k=arguments.top_k,
+        retrieval_embedding_model=retrieval_embedding_model,
     )
 
     with exclusive_output_lock(output):
@@ -825,6 +863,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 input_fingerprint=input_fingerprint,
                 generate=arguments.generate,
                 top_k=arguments.top_k,
+                retrieval_embedding_model=retrieval_embedding_model,
             )
             atomic_write_json(output, snapshot)
 

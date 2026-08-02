@@ -17,6 +17,8 @@ PATH_KEYS = {
     "stats_path",
     "feature_overrides_path",
     "model_path",
+    "embedding_model_path",
+    "embedding_cache_path",
 }
 
 
@@ -55,6 +57,13 @@ def load_settings(
     model_override = os.environ.get("SOPRANO_QA_MODEL_PATH")
     if model_override:
         settings["model_path"] = _resolve_repo_relative_path(model_override)
+    embedding_model_override = os.environ.get(
+        "SOPRANO_QA_EMBEDDING_MODEL_PATH"
+    )
+    if embedding_model_override:
+        settings["embedding_model_path"] = _resolve_repo_relative_path(
+            embedding_model_override
+        )
     return settings
 
 

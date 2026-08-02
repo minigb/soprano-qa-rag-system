@@ -3,7 +3,14 @@
 models/*.gguf
 models/*.bin
 models/*.safetensors
+models/*.json
 
 # Python cache
 __pycache__/
 *.pyc
+
+# Evaluation runner lock sidecars
+evaluation/*.lock
+
+# Local intermediate evaluation checkpoints
+evaluation/*_pre_*.json

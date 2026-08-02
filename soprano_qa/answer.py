@@ -6,6 +6,7 @@ from __future__ import annotations
 
 import argparse
 import difflib
+from itertools import combinations
 import json
 import os
 import re
@@ -19,9 +20,13 @@ from soprano_qa.corpus import (
     corpus_input_fingerprint,
     file_sha256,
 )
+from soprano_qa.dense import (
+    SearchIndex,
+    build_retrieval_index,
+    retrieval_diagnostics,
+)
 from soprano_qa.llm import generate
 from soprano_qa.retrieval import (
-    BM25Index,
     format_measure_range,
     format_result,
     load_corpus,
@@ -387,6 +392,33 @@ def _claim_cited_result_indices(
             if 0 < int(label) <= len(results)
         )
     return cited
+
+
+def cited_primary_grounding_results(
+    answer: str,
+    results: List[Any],
+) -> List[Any]:
+    """Return primary evidence explicitly cited by substantive answer claims.
+
+    Review warnings are evidence-specific.  They must not be projected from an
+    unused retrieval candidate onto an answer grounded in a different record.
+    Preserve retrieval order so later citation finalization remains stable.
+    """
+
+    primary_ids = {
+        id(result)
+        for result in primary_grounding_results(results)
+    }
+    cited_indices: set[int] = set()
+    for claim in _answer_claims(answer):
+        cited_indices.update(
+            _claim_cited_result_indices(claim, results)
+        )
+    return [
+        result
+        for index, result in enumerate(results)
+        if index in cited_indices and id(result) in primary_ids
+    ]
 
 
 def _claim_names_confirmed_range(
@@ -1272,6 +1304,39 @@ def ensure_review_disclosure(answer: str, results: List[Any]) -> str:
     return disclosure + "\n\n" + answer.lstrip()
 
 
+def reconcile_review_disclosure(
+    answer: str,
+    supplied_results: List[Any],
+    cited_results: List[Any],
+) -> str:
+    """Keep only the deterministic warning disclosure for cited evidence.
+
+    A model can copy the conditional disclosure for a retrieved record that it
+    ultimately does not use.  Remove only disclosures that this application
+    itself can reproduce exactly; arbitrary model prose is never deleted.
+    """
+
+    required = build_review_disclosure(cited_results)
+    warned = [
+        result
+        for result in primary_grounding_results(supplied_results)
+        if result.record.get("retrieval_review_warning")
+    ]
+    known_disclosures = set()
+    for subset_size in range(1, len(warned) + 1):
+        for subset in combinations(warned, subset_size):
+            disclosure = build_review_disclosure(list(subset))
+            if disclosure:
+                known_disclosures.add(disclosure)
+    for disclosure in sorted(known_disclosures, key=len, reverse=True):
+        if disclosure == required:
+            continue
+        if _has_exact_leading_prefix_with_boundary(answer, disclosure):
+            answer = answer[len(disclosure) :].lstrip()
+            break
+    return ensure_review_disclosure(answer, cited_results)
+
+
 def build_review_constraints(results: List[Any]) -> str:
     """Render unresolved human-review notes as hard generation constraints."""
 
@@ -1297,6 +1362,7 @@ def build_review_constraints(results: List[Any]) -> str:
             measure_notes = _neutralize_unconfirmed_review_locators(
                 measure_notes
             )
+        required_disclosure_if_used = build_review_disclosure([result])
         warnings.append(
             "\n".join(
                 [
@@ -1308,19 +1374,22 @@ def build_review_constraints(results: List[Any]) -> str:
                     "measure_status: %s"
                     % (record.get("measure_status") or "(unknown)"),
                     "measure_notes: %s" % measure_notes,
+                    "required_disclosure_if_used: %s"
+                    % required_disclosure_if_used,
                 ]
             )
         )
     if not warnings:
         return ""
-    required_disclosure = build_review_disclosure(results)
     return """MANDATORY REVIEW CONSTRAINTS
-The following evidence is provisional. These notes are hard safety constraints, not
-background metadata:
+The following evidence is provisional. For each evidence item that the answer actually
+uses and cites, its notes are hard safety constraints, not background metadata. Do not
+mention a warning or disclosure for an evidence item that the answer omits:
 {warnings}
 
-The answer must begin with this exact Korean disclosure:
-{required_disclosure}
+If the answer cites flagged evidence, it must begin with the corresponding exact Korean
+required_disclosure_if_used. When several flagged items are cited, combine only their
+warnings into one leading disclosure. The application enforces the final combined wording.
 
 Attribute provisional content to the annotation instead of stating it as settled score
 fact. A rewrite note about accuracy or source basis means that the flagged detail must be
@@ -1334,7 +1403,6 @@ simultaneity, location, notation, or causal relationship without qualification. 
 recorded alternatives, or state only their shared undisputed conclusion.
 """.format(
         warnings="\n\n".join(warnings),
-        required_disclosure=required_disclosure,
     )
 
 
@@ -1351,8 +1419,11 @@ def requires_review_compliance_repair(results: List[Any]) -> bool:
 def build_review_compliance_repair_messages(
     messages: List[Dict[str, str]],
     answer: str,
+    cited_results: List[Any],
 ) -> List[Dict[str, str]]:
     """Ask the grounded model to audit a draft against review constraints."""
+
+    required_disclosure = build_review_disclosure(cited_results)
 
     return [
         *messages,
@@ -1366,7 +1437,10 @@ def build_review_compliance_repair_messages(
                 "one disputed timing, simultaneity, location, notation, or "
                 "causal relationship as settled. Preserve both recorded "
                 "alternatives, or keep only their shared undisputed "
-                "conclusion. Preserve the exact required disclosure, all "
+                "conclusion. Preserve this exact required disclosure for the "
+                "flagged evidence actually cited in the draft:\n"
+                + required_disclosure
+                + "\nPreserve all "
                 "grounded practical advice, uncertainty, and valid evidence "
                 "labels. Add no new claim. Output the corrected answer only."
                 "\n/no_think"
@@ -1511,12 +1585,187 @@ def is_grounded_insufficiency_answer(answer: str) -> bool:
     return legacy_refusal in normalized
 
 
-def build_extractive_answer(results: List[Any]) -> str:
+def select_extractive_fallback_evidence(
+    results: List[Any],
+    *,
+    max_items: int = 3,
+    exclude_local_examples: bool = False,
+) -> List[Any]:
+    """Choose a compact, coherent evidence bundle for safe fallback text.
+
+    Retrieval intentionally keeps diverse top-k candidates for recall.  An
+    extractive answer has a different contract: concatenating unrelated
+    candidates makes a safe fallback look like a direct multi-part answer.
+    Keep split units from one immutable source together and cap unrelated
+    expert supplementation at one record. Once a non-local expert anchors the
+    answer, web and local-example candidates are not appended merely to
+    diversify a dense fallback. A local or web candidate may anchor only when
+    it has a direct query signal; rejected local generalizations exclude local
+    examples entirely.
+    """
+
+    if max_items < 1 or not results:
+        return []
+    primary = primary_grounding_results(results)
+    if not primary:
+        # Keep the existing explicit other-range fallback path intact.
+        return list(results)
+    def has_direct_query_signal(result: Any) -> bool:
+        return bool(
+            result.alias_score > 0
+            or result.answer_relation_score > 0
+            or result.text_score > 0
+            or (
+                result.concept_coverage >= 0.5
+                and result.content_concept_coverage >= 0.5
+            )
+        )
+
+    def directness_anchor(candidates: List[Any]) -> Any:
+        return max(
+            enumerate(candidates),
+            key=lambda item: (
+                item[1].alias_score > 0,
+                item[1].alias_score,
+                item[1].answer_relation_score,
+                item[1].concept_coverage,
+                item[1].content_concept_coverage,
+                -item[0],
+            ),
+        )[1]
+
+    eligible_primary = [
+        result
+        for result in primary
+        if not (
+            exclude_local_examples
+            and result.scope_match == "local_example"
+        )
+    ]
+    expert = [
+        result
+        for result in eligible_primary
+        if result.record.get("evidence_type") == "expert_annotation"
+    ]
+    broad_guidance = any(
+        result.semantic_match_type == "broad_guidance"
+        for result in expert
+    )
+    general = [
+        result
+        for result in expert
+        if result.scope_match in {"general_evidence", "global_context"}
+    ]
+    anchor = None
+    if broad_guidance and general:
+        pool = general
+        anchor = max(
+            pool,
+            key=lambda result: (
+                result.score,
+                result.text_score,
+                result.dense_score,
+            ),
+        )
+    elif expert:
+        pool = expert
+        anchor = directness_anchor(pool)
+        if anchor.scope_match == "local_example":
+            if not has_direct_query_signal(anchor):
+                non_local_expert = [
+                    result
+                    for result in expert
+                    if result.scope_match != "local_example"
+                ]
+                if non_local_expert:
+                    pool = non_local_expert
+                    anchor = directness_anchor(pool)
+                else:
+                    anchor = None
+            # A genuinely direct local-only result remains useful, but it
+            # does not authorize unrelated whole-piece supplementation.
+            if anchor is not None and anchor.scope_match == "local_example":
+                pool = [
+                    result
+                    for result in expert
+                    if result.scope_match == "local_example"
+                ]
+        else:
+            # Expert whole-piece evidence has higher answer authority than a
+            # local example or a web research lead. Preserve those candidates
+            # in diagnostics, not in the deterministic answer bundle.
+            pool = [
+                result
+                for result in expert
+                if result.scope_match != "local_example"
+            ]
+
+    if anchor is None:
+        pool = [
+            result
+            for result in eligible_primary
+            if has_direct_query_signal(result)
+        ]
+        if not pool:
+            return []
+        anchor = directness_anchor(pool)
+
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    selected = [anchor]
+    siblings = [
+        result
+        for result in pool
+        if (
+            result is not anchor
+            and anchor_sources.intersection(
+                result.record.get("source_ids") or []
+            )
+        )
+    ]
+    if (
+        not broad_guidance
+        and anchor is primary[0]
+        and anchor.scope_match
+        in {"unscoped_pending_review", "unspecified_scope"}
+    ):
+        # A top-ranked unscoped record can be the exact source-question answer
+        # whose location alone awaits curation. Do not dilute it with an
+        # unrelated general record merely because both are primary evidence.
+        return [anchor, *siblings][:max_items]
+    independent = [
+        result
+        for result in pool
+        if result is not anchor and result not in siblings
+    ]
+    if anchor.scope_match == "local_example":
+        selected.extend(siblings)
+    elif broad_guidance or anchor.alias_score > 0:
+        selected.extend(siblings)
+        selected.extend(independent[:1])
+    else:
+        # Retrieval order breaks ambiguity without turning every diverse
+        # candidate into a claim. Same-source siblings may still fill the
+        # remaining compact bundle after that single contender.
+        selected.extend(independent[:1])
+        selected.extend(siblings)
+    return selected[:max_items]
+
+
+def build_extractive_answer(
+    results: List[Any],
+    *,
+    max_items: int | None = None,
+) -> str:
     if not results:
         return NO_CORPUS_EVIDENCE_MESSAGE
 
     primary = primary_grounding_results(results)
     if primary:
+        answer_primary = (
+            primary[:max_items]
+            if max_items is not None
+            else primary
+        )
         body = "\n\n".join(
             "%s%s [%s]"
             % (
@@ -1535,17 +1784,14 @@ def build_extractive_answer(results: List[Any]) -> str:
                 result.record["answer"].strip(),
                 result.record["id"],
             )
-            # Four records still keeps the fallback compact while preserving
-            # complementary KUs that expert curation split from one broad
-            # source answer (for example tone colour plus diction).
-            for result in primary[:4]
+            for result in answer_primary
         )
-        disclosure = build_review_disclosure(primary)
+        disclosure = build_review_disclosure(answer_primary)
         scope_notice = (
             "범위 안내: 아래 내용은 표시된 마디에서 확인된 국소 "
             "예시다. 이 근거만으로 곡 전체의 빈도나 모든 구간에 "
             "항상 적용되는 규칙을 뜻하지 않는다."
-            if local_examples_are_only_scope_authority(primary)
+            if local_examples_are_only_scope_authority(answer_primary)
             else ""
         )
         return "\n\n".join(
@@ -1583,7 +1829,7 @@ def is_context_overflow_error(exc: ValueError) -> bool:
 
 
 def generate_with_context_retry(
-    index: BM25Index,
+    index: SearchIndex,
     *,
     query: str,
     piece: str,
@@ -1636,15 +1882,33 @@ def generate_with_context_retry(
                         suspicious_tokens,
                     )
                 )
+            supplied_review_results = [
+                result
+                for result in primary_grounding_results(results)
+                if result.record.get("retrieval_review_warning")
+            ]
+            cited_results = cited_primary_grounding_results(answer, results)
             if (
                 answer.strip()
                 and not is_grounded_insufficiency_answer(answer)
-                and requires_review_compliance_repair(results)
+                and supplied_review_results
+                and not cited_results
+            ):
+                # With provisional evidence in the prompt, an uncited draft
+                # cannot prove which warning contract applies.  Let the caller
+                # use the deterministic extractive fallback instead of adding
+                # every retrieved warning to an ambiguous answer.
+                answer = NO_GROUNDED_ANSWER_SENTINEL
+            if (
+                answer.strip()
+                and not is_grounded_insufficiency_answer(answer)
+                and requires_review_compliance_repair(cited_results)
             ):
                 answer = generator(
                     build_review_compliance_repair_messages(
                         messages,
                         answer,
+                        cited_results,
                     )
                 )
                 for _ in range(2):
@@ -1703,7 +1967,18 @@ def generate_with_context_retry(
                 answer.strip()
                 and not is_grounded_insufficiency_answer(answer)
             ):
-                answer = ensure_review_disclosure(answer, results)
+                cited_results = cited_primary_grounding_results(
+                    answer,
+                    results,
+                )
+                if supplied_review_results and not cited_results:
+                    answer = NO_GROUNDED_ANSWER_SENTINEL
+                else:
+                    answer = reconcile_review_disclosure(
+                        answer,
+                        results,
+                        cited_results,
+                    )
             return answer, results, messages, context_limited
         except ValueError as exc:
             if not is_context_overflow_error(exc):
@@ -1892,7 +2167,9 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         # by deleting its citation. Fall back to the primary extractive answer
         # so the secondary claim is removed together with its attribution.
         return build_extractive_answer(
-            primary_results if primary_results else results
+            select_extractive_fallback_evidence(
+                primary_results if primary_results else results
+            )
         )
     provenance_ids = {
         provenance_id
@@ -2078,7 +2355,7 @@ def main() -> None:
     ensure_corpus(settings, args.rebuild_corpus)
 
     records = load_corpus(settings["corpus_path"])
-    index = BM25Index(records)
+    index = build_retrieval_index(records, settings)
     generation_mode = "retrieval_only" if args.no_generate else "llm"
     answer_basis = "retrieval_only" if args.no_generate else "retrieved_evidence"
     generation_fallback_reason = None
@@ -2135,7 +2412,9 @@ def main() -> None:
                     "local model returned no usable answer"
                 )
         elif results and grounded_answer_unusable:
-            answer = build_extractive_answer(results)
+            answer = build_extractive_answer(
+                select_extractive_fallback_evidence(results)
+            )
             answer_basis = (
                 "retrieval_extractive"
                 if has_primary_grounding(results)
@@ -2149,7 +2428,9 @@ def main() -> None:
             )
         elif context_limited and not raw_answer:
             if results:
-                answer = build_extractive_answer(results)
+                answer = build_extractive_answer(
+                    select_extractive_fallback_evidence(results)
+                )
                 answer_basis = "retrieval_extractive"
                 generation_mode = "extractive"
                 generation_fallback_reason = "model context limit exceeded"
@@ -2173,7 +2454,12 @@ def main() -> None:
                 )
             )
             answer = (
-                build_extractive_answer(results)
+                build_extractive_answer(
+                    select_extractive_fallback_evidence(
+                        results,
+                        exclude_local_examples=True,
+                    )
+                )
                 if local_scope_rejected
                 else finalize_answer_citations(raw_answer, results)
             )
@@ -2213,6 +2499,7 @@ def main() -> None:
                     "generation_mode": generation_mode,
                     "answer_basis": answer_basis,
                     "generation_fallback_reason": generation_fallback_reason,
+                    "retrieval": retrieval_diagnostics(index),
                     "has_primary_grounding": has_primary_grounding(results),
                     "has_selected_range_grounding": (
                         has_selected_range_grounding(results)
@@ -2225,6 +2512,12 @@ def main() -> None:
                             "rank": idx,
                             "score": result.score,
                             "text_score": result.text_score,
+                            "dense_score": result.dense_score,
+                            "dense_content_score": (
+                                result.dense_content_score
+                            ),
+                            "fusion_score": result.fusion_score,
+                            "retrieval_mode": result.retrieval_mode,
                             "measure_score": result.measure_score,
                             "piece_score": result.piece_score,
                             "concept_coverage": result.concept_coverage,

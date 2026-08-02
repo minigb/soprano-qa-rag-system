@@ -4,6 +4,63 @@ This local, read-only viewer presents the selected paraphrased questions and
 their saved retrieval and generation results from
 `three_piece_results.json`.
 
+## Synthesized development retrieval evaluation
+
+`run_synthesized_retrieval.py` measures retrieval robustness on three unindexed
+Korean reformulations of every schema-1.3 question for Die Forelle, In Flowery
+Clouds, and La Capinera. This is a development set that informed tuning, not an
+untouched holdout. It expands the same 51 canonical source/range cases as the
+strict evaluator into 153 cases. The known invalid La Capinera
+`kim-la-capinera-01` / measures 78-81 pairing remains excluded.
+
+The benchmark dataset and evaluated system are separate arguments. This makes
+it possible to evaluate clean or dirty code worktrees without copying the
+runner into them:
+
+```bash
+SQA_VARIANT_DATASET=/home/minhee/soprano-qa-dataset-evaluation-set-synthesized
+
+conda run -n soprano-qa python \
+  evaluation/run_synthesized_retrieval.py \
+  --system-root /home/minhee/soprano-qa-rag-system \
+  --dataset-root "$SQA_VARIANT_DATASET" \
+  --output evaluation/synthesized_retrieval_lexical.json \
+  --top-k 6 \
+  --require-retrieval-mode lexical
+
+conda run -n soprano-qa python \
+  evaluation/run_synthesized_retrieval.py \
+  --system-root /home/minhee/soprano-qa-rag-system-dense-retrieval \
+  --dataset-root "$SQA_VARIANT_DATASET" \
+  --output evaluation/synthesized_retrieval_hybrid.json \
+  --top-k 6 \
+  --require-retrieval-mode hybrid
+```
+
+`--dataset-root` supplies only benchmark inventories, reviews, and
+`expert_curation/evaluation_question_variants/*.json`. By default it does not
+replace the target service's configured corpus dataset. This separation is
+intentional: pointing corpus construction at the development dataset worktree
+would change the corpus fingerprint merely because its absolute path differs.
+Use `--pipeline-dataset-root` only when a different corpus source is an
+explicit part of the experiment.
+
+The runner imports `soprano_qa` exclusively from `--system-root`, performs all
+153 calls in that process with generation and internal-knowledge fallback
+disabled, and redirects corpus, stats, embedding-cache, and bytecode writes
+away from the target worktree. It fingerprints target code, configuration,
+corpus, and dense assets before and after the run. Outputs checkpoint after
+each case, resume only when input and system fingerprints match, and refuse to
+mix lexical, hybrid, fallback, or differently configured runs.
+
+Each case records ordered evidence IDs, first expected and range-applicable
+ranks, reciprocal rank, hit@1, hit@k, complete expected/applicable retrieval,
+target-source grounding, and the pipeline's retrieval diagnostics. Summary
+rollups are provided overall, by piece, and by synthesized variant index.
+`formulation_consistency` reports whether all three formulations of the same
+source/range case hit at `k`; its rate is the most direct robustness measure
+for comparing lexical and hybrid retrieval.
+
 ## Five-piece qualitative run
 
 The completed five-piece annotations can be evaluated separately without
@@ -70,6 +127,13 @@ The generation phase must run in the `soprano-qa` Conda environment, where
 `llama-cpp-python` is installed. Running it with a Python interpreter that
 lacks `llama_cpp` produces an extractive fallback, which deliberately cannot
 pass the grounded RAG+LLM metric.
+
+`--dataset-root` may point at the separate development-variant worktree.
+`--pipeline-dataset-root`, however, must resolve to the selected system's
+configured `dataset_root`: the full evaluator fingerprints and authenticates
+the already-built corpus before any pipeline call and will not rebuild it in
+place. To evaluate a genuinely different corpus dataset, first prepare a
+separate system worktree whose config, corpus, and stats all use that dataset.
 
 The default output is the schema-8
 `evaluation/three_piece_results.json`, produced by the v13 dual-frame judge

@@ -537,6 +537,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
             "이 곡을 노래할 때 중요한 가창 포인트는?",
             "이 곡에서 가창자가 신경 써야 할 사항은?",
             "이 곡을 잘 부르기 위한 팁은?",
+            "이 노래를 잘 노래하려면 무엇을 해야 할까요?",
+            "이 작품을 제대로 소화할 때 신경 쓸 점은?",
+            "어떻게 해야 이 노래를 잘 부를 수 있나요?",
             "이 곡을 부르는 법을 알려줘",
             "이 작품의 전반적인 가창 조언을 줘",
             "How should I sing this piece?",
@@ -577,6 +580,17 @@ class MeasureAwareSearchTests(unittest.TestCase):
                 "test-piece",
             )
         )
+        for homonym in (
+            "이 작품에서 성악가가 제대하려면 어떻게 해야 할까?",
+            "이 작품에서 소화를 잘하려면 무엇을 해야 할까?",
+        ):
+            with self.subTest(homonym=homonym):
+                self.assertFalse(
+                    is_broad_performance_guidance_query(
+                        homonym,
+                        "test-piece",
+                    )
+                )
 
     def test_no_range_prefers_confirmed_local_over_pending_scope(self) -> None:
         local = make_record("local", [[10, 12]])

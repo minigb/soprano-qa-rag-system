@@ -1,7 +1,7 @@
 # Soprano QA RAG System
 
-Local, measure-aware retrieval and Qwen-based answer generation for five
-soprano works. This repository is the RAG/LLM layer and uses the sibling
+Local, measure-aware hybrid retrieval and Qwen-based answer generation for
+five soprano works. This repository is the RAG/LLM layer and uses the sibling
 dataset and demo repositories described below.
 
 ## Setup
@@ -64,15 +64,23 @@ python -m pip install -r requirements.txt \
 Other platforms may build `llama-cpp-python` locally or use an appropriate
 platform-specific wheel.
 
-### 3. Build the corpus and optionally download the model
+### 3. Build the corpus and download the local models
 
 ```bash
 python scripts/build_corpus.py
-python scripts/download_model.py  # Optional; needed for generated answers
+python scripts/download_embedding_model.py  # 639 MB; needed for dense retrieval
+python scripts/download_model.py            # Optional; needed for generated answers
 ```
 
-The default Qwen GGUF checkpoint needs approximately 5 GB. Retrieval-only
-queries work without the model by passing `--no-generate`.
+The default generation checkpoint needs approximately 5 GB. Retrieval-only
+queries work without it by passing `--no-generate`. If the embedding checkpoint
+is unavailable, the service reports the reason and falls back to lexical BM25
+instead of downloading a model during a request.
+
+The embedding model is loaded when the retrieval index first initializes.
+`retrieval.n_gpu_layers` defaults to `-1` (all available GPU layers); lower it
+in `config/settings.json` when the embedding and generation checkpoints must
+share a smaller GPU.
 
 ### 4. Verify the installation
 
@@ -154,15 +162,19 @@ Defaults are repository-relative and assume the sibling layout above.
 | --- | --- |
 | `SOPRANO_QA_RAG_DATASET_ROOT` | Override the dataset/corpus repository |
 | `SOPRANO_QA_MODEL_PATH` | Override the local GGUF checkpoint |
+| `SOPRANO_QA_EMBEDDING_MODEL_PATH` | Override the local embedding GGUF checkpoint |
 | `config/settings.json` | Corpus, model, retrieval, and generation defaults |
 | `config/feature_overrides.json` | Optional recurring measure-range overrides |
 
 ## Project notes
 
 The corpus combines expert measure annotations with answer-eligible web
-database records. Measure-scoped questions prioritize overlapping expert
-evidence; unsupported questions can use a clearly marked internal-knowledge
-fallback without corpus citations.
+database records. Retrieval fuses BM25 and Qwen3 dense ranks in memory; the
+corpus vectors are cached locally, and a bounded query cache avoids repeated
+embedding work for generation retries. Piece identity, evidence eligibility,
+and measure scope remain deterministic constraints. Measure-scoped questions
+prioritize overlapping expert evidence; unsupported questions can use a
+clearly marked internal-knowledge fallback without corpus citations.
 
 Expert records come from the sibling dataset's active
 `expert_curation/review/*.json` files. All included knowledge units remain

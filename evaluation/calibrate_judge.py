@@ -1428,7 +1428,10 @@ def _input_fingerprint(
     dataset_root: Path,
     runtime: Mapping[str, str],
     max_tokens: int,
+    max_attempts: int,
     range_guard: Mapping[str, Any],
+    retrieval_embedding_model: Mapping[str, Any],
+    system_root: Path,
 ) -> str:
     control_contract = [
         {
@@ -1453,7 +1456,10 @@ def _input_fingerprint(
         "dataset_root": str(dataset_root.resolve()),
         "runtime_versions": dict(runtime),
         "max_tokens": max_tokens,
+        "max_attempts": max_attempts,
         "range_guard": dict(range_guard),
+        "retrieval_embedding_model": dict(retrieval_embedding_model),
+        "system_root": str(system_root.resolve()),
     }
     return hashlib.sha256(
         evaluator.canonical_json_bytes(payload)
@@ -1469,6 +1475,9 @@ def new_snapshot(
     judge_model: Mapping[str, Any],
     range_guard: Mapping[str, Any],
     max_tokens: int,
+    max_attempts: int = evaluator.DEFAULT_JUDGE_MAX_ATTEMPTS,
+    retrieval_embedding_model: Mapping[str, Any] | None = None,
+    system_root: Path = PROJECT_ROOT,
 ) -> dict[str, Any]:
     now = utc_now()
     snapshot = {
@@ -1479,6 +1488,7 @@ def new_snapshot(
             "updated_at": now,
             "finished_at": None,
             "dataset_root": str(dataset_root.resolve()),
+            "system_root": str(system_root.resolve()),
             "input_fingerprint": input_fingerprint,
             "input_files": input_files,
             "control_contract_version": CONTROL_CONTRACT_VERSION,
@@ -1486,8 +1496,14 @@ def new_snapshot(
             "frames": list(evaluator.FRAME_NAMES),
             "judge_backend": "transformers",
             "judge_model": dict(judge_model),
+            "retrieval_embedding_model": (
+                dict(retrieval_embedding_model)
+                if retrieval_embedding_model is not None
+                else None
+            ),
             "range_guard": deepcopy(dict(range_guard)),
             "judge_max_tokens": max_tokens,
+            "judge_max_attempts": max_attempts,
             "same_model_dual_prompt_is_independent": False,
             "human_review_remains_authoritative": True,
         },
@@ -1502,6 +1518,7 @@ def validate_resume_snapshot(
     snapshot: Mapping[str, Any],
     *,
     input_fingerprint: str,
+    judge_max_attempts: int = evaluator.DEFAULT_JUDGE_MAX_ATTEMPTS,
 ) -> None:
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise CalibrationInputError(
@@ -1512,6 +1529,15 @@ def validate_resume_snapshot(
         raise CalibrationInputError(
             "Calibration inputs, controls, runner, or model changed. "
             "Choose a new --output rather than mixing runs."
+        )
+    if (
+        snapshot.get("run", {}).get("judge_max_attempts")
+        != judge_max_attempts
+    ):
+        raise CalibrationInputError(
+            "Judge retry policy changed since this calibration snapshot was "
+            "created. Choose a new --output rather than mixing retry "
+            "policies."
         )
 
 
@@ -1524,13 +1550,21 @@ def expected_calibration_inputs(
     range_nli_threshold: float,
     range_embedding_delta_threshold: float,
     max_tokens: int,
+    max_attempts: int = evaluator.DEFAULT_JUDGE_MAX_ATTEMPTS,
+    system_root: Path = PROJECT_ROOT,
+    runtime_settings: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Reconstruct the complete immutable calibration contract."""
 
     dataset_root = dataset_root.resolve()
     judge_model_path = judge_model_path.resolve()
+    system_root = system_root.resolve()
     architecture_record = validate_qwen3_4b_checkpoint(judge_model_path)
-    settings = evaluator._load_runtime_settings()
+    settings = (
+        deepcopy(dict(runtime_settings))
+        if runtime_settings is not None
+        else evaluator._load_runtime_settings(system_root)
+    )
     generator_model_path = Path(settings["model_path"]).resolve()
     if judge_model_path == generator_model_path:
         raise CalibrationInputError(
@@ -1545,15 +1579,26 @@ def expected_calibration_inputs(
         dataset_root,
         trusted_expert_catalog=trusted_expert_catalog,
     )
+    system_paths = [
+        system_root / "soprano_qa" / filename
+        for filename in (
+            "answer.py",
+            "corpus.py",
+            "retrieval.py",
+            "service.py",
+            "settings.py",
+        )
+    ]
+    dense_path = system_root / "soprano_qa" / "dense.py"
+    if dense_path.is_file():
+        system_paths.append(dense_path)
     input_files = evaluator.input_file_records(
         [
             *dataset_paths,
             Path(__file__).resolve(),
             Path(evaluator.__file__).resolve(),
-            PROJECT_ROOT / "soprano_qa" / "answer.py",
-            PROJECT_ROOT / "soprano_qa" / "corpus.py",
-            PROJECT_ROOT / "soprano_qa" / "retrieval.py",
-            PROJECT_ROOT / "soprano_qa" / "service.py",
+            *system_paths,
+            system_root / "config" / "settings.json",
             corpus_path,
             stats_path,
         ]
@@ -1570,6 +1615,10 @@ def expected_calibration_inputs(
         backend="llama-cpp",
     )
     judge_model["generator_model_sha256"] = generator_model["sha256"]
+    retrieval_embedding_model = evaluator._model_record(
+        Path(settings["embedding_model_path"]),
+        backend="llama-cpp-embedding",
+    )
     range_guard = evaluator.build_range_guard_record(
         embedding_model_path=range_embedding_model_path.resolve(),
         nli_model_path=range_nli_model_path.resolve(),
@@ -1584,14 +1633,20 @@ def expected_calibration_inputs(
         dataset_root=dataset_root,
         runtime=runtime,
         max_tokens=max_tokens,
+        max_attempts=max_attempts,
         range_guard=range_guard,
+        retrieval_embedding_model=retrieval_embedding_model,
+        system_root=system_root,
     )
     return {
         "controls": controls,
         "input_files": input_files,
         "judge_model": judge_model,
+        "retrieval_embedding_model": retrieval_embedding_model,
         "runtime_versions": runtime,
         "range_guard": range_guard,
+        "system_root": system_root,
+        "judge_max_attempts": max_attempts,
         "input_fingerprint": fingerprint,
     }
 
@@ -1616,7 +1671,18 @@ def parse_arguments(
         type=Path,
         default=DEFAULT_DATASET_ROOT,
     )
-    parser.add_argument("--judge-max-attempts", type=int, default=4)
+    parser.add_argument(
+        "--system-root",
+        type=Path,
+        default=PROJECT_ROOT,
+        help="System worktree whose settings, corpus, and retrieval files bind "
+        "this calibration.",
+    )
+    parser.add_argument(
+        "--judge-max-attempts",
+        type=int,
+        default=evaluator.DEFAULT_JUDGE_MAX_ATTEMPTS,
+    )
     parser.add_argument("--judge-max-tokens", type=int, default=2048)
     parser.add_argument(
         "--control-id",
@@ -1681,6 +1747,7 @@ def parse_arguments(
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = parse_arguments(argv)
     dataset_root = arguments.dataset_root.resolve()
+    system_root = arguments.system_root.resolve()
     output = arguments.output.resolve()
     judge_model_path = arguments.judge_model_path.resolve()
     expected = expected_calibration_inputs(
@@ -1695,6 +1762,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             arguments.range_embedding_delta_threshold
         ),
         max_tokens=arguments.judge_max_tokens,
+        max_attempts=arguments.judge_max_attempts,
+        system_root=system_root,
     )
     controls = expected["controls"]
     selected_control_ids = (
@@ -1715,6 +1784,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
     input_files = expected["input_files"]
     judge_model = expected["judge_model"]
+    retrieval_embedding_model = expected["retrieval_embedding_model"]
     fingerprint = expected["input_fingerprint"]
     range_guard = expected["range_guard"]
 
@@ -1724,6 +1794,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             validate_resume_snapshot(
                 snapshot,
                 input_fingerprint=fingerprint,
+                judge_max_attempts=arguments.judge_max_attempts,
             )
         else:
             snapshot = new_snapshot(
@@ -1734,6 +1805,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 judge_model=judge_model,
                 range_guard=range_guard,
                 max_tokens=arguments.judge_max_tokens,
+                max_attempts=arguments.judge_max_attempts,
+                retrieval_embedding_model=retrieval_embedding_model,
+                system_root=system_root,
             )
             snapshot["run"]["runtime_versions"] = expected[
                 "runtime_versions"

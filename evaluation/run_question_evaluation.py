@@ -16,6 +16,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import importlib
 import json
 import math
 import os
@@ -32,9 +33,13 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "three_piece_results.json"
+DEFAULT_SYNTHESIZED_OUTPUT = (
+    PROJECT_ROOT / "evaluation" / "synthesized_question_results.json"
+)
 DEFAULT_JUDGE_CALIBRATION = (
     PROJECT_ROOT / "evaluation" / "judge_calibration_results.json"
 )
+DEFAULT_JUDGE_MAX_ATTEMPTS = 4
 TARGET_PIECES = (
     "die-forelle",
     "in-flowery-clouds",
@@ -42,14 +47,60 @@ TARGET_PIECES = (
 )
 EXPECTED_QUESTION_COUNT = 40
 EXPECTED_CASE_COUNT = 51
-SCHEMA_VERSION = "8.0"
+EXPECTED_SYNTHESIZED_CASE_COUNT = 153
+QUESTION_SETS = ("canonical", "synthesized")
+SYNTHESIZED_VARIANT_SCHEMA_VERSION = "1.0"
+SYNTHESIZED_VARIANTS_PER_QUESTION = 3
+SYNTHESIZED_VARIANT_TOP_LEVEL_FIELDS = (
+    "schema_version",
+    "piece_id",
+    "source_inventory_schema_version",
+    "variants_per_question",
+    "questions",
+)
+SYNTHESIZED_VARIANT_QUESTION_FIELDS = (
+    "source_id",
+    "original_question",
+    "base_paraphrased_question",
+    "variants",
+)
+SYNTHESIZED_VARIANT_FIELDS = (
+    "variant_id",
+    "question",
+    "transformations",
+)
+SYNTHESIZED_TRANSFORMATIONS = {
+    "colloquial_reframing",
+    "information_structure",
+    "lexical_substitution",
+    "syntactic_reframing",
+    "word_order",
+}
+SCHEMA_VERSION = "8.1"
 JUDGE_PROTOCOL_VERSION = (
     "dual-frame-v13-authenticated-disclosure-retrieved-expert-"
     "factuality-contextual-required-s-substitution-nli-literal-anchor-"
     "hybrid-range-guard"
 )
 ABSOLUTE_MEASURE_RE = re.compile(
-    r"(?:\d+\s*(?:[-–—~]\s*\d+\s*)?(?:번째\s*)?마디|마디)"
+    r"(?:"
+    r"\d+\s*(?:[-–—~]\s*\d+\s*)?(?:번째\s*)?마디"
+    r"|마디"
+    r"|(?<![\w])m{1,2}\.?\s*\d+"
+    r"(?:\s*[-–—~]\s*(?:m{1,2}\.?\s*)?\d+)?"
+    r"|\bmeasures?\s+\d+"
+    r"(?:\s*[-–—~]\s*\d+)?"
+    r")",
+    flags=re.IGNORECASE,
+)
+SYNTHESIZED_LATIN_TOKEN_RE = re.compile(
+    r"[A-Za-zÀ-ÖØ-öø-ÿ]+"
+    r"(?:['’][A-Za-zÀ-ÖØ-öø-ÿ]+)*"
+)
+SYNTHESIZED_NUMBER_RE = re.compile(r"\d+(?:[.,]\d+)?")
+SYNTHESIZED_KOREAN_RE = re.compile(r"[가-힣]")
+SYNTHESIZED_HONORIFIC_END_RE = re.compile(
+    r"(?:요|습니까|입니까|합니까)\?$"
 )
 KNOWLEDGE_UNIT_CITATION_RE = re.compile(
     r"\[(?:[a-z0-9]+(?:-[a-z0-9]+)*-ku-\d{3}|E\d+|"
@@ -215,6 +266,10 @@ class EvaluationInputError(ValueError):
     """Raised when the immutable evaluation inputs violate the contract."""
 
 
+class RetrievalModeMismatchError(EvaluationInputError):
+    """Raised when a strict run uses a different retrieval mode."""
+
+
 class JudgeOutputError(ValueError):
     """Raised when a judge response does not match the strict schema."""
 
@@ -222,6 +277,7 @@ class JudgeOutputError(ValueError):
 JSON_APOSTROPHE_ESCAPE_NORMALIZATION = (
     "single_invalid_json_apostrophe_escape_removed"
 )
+_ACTIVE_SYSTEM_ROOT: Path | None = None
 
 
 def _load_strict_judge_json(raw: str) -> tuple[Any, list[str]]:
@@ -256,6 +312,71 @@ def _load_strict_judge_json(raw: str) -> tuple[Any, list[str]]:
 
 def utc_now() -> str:
     return datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+
+def _path_belongs_to_root(path: Path, root: Path) -> bool:
+    try:
+        path.resolve().relative_to(root.resolve())
+    except ValueError:
+        return False
+    return True
+
+
+def _module_belongs_to_system_root(module: Any, system_root: Path) -> bool:
+    module_path = getattr(module, "__file__", None)
+    return bool(
+        module_path
+        and _path_belongs_to_root(Path(module_path), system_root)
+    )
+
+
+def _activate_system_root(system_root: Path) -> Path:
+    """Put one system checkout first and evict stale Soprano imports."""
+
+    global _ACTIVE_SYSTEM_ROOT
+    resolved = system_root.expanduser().resolve()
+    settings_path = resolved / "soprano_qa" / "settings.py"
+    if not settings_path.is_file():
+        raise EvaluationInputError(
+            f"System root has no soprano_qa/settings.py: {resolved}"
+        )
+
+    selected = str(resolved)
+    evaluator_root = str(PROJECT_ROOT.resolve())
+    sys.path[:] = [
+        value
+        for value in sys.path
+        if value not in {selected, evaluator_root}
+    ]
+    sys.path.insert(0, selected)
+    if evaluator_root != selected:
+        sys.path.insert(1, evaluator_root)
+
+    stale_names = [
+        name
+        for name, module in sys.modules.items()
+        if (
+            name == "soprano_qa"
+            or name.startswith("soprano_qa.")
+        )
+        and not _module_belongs_to_system_root(module, resolved)
+    ]
+    for name in sorted(stale_names, reverse=True):
+        sys.modules.pop(name, None)
+    importlib.invalidate_caches()
+    _ACTIVE_SYSTEM_ROOT = resolved
+    return resolved
+
+
+def _import_system_module(name: str, system_root: Path) -> Any:
+    resolved = _activate_system_root(system_root)
+    module = importlib.import_module(name)
+    if not _module_belongs_to_system_root(module, resolved):
+        raise EvaluationInputError(
+            f"Imported {name} from outside selected system root {resolved}: "
+            f"{getattr(module, '__file__', None)}"
+        )
+    return module
 
 
 def load_json(path: Path) -> Any:
@@ -718,12 +839,262 @@ def _range_applicable_unit_ids(
     return applicable
 
 
+def _normalized_synthesized_question(value: str) -> str:
+    return re.sub(r"[\s?‘’'\"()]", "", value).casefold()
+
+
+def _synthesized_protected_tokens(
+    value: str,
+) -> tuple[Counter[str], Counter[str]]:
+    return (
+        Counter(
+            token.casefold()
+            for token in SYNTHESIZED_LATIN_TOKEN_RE.findall(value)
+        ),
+        Counter(SYNTHESIZED_NUMBER_RE.findall(value)),
+    )
+
+
+def _load_synthesized_question_variants(
+    dataset_root: Path,
+    questions: Sequence[dict[str, Any]],
+) -> tuple[dict[str, list[dict[str, Any]]], list[Path]]:
+    """Validate development variant shards against canonical question records."""
+
+    variant_root = (
+        dataset_root / "expert_curation" / "evaluation_question_variants"
+    )
+    canonical_by_piece: dict[str, list[dict[str, Any]]] = {
+        piece_id: [
+            question
+            for question in questions
+            if question["piece_id"] == piece_id
+        ]
+        for piece_id in TARGET_PIECES
+    }
+    variants_by_source: dict[str, list[dict[str, Any]]] = {}
+    input_paths: list[Path] = []
+    all_variant_ids: set[str] = set()
+    all_variant_texts: set[str] = set()
+
+    for piece_id in TARGET_PIECES:
+        path = variant_root / f"{piece_id}.json"
+        payload = load_json(path)
+        input_paths.append(path)
+        if (
+            not isinstance(payload, dict)
+            or tuple(payload) != SYNTHESIZED_VARIANT_TOP_LEVEL_FIELDS
+        ):
+            raise EvaluationInputError(
+                f"{path}: non-canonical synthesized-variant fields"
+            )
+        if payload["schema_version"] != SYNTHESIZED_VARIANT_SCHEMA_VERSION:
+            raise EvaluationInputError(
+                f"{path}: expected synthesized-variant schema "
+                f"{SYNTHESIZED_VARIANT_SCHEMA_VERSION}"
+            )
+        if payload["piece_id"] != piece_id:
+            raise EvaluationInputError(
+                f"{path}: piece_id does not match filename"
+            )
+        if payload["source_inventory_schema_version"] != "1.3":
+            raise EvaluationInputError(
+                f"{path}: synthesized variants require source schema 1.3"
+            )
+        if (
+            payload["variants_per_question"]
+            != SYNTHESIZED_VARIANTS_PER_QUESTION
+        ):
+            raise EvaluationInputError(
+                f"{path}: expected exactly three variants per question"
+            )
+
+        shard_questions = payload["questions"]
+        canonical_questions = canonical_by_piece[piece_id]
+        if (
+            not isinstance(shard_questions, list)
+            or len(shard_questions) != len(canonical_questions)
+        ):
+            raise EvaluationInputError(
+                f"{path}: synthesized question count does not match "
+                "the canonical inventory"
+            )
+        for question_index, (item, canonical) in enumerate(
+            zip(shard_questions, canonical_questions)
+        ):
+            label = f"{path}: questions[{question_index}]"
+            if (
+                not isinstance(item, dict)
+                or tuple(item) != SYNTHESIZED_VARIANT_QUESTION_FIELDS
+            ):
+                raise EvaluationInputError(
+                    f"{label}: non-canonical question fields"
+                )
+            source_id = canonical["source_id"]
+            if item["source_id"] != source_id:
+                raise EvaluationInputError(
+                    f"{label}: source_id or source order drift"
+                )
+            if item["original_question"] != canonical["original_question"]:
+                raise EvaluationInputError(
+                    f"{label}: original question is not verbatim"
+                )
+            if (
+                item["base_paraphrased_question"]
+                != canonical["paraphrased_question"]
+            ):
+                raise EvaluationInputError(
+                    f"{label}: base paraphrased question drift"
+                )
+
+            variants = item["variants"]
+            if (
+                not isinstance(variants, list)
+                or len(variants) != SYNTHESIZED_VARIANTS_PER_QUESTION
+            ):
+                raise EvaluationInputError(
+                    f"{label}: expected exactly three variants"
+                )
+            source_texts = {
+                _normalized_synthesized_question(
+                    canonical["original_question"]
+                ),
+                _normalized_synthesized_question(
+                    canonical["paraphrased_question"]
+                ),
+            }
+            expected_protected = _synthesized_protected_tokens(
+                canonical["paraphrased_question"]
+            )
+            validated_variants: list[dict[str, Any]] = []
+            for variant_index, variant in enumerate(variants, start=1):
+                variant_label = (
+                    f"{label}.variants[{variant_index - 1}]"
+                )
+                if (
+                    not isinstance(variant, dict)
+                    or tuple(variant) != SYNTHESIZED_VARIANT_FIELDS
+                ):
+                    raise EvaluationInputError(
+                        f"{variant_label}: non-canonical variant fields"
+                    )
+                expected_id = f"{source_id}-syn-{variant_index:02d}"
+                if variant["variant_id"] != expected_id:
+                    raise EvaluationInputError(
+                        f"{variant_label}: expected stable ID {expected_id}"
+                    )
+                if expected_id in all_variant_ids:
+                    raise EvaluationInputError(
+                        f"{variant_label}: duplicate variant ID"
+                    )
+                all_variant_ids.add(expected_id)
+
+                transformations = variant["transformations"]
+                if (
+                    not isinstance(transformations, list)
+                    or not transformations
+                    or transformations != sorted(set(transformations))
+                    or any(
+                        value not in SYNTHESIZED_TRANSFORMATIONS
+                        for value in transformations
+                    )
+                ):
+                    raise EvaluationInputError(
+                        f"{variant_label}: transformations must be a "
+                        "sorted, unique, non-empty controlled list"
+                    )
+
+                value = variant["question"]
+                if (
+                    not isinstance(value, str)
+                    or not value.strip()
+                    or value != value.strip()
+                    or not value.endswith("?")
+                    or SYNTHESIZED_HONORIFIC_END_RE.search(value)
+                    or not SYNTHESIZED_KOREAN_RE.search(value)
+                ):
+                    raise EvaluationInputError(
+                        f"{variant_label}: question must be non-empty, "
+                        "trimmed, Korean, non-honorific, and end with ?"
+                    )
+                if ABSOLUTE_MEASURE_RE.search(value):
+                    raise EvaluationInputError(
+                        f"{variant_label}: question contains a measure "
+                        "locator"
+                    )
+                if _synthesized_protected_tokens(value) != expected_protected:
+                    raise EvaluationInputError(
+                        f"{variant_label}: protected foreign or numeric "
+                        "anchors changed"
+                    )
+                normalized = _normalized_synthesized_question(value)
+                if normalized in source_texts:
+                    raise EvaluationInputError(
+                        f"{variant_label}: question duplicates its source "
+                        "or base paraphrase"
+                    )
+                if normalized in all_variant_texts:
+                    raise EvaluationInputError(
+                        f"{variant_label}: duplicate synthesized question"
+                    )
+                all_variant_texts.add(normalized)
+                validated_variants.append(
+                    {
+                        "variant_id": expected_id,
+                        "question": value,
+                        "transformations": list(transformations),
+                    }
+                )
+            variants_by_source[source_id] = validated_variants
+
+    return variants_by_source, input_paths
+
+
+def _expand_synthesized_inference_runs(
+    questions: Sequence[dict[str, Any]],
+    variants_by_source: Mapping[str, Sequence[Mapping[str, Any]]],
+) -> None:
+    """Replace each canonical case with one case per development variant."""
+
+    for question in questions:
+        source_id = question["source_id"]
+        try:
+            variants = variants_by_source[source_id]
+        except KeyError as error:
+            raise EvaluationInputError(
+                f"Missing synthesized variants for {source_id}"
+            ) from error
+        canonical_runs = question["inference_runs"]
+        expanded_runs = []
+        for variant in variants:
+            variant_id = variant["variant_id"]
+            for canonical_run in canonical_runs:
+                run = deepcopy(canonical_run)
+                measure_range = run["inference_input"]["measure_range"]
+                run["case_id"] = _case_id(variant_id, measure_range)
+                run["inference_input"]["question"] = variant["question"]
+                run["inference_input"][
+                    "synthesized_variant_id"
+                ] = variant_id
+                expanded_runs.append(run)
+        question["synthesized_question_variants"] = deepcopy(
+            list(variants)
+        )
+        question["inference_runs"] = expanded_runs
+
+
 def load_evaluation_questions(
     dataset_root: Path,
     *,
     enforce_expected_counts: bool = True,
+    question_set: str = "canonical",
 ) -> tuple[list[dict[str, Any]], list[Path]]:
     """Load questions and authoritative source answers from the dataset."""
+
+    if question_set not in QUESTION_SETS:
+        raise EvaluationInputError(
+            f"Unsupported question set: {question_set}"
+        )
 
     inventory_root = dataset_root / "expert_curation" / "evaluation_questions"
     review_root = dataset_root / "expert_curation" / "review"
@@ -940,19 +1311,42 @@ def load_evaluation_questions(
                 }
             )
 
-    case_count = sum(
+    canonical_case_count = sum(
         len(question["inference_runs"])
         for question in questions
     )
     if enforce_expected_counts and (
         len(questions) != EXPECTED_QUESTION_COUNT
-        or case_count != EXPECTED_CASE_COUNT
+        or canonical_case_count != EXPECTED_CASE_COUNT
     ):
         raise EvaluationInputError(
             "Expected exactly "
             f"{EXPECTED_QUESTION_COUNT} questions/{EXPECTED_CASE_COUNT} "
-            f"cases, found {len(questions)}/{case_count}"
+            f"cases, found {len(questions)}/{canonical_case_count}"
         )
+    if question_set == "synthesized":
+        variants_by_source, variant_paths = (
+            _load_synthesized_question_variants(dataset_root, questions)
+        )
+        input_paths.extend(variant_paths)
+        _expand_synthesized_inference_runs(
+            questions,
+            variants_by_source,
+        )
+        synthesized_case_count = sum(
+            len(question["inference_runs"])
+            for question in questions
+        )
+        if enforce_expected_counts and (
+            len(questions) != EXPECTED_QUESTION_COUNT
+            or synthesized_case_count != EXPECTED_SYNTHESIZED_CASE_COUNT
+        ):
+            raise EvaluationInputError(
+                "Expected exactly "
+                f"{EXPECTED_QUESTION_COUNT} synthesized question records/"
+                f"{EXPECTED_SYNTHESIZED_CASE_COUNT} cases, found "
+                f"{len(questions)}/{synthesized_case_count}"
+            )
     return questions, input_paths
 
 
@@ -977,12 +1371,37 @@ def build_input_fingerprint(
     judge_model_sha256: str | None,
     judge_backend: str,
     range_guard: Mapping[str, Any],
+    judge_max_attempts: int = DEFAULT_JUDGE_MAX_ATTEMPTS,
     judge_calibration_sha256: str | None = None,
+    question_set: str = "canonical",
+    system_root: Path = PROJECT_ROOT,
+    benchmark_dataset_root: Path | None = None,
+    pipeline_dataset_root: Path | None = None,
+    required_retrieval_mode: str | None = None,
+    pipeline_state: Mapping[str, Any] | None = None,
 ) -> str:
+    if question_set not in QUESTION_SETS:
+        raise EvaluationInputError(
+            f"Unsupported question set: {question_set}"
+        )
     payload = {
         "schema_version": SCHEMA_VERSION,
         "judge_protocol": JUDGE_PROTOCOL_VERSION,
         "target_pieces": TARGET_PIECES,
+        "question_set": question_set,
+        "system_root": str(system_root.resolve()),
+        "benchmark_dataset_root": (
+            str(benchmark_dataset_root.resolve())
+            if benchmark_dataset_root is not None
+            else None
+        ),
+        "pipeline_dataset_root": (
+            str(pipeline_dataset_root.resolve())
+            if pipeline_dataset_root is not None
+            else None
+        ),
+        "required_retrieval_mode": required_retrieval_mode,
+        "pipeline_state": deepcopy(dict(pipeline_state or {})),
         "top_k": top_k,
         "generator_runtime_settings": deepcopy(
             dict(generator_runtime_settings)
@@ -991,6 +1410,7 @@ def build_input_fingerprint(
         "generator_model_sha256": generator_model_sha256,
         "judge_model_sha256": judge_model_sha256,
         "judge_backend": judge_backend,
+        "judge_max_attempts": judge_max_attempts,
         "range_guard": dict(range_guard),
         "judge_calibration_sha256": judge_calibration_sha256,
     }
@@ -1007,7 +1427,24 @@ def new_snapshot(
     generator_model: Mapping[str, Any],
     judge_model: Mapping[str, Any],
     range_guard: Mapping[str, Any],
+    judge_max_attempts: int = DEFAULT_JUDGE_MAX_ATTEMPTS,
+    question_set: str = "canonical",
+    system_root: Path = PROJECT_ROOT,
+    benchmark_dataset_root: Path | None = None,
+    pipeline_dataset_root: Path | None = None,
+    required_retrieval_mode: str | None = None,
+    pipeline_state: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
+    if question_set not in QUESTION_SETS:
+        raise EvaluationInputError(
+            f"Unsupported question set: {question_set}"
+        )
+    resolved_benchmark_root = (
+        benchmark_dataset_root or dataset_root
+    ).resolve()
+    resolved_pipeline_root = (
+        pipeline_dataset_root or dataset_root
+    ).resolve()
     now = utc_now()
     snapshot = {
         "schema_version": SCHEMA_VERSION,
@@ -1017,7 +1454,18 @@ def new_snapshot(
             "updated_at": now,
             "finished_at": None,
             "target_pieces": list(TARGET_PIECES),
-            "dataset_root": str(dataset_root.resolve()),
+            "dataset_root": str(resolved_benchmark_root),
+            "question_set": question_set,
+            "system_root": str(system_root.resolve()),
+            "benchmark_dataset_root": str(resolved_benchmark_root),
+            "pipeline_dataset_root": str(resolved_pipeline_root),
+            "required_retrieval_mode": required_retrieval_mode,
+            "pipeline_state": deepcopy(dict(pipeline_state or {})),
+            "pipeline_integrity": {
+                "status": "validated",
+                "validated_at": now,
+                "error": None,
+            },
             "input_fingerprint": input_fingerprint,
             "input_files": input_files,
             "top_k": top_k,
@@ -1033,6 +1481,7 @@ def new_snapshot(
             },
             "generator_model": dict(generator_model),
             "judge_model": dict(judge_model),
+            "judge_max_attempts": judge_max_attempts,
             "range_guard": deepcopy(dict(range_guard)),
             "judge_protocol": {
                 "version": JUDGE_PROTOCOL_VERSION,
@@ -1177,6 +1626,139 @@ def enrich_pipeline_result(
     return enriched
 
 
+def normalize_retrieval_diagnostics(
+    result: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Normalize legacy lexical and current hybrid diagnostics."""
+
+    raw = result.get("retrieval")
+    if raw is None:
+        return {
+            "configured_mode": "lexical",
+            "active_mode": "lexical",
+            "dense_available": False,
+            "embedding_model": None,
+            "embedding_dimension": None,
+            "fallback_reason": None,
+            "last_dense_error": None,
+            "last_search_mode": "lexical",
+            "query_route": "lexical",
+            "route_reason": "implicit_legacy_lexical",
+            "dense_attempted": False,
+            "dense_contributed": False,
+            "fallback_used": False,
+            "diagnostic_source": "implicit_legacy_lexical",
+        }
+    if not isinstance(raw, Mapping):
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics must be an object"
+        )
+    active = raw.get("active_mode")
+    configured = raw.get("configured_mode", active)
+    if not isinstance(active, str) or not isinstance(configured, str):
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics must name configured and "
+            "active modes"
+        )
+    last_search = raw.get("last_search_mode")
+    query_route = raw.get("query_route")
+    if query_route is None:
+        if last_search in {"hybrid", "hybrid_no_dense_match"}:
+            query_route = "hybrid"
+        elif last_search in {
+            "lexical",
+            "lexical_route",
+            "lexical_fallback",
+        }:
+            query_route = "lexical"
+        else:
+            query_route = "none"
+    if query_route not in {"hybrid", "lexical", "none"}:
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics contain an invalid query route"
+        )
+    fallback_reason = raw.get("fallback_reason")
+    last_dense_error = raw.get("last_dense_error")
+    fallback_used = raw.get("fallback_used")
+    if fallback_used is None:
+        fallback_used = bool(
+            fallback_reason
+            or last_dense_error
+            or last_search == "lexical_fallback"
+        )
+    dense_attempted = raw.get("dense_attempted")
+    if dense_attempted is None:
+        dense_attempted = last_search in {
+            "hybrid",
+            "hybrid_no_dense_match",
+            "lexical_fallback",
+        }
+    dense_contributed = raw.get("dense_contributed")
+    if dense_contributed is not None:
+        dense_contributed = bool(dense_contributed)
+    return {
+        "configured_mode": configured,
+        "active_mode": active,
+        "dense_available": bool(
+            raw.get("dense_available", active == "hybrid")
+        ),
+        "embedding_model": raw.get("embedding_model"),
+        "embedding_dimension": raw.get("embedding_dimension"),
+        "fallback_reason": fallback_reason,
+        "last_dense_error": last_dense_error,
+        "last_search_mode": last_search,
+        "query_route": query_route,
+        "route_reason": raw.get("route_reason"),
+        "dense_attempted": bool(dense_attempted),
+        "dense_contributed": dense_contributed,
+        "fallback_used": bool(fallback_used),
+        "diagnostic_source": "pipeline",
+    }
+
+
+def require_retrieval_mode(
+    diagnostics: Mapping[str, Any],
+    required_mode: str | None,
+) -> None:
+    if required_mode is None:
+        return
+    active = diagnostics.get("active_mode")
+    configured = diagnostics.get("configured_mode")
+    fallback = diagnostics.get("fallback_reason")
+    last_error = diagnostics.get("last_dense_error")
+    last_search = diagnostics.get("last_search_mode")
+    problems: list[str] = []
+    if active != required_mode:
+        problems.append(f"active_mode={active!r}")
+    if configured != required_mode:
+        problems.append(f"configured_mode={configured!r}")
+    if fallback:
+        problems.append(f"fallback_reason={fallback!r}")
+    if last_error:
+        problems.append(f"last_dense_error={last_error!r}")
+    if diagnostics.get("fallback_used") is True:
+        problems.append("fallback_used=true")
+    if last_search == "lexical_fallback":
+        problems.append("last_search_mode='lexical_fallback'")
+    if required_mode == "hybrid" and (
+        diagnostics.get("dense_available") is not True
+    ):
+        problems.append("dense_available is not true")
+    if required_mode == "hybrid" and last_search not in {
+        "hybrid",
+        "hybrid_no_dense_match",
+        "lexical_route",
+    }:
+        problems.append(f"last_search_mode={last_search!r}")
+    if required_mode == "lexical" and last_search != "lexical":
+        problems.append(f"last_search_mode={last_search!r}")
+    if problems:
+        raise RetrievalModeMismatchError(
+            f"Required clean {required_mode} retrieval, but "
+            + ", ".join(problems)
+        )
+
+
 def _phase_field(phase: str) -> str:
     return {
         "retrieval": "retrieval_probe",
@@ -1213,6 +1795,7 @@ def run_pipeline_phase(
     top_k: int,
     selected_case_ids: set[str] | None = None,
     rerun: bool = False,
+    required_retrieval_mode: str | None = None,
 ) -> None:
     if phase not in {"retrieval", "generate"}:
         raise ValueError(f"Unsupported pipeline phase {phase}")
@@ -1252,13 +1835,29 @@ def run_pipeline_phase(
                 allow_internal_knowledge=False,
                 top_k=top_k,
             )
-            case[field] = enrich_pipeline_result(
+            retrieval_validation = normalize_retrieval_diagnostics(result)
+            require_retrieval_mode(
+                retrieval_validation,
+                required_retrieval_mode,
+            )
+            enriched_result = enrich_pipeline_result(
                 result,
                 question=question,
                 case=case,
             )
+            enriched_result["retrieval_validation"] = retrieval_validation
+            case[field] = enriched_result
             case["phase_errors"].pop(phase, None)
         except KeyboardInterrupt:
+            refresh_summary(snapshot)
+            checkpoint()
+            raise
+        except RetrievalModeMismatchError as error:
+            case["phase_errors"][phase] = {
+                "at": utc_now(),
+                "type": type(error).__name__,
+                "message": str(error),
+            }
             refresh_summary(snapshot)
             checkpoint()
             raise
@@ -4965,6 +5564,49 @@ def compute_frame_result(
     }
 
 
+def _pipeline_is_grounded_rag_llm_answer(
+    generated_answer: Mapping[str, Any],
+    *,
+    supplemental_evidence_validation: Mapping[str, Any] | None,
+    supplemental_validation_record: Mapping[str, Any],
+    review_disclosure_validation: Mapping[str, Any] | None,
+    review_disclosure_record: Mapping[str, Any],
+) -> bool:
+    evidence = generated_answer.get("evidence") or []
+    expert_evidence = [
+        item
+        for item in evidence
+        if item.get("kind") == "expert"
+        or item.get("evidence_type") == "expert_annotation"
+    ]
+    return bool(
+        generated_answer.get("generation_mode") == "llm"
+        and generated_answer.get("answer_basis") == "retrieved_evidence"
+        and expert_evidence
+        and (
+            supplemental_evidence_validation is None
+            or supplemental_validation_record.get("status")
+            == "not_configured"
+            or (
+                supplemental_validation_record.get(
+                    "auto_pass_eligible"
+                )
+                is True
+                and bool(
+                    supplemental_validation_record.get(
+                        "accepted_evidence"
+                    )
+                )
+            )
+        )
+        and (
+            review_disclosure_validation is None
+            or review_disclosure_record.get("status") == "not_configured"
+            or review_disclosure_record.get("auto_pass_eligible") is True
+        )
+    )
+
+
 def aggregate_judge_frames(
     frames: Mapping[str, Mapping[str, Any]],
     *,
@@ -5534,45 +6176,18 @@ def aggregate_judge_frames(
         status = "human_review"
         disagreement_reasons.append("reference_curation_needs_review")
 
-    evidence = generated_answer.get("evidence") or []
-    expert_evidence = [
-        item
-        for item in evidence
-        if item.get("kind") == "expert"
-        or item.get("evidence_type") == "expert_annotation"
-    ]
     target_source_grounded = (
         generated_answer.get("diagnostics", {}).get(
             "target_source_grounded"
         )
         is True
     )
-    pipeline_is_rag_llm = (
-        generated_answer.get("generation_mode") == "llm"
-        and generated_answer.get("answer_basis") == "retrieved_evidence"
-        and bool(expert_evidence)
-        and (
-            supplemental_evidence_validation is None
-            or supplemental_validation_record.get("status")
-            == "not_configured"
-            or (
-                supplemental_validation_record.get(
-                    "auto_pass_eligible"
-                )
-                is True
-                and bool(
-                    supplemental_validation_record.get(
-                        "accepted_evidence"
-                    )
-                )
-            )
-        )
-        and (
-            review_disclosure_validation is None
-            or review_disclosure_record.get("status")
-            == "not_configured"
-            or review_disclosure_record.get("auto_pass_eligible") is True
-        )
+    pipeline_is_rag_llm = _pipeline_is_grounded_rag_llm_answer(
+        generated_answer,
+        supplemental_evidence_validation=supplemental_evidence_validation,
+        supplemental_validation_record=supplemental_validation_record,
+        review_disclosure_validation=review_disclosure_validation,
+        review_disclosure_record=review_disclosure_record,
     )
     reasons = []
     if status != "pass":
@@ -5625,6 +6240,163 @@ def aggregate_judge_frames(
     }
 
 
+def _mark_structured_output_unjudgeable(
+    *,
+    frame: str,
+    frame_state: dict[str, Any],
+    max_attempts: int,
+) -> dict[str, Any]:
+    attempts = frame_state.setdefault("attempts", [])
+    last_error = (
+        deepcopy(attempts[-1].get("error")) if attempts else None
+    )
+    diagnostic = {
+        "status": "unjudgeable",
+        "reason": "structured_output_retries_exhausted",
+        "frame": frame,
+        "attempt_count": len(attempts),
+        "max_attempts": max_attempts,
+        "last_error": last_error,
+    }
+    frame_state.update(
+        {
+            "status": "unjudgeable",
+            "unjudgeable_diagnostic": diagnostic,
+            "completed_at": utc_now(),
+        }
+    )
+    return diagnostic
+
+
+def _structured_output_retries_exhausted(
+    frame_state: Mapping[str, Any],
+    *,
+    max_attempts: int,
+) -> bool:
+    attempts = list(frame_state.get("attempts") or [])[-max_attempts:]
+    return len(attempts) == max_attempts and all(
+        (
+            attempt.get("error", {}).get("type")
+            == JudgeOutputError.__name__
+            and attempt.get("error", {}).get("stage")
+            == "judge_response_validation"
+        )
+        for attempt in attempts
+    )
+
+
+def _unjudgeable_judge_aggregate(
+    *,
+    diagnostic: Mapping[str, Any],
+    generated_answer: Mapping[str, Any],
+    range_scope_state: Mapping[str, Any],
+    reference_review: Mapping[str, Any] | None,
+    supplemental_evidence_validation: Mapping[str, Any] | None,
+    review_disclosure_validation: Mapping[str, Any] | None,
+) -> dict[str, Any]:
+    range_scope_evaluation = deepcopy(
+        range_scope_state.get("assessment")
+        or {
+            "status": "human_review",
+            "applicable": bool(
+                range_scope_state.get("requirement", {}).get(
+                    "applicable"
+                )
+            ),
+            "wrong_measure_application": False,
+        }
+    )
+    reference_review_record = deepcopy(
+        dict(
+            reference_review
+            or {
+                "required": False,
+                "reasons": [],
+                "conditional_mixed_reference_ids": [],
+            }
+        )
+    )
+    supplemental_validation_record = deepcopy(
+        dict(
+            supplemental_evidence_validation
+            or {
+                "status": "not_configured",
+                "auto_pass_eligible": True,
+                "accepted_evidence": [],
+                "accepted_secondary_context": [],
+                "rejected_evidence": [],
+            }
+        )
+    )
+    review_disclosure_record = deepcopy(
+        dict(
+            review_disclosure_validation
+            or {
+                "status": "not_configured",
+                "expected_text": "",
+                "evidence_ids": [],
+                "stripped_from_semantic_candidate": False,
+                "auto_pass_eligible": True,
+                "failure_reason": None,
+                "semantic_candidate_empty": False,
+                "additional_disclosure_remains": False,
+            }
+        )
+    )
+    unjudgeable_diagnostic = deepcopy(dict(diagnostic))
+    pipeline_is_rag_llm = _pipeline_is_grounded_rag_llm_answer(
+        generated_answer,
+        supplemental_evidence_validation=supplemental_evidence_validation,
+        supplemental_validation_record=supplemental_validation_record,
+        review_disclosure_validation=review_disclosure_validation,
+        review_disclosure_record=review_disclosure_record,
+    )
+    return {
+        "status": "human_review",
+        "weighted_score": None,
+        "minimum_frame_score": None,
+        "disagreement": True,
+        "disagreement_reasons": [
+            "judge_structured_output_unjudgeable"
+        ],
+        "shared_critical_errors": [],
+        "union_critical_errors": [],
+        "hard_error_frames": [],
+        "weak_confidence_frames": [],
+        "judge_schema_warning_frames": [],
+        "range_scope_evaluation": range_scope_evaluation,
+        "reference_review": reference_review_record,
+        "supplemental_evidence_review": {
+            "required": False,
+            "usage_by_frame": {},
+            "policy": (
+                "Structured judge output was unavailable, so no automated "
+                "supplemental-evidence usage conclusion was made."
+            ),
+        },
+        "supplemental_evidence_validation": (
+            supplemental_validation_record
+        ),
+        "review_disclosure_validation": review_disclosure_record,
+        "target_source_grounded": (
+            generated_answer.get("diagnostics", {}).get(
+                "target_source_grounded"
+            )
+            is True
+        ),
+        "pipeline_is_grounded_rag_llm": pipeline_is_rag_llm,
+        "answer_quality_status": "human_review",
+        "answer_quality_rag_llm_pass": False,
+        "reliable_rag_llm_pass": False,
+        "reliability_failure_reasons": [
+            "semantic_status_human_review",
+            "judge_structured_output_unjudgeable",
+        ],
+        "unjudgeable": True,
+        "unjudgeable_diagnostic": unjudgeable_diagnostic,
+    }
+
+
 def _run_one_judge_frame(
     *,
     frame: str,
@@ -5639,6 +6411,7 @@ def _run_one_judge_frame(
     previous_error: str | None = None
     for _ in range(max_attempts):
         attempt: dict[str, Any] = {"at": utc_now()}
+        error_stage = "judge_call"
         try:
             raw = judge_fn(
                 build_judge_messages(
@@ -5648,10 +6421,27 @@ def _run_one_judge_frame(
                 )
             )
             attempt["raw_response"] = raw
+            error_stage = "coverage_signal_generation"
             atomic_coverage_signals = coverage_signal_fn(packet)
             attempt["atomic_coverage_signals"] = (
                 atomic_coverage_signals
             )
+            error_stage = "coverage_signal_validation"
+            _strict_number(
+                coverage_nli_threshold,
+                label="atomic_coverage_nli_threshold",
+                minimum=0.0,
+                maximum=1.0,
+            )
+            _validate_atomic_claim_entailment_signals(
+                atomic_coverage_signals,
+                authoritative_reference_items=(
+                    _all_semantic_reference_items(packet)
+                ),
+                candidate_answer_items=_candidate_answer_items(packet),
+                question_context=packet["question"],
+            )
+            error_stage = "judge_response_validation"
             assessment = validate_judge_assessment(
                 raw,
                 expected_frame=frame,
@@ -5686,10 +6476,15 @@ def _run_one_judge_frame(
             attempt["error"] = {
                 "type": type(error).__name__,
                 "message": str(error),
+                "stage": error_stage,
             }
             frame_state.setdefault("attempts", []).append(attempt)
             frame_state["status"] = "error"
-            previous_error = str(error)
+            previous_error = (
+                str(error)
+                if error_stage == "judge_response_validation"
+                else None
+            )
             checkpoint()
             continue
 
@@ -5721,6 +6516,7 @@ def _run_one_range_frame(
     previous_error: str | None = None
     for _ in range(max_attempts):
         attempt: dict[str, Any] = {"at": utc_now()}
+        error_stage = "judge_call"
         try:
             raw = judge_fn(
                 build_range_judge_messages(
@@ -5729,8 +6525,27 @@ def _run_one_range_frame(
                 )
             )
             attempt["raw_response"] = raw
+            error_stage = "range_signal_generation"
             hybrid_signals = range_signal_fn(packet)
             attempt["hybrid_signals"] = hybrid_signals
+            error_stage = "range_signal_validation"
+            _strict_number(
+                nli_threshold,
+                label="nli_threshold",
+                minimum=0.0,
+                maximum=1.0,
+            )
+            _strict_number(
+                embedding_delta_threshold,
+                label="embedding_delta_threshold",
+                minimum=-2.0,
+                maximum=2.0,
+            )
+            _validate_range_signal_scores(
+                hybrid_signals,
+                packet=packet,
+            )
+            error_stage = "judge_response_validation"
             assessment = validate_range_judge_assessment(
                 raw,
                 packet=packet,
@@ -5755,10 +6570,15 @@ def _run_one_range_frame(
             attempt["error"] = {
                 "type": type(error).__name__,
                 "message": str(error),
+                "stage": error_stage,
             }
             frame_state.setdefault("attempts", []).append(attempt)
             frame_state["status"] = "error"
-            previous_error = str(error)
+            previous_error = (
+                str(error)
+                if error_stage == "judge_response_validation"
+                else None
+            )
             checkpoint()
             continue
         frame_state.setdefault("attempts", []).append(attempt)
@@ -5897,10 +6717,17 @@ def run_judge_phase(
             )
 
         all_frames_complete = True
+        unjudgeable_diagnostic: dict[str, Any] | None = None
         for frame in FRAME_NAMES:
             frame_state = semantic["frames"][frame]
             if frame_state.get("status") == "complete":
                 continue
+            if frame_state.get("status") == "unjudgeable":
+                all_frames_complete = False
+                unjudgeable_diagnostic = deepcopy(
+                    frame_state["unjudgeable_diagnostic"]
+                )
+                break
             completed = _run_one_judge_frame(
                 frame=frame,
                 packet=packet,
@@ -5913,14 +6740,25 @@ def run_judge_phase(
             )
             if not completed:
                 all_frames_complete = False
-                case["phase_errors"][phase] = {
-                    "at": utc_now(),
-                    "type": "JudgeOutputError",
-                    "message": (
-                        f"{frame} did not return valid structured output "
-                        f"within {max_attempts} attempts"
-                    ),
-                }
+                if _structured_output_retries_exhausted(
+                    frame_state,
+                    max_attempts=max_attempts,
+                ):
+                    unjudgeable_diagnostic = (
+                        _mark_structured_output_unjudgeable(
+                            frame=frame,
+                            frame_state=frame_state,
+                            max_attempts=max_attempts,
+                        )
+                    )
+                else:
+                    last_error = deepcopy(
+                        frame_state["attempts"][-1]["error"]
+                    )
+                    case["phase_errors"][phase] = {
+                        "at": utc_now(),
+                        **last_error,
+                    }
                 break
 
         range_state = semantic["range_scope"]
@@ -5929,28 +6767,63 @@ def run_judge_phase(
             and range_requirement["applicable"]
             and range_state.get("status") != "complete"
         ):
-            completed = _run_one_range_frame(
-                packet=packet,
-                judge_fn=judge_fn,
-                range_signal_fn=range_signal_fn,
-                nli_threshold=nli_threshold,
-                embedding_delta_threshold=embedding_delta_threshold,
-                frame_state=range_state,
-                checkpoint=checkpoint,
-                max_attempts=max_attempts,
-            )
-            if not completed:
+            if range_state.get("status") == "unjudgeable":
                 all_frames_complete = False
-                case["phase_errors"][phase] = {
-                    "at": utc_now(),
-                    "type": "JudgeOutputError",
-                    "message": (
-                        "range_scope did not return valid structured output "
-                        f"within {max_attempts} attempts"
-                    ),
-                }
+                unjudgeable_diagnostic = deepcopy(
+                    range_state["unjudgeable_diagnostic"]
+                )
+            else:
+                completed = _run_one_range_frame(
+                    packet=packet,
+                    judge_fn=judge_fn,
+                    range_signal_fn=range_signal_fn,
+                    nli_threshold=nli_threshold,
+                    embedding_delta_threshold=embedding_delta_threshold,
+                    frame_state=range_state,
+                    checkpoint=checkpoint,
+                    max_attempts=max_attempts,
+                )
+                if not completed:
+                    all_frames_complete = False
+                    if _structured_output_retries_exhausted(
+                        range_state,
+                        max_attempts=max_attempts,
+                    ):
+                        unjudgeable_diagnostic = (
+                            _mark_structured_output_unjudgeable(
+                                frame="range_scope",
+                                frame_state=range_state,
+                                max_attempts=max_attempts,
+                            )
+                        )
+                    else:
+                        last_error = deepcopy(
+                            range_state["attempts"][-1]["error"]
+                        )
+                        case["phase_errors"][phase] = {
+                            "at": utc_now(),
+                            **last_error,
+                        }
 
-        if all_frames_complete and all(
+        if unjudgeable_diagnostic is not None:
+            semantic["unjudgeable_diagnostic"] = deepcopy(
+                unjudgeable_diagnostic
+            )
+            semantic["aggregate"] = _unjudgeable_judge_aggregate(
+                diagnostic=unjudgeable_diagnostic,
+                generated_answer=case["generated_answer"],
+                range_scope_state=range_state,
+                reference_review=reference_review,
+                supplemental_evidence_validation=packet[
+                    "supplemental_evidence_validation"
+                ],
+                review_disclosure_validation=packet[
+                    "review_disclosure_validation"
+                ],
+            )
+            semantic["completed_at"] = utc_now()
+            case["phase_errors"].pop(phase, None)
+        elif all_frames_complete and all(
             semantic["frames"][frame].get("status") == "complete"
             for frame in FRAME_NAMES
         ) and (
@@ -5969,6 +6842,7 @@ def run_judge_phase(
                     "review_disclosure_validation"
                 ],
             )
+            semantic.pop("unjudgeable_diagnostic", None)
             semantic["completed_at"] = utc_now()
             case["phase_errors"].pop(phase, None)
         refresh_summary(snapshot)
@@ -6083,6 +6957,16 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         for _, case in cases
         if case["generated_answer"] is not None
     ]
+    retrieval_mode_diagnostics = [
+        result.get("retrieval_validation")
+        or normalize_retrieval_diagnostics(result)
+        for result in retrievals
+    ]
+    generation_mode_diagnostics = [
+        result.get("retrieval_validation")
+        or normalize_retrieval_diagnostics(result)
+        for result in generations
+    ]
     aggregates = [
         case["semantic_evaluation"]["aggregate"]
         for _, case in cases
@@ -6101,6 +6985,14 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         aggregate.get("answer_quality_status", aggregate["status"])
         for aggregate in aggregates
     )
+    unjudgeable_cases = sum(
+        aggregate.get("unjudgeable") is True
+        for aggregate in aggregates
+    )
+    phase_summary["judge"]["unjudgeable_cases"] = unjudgeable_cases
+    snapshot["run"]["phases"]["judge"][
+        "unjudgeable_cases"
+    ] = unjudgeable_cases
     answer_quality_question_statuses = Counter(
         _question_answer_quality_status(question)
         for question in questions
@@ -6149,6 +7041,10 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
                 "answer_quality_status",
                 aggregate["status"],
             )
+            for aggregate in piece_aggregates
+        )
+        piece_unjudgeable_cases = sum(
+            aggregate.get("unjudgeable") is True
             for aggregate in piece_aggregates
         )
         piece_question_statuses = Counter(
@@ -6206,6 +7102,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         piece_primary[piece_id] = {
             "inference_cases": piece_case_total,
             "judged_cases": len(piece_aggregates),
+            "unjudgeable_cases": piece_unjudgeable_cases,
             "passed_cases": piece_passes,
             "case_pass_rate": (
                 round(piece_passes / piece_case_total, 6)
@@ -6262,6 +7159,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         piece_semantic[piece_id] = {
             "case_statuses": dict(sorted(piece_case_statuses.items())),
             "judged_cases": len(piece_aggregates),
+            "unjudgeable_cases": piece_unjudgeable_cases,
             "passed_cases": piece_semantic_case_passes,
             "case_pass_rate": (
                 round(
@@ -6291,6 +7189,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
             "case_statuses": dict(sorted(piece_quality_statuses.items())),
             "inference_cases": piece_case_total,
             "judged_cases": len(piece_aggregates),
+            "unjudgeable_cases": piece_unjudgeable_cases,
             "passed_cases": piece_quality_case_passes,
             "case_pass_rate": (
                 round(piece_quality_case_passes / piece_case_total, 6)
@@ -6386,10 +7285,22 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
     snapshot["summary"] = {
         "questions": len(questions),
         "inference_cases": len(cases),
+        "unjudgeable_cases": unjudgeable_cases,
         "phases": phase_summary,
+        "pipeline_integrity": deepcopy(
+            snapshot["run"].get(
+                "pipeline_integrity",
+                {
+                    "status": "validated",
+                    "validated_at": None,
+                    "error": None,
+                },
+            )
+        ),
         "primary_metric": {
             "name": "semantically_reliable_rag_llm_answer",
             "judged_cases": judged_count,
+            "unjudgeable_cases": unjudgeable_cases,
             "passed_cases": rag_llm_passes,
             "case_pass_rate": (
                 round(rag_llm_passes / len(cases), 6)
@@ -6435,6 +7346,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
             "name": "expert_claim_semantic_fidelity_before_curation_gate",
             "statuses": dict(sorted(answer_quality_statuses.items())),
             "judged_cases": judged_count,
+            "unjudgeable_cases": unjudgeable_cases,
             "passed_cases": answer_quality_rag_llm_passes,
             "case_pass_rate": (
                 round(answer_quality_rag_llm_passes / len(cases), 6)
@@ -6483,6 +7395,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
         "semantic_judge": {
             "statuses": dict(sorted(judge_statuses.items())),
+            "unjudgeable_cases": unjudgeable_cases,
             "passed_cases": semantic_passes,
             "pass_rate": (
                 round(semantic_passes / judged_count, 6)
@@ -6494,6 +7407,26 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
         "retrieval_diagnostics": {
             "completed_cases": len(retrievals),
+            "retrieval_modes": dict(sorted(Counter(
+                diagnostics.get("last_search_mode") or "unknown"
+                for diagnostics in retrieval_mode_diagnostics
+            ).items())),
+            "query_routes": dict(sorted(Counter(
+                diagnostics.get("query_route") or "unknown"
+                for diagnostics in retrieval_mode_diagnostics
+            ).items())),
+            "dense_attempted_cases": sum(
+                diagnostics.get("dense_attempted") is True
+                for diagnostics in retrieval_mode_diagnostics
+            ),
+            "dense_contributed_cases": sum(
+                diagnostics.get("dense_contributed") is True
+                for diagnostics in retrieval_mode_diagnostics
+            ),
+            "fallback_used_cases": sum(
+                diagnostics.get("fallback_used") is True
+                for diagnostics in retrieval_mode_diagnostics
+            ),
             "target_source_grounded_cases": sum(
                 result["diagnostics"]["target_source_grounded"]
                 for result in retrievals
@@ -6519,6 +7452,26 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
         "generation_diagnostics": {
             "completed_cases": len(generations),
+            "retrieval_modes": dict(sorted(Counter(
+                diagnostics.get("last_search_mode") or "unknown"
+                for diagnostics in generation_mode_diagnostics
+            ).items())),
+            "query_routes": dict(sorted(Counter(
+                diagnostics.get("query_route") or "unknown"
+                for diagnostics in generation_mode_diagnostics
+            ).items())),
+            "dense_attempted_cases": sum(
+                diagnostics.get("dense_attempted") is True
+                for diagnostics in generation_mode_diagnostics
+            ),
+            "dense_contributed_cases": sum(
+                diagnostics.get("dense_contributed") is True
+                for diagnostics in generation_mode_diagnostics
+            ),
+            "fallback_used_cases": sum(
+                diagnostics.get("fallback_used") is True
+                for diagnostics in generation_mode_diagnostics
+            ),
             "answer_basis": dict(sorted(Counter(
                 result.get("answer_basis", "unknown")
                 for result in generations
@@ -6534,7 +7487,17 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
     }
     snapshot["run"]["updated_at"] = utc_now()
-    if phase_summary["judge"]["status"] == "complete":
+    integrity_status = snapshot["run"].get(
+        "pipeline_integrity",
+        {},
+    ).get("status", "validated")
+    if integrity_status == "invalid":
+        snapshot["run"]["status"] = "invalid"
+        snapshot["run"]["finished_at"] = None
+    elif (
+        phase_summary["judge"]["status"] == "complete"
+        and integrity_status == "validated"
+    ):
         snapshot["run"]["status"] = "complete"
         if snapshot["run"]["finished_at"] is None:
             snapshot["run"]["finished_at"] = utc_now()
@@ -6547,6 +7510,7 @@ def validate_resume_snapshot(
     snapshot: Mapping[str, Any],
     *,
     input_fingerprint: str,
+    judge_max_attempts: int = DEFAULT_JUDGE_MAX_ATTEMPTS,
 ) -> None:
     if snapshot.get("schema_version") != SCHEMA_VERSION:
         raise EvaluationInputError(
@@ -6558,6 +7522,15 @@ def validate_resume_snapshot(
             "Evaluation inputs changed since this snapshot was created. "
             "Choose a new --output so results from different corpus/model/code "
             "states are not mixed."
+        )
+    if (
+        snapshot.get("run", {}).get("judge_max_attempts")
+        != judge_max_attempts
+    ):
+        raise EvaluationInputError(
+            "Judge retry policy changed since this snapshot was created. "
+            "Choose a new --output rather than mixing terminal-outcome "
+            "policies."
         )
 
 
@@ -7176,6 +8149,9 @@ def validate_judge_calibration(
     range_guard: Mapping[str, Any],
     dataset_root: Path,
     judge_max_tokens: int,
+    judge_max_attempts: int = DEFAULT_JUDGE_MAX_ATTEMPTS,
+    system_root: Path = PROJECT_ROOT,
+    runtime_settings: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Reconstruct and verify the complete calibration contract and results."""
 
@@ -7208,6 +8184,9 @@ def validate_judge_calibration(
                 "embedding_contrast_delta"
             ],
             max_tokens=judge_max_tokens,
+            max_attempts=judge_max_attempts,
+            system_root=system_root.resolve(),
+            runtime_settings=runtime_settings,
         )
     except Exception as error:
         raise EvaluationInputError(
@@ -7249,11 +8228,20 @@ def validate_judge_calibration(
         failures.append("calibration_backend_mismatch")
     if run.get("judge_max_tokens") != judge_max_tokens:
         failures.append("calibration_max_tokens_mismatch")
+    if run.get("judge_max_attempts") != judge_max_attempts:
+        failures.append("calibration_max_attempts_mismatch")
+    if run.get("system_root") != str(system_root.resolve()):
+        failures.append("calibration_system_root_mismatch")
     if run.get("runtime_versions") != expected["runtime_versions"]:
         failures.append("calibration_runtime_mismatch")
     calibrated_model = run.get("judge_model") or {}
     if calibrated_model != expected["judge_model"]:
         failures.append("calibration_model_mismatch")
+    if (
+        run.get("retrieval_embedding_model")
+        != expected["retrieval_embedding_model"]
+    ):
+        failures.append("calibration_retrieval_embedding_model_mismatch")
     if judge_model.get("sha256") != expected["judge_model"].get("sha256"):
         failures.append("evaluation_judge_model_mismatch")
     if calibrated_model.get("distinct_from_generator") is not True:
@@ -7535,6 +8523,8 @@ def validate_judge_calibration(
         ),
         "total_controls": summary.get("total_controls"),
         "matched_controls": summary.get("matched_controls"),
+        "judge_max_attempts": run.get("judge_max_attempts"),
+        "system_root": run.get("system_root"),
         "quality_gate_passed": True,
     }
 
@@ -7642,14 +8632,242 @@ def _resolve_selected_cases(
     return set(selected)
 
 
-def _load_runtime_settings() -> dict[str, Any]:
-    from soprano_qa.settings import load_settings
+def _load_runtime_settings(
+    system_root: Path = PROJECT_ROOT,
+) -> dict[str, Any]:
+    settings_module = _import_system_module(
+        "soprano_qa.settings",
+        system_root,
+    )
+    return settings_module.load_settings(use_legacy_dataset_env=False)
 
-    return load_settings(use_legacy_dataset_env=False)
+
+def _system_fingerprint_paths(
+    system_root: Path,
+    settings: Mapping[str, Any],
+) -> list[Path]:
+    """Return selected-system files whose bytes affect pipeline results."""
+
+    resolved = system_root.resolve()
+    paths = sorted((resolved / "soprano_qa").glob("*.py"))
+    paths.extend(
+        (
+            Path(__file__).resolve(),
+            resolved / "requirements.txt",
+            resolved / "config" / "settings.json",
+            Path(str(settings["corpus_path"])),
+            Path(str(settings["stats_path"])),
+        )
+    )
+    for setting_name in ("embedding_model_path", "embedding_cache_path"):
+        configured_path = settings.get(setting_name)
+        if configured_path:
+            asset_path = Path(str(configured_path))
+            if asset_path.is_file():
+                paths.append(asset_path)
+    return paths
+
+
+def validate_pipeline_dataset_root(
+    settings: Mapping[str, Any],
+    requested_root: Path,
+) -> Path:
+    """Keep the full evaluator's authenticated corpus immutable.
+
+    The service rebuilds its corpus when its dataset-root identity changes.
+    That would happen after this evaluator fingerprints and authenticates the
+    existing corpus, invalidating both provenance and resumability.  Alternate
+    corpora therefore require a separately prepared system worktree whose
+    settings, corpus, and stats already agree.
+    """
+
+    configured_root = Path(str(settings["dataset_root"])).resolve()
+    resolved_requested = requested_root.resolve()
+    if resolved_requested != configured_root:
+        raise EvaluationInputError(
+            "--pipeline-dataset-root differs from the selected system's "
+            "configured dataset_root. Prepare that system worktree's config, "
+            "corpus, and stats first; the full evaluator will not rebuild "
+            "authenticated inputs during a run."
+        )
+    return configured_root
+
+
+def validate_prebuilt_corpus(
+    settings: Mapping[str, Any],
+    *,
+    corpus_input_fingerprint_fn: Callable[[dict[str, Any]], str],
+) -> dict[str, Any]:
+    """Fail closed instead of letting the service rebuild trusted inputs."""
+
+    corpus_path = Path(str(settings["corpus_path"]))
+    stats_path = Path(str(settings["stats_path"]))
+    if not corpus_path.is_file() or not stats_path.is_file():
+        raise EvaluationInputError(
+            "The selected system needs a prebuilt corpus and stats before "
+            "full evaluation"
+        )
+    try:
+        stats = load_json(stats_path)
+        expected_fingerprint = corpus_input_fingerprint_fn(dict(settings))
+    except (OSError, ValueError, TypeError, FileNotFoundError) as error:
+        raise EvaluationInputError(
+            "Could not authenticate the selected system's corpus inputs"
+        ) from error
+    expected_exports = settings.get(
+        "web_export_files",
+        ["research-open.jsonl"],
+    )
+    checks = {
+        "stats_object": isinstance(stats, dict),
+        "schema": isinstance(stats, dict)
+        and stats.get("corpus_schema_version") == 6,
+        "web_exports": isinstance(stats, dict)
+        and stats.get("web_export_files") == expected_exports,
+        "dataset_root": isinstance(stats, dict)
+        and stats.get("dataset_root")
+        == os.path.realpath(str(settings["dataset_root"])),
+        "input_fingerprint": isinstance(stats, dict)
+        and stats.get("input_fingerprint") == expected_fingerprint,
+        "corpus_sha256": isinstance(stats, dict)
+        and stats.get("corpus_sha256") == file_sha256(corpus_path),
+    }
+    failures = [name for name, passed in checks.items() if not passed]
+    if failures:
+        raise EvaluationInputError(
+            "The selected system's corpus is stale or unauthenticated "
+            f"({', '.join(failures)}). Rebuild it before evaluation; the "
+            "evaluator will not mutate trusted inputs."
+        )
+    return stats
+
+
+def _pipeline_asset_record(path_value: Any) -> dict[str, Any]:
+    if path_value is None or str(path_value).strip() == "":
+        return {
+            "path": None,
+            "exists": False,
+            "kind": None,
+            "sha256": None,
+        }
+    path = Path(str(path_value)).resolve()
+    if path.is_file():
+        return {
+            "path": str(path),
+            "exists": True,
+            "kind": "file",
+            "sha256": file_sha256(path),
+        }
+    if path.is_dir():
+        files = [
+            {
+                "path": str(candidate.relative_to(path)),
+                "sha256": file_sha256(candidate),
+            }
+            for candidate in sorted(path.rglob("*"))
+            if candidate.is_file()
+        ]
+        return {
+            "path": str(path),
+            "exists": True,
+            "kind": "directory",
+            "sha256": hashlib.sha256(
+                canonical_json_bytes(files)
+            ).hexdigest(),
+        }
+    return {
+        "path": str(path),
+        "exists": False,
+        "kind": None,
+        "sha256": None,
+    }
+
+
+def authenticate_pipeline_state(
+    settings: Mapping[str, Any],
+    *,
+    corpus_input_fingerprint_fn: Callable[[dict[str, Any]], str],
+) -> dict[str, Any]:
+    """Authenticate all mutable retrieval assets as one state record."""
+
+    stats = validate_prebuilt_corpus(
+        settings,
+        corpus_input_fingerprint_fn=corpus_input_fingerprint_fn,
+    )
+    try:
+        assets = {
+            "corpus": _pipeline_asset_record(settings.get("corpus_path")),
+            "stats": _pipeline_asset_record(settings.get("stats_path")),
+            "embedding_model": _pipeline_asset_record(
+                settings.get("embedding_model_path")
+            ),
+            "embedding_cache": _pipeline_asset_record(
+                settings.get("embedding_cache_path")
+            ),
+        }
+    except (OSError, ValueError, TypeError) as error:
+        raise EvaluationInputError(
+            "Could not fingerprint the selected system's retrieval assets"
+        ) from error
+    if assets["corpus"]["sha256"] != stats.get("corpus_sha256"):
+        raise EvaluationInputError(
+            "The selected system's corpus changed while it was being "
+            "authenticated"
+        )
+    return {
+        "dataset_root": os.path.realpath(str(settings["dataset_root"])),
+        "corpus_input_fingerprint": stats["input_fingerprint"],
+        "assets": assets,
+    }
+
+
+def reauthenticate_pipeline_state(
+    settings: Mapping[str, Any],
+    *,
+    corpus_input_fingerprint_fn: Callable[[dict[str, Any]], str],
+    expected_state: Mapping[str, Any],
+) -> dict[str, Any]:
+    """Fail if corpus inputs or retrieval assets drifted during a phase."""
+
+    current_state = authenticate_pipeline_state(
+        settings,
+        corpus_input_fingerprint_fn=corpus_input_fingerprint_fn,
+    )
+    if current_state != dict(expected_state):
+        expected_assets = expected_state.get("assets", {})
+        current_assets = current_state.get("assets", {})
+        changed = [
+            name
+            for name in sorted(set(expected_assets) | set(current_assets))
+            if expected_assets.get(name) != current_assets.get(name)
+        ]
+        if (
+            expected_state.get("corpus_input_fingerprint")
+            != current_state.get("corpus_input_fingerprint")
+        ):
+            changed.append("corpus_inputs")
+        if expected_state.get("dataset_root") != current_state.get(
+            "dataset_root"
+        ):
+            changed.append("dataset_root")
+        raise EvaluationInputError(
+            "The selected system's authenticated pipeline state changed "
+            "during evaluation"
+            + (f" ({', '.join(changed)})" if changed else "")
+        )
+    return current_state
 
 
 def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
-    settings = _load_runtime_settings()
+    bootstrap = argparse.ArgumentParser(add_help=False)
+    bootstrap.add_argument(
+        "--system-root",
+        type=Path,
+        default=PROJECT_ROOT,
+    )
+    bootstrap_arguments, _ = bootstrap.parse_known_args(argv)
+    system_root = _activate_system_root(bootstrap_arguments.system_root)
+    settings = _load_runtime_settings(system_root)
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--phase",
@@ -7657,16 +8875,41 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
         default="all",
     )
     parser.add_argument(
+        "--question-set",
+        choices=QUESTION_SETS,
+        default="canonical",
+    )
+    parser.add_argument(
+        "--system-root",
+        type=Path,
+        default=system_root,
+        help="System worktree whose soprano_qa package and config are used.",
+    )
+    parser.add_argument(
         "--dataset-root",
         type=Path,
         default=Path(settings["dataset_root"]),
+        help="Benchmark dataset root containing inventories and variants.",
+    )
+    parser.add_argument(
+        "--pipeline-dataset-root",
+        type=Path,
+        default=Path(settings["dataset_root"]),
+        help="Dataset root used by the selected system to build its corpus.",
     )
     parser.add_argument(
         "--output",
         type=Path,
-        default=DEFAULT_OUTPUT,
+        default=None,
     )
     parser.add_argument("--top-k", type=int, default=6)
+    parser.add_argument(
+        "--require-retrieval-mode",
+        choices=("lexical", "hybrid"),
+        default=None,
+        help="Fail closed if the selected pipeline uses another mode or a "
+        "retrieval fallback.",
+    )
     parser.add_argument(
         "--case-id",
         action="append",
@@ -7702,7 +8945,11 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
         help="`auto` uses Transformers for a model directory and llama.cpp "
         "for a GGUF file.",
     )
-    parser.add_argument("--judge-max-attempts", type=int, default=4)
+    parser.add_argument(
+        "--judge-max-attempts",
+        type=int,
+        default=DEFAULT_JUDGE_MAX_ATTEMPTS,
+    )
     parser.add_argument("--judge-max-tokens", type=int, default=2048)
     parser.add_argument(
         "--range-embedding-model-path",
@@ -7762,14 +9009,38 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
         )
     if not 0 <= arguments.minimum_pass_rate <= 1:
         parser.error("--minimum-pass-rate must be between 0 and 1")
+    arguments.system_root = _activate_system_root(arguments.system_root)
+    if arguments.output is None:
+        arguments.output = (
+            DEFAULT_SYNTHESIZED_OUTPUT
+            if arguments.question_set == "synthesized"
+            else DEFAULT_OUTPUT
+        )
     return arguments
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     arguments = parse_arguments(argv)
-    dataset_root = arguments.dataset_root.resolve()
+    system_root = arguments.system_root.resolve()
+    benchmark_dataset_root = arguments.dataset_root.resolve()
+    pipeline_dataset_root = arguments.pipeline_dataset_root.resolve()
     output = arguments.output.resolve()
-    settings = _load_runtime_settings()
+    settings = _load_runtime_settings(system_root)
+    validate_pipeline_dataset_root(settings, pipeline_dataset_root)
+    corpus_module = _import_system_module("soprano_qa.corpus", system_root)
+    corpus_fingerprint_fn = getattr(
+        corpus_module,
+        "corpus_input_fingerprint",
+        None,
+    )
+    if not callable(corpus_fingerprint_fn):
+        raise EvaluationInputError(
+            "Selected system does not expose corpus_input_fingerprint"
+        )
+    pipeline_state = authenticate_pipeline_state(
+        settings,
+        corpus_input_fingerprint_fn=corpus_fingerprint_fn,
+    )
     generator_model_path = Path(settings["model_path"])
     judge_model_path = arguments.judge_model_path.resolve()
     judge_backend = arguments.judge_backend
@@ -7779,25 +9050,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             if judge_model_path.is_dir()
             else "llama-cpp"
         )
-    questions, dataset_paths = load_evaluation_questions(dataset_root)
-
-    implementation_paths = [
-        PROJECT_ROOT / "soprano_qa" / filename
-        for filename in (
-            "answer.py",
-            "corpus.py",
-            "llm.py",
-            "retrieval.py",
-            "service.py",
-            "settings.py",
-        )
-    ]
-    implementation_paths.extend(
-        (
-            Path(__file__).resolve(),
-            PROJECT_ROOT / "config" / "settings.json",
-        )
+    questions, dataset_paths = load_evaluation_questions(
+        benchmark_dataset_root,
+        question_set=arguments.question_set,
     )
+
     corpus_paths = [
         Path(settings["corpus_path"]),
         Path(settings["stats_path"]),
@@ -7806,17 +9063,21 @@ def main(argv: Sequence[str] | None = None) -> int:
         corpus_paths[0]
     )
     input_files = input_file_records(
-        [*dataset_paths, *implementation_paths, *corpus_paths]
+        [
+            *dataset_paths,
+            *_system_fingerprint_paths(system_root, settings),
+        ]
     )
     generator_model = _model_record(
         generator_model_path,
         backend="llama-cpp",
     )
     generator_runtime_settings = deepcopy(settings)
-    # The explicit evaluation argument is what the service actually receives
-    # through SOPRANO_QA_RAG_DATASET_ROOT below, even when the repository
-    # settings file names another default dataset.
-    generator_runtime_settings["dataset_root"] = str(dataset_root)
+    # Benchmark variants never redirect corpus construction. The explicit
+    # pipeline root is what the selected service receives below.
+    generator_runtime_settings["dataset_root"] = str(
+        pipeline_dataset_root
+    )
     generator_model["runtime_settings"] = deepcopy(
         generator_runtime_settings
     )
@@ -7842,11 +9103,18 @@ def main(argv: Sequence[str] | None = None) -> int:
         judge_model_sha256=judge_model["sha256"],
         judge_backend=judge_backend,
         range_guard=range_guard,
+        judge_max_attempts=arguments.judge_max_attempts,
         judge_calibration_sha256=(
             file_sha256(arguments.judge_calibration.resolve())
             if arguments.judge_calibration.resolve().is_file()
             else None
         ),
+        question_set=arguments.question_set,
+        system_root=system_root,
+        benchmark_dataset_root=benchmark_dataset_root,
+        pipeline_dataset_root=pipeline_dataset_root,
+        required_retrieval_mode=arguments.require_retrieval_mode,
+        pipeline_state=pipeline_state,
     )
 
     with exclusive_output_lock(output):
@@ -7855,17 +9123,25 @@ def main(argv: Sequence[str] | None = None) -> int:
             validate_resume_snapshot(
                 snapshot,
                 input_fingerprint=fingerprint,
+                judge_max_attempts=arguments.judge_max_attempts,
             )
         else:
             snapshot = new_snapshot(
                 questions=questions,
-                dataset_root=dataset_root,
+                dataset_root=benchmark_dataset_root,
                 input_files=input_files,
                 input_fingerprint=fingerprint,
                 top_k=arguments.top_k,
                 generator_model=generator_model,
                 judge_model=judge_model,
                 range_guard=range_guard,
+                judge_max_attempts=arguments.judge_max_attempts,
+                question_set=arguments.question_set,
+                system_root=system_root,
+                benchmark_dataset_root=benchmark_dataset_root,
+                pipeline_dataset_root=pipeline_dataset_root,
+                required_retrieval_mode=arguments.require_retrieval_mode,
+                pipeline_state=pipeline_state,
             )
             atomic_write_json(output, snapshot)
 
@@ -7885,21 +9161,65 @@ def main(argv: Sequence[str] | None = None) -> int:
             else (arguments.phase,)
         )
         if any(phase in {"retrieval", "generate"} for phase in phases):
-            os.environ["SOPRANO_QA_RAG_DATASET_ROOT"] = str(dataset_root)
-            from soprano_qa.service import ask
+            os.environ["SOPRANO_QA_RAG_DATASET_ROOT"] = str(
+                pipeline_dataset_root
+            )
+            ask = _import_system_module(
+                "soprano_qa.service",
+                system_root,
+            ).ask
 
             for phase in phases:
                 if phase not in {"retrieval", "generate"}:
                     continue
-                run_pipeline_phase(
-                    snapshot,
-                    phase=phase,
-                    ask_fn=ask,
-                    checkpoint=checkpoint,
-                    top_k=arguments.top_k,
-                    selected_case_ids=selected_case_ids,
-                    rerun=arguments.rerun,
-                )
+                snapshot["run"]["pipeline_integrity"] = {
+                    "status": "pending",
+                    "validated_at": None,
+                    "error": None,
+                }
+                checkpoint()
+                phase_error: BaseException | None = None
+                try:
+                    run_pipeline_phase(
+                        snapshot,
+                        phase=phase,
+                        ask_fn=ask,
+                        checkpoint=checkpoint,
+                        top_k=arguments.top_k,
+                        selected_case_ids=selected_case_ids,
+                        rerun=arguments.rerun,
+                        required_retrieval_mode=(
+                            arguments.require_retrieval_mode
+                        ),
+                    )
+                except (KeyboardInterrupt, RetrievalModeMismatchError) as error:
+                    phase_error = error
+                try:
+                    reauthenticate_pipeline_state(
+                        settings,
+                        corpus_input_fingerprint_fn=corpus_fingerprint_fn,
+                        expected_state=pipeline_state,
+                    )
+                except EvaluationInputError as error:
+                    snapshot["run"]["pipeline_integrity"] = {
+                        "status": "invalid",
+                        "validated_at": None,
+                        "error": {
+                            "at": utc_now(),
+                            "type": type(error).__name__,
+                            "message": str(error),
+                        },
+                    }
+                    checkpoint()
+                    raise
+                snapshot["run"]["pipeline_integrity"] = {
+                    "status": "validated",
+                    "validated_at": utc_now(),
+                    "error": None,
+                }
+                checkpoint()
+                if phase_error is not None:
+                    raise phase_error
 
         if "judge" in phases:
             if not judge_model["checkpoint_exists"]:
@@ -7910,8 +9230,11 @@ def main(argv: Sequence[str] | None = None) -> int:
                 arguments.judge_calibration.resolve(),
                 judge_model=judge_model,
                 range_guard=range_guard,
-                dataset_root=dataset_root,
+                dataset_root=benchmark_dataset_root,
                 judge_max_tokens=arguments.judge_max_tokens,
+                judge_max_attempts=arguments.judge_max_attempts,
+                system_root=system_root,
+                runtime_settings=settings,
             )
             snapshot["run"]["judge_calibration"] = calibration_record
             checkpoint()
@@ -7921,7 +9244,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                     max_tokens=arguments.judge_max_tokens,
                 )
             else:
-                from soprano_qa.llm import generate as generate_llm
+                generate_llm = _import_system_module(
+                    "soprano_qa.llm",
+                    system_root,
+                ).generate
 
                 judge_settings = {
                     **settings["llm"],

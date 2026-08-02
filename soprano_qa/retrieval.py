@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""Dependency-free BM25 retrieval with piece and measure-aware boosts."""
+"""Measure-aware lexical retrieval primitives and evidence formatting."""
 
 from __future__ import annotations
 
@@ -553,6 +553,12 @@ BROAD_PERFORMANCE_ADVICE_TERMS = (
     "주의",
     "중요",
     "잘 부르",
+    "잘 부를",
+    "잘 불러",
+    "잘 노래",
+    "제대로 소화",
+    "무엇을 해야",
+    "어떻게 해야",
     "어떻게 부르",
     "어떻게 불러",
     "어떻게 노래",
@@ -1216,6 +1222,7 @@ def is_broad_performance_guidance_query(
     if not piece:
         return False
     lowered = query.lower()
+    piece_performance_idiom = "제대로 소화" in lowered
     concepts = semantic_concepts(query, piece, query=True)
     subject_concept_prefixes = (
         "가창",
@@ -1228,6 +1235,7 @@ def is_broad_performance_guidance_query(
     )
     if not (
         any(term in lowered for term in BROAD_PERFORMANCE_SUBJECT_TERMS)
+        or piece_performance_idiom
         or any(
             concept.startswith(prefix)
             for concept in concepts
@@ -1241,6 +1249,8 @@ def is_broad_performance_guidance_query(
         return False
 
     def is_generic(concept: str) -> bool:
+        if piece_performance_idiom and concept.startswith(("제대", "소화")):
+            return True
         return any(
             concept.startswith(prefix)
             or prefix.startswith(concept)
@@ -1543,6 +1553,10 @@ class SearchResult:
     content_concept_coverage: float = 0.0
     answer_relation_score: float = 0.0
     semantic_match_type: str = "strict"
+    dense_score: float = 0.0
+    dense_content_score: float = 0.0
+    fusion_score: float = 0.0
+    retrieval_mode: str = "lexical"
 
 
 class BM25Index:
@@ -2255,8 +2269,8 @@ def format_result(result: SearchResult, rank: int) -> str:
     record = result.record
     return (
         "[%d] %s | %s | %s | %s | score %.2f "
-        "(text %.2f, scope %.2f, concepts %.2f, content %.2f, "
-        "relation %.2f, %s)"
+        "(text %.2f, dense %.2f, dense-content %.2f, fusion %.2f, scope %.2f, "
+        "concepts %.2f, content %.2f, relation %.2f, %s/%s)"
         "\nQ: %s\nA: %s%s"
         % (
             rank,
@@ -2266,10 +2280,14 @@ def format_result(result: SearchResult, rank: int) -> str:
             format_measure_range(record.get("measure_range") or []),
             result.score,
             result.text_score,
+            result.dense_score,
+            result.dense_content_score,
+            result.fusion_score,
             result.measure_score,
             result.concept_coverage,
             result.content_concept_coverage,
             result.answer_relation_score,
+            result.retrieval_mode,
             result.semantic_match_type,
             record.get("question") or "(standalone tip)",
             record["answer"],

@@ -333,6 +333,32 @@ class FivePieceQualitativeRunnerTests(unittest.TestCase):
                 input_fingerprint="changed",
             )
 
+    def test_fingerprint_binds_optional_embedding_checkpoint_state(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            checkpoint = Path(temporary) / "embedding.gguf"
+            missing = qualitative.embedding_model_record(checkpoint)
+            missing_fingerprint = qualitative.build_input_fingerprint(
+                input_files=[],
+                generate=True,
+                top_k=6,
+                retrieval_embedding_model=missing,
+            )
+
+            checkpoint.write_bytes(b"embedding-checkpoint")
+            present = qualitative.embedding_model_record(checkpoint)
+            present_fingerprint = qualitative.build_input_fingerprint(
+                input_files=[],
+                generate=True,
+                top_k=6,
+                retrieval_embedding_model=present,
+            )
+
+        self.assertFalse(missing["checkpoint_exists"])
+        self.assertIsNone(missing["sha256"])
+        self.assertTrue(present["checkpoint_exists"])
+        self.assertEqual(present["kind"], "file")
+        self.assertNotEqual(missing_fingerprint, present_fingerprint)
+
 
 if __name__ == "__main__":
     unittest.main()

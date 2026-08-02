@@ -14,7 +14,7 @@ flowchart LR
     B["Validated combined corpus"]
     C["Piece + question<br/>+ optional measure range"]
     D["Piece and range filtering"]
-    E["Semantic matching<br/>and BM25 ranking"]
+    E["BM25 + dense retrieval<br/>and rank fusion"]
     F["Range-safe evidence context"]
     G["Local LLM"]
     H["Grounded answer<br/>with evidence IDs"]
@@ -88,13 +88,40 @@ Retrieval proceeds in this order:
 
 1. Keep only records for the selected piece.
 2. Apply the selected measure range.
-3. Check that each candidate covers the question's musical/content concepts.
-4. Treat a terminal Korean answer relation such as `의미하다`, `표현하다`,
+3. Run the existing Korean concept and BM25 search, including strict
+   expert-question alias matching.
+4. Independently embed the natural-language question and retrieve semantically
+   similar knowledge units, allowing paraphrases outside the lexical concept
+   gate to enter the candidate set.
+5. Treat a terminal Korean answer relation such as `의미하다`, `표현하다`,
    or `상징하다` as a soft intent concept when the remaining content concepts
-   are fully covered.
-5. Rank eligible candidates with BM25, concept coverage, answer-relation
-   support, and expert-question alias matching.
-6. Select a small set of records that collectively covers the question.
+   are fully covered on the lexical path.
+6. Fuse lexical and dense ranks with weighted reciprocal-rank fusion. Exact
+   source-question aliases retain precedence within the same scope.
+7. Select a small set of records that collectively covers the question.
+
+Dense retrieval uses the local `Qwen3-Embedding-0.6B-Q8_0.gguf` checkpoint.
+Knowledge-unit relevance and answer vectors are normalized and cached using a
+fingerprint of the corpus text, model file, and embedding runtime settings. A
+question receives an English retrieval instruction and is embedded once per
+new normalized question in a process; a bounded hash-keyed cache reuses the
+query vector across generation retries. Direct dot products over the 446
+cached vector slots replace the need for a vector database. Dense model
+loading and inference use the existing `llama-cpp-python` runtime.
+
+Dense similarity never overrides corpus authority. Retrieval eligibility,
+piece identity, topic, confirmed measure status, and range relationship are
+checked independently for both candidate paths. A dense-only result for a
+selected range must overlap that range; confident lexical evidence may still
+report a confirmed non-overlapping annotation as secondary context. Low
+similarity floors remove remote neighbours, while two precision guards handle
+cases cosine similarity cannot separate: the query must have a music-domain
+anchor, and an answer must support explicitly requested attributes such as
+fingering, harmony analysis, BPM, page location, physical units, or a
+left-versus-right assignment. These checks apply only to dense-only admission,
+not to records already justified by the lexical path. If the checkpoint or
+embedding backend is unavailable, the active mode becomes lexical and
+structured diagnostics report the fallback reason.
 
 The soft relation path is deliberately separate from expert-question alias
 matching: aliases remain strict because a positive alias match is authoritative
@@ -127,7 +154,7 @@ The range contribution to ranking is:
 | Global context | `+0.25` |
 | Confirmed non-overlapping local evidence | `-1.0` |
 
-Scope priority is applied before the total BM25 score. Therefore, an
+Scope priority is applied before lexical or fused relevance. Therefore, an
 overlapping record ranks ahead of global context even if the global record has
 more lexical overlap. If any semantically relevant overlapping candidate
 exists, the final selected set must contain overlapping evidence.
@@ -194,14 +221,17 @@ numbers; old source-text locators and legacy hints are neutralized. If a
 review note contains disputed locations, the answer labels them only as
 unconfirmed locations rather than printing competing measure numbers.
 
-The question is normalized before matching: piece names, measure expressions,
-and generic question wording are removed from the lexical query. Korean
-concept normalization and BM25 are then used together. Structured output also
-reports `concept_coverage`, `content_concept_coverage`,
-`answer_relation_score`, and `semantic_match_type`, making strict and soft
-matches distinguishable. Alias-enriched concepts can help find candidates, but
-a soft match also requires explanatory language and content anchors in the
-knowledge-unit answer itself.
+The question is normalized before lexical matching: piece names, measure
+expressions, and generic question wording are removed from the lexical query.
+Korean concept normalization and BM25 are then used together. Dense query
+preparation removes piece and measure routing syntax but keeps the natural
+question wording. Structured output reports `concept_coverage`,
+`content_concept_coverage`, `answer_relation_score`, `dense_score`,
+`dense_content_score`, `fusion_score`, `retrieval_mode`, and
+`semantic_match_type`, making lexical,
+dense, strict, and soft matches distinguishable. Alias-enriched concepts can
+help find candidates, but a lexical soft match also requires explanatory
+language and content anchors in the knowledge-unit answer itself.
 
 Range overlap alone is never enough. A record must also be semantically
 relevant to the question.

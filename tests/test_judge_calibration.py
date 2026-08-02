@@ -22,6 +22,7 @@ from tests.test_question_evaluation import (
 
 DATASET_ROOT = Path("/home/minhee/soprano-qa-dataset")
 JUDGE_MAX_TOKENS = 1536
+JUDGE_MAX_ATTEMPTS = evaluator.DEFAULT_JUDGE_MAX_ATTEMPTS
 EXPECTED_VERDICTS = {
     "good_retrieved_expert_supplement": "pass",
     "supplement_only_cannot_replace_target": "fail",
@@ -286,6 +287,9 @@ def complete_artifact(expected: dict) -> dict:
         judge_model=deepcopy(expected["judge_model"]),
         range_guard=deepcopy(expected["range_guard"]),
         max_tokens=JUDGE_MAX_TOKENS,
+        retrieval_embedding_model=deepcopy(
+            expected["retrieval_embedding_model"]
+        ),
     )
     artifact["run"]["runtime_versions"] = deepcopy(
         expected["runtime_versions"]
@@ -832,6 +836,87 @@ class ExpectationScoringTests(unittest.TestCase):
 
 
 class CalibrationRunTests(unittest.TestCase):
+    def test_fingerprint_binds_retrieval_embedding_model(self) -> None:
+        common = {
+            "controls": [],
+            "input_files": [],
+            "judge_model": {"sha256": "judge"},
+            "dataset_root": DATASET_ROOT,
+            "runtime": {"python": "test"},
+            "max_tokens": 512,
+            "max_attempts": JUDGE_MAX_ATTEMPTS,
+            "range_guard": TEST_RANGE_GUARD,
+            "system_root": evaluator.PROJECT_ROOT,
+        }
+        missing = calibration._input_fingerprint(
+            **common,
+            retrieval_embedding_model={
+                "path": "/models/embedding.gguf",
+                "checkpoint_exists": False,
+                "kind": "missing",
+                "sha256": None,
+            },
+        )
+        present = calibration._input_fingerprint(
+            **common,
+            retrieval_embedding_model={
+                "path": "/models/embedding.gguf",
+                "checkpoint_exists": True,
+                "kind": "file",
+                "sha256": "embedding-sha256",
+            },
+        )
+
+        self.assertNotEqual(missing, present)
+
+    def test_fingerprint_and_resume_bind_judge_retry_policy(self) -> None:
+        common = {
+            "controls": [],
+            "input_files": [],
+            "judge_model": {"sha256": "judge"},
+            "dataset_root": DATASET_ROOT,
+            "runtime": {"python": "test"},
+            "max_tokens": 512,
+            "range_guard": TEST_RANGE_GUARD,
+            "retrieval_embedding_model": {"sha256": "embedding"},
+            "system_root": evaluator.PROJECT_ROOT,
+        }
+        first = calibration._input_fingerprint(
+            **common,
+            max_attempts=1,
+        )
+        second = calibration._input_fingerprint(
+            **common,
+            max_attempts=4,
+        )
+        alternate_system = calibration._input_fingerprint(
+            **{
+                **common,
+                "system_root": Path("/tmp/alternate-soprano-system"),
+            },
+            max_attempts=4,
+        )
+        self.assertNotEqual(first, second)
+        self.assertNotEqual(second, alternate_system)
+
+        controls, _ = calibration.build_controls(DATASET_ROOT)
+        snapshot = calibration.new_snapshot(
+            controls=[deepcopy(controls[0])],
+            dataset_root=DATASET_ROOT,
+            input_files=[],
+            input_fingerprint="test",
+            judge_model={"path": "Qwen3-4B"},
+            range_guard=TEST_RANGE_GUARD,
+            max_tokens=512,
+            max_attempts=4,
+        )
+        with self.assertRaises(calibration.CalibrationInputError):
+            calibration.validate_resume_snapshot(
+                snapshot,
+                input_fingerprint="test",
+                judge_max_attempts=1,
+            )
+
     def test_runner_uses_both_semantic_frames_and_checkpoints(self) -> None:
         controls, _ = calibration.build_controls(DATASET_ROOT)
         control = deepcopy(controls[0])
@@ -1063,6 +1148,37 @@ class CalibrationArtifactReconstructionTests(unittest.TestCase):
         self.assertTrue(record["quality_gate_passed"])
         self.assertEqual(record["total_controls"], 25)
         self.assertEqual(record["matched_controls"], 25)
+
+    def test_validator_threads_selected_system_context(self) -> None:
+        target_root = Path("/tmp/alternate-soprano-system").resolve()
+        target_settings = {
+            "model_path": "/tmp/alternate-generator.gguf",
+            "embedding_model_path": "/tmp/alternate-embedding.gguf",
+        }
+        artifact = deepcopy(self.artifact)
+        artifact["run"]["system_root"] = str(target_root)
+        with mock.patch.object(
+            calibration,
+            "expected_calibration_inputs",
+            return_value=deepcopy(self.expected),
+        ) as reconstruct:
+            with tempfile.TemporaryDirectory() as directory:
+                output = Path(directory) / "calibration.json"
+                evaluator.atomic_write_json(output, artifact)
+                evaluator.validate_judge_calibration(
+                    output,
+                    judge_model=self.expected["judge_model"],
+                    range_guard=self.expected["range_guard"],
+                    dataset_root=DATASET_ROOT,
+                    judge_max_tokens=JUDGE_MAX_TOKENS,
+                    judge_max_attempts=JUDGE_MAX_ATTEMPTS,
+                    system_root=target_root,
+                    runtime_settings=target_settings,
+                )
+
+        kwargs = reconstruct.call_args.kwargs
+        self.assertEqual(kwargs["system_root"], target_root)
+        self.assertIs(kwargs["runtime_settings"], target_settings)
 
     def test_forged_contract_state_raw_output_and_summary_are_rejected(
         self,

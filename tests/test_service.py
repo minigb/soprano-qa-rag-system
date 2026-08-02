@@ -4,6 +4,7 @@ from __future__ import annotations
 from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
+import tempfile
 import threading
 import time
 import unittest
@@ -35,6 +36,7 @@ class ServicePipelineTests(unittest.TestCase):
                 "SOPRANO_QA_DATASET_ROOT": "/tmp/score-dataset",
                 "SOPRANO_QA_RAG_DATASET_ROOT": "/tmp/rag-dataset",
                 "SOPRANO_QA_MODEL_PATH": "/tmp/model.gguf",
+                "SOPRANO_QA_EMBEDDING_MODEL_PATH": "/tmp/embedding.gguf",
             },
             clear=False,
         ):
@@ -42,6 +44,10 @@ class ServicePipelineTests(unittest.TestCase):
 
         self.assertEqual(settings["dataset_root"], "/tmp/rag-dataset")
         self.assertEqual(settings["model_path"], "/tmp/model.gguf")
+        self.assertEqual(
+            settings["embedding_model_path"],
+            "/tmp/embedding.gguf",
+        )
 
     def test_relative_overrides_resolve_from_pipeline_repository(self) -> None:
         with mock.patch.dict(
@@ -63,6 +69,32 @@ class ServicePipelineTests(unittest.TestCase):
             settings["model_path"],
             str((pipeline_root / "models" / "alternate.gguf").resolve()),
         )
+
+    def test_index_signature_changes_when_embedding_checkpoint_appears(
+        self,
+    ) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            corpus_path = root / "corpus.json"
+            stats_path = root / "stats.json"
+            embedding_path = root / "embedding.gguf"
+            corpus_path.write_text("[]", encoding="utf-8")
+            stats_path.write_text("{}", encoding="utf-8")
+            with mock.patch.dict(
+                qa.SETTINGS,
+                {
+                    "corpus_path": str(corpus_path),
+                    "stats_path": str(stats_path),
+                    "embedding_model_path": str(embedding_path),
+                },
+            ):
+                without_checkpoint = qa._current_corpus_signature()
+                embedding_path.write_bytes(b"checkpoint")
+                with_checkpoint = qa._current_corpus_signature()
+
+        self.assertIsNone(without_checkpoint[2])
+        self.assertIsNotNone(with_checkpoint[2])
+        self.assertNotEqual(without_checkpoint, with_checkpoint)
 
     def test_measure_query_uses_pipeline_scope_and_ids(self) -> None:
         result = qa.ask(
@@ -282,6 +314,75 @@ class ServicePipelineTests(unittest.TestCase):
             result["answer"],
         )
 
+    def test_retrieval_only_answer_is_bounded_but_evidence_is_complete(
+        self,
+    ) -> None:
+        results = []
+        for index in range(6):
+            record = {
+                "id": f"die-forelle-ku-test-{index}",
+                "evidence_type": "expert_annotation",
+                "piece": "die-forelle",
+                "work": "Die Forelle",
+                "topic": "performance",
+                "question": "",
+                "answer": f"검색 답변 {index}",
+                "measure_range": [],
+                "measure_scope": "whole_piece",
+                "measure_status": "whole_piece",
+                "measure_notes": "",
+                "rewrite_status": "ready",
+                "rewrite_notes": "",
+                "retrieval_review_warning": "",
+                "source_ids": [f"source-{index}"],
+                "web_source_ids": [],
+                "claim_ids": [],
+                "sources": [],
+                "annotators": ["tester"],
+                "source_answer_context": [],
+            }
+            results.append(
+                SearchResult(
+                    record=record,
+                    score=1.0 - index * 0.01,
+                    text_score=1.0,
+                    measure_score=1.5,
+                    piece_score=1.0,
+                    scope_match="general_evidence",
+                )
+            )
+
+        class FixedIndex:
+            @staticmethod
+            def search(**_kwargs):
+                return results
+
+        unavailable = {
+            "path": "/tmp/model.gguf",
+            "checkpoint_exists": False,
+            "llama_cpp_available": False,
+        }
+        with (
+            mock.patch.object(qa, "_get_index", return_value=FixedIndex()),
+            mock.patch.object(qa, "model_status", return_value=unavailable),
+        ):
+            response = qa.ask(
+                piece_id="die-forelle",
+                question="어떻게 표현할까?",
+                measure_range=None,
+                generate=False,
+                top_k=6,
+            )
+
+        self.assertEqual(len(response["evidence"]), 6)
+        cited_ids = [
+            item["id"]
+            for item in response["evidence"]
+            if f'[{item["id"]}]' in response["answer"]
+        ]
+        self.assertEqual(cited_ids, [result.record["id"] for result in results[:4]])
+        self.assertNotIn(results[4].record["answer"], response["answer"])
+
     def test_broad_rag_generation_can_cite_a_confirmed_local_example(
         self,
     ) -> None:
@@ -403,12 +504,15 @@ class ServicePipelineTests(unittest.TestCase):
             "unsupported local-example generalization rejected",
         )
         self.assertNotIn("항상 고음을 약하게", result["answer"])
-        self.assertIn(f'[{selected_local["id"]}]', result["answer"])
-        self.assertIn(
-            "확인된 국소 예시(마디 "
-            + selected_local["measure_range"]
-            + ")",
-            result["answer"],
+        self.assertNotIn(f'[{selected_local["id"]}]', result["answer"])
+        cited = [
+            item
+            for item in result["evidence"]
+            if f'[{item["id"]}]' in result["answer"]
+        ]
+        self.assertTrue(cited)
+        self.assertTrue(
+            all(item["scope_match"] != "local_example" for item in cited)
         )
 
     def test_ranged_query_retains_confirmed_other_range_context(self) -> None:

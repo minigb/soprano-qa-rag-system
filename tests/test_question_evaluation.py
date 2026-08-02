@@ -5,14 +5,23 @@ from __future__ import annotations
 from copy import deepcopy
 import hashlib
 import json
+import os
 from pathlib import Path
+import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from evaluation import run_question_evaluation as evaluator
 
 
 DATASET_ROOT = Path("/home/minhee/soprano-qa-dataset")
+SYNTHESIZED_DATASET_ROOT = Path(
+    "/home/minhee/soprano-qa-dataset-evaluation-set-synthesized"
+)
+DENSE_SYSTEM_ROOT = Path(
+    "/home/minhee/soprano-qa-rag-system-dense-retrieval"
+)
 TEST_RANGE_GUARD = {
     "embedding_model": {"path": "embedding", "sha256": "embedding"},
     "nli_model": {"path": "nli", "sha256": "nli"},
@@ -791,6 +800,7 @@ class QuestionInventoryTests(unittest.TestCase):
             aggregate["answer_quality_status"],
             "human_review",
         )
+        self.assertTrue(aggregate["pipeline_is_grounded_rag_llm"])
         self.assertFalse(aggregate["reliable_rag_llm_pass"])
         self.assertIn(
             "support_only_reference_requires_review",
@@ -1567,6 +1577,144 @@ class QuestionInventoryTests(unittest.TestCase):
         )
 
 
+class SynthesizedQuestionInventoryTests(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls) -> None:
+        cls.questions, cls.paths = evaluator.load_evaluation_questions(
+            SYNTHESIZED_DATASET_ROOT,
+            question_set="synthesized",
+        )
+
+    def test_synthesized_set_keeps_40_records_and_expands_153_cases(
+        self,
+    ) -> None:
+        self.assertEqual(len(self.questions), 40)
+        cases = [
+            case
+            for question in self.questions
+            for case in question["inference_runs"]
+        ]
+        self.assertEqual(
+            len(cases),
+            evaluator.EXPECTED_SYNTHESIZED_CASE_COUNT,
+        )
+        self.assertEqual(len({case["case_id"] for case in cases}), 153)
+        self.assertEqual(
+            [path.parent.name for path in self.paths].count(
+                "evaluation_question_variants"
+            ),
+            3,
+        )
+        for question in self.questions:
+            variants = question["synthesized_question_variants"]
+            self.assertEqual(len(variants), 3)
+            by_id = {item["variant_id"]: item for item in variants}
+            self.assertEqual(
+                {
+                    case["inference_input"]["synthesized_variant_id"]
+                    for case in question["inference_runs"]
+                },
+                set(by_id),
+            )
+            for case in question["inference_runs"]:
+                variant_id = case["inference_input"][
+                    "synthesized_variant_id"
+                ]
+                self.assertTrue(case["case_id"].startswith(variant_id + "__"))
+                self.assertEqual(
+                    case["inference_input"]["question"],
+                    by_id[variant_id]["question"],
+                )
+
+    def test_variant_shards_are_bound_and_form_checked(self) -> None:
+        real_load = evaluator.load_json
+
+        def run_mutation(mutator, expected_error: str) -> None:
+            def mutating_load(path):
+                payload = real_load(path)
+                if (
+                    path.parent.name == "evaluation_question_variants"
+                    and path.name == "die-forelle.json"
+                ):
+                    payload = deepcopy(payload)
+                    mutator(payload)
+                return payload
+
+            with patch.object(
+                evaluator,
+                "load_json",
+                side_effect=mutating_load,
+            ):
+                with self.assertRaisesRegex(
+                    evaluator.EvaluationInputError,
+                    expected_error,
+                ):
+                    evaluator.load_evaluation_questions(
+                        SYNTHESIZED_DATASET_ROOT,
+                        question_set="synthesized",
+                    )
+
+        cases = (
+            (
+                lambda value: value["questions"][0].__setitem__(
+                    "base_paraphrased_question",
+                    "바뀐 기준 질문?",
+                ),
+                "base paraphrased question drift",
+            ),
+            (
+                lambda value: value["questions"][0]["variants"][0]
+                .__setitem__("variant_id", "unstable-id"),
+                "expected stable ID",
+            ),
+            (
+                lambda value: value["questions"][0]["variants"][0]
+                .__setitem__("question", "2마디에서는 어떻게 해야 할까?"),
+                "measure locator",
+            ),
+            (
+                lambda value: value["questions"][0]["variants"][0]
+                .__setitem__("question", "이 경우에는 어떻게 해야 하나요?"),
+                "non-honorific",
+            ),
+            (
+                lambda value: value["questions"][0]["variants"][1]
+                .__setitem__(
+                    "question",
+                    value["questions"][0]["variants"][0]["question"],
+                ),
+                "duplicate synthesized question",
+            ),
+        )
+        for mutator, expected_error in cases:
+            with self.subTest(expected_error=expected_error):
+                run_mutation(mutator, expected_error)
+
+    def test_snapshot_records_benchmark_and_pipeline_provenance(self) -> None:
+        snapshot = evaluator.new_snapshot(
+            questions=deepcopy(self.questions),
+            dataset_root=SYNTHESIZED_DATASET_ROOT,
+            input_files=[],
+            input_fingerprint="synthesized-test",
+            top_k=6,
+            generator_model={"path": "generator"},
+            judge_model={"path": "judge"},
+            range_guard=TEST_RANGE_GUARD,
+            question_set="synthesized",
+            system_root=DENSE_SYSTEM_ROOT,
+            benchmark_dataset_root=SYNTHESIZED_DATASET_ROOT,
+            pipeline_dataset_root=DATASET_ROOT,
+        )
+        run = snapshot["run"]
+        self.assertEqual(run["question_set"], "synthesized")
+        self.assertEqual(run["system_root"], str(DENSE_SYSTEM_ROOT))
+        self.assertEqual(
+            run["benchmark_dataset_root"],
+            str(SYNTHESIZED_DATASET_ROOT),
+        )
+        self.assertEqual(run["pipeline_dataset_root"], str(DATASET_ROOT))
+
+
 class RangeScopeNliTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -2127,6 +2275,182 @@ class RangeScopeNliTests(unittest.TestCase):
         self.assertEqual(assessment["status"], "fail")
 
 
+class RuntimeSelectionTests(unittest.TestCase):
+    def tearDown(self) -> None:
+        evaluator._activate_system_root(evaluator.PROJECT_ROOT)
+
+    def test_cli_defaults_output_from_question_set(self) -> None:
+        canonical = evaluator.parse_arguments([])
+        synthesized = evaluator.parse_arguments(
+            ["--question-set", "synthesized"]
+        )
+        self.assertEqual(canonical.output, evaluator.DEFAULT_OUTPUT)
+        self.assertEqual(
+            synthesized.output,
+            evaluator.DEFAULT_SYNTHESIZED_OUTPUT,
+        )
+
+    def test_system_root_is_activated_before_settings_import(self) -> None:
+        arguments = evaluator.parse_arguments(
+            [
+                "--system-root",
+                str(DENSE_SYSTEM_ROOT),
+                "--question-set",
+                "synthesized",
+                "--dataset-root",
+                str(SYNTHESIZED_DATASET_ROOT),
+                "--pipeline-dataset-root",
+                str(DATASET_ROOT),
+            ]
+        )
+        self.assertEqual(arguments.system_root, DENSE_SYSTEM_ROOT)
+        self.assertEqual(arguments.dataset_root, SYNTHESIZED_DATASET_ROOT)
+        self.assertEqual(arguments.pipeline_dataset_root, DATASET_ROOT)
+        self.assertEqual(Path(sys.path[0]), DENSE_SYSTEM_ROOT)
+        settings_module = evaluator._import_system_module(
+            "soprano_qa.settings",
+            DENSE_SYSTEM_ROOT,
+        )
+        self.assertTrue(
+            Path(settings_module.__file__).resolve().is_relative_to(
+                DENSE_SYSTEM_ROOT
+            )
+        )
+
+    def test_dense_system_files_and_checkpoint_are_fingerprinted(self) -> None:
+        settings = evaluator._load_runtime_settings(DENSE_SYSTEM_ROOT)
+        paths = {
+            path.resolve()
+            for path in evaluator._system_fingerprint_paths(
+                DENSE_SYSTEM_ROOT,
+                settings,
+            )
+        }
+        self.assertIn(
+            DENSE_SYSTEM_ROOT / "soprano_qa" / "dense.py",
+            paths,
+        )
+        self.assertIn(
+            DENSE_SYSTEM_ROOT / "config" / "settings.json",
+            paths,
+        )
+        self.assertIn(Path(settings["corpus_path"]).resolve(), paths)
+        self.assertIn(Path(settings["stats_path"]).resolve(), paths)
+        self.assertIn(
+            Path(settings["embedding_model_path"]).resolve(),
+            paths,
+        )
+        self.assertIn(
+            Path(settings["embedding_cache_path"]).resolve(),
+            paths,
+        )
+        self.assertIn(DENSE_SYSTEM_ROOT / "requirements.txt", paths)
+
+    def test_full_evaluator_refuses_a_corpus_rebuild_after_fingerprinting(
+        self,
+    ) -> None:
+        settings = {"dataset_root": str(DATASET_ROOT)}
+        self.assertEqual(
+            evaluator.validate_pipeline_dataset_root(settings, DATASET_ROOT),
+            DATASET_ROOT,
+        )
+        with self.assertRaisesRegex(
+            evaluator.EvaluationInputError,
+            "will not rebuild authenticated inputs",
+        ):
+            evaluator.validate_pipeline_dataset_root(
+                settings,
+                SYNTHESIZED_DATASET_ROOT,
+            )
+
+    def test_full_evaluator_requires_a_current_authenticated_corpus(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            corpus = root / "corpus.json"
+            stats = root / "stats.json"
+            corpus.write_text("[]\n", encoding="utf-8")
+            settings = {
+                "dataset_root": str(root),
+                "corpus_path": str(corpus),
+                "stats_path": str(stats),
+                "web_export_files": ["research-open.jsonl"],
+            }
+            stats_payload = {
+                "corpus_schema_version": 6,
+                "dataset_root": str(root.resolve()),
+                "input_fingerprint": "current-inputs",
+                "corpus_sha256": evaluator.file_sha256(corpus),
+                "web_export_files": ["research-open.jsonl"],
+            }
+            stats.write_text(
+                json.dumps(stats_payload, ensure_ascii=False, indent=2) + "\n",
+                encoding="utf-8",
+            )
+
+            validated = evaluator.validate_prebuilt_corpus(
+                settings,
+                corpus_input_fingerprint_fn=lambda _: "current-inputs",
+            )
+            self.assertEqual(validated, stats_payload)
+
+            corpus.write_text("[{}]\n", encoding="utf-8")
+            with self.assertRaisesRegex(
+                evaluator.EvaluationInputError,
+                "corpus_sha256",
+            ):
+                evaluator.validate_prebuilt_corpus(
+                    settings,
+                    corpus_input_fingerprint_fn=lambda _: "current-inputs",
+                )
+
+    def test_full_evaluator_reauthenticates_embedding_cache(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            corpus = root / "corpus.json"
+            stats = root / "stats.json"
+            embedding_model = root / "embedding.gguf"
+            embedding_cache = root / "embedding-cache.json"
+            corpus.write_text("[]\n", encoding="utf-8")
+            embedding_model.write_bytes(b"model-v1")
+            embedding_cache.write_text("{}\n", encoding="utf-8")
+            settings = {
+                "dataset_root": str(root),
+                "corpus_path": str(corpus),
+                "stats_path": str(stats),
+                "embedding_model_path": str(embedding_model),
+                "embedding_cache_path": str(embedding_cache),
+                "web_export_files": ["research-open.jsonl"],
+            }
+            stats.write_text(
+                json.dumps(
+                    {
+                        "corpus_schema_version": 6,
+                        "dataset_root": str(root.resolve()),
+                        "input_fingerprint": "current-inputs",
+                        "corpus_sha256": evaluator.file_sha256(corpus),
+                        "web_export_files": ["research-open.jsonl"],
+                    }
+                )
+                + "\n",
+                encoding="utf-8",
+            )
+            expected = evaluator.authenticate_pipeline_state(
+                settings,
+                corpus_input_fingerprint_fn=lambda _: "current-inputs",
+            )
+            embedding_cache.write_text('{"changed": true}\n', encoding="utf-8")
+
+            with self.assertRaisesRegex(
+                evaluator.EvaluationInputError,
+                "embedding_cache",
+            ):
+                evaluator.reauthenticate_pipeline_state(
+                    settings,
+                    corpus_input_fingerprint_fn=lambda _: "current-inputs",
+                    expected_state=expected,
+                )
+
+
 class PipelinePhaseTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
@@ -2173,6 +2497,105 @@ class PipelinePhaseTests(unittest.TestCase):
             },
         )
         self.assertNotEqual(first, second)
+
+    def test_input_fingerprint_binds_required_mode_and_pipeline_state(
+        self,
+    ) -> None:
+        common = {
+            "input_files": [],
+            "top_k": 6,
+            "generator_runtime_settings": {},
+            "generator_model_sha256": "generator",
+            "judge_model_sha256": "judge",
+            "judge_backend": "transformers",
+            "range_guard": TEST_RANGE_GUARD,
+        }
+        lexical = evaluator.build_input_fingerprint(
+            **common,
+            required_retrieval_mode="lexical",
+            pipeline_state={"embedding_cache": "cache-v1"},
+        )
+        hybrid = evaluator.build_input_fingerprint(
+            **common,
+            required_retrieval_mode="hybrid",
+            pipeline_state={"embedding_cache": "cache-v1"},
+        )
+        changed_cache = evaluator.build_input_fingerprint(
+            **common,
+            required_retrieval_mode="lexical",
+            pipeline_state={"embedding_cache": "cache-v2"},
+        )
+        self.assertEqual(len({lexical, hybrid, changed_cache}), 3)
+
+    def test_input_fingerprint_and_resume_bind_judge_retry_policy(
+        self,
+    ) -> None:
+        common = {
+            "input_files": [],
+            "top_k": 6,
+            "generator_runtime_settings": {"llm": {"max_tokens": 768}},
+            "generator_model_sha256": "generator",
+            "judge_model_sha256": "judge",
+            "judge_backend": "transformers",
+            "range_guard": TEST_RANGE_GUARD,
+        }
+        first = evaluator.build_input_fingerprint(
+            **common,
+            judge_max_attempts=1,
+        )
+        second = evaluator.build_input_fingerprint(
+            **common,
+            judge_max_attempts=4,
+        )
+        self.assertNotEqual(first, second)
+
+        snapshot = self.make_snapshot()
+        with self.assertRaises(evaluator.EvaluationInputError):
+            evaluator.validate_resume_snapshot(
+                snapshot,
+                input_fingerprint="test",
+                judge_max_attempts=1,
+            )
+
+    def test_input_fingerprint_binds_question_and_system_roots(self) -> None:
+        common = {
+            "input_files": [],
+            "top_k": 6,
+            "generator_runtime_settings": {"llm": {"max_tokens": 768}},
+            "generator_model_sha256": "generator",
+            "judge_model_sha256": "judge",
+            "judge_backend": "transformers",
+            "range_guard": TEST_RANGE_GUARD,
+            "benchmark_dataset_root": SYNTHESIZED_DATASET_ROOT,
+            "pipeline_dataset_root": DATASET_ROOT,
+        }
+        canonical = evaluator.build_input_fingerprint(
+            **common,
+            question_set="canonical",
+            system_root=evaluator.PROJECT_ROOT,
+        )
+        synthesized = evaluator.build_input_fingerprint(
+            **common,
+            question_set="synthesized",
+            system_root=evaluator.PROJECT_ROOT,
+        )
+        alternate_system = evaluator.build_input_fingerprint(
+            **common,
+            question_set="canonical",
+            system_root=DENSE_SYSTEM_ROOT,
+        )
+        alternate_pipeline = evaluator.build_input_fingerprint(
+            **{
+                **common,
+                "pipeline_dataset_root": SYNTHESIZED_DATASET_ROOT,
+            },
+            question_set="canonical",
+            system_root=evaluator.PROJECT_ROOT,
+        )
+        self.assertEqual(
+            len({canonical, synthesized, alternate_system, alternate_pipeline}),
+            4,
+        )
 
     @staticmethod
     def pipeline_result(*, generate: bool) -> dict:
@@ -2267,6 +2690,77 @@ class PipelinePhaseTests(unittest.TestCase):
         evaluator.run_pipeline_phase(**arguments)
         self.assertIsNotNone(case["retrieval_probe"])
         self.assertNotIn("retrieval", case["phase_errors"])
+
+    def test_strict_hybrid_mode_accepts_intentional_lexical_route(self) -> None:
+        snapshot = self.make_snapshot()
+        case = snapshot["results"][0]["inference_runs"][0]
+
+        def ask_fn(**kwargs):
+            result = self.pipeline_result(generate=False)
+            result["retrieval"] = {
+                "configured_mode": "hybrid",
+                "active_mode": "hybrid",
+                "dense_available": True,
+                "fallback_reason": None,
+                "last_dense_error": None,
+                "last_search_mode": "lexical_route",
+                "query_route": "lexical",
+                "route_reason": "content_free_query",
+                "dense_attempted": False,
+                "dense_contributed": False,
+                "fallback_used": False,
+            }
+            return result
+
+        evaluator.run_pipeline_phase(
+            snapshot,
+            phase="retrieval",
+            ask_fn=ask_fn,
+            checkpoint=lambda: None,
+            top_k=6,
+            selected_case_ids={case["case_id"]},
+            required_retrieval_mode="hybrid",
+        )
+        validation = case["retrieval_probe"]["retrieval_validation"]
+        self.assertEqual(validation["last_search_mode"], "lexical_route")
+        self.assertFalse(validation["fallback_used"])
+
+    def test_strict_hybrid_mode_fails_closed_on_dense_fallback(self) -> None:
+        snapshot = self.make_snapshot()
+        case = snapshot["results"][0]["inference_runs"][0]
+
+        def ask_fn(**kwargs):
+            result = self.pipeline_result(generate=False)
+            result["retrieval"] = {
+                "configured_mode": "hybrid",
+                "active_mode": "hybrid",
+                "dense_available": True,
+                "fallback_reason": None,
+                "last_dense_error": "embedding failed",
+                "last_search_mode": "lexical_fallback",
+                "query_route": "lexical",
+                "route_reason": "dense_query_error",
+                "dense_attempted": True,
+                "dense_contributed": False,
+                "fallback_used": True,
+            }
+            return result
+
+        with self.assertRaises(evaluator.RetrievalModeMismatchError):
+            evaluator.run_pipeline_phase(
+                snapshot,
+                phase="retrieval",
+                ask_fn=ask_fn,
+                checkpoint=lambda: None,
+                top_k=6,
+                selected_case_ids={case["case_id"]},
+                required_retrieval_mode="hybrid",
+            )
+        self.assertIsNone(case["retrieval_probe"])
+        self.assertEqual(
+            case["phase_errors"]["retrieval"]["type"],
+            "RetrievalModeMismatchError",
+        )
 
 
 class JudgeProtocolTests(unittest.TestCase):
@@ -4000,6 +4494,37 @@ class JudgeResumeTests(unittest.TestCase):
             for item in questions
             if item["source_id"] == "kim-die-forelle-02"
         )
+        cls.range_contrast_question = next(
+            item
+            for item in questions
+            if item["source_id"] == "kim-la-capinera-17"
+        )
+
+    @staticmethod
+    def one_case_snapshot(
+        question: dict,
+        *,
+        measure_range: list[int] | None = None,
+    ) -> tuple[dict, dict]:
+        snapshot = evaluator.new_snapshot(
+            questions=[deepcopy(question)],
+            dataset_root=DATASET_ROOT,
+            input_files=[],
+            input_fingerprint="test",
+            top_k=6,
+            generator_model={"path": "generator"},
+            judge_model={"path": "judge"},
+            range_guard=TEST_RANGE_GUARD,
+        )
+        cases = snapshot["results"][0]["inference_runs"]
+        case = next(
+            item
+            for item in cases
+            if item["inference_input"]["measure_range"] == measure_range
+        )
+        snapshot["results"][0]["inference_runs"] = [case]
+        evaluator.refresh_summary(snapshot)
+        return snapshot, case
 
     def test_semantic_attempt_preserves_repaired_raw_and_audit_marker(
         self,
@@ -4132,6 +4657,317 @@ class JudgeResumeTests(unittest.TestCase):
 
         evaluator.run_judge_phase(**arguments)
         self.assertEqual(calls, list(evaluator.FRAME_NAMES))
+
+    def test_exhausted_semantic_frame_is_terminal_unjudgeable(self) -> None:
+        snapshot, case = self.one_case_snapshot(
+            self.question,
+            measure_range=[2, 27],
+        )
+        case["generated_answer"] = {
+            "answer": "두 번째 박의 악센트는 송어의 움직임을 표현한다.",
+            **grounded_answer(),
+        }
+        case["phase_errors"]["judge"] = {"message": "stale failure"}
+        invalid_raws = ["invalid json one", "invalid json two"]
+        messages_seen = []
+
+        def judge_fn(messages):
+            messages_seen.append(deepcopy(messages))
+            return invalid_raws[len(messages_seen) - 1]
+
+        arguments = {
+            "snapshot": snapshot,
+            "judge_fn": judge_fn,
+            "range_signal_fn": hybrid_range_signals,
+            "coverage_signal_fn": atomic_coverage_signals,
+            "nli_threshold": 0.8,
+            "embedding_delta_threshold": 0.05,
+            "checkpoint": lambda: None,
+            "max_attempts": 2,
+            "selected_case_ids": {case["case_id"]},
+        }
+        evaluator.run_judge_phase(**arguments)
+
+        semantic = case["semantic_evaluation"]
+        frame_state = semantic["frames"][evaluator.FRAME_NAMES[0]]
+        self.assertEqual(frame_state["status"], "unjudgeable")
+        self.assertEqual(
+            [item["raw_response"] for item in frame_state["attempts"]],
+            invalid_raws,
+        )
+        self.assertTrue(all("error" in item for item in frame_state["attempts"]))
+        diagnostic = frame_state["unjudgeable_diagnostic"]
+        self.assertEqual(
+            diagnostic,
+            {
+                "status": "unjudgeable",
+                "reason": "structured_output_retries_exhausted",
+                "frame": evaluator.FRAME_NAMES[0],
+                "attempt_count": 2,
+                "max_attempts": 2,
+                "last_error": frame_state["attempts"][-1]["error"],
+            },
+        )
+        self.assertNotIn(
+            "Your previous response was invalid:",
+            messages_seen[0][0]["content"],
+        )
+        self.assertIn(
+            "Your previous response was invalid:",
+            messages_seen[1][0]["content"],
+        )
+
+        aggregate = semantic["aggregate"]
+        self.assertTrue(aggregate["unjudgeable"])
+        self.assertEqual(aggregate["status"], "human_review")
+        self.assertEqual(
+            aggregate["answer_quality_status"],
+            "human_review",
+        )
+        self.assertTrue(aggregate["pipeline_is_grounded_rag_llm"])
+        self.assertFalse(aggregate["reliable_rag_llm_pass"])
+        self.assertFalse(aggregate["answer_quality_rag_llm_pass"])
+        self.assertEqual(
+            aggregate["unjudgeable_diagnostic"],
+            diagnostic,
+        )
+        self.assertEqual(semantic["unjudgeable_diagnostic"], diagnostic)
+        self.assertNotIn("judge", case["phase_errors"])
+
+        summary = snapshot["summary"]
+        self.assertEqual(summary["unjudgeable_cases"], 1)
+        self.assertEqual(summary["phases"]["judge"]["status"], "complete")
+        self.assertEqual(summary["phases"]["judge"]["error_cases"], 0)
+        self.assertEqual(
+            summary["phases"]["judge"]["unjudgeable_cases"],
+            1,
+        )
+        self.assertEqual(summary["semantic_judge"]["unjudgeable_cases"], 1)
+        self.assertEqual(
+            summary["semantic_judge"]["by_piece"]["die-forelle"][
+                "unjudgeable_cases"
+            ],
+            1,
+        )
+        self.assertEqual(snapshot["run"]["status"], "complete")
+
+        evaluator.run_judge_phase(**arguments)
+        self.assertEqual(len(messages_seen), 2)
+        self.assertEqual(len(frame_state["attempts"]), 2)
+
+    def test_exhausted_range_frame_is_terminal_unjudgeable(self) -> None:
+        snapshot, case = self.one_case_snapshot(
+            self.range_contrast_question,
+            measure_range=[51, 58],
+        )
+        case["generated_answer"] = {
+            "answer": "ff와 pp를 두 덩어리로 대비해 메아리를 표현한다.",
+            **grounded_answer(),
+        }
+        packet = evaluator._reference_packet(
+            snapshot["results"][0],
+            case,
+        )
+        references = evaluator._all_semantic_reference_items(packet)
+        candidates = evaluator._candidate_answer_items(packet)
+        invalid_raws = ["invalid range one", "invalid range two"]
+        range_messages = []
+
+        def judge_fn(messages):
+            system = messages[0]["content"]
+            for frame in evaluator.FRAME_NAMES:
+                if f"Frame: {frame}" in system:
+                    return json.dumps(
+                        assessment_payload(
+                            frame,
+                            reference_items=references,
+                            candidate_items=candidates,
+                        ),
+                        ensure_ascii=False,
+                    )
+            range_messages.append(deepcopy(messages))
+            return invalid_raws[len(range_messages) - 1]
+
+        evaluator.run_judge_phase(
+            snapshot,
+            judge_fn=judge_fn,
+            range_signal_fn=hybrid_range_signals,
+            coverage_signal_fn=atomic_coverage_signals,
+            nli_threshold=0.8,
+            embedding_delta_threshold=0.05,
+            checkpoint=lambda: None,
+            max_attempts=2,
+            selected_case_ids={case["case_id"]},
+        )
+
+        semantic = case["semantic_evaluation"]
+        self.assertTrue(
+            all(
+                state["status"] == "complete"
+                for state in semantic["frames"].values()
+            )
+        )
+        range_state = semantic["range_scope"]
+        self.assertEqual(range_state["status"], "unjudgeable")
+        self.assertEqual(
+            [item["raw_response"] for item in range_state["attempts"]],
+            invalid_raws,
+        )
+        self.assertEqual(
+            range_state["unjudgeable_diagnostic"]["frame"],
+            "range_scope",
+        )
+        self.assertEqual(
+            range_state["unjudgeable_diagnostic"]["attempt_count"],
+            2,
+        )
+        self.assertNotIn(
+            "Your previous response was invalid:",
+            range_messages[0][0]["content"],
+        )
+        self.assertIn(
+            "Your previous response was invalid:",
+            range_messages[1][0]["content"],
+        )
+        aggregate = semantic["aggregate"]
+        self.assertTrue(aggregate["unjudgeable"])
+        self.assertEqual(aggregate["status"], "human_review")
+        self.assertEqual(
+            aggregate["answer_quality_status"],
+            "human_review",
+        )
+        self.assertFalse(aggregate["reliable_rag_llm_pass"])
+        self.assertFalse(aggregate["answer_quality_rag_llm_pass"])
+        self.assertNotIn("judge", case["phase_errors"])
+        self.assertEqual(
+            snapshot["summary"]["semantic_judge"]["by_piece"][
+                "la-capinera"
+            ]["unjudgeable_cases"],
+            1,
+        )
+
+    def test_coverage_guard_contract_error_remains_phase_error(self) -> None:
+        snapshot, case = self.one_case_snapshot(
+            self.question,
+            measure_range=[2, 27],
+        )
+        case["generated_answer"] = {
+            "answer": "두 번째 박의 악센트는 송어의 움직임을 표현한다.",
+            **grounded_answer(),
+        }
+        packet = evaluator._reference_packet(
+            snapshot["results"][0],
+            case,
+        )
+        references = evaluator._all_semantic_reference_items(packet)
+        candidates = evaluator._candidate_answer_items(packet)
+
+        def judge_fn(messages):
+            frame = next(
+                frame
+                for frame in evaluator.FRAME_NAMES
+                if f"Frame: {frame}" in messages[0]["content"]
+            )
+            return json.dumps(
+                assessment_payload(
+                    frame,
+                    reference_items=references,
+                    candidate_items=candidates,
+                ),
+                ensure_ascii=False,
+            )
+
+        evaluator.run_judge_phase(
+            snapshot,
+            judge_fn=judge_fn,
+            range_signal_fn=hybrid_range_signals,
+            coverage_signal_fn=lambda _packet: {
+                "atomic_claim_signals": "malformed"
+            },
+            nli_threshold=0.8,
+            embedding_delta_threshold=0.05,
+            checkpoint=lambda: None,
+            max_attempts=2,
+            selected_case_ids={case["case_id"]},
+        )
+
+        semantic = case["semantic_evaluation"]
+        frame_state = semantic["frames"][evaluator.FRAME_NAMES[0]]
+        self.assertEqual(frame_state["status"], "error")
+        self.assertIsNone(semantic["aggregate"])
+        self.assertTrue(all(
+            attempt["error"]["stage"] == "coverage_signal_validation"
+            for attempt in frame_state["attempts"]
+        ))
+        self.assertEqual(
+            case["phase_errors"]["judge"]["stage"],
+            "coverage_signal_validation",
+        )
+        self.assertEqual(snapshot["summary"]["unjudgeable_cases"], 0)
+        self.assertEqual(
+            snapshot["summary"]["phases"]["judge"]["error_cases"],
+            1,
+        )
+
+    def test_range_guard_contract_error_remains_phase_error(self) -> None:
+        snapshot, case = self.one_case_snapshot(
+            self.range_contrast_question,
+            measure_range=[51, 58],
+        )
+        case["generated_answer"] = {
+            "answer": "ff와 pp를 두 덩어리로 대비해 메아리를 표현한다.",
+            **grounded_answer(),
+        }
+        packet = evaluator._reference_packet(
+            snapshot["results"][0],
+            case,
+        )
+        references = evaluator._all_semantic_reference_items(packet)
+        candidates = evaluator._candidate_answer_items(packet)
+
+        def judge_fn(messages):
+            for frame in evaluator.FRAME_NAMES:
+                if f"Frame: {frame}" in messages[0]["content"]:
+                    return json.dumps(
+                        assessment_payload(
+                            frame,
+                            reference_items=references,
+                            candidate_items=candidates,
+                        ),
+                        ensure_ascii=False,
+                    )
+            return "{}"
+
+        evaluator.run_judge_phase(
+            snapshot,
+            judge_fn=judge_fn,
+            range_signal_fn=lambda _packet: {
+                "excluded_claim_signals": "malformed"
+            },
+            coverage_signal_fn=atomic_coverage_signals,
+            nli_threshold=0.8,
+            embedding_delta_threshold=0.05,
+            checkpoint=lambda: None,
+            max_attempts=2,
+            selected_case_ids={case["case_id"]},
+        )
+
+        semantic = case["semantic_evaluation"]
+        self.assertTrue(all(
+            state["status"] == "complete"
+            for state in semantic["frames"].values()
+        ))
+        self.assertEqual(semantic["range_scope"]["status"], "error")
+        self.assertIsNone(semantic["aggregate"])
+        self.assertTrue(all(
+            attempt["error"]["stage"] == "range_signal_validation"
+            for attempt in semantic["range_scope"]["attempts"]
+        ))
+        self.assertEqual(
+            case["phase_errors"]["judge"]["stage"],
+            "range_signal_validation",
+        )
+        self.assertEqual(snapshot["summary"]["unjudgeable_cases"], 0)
 
 
 class CalibrationGateShapeTests(unittest.TestCase):

@@ -25,10 +25,15 @@ from soprano_qa.answer import (
     has_primary_grounding,
     has_selected_range_grounding,
     is_grounded_insufficiency_answer,
+    select_extractive_fallback_evidence,
 )
 from soprano_qa.llm import generate as generate_llm
+from soprano_qa.dense import (
+    SearchIndex,
+    build_retrieval_index,
+    retrieval_diagnostics,
+)
 from soprano_qa.retrieval import (
-    BM25Index,
     SearchResult,
     format_measure_range,
     load_corpus,
@@ -45,8 +50,10 @@ CORPUS_REFRESH_SECONDS = float(
 
 _index_lock = threading.Lock()
 _generation_lock = threading.Lock()
-_index: Optional[BM25Index] = None
-_corpus_signature: Optional[tuple[tuple[int, int], tuple[int, int]]] = None
+_index: Optional[SearchIndex] = None
+_corpus_signature: Optional[
+    tuple[tuple[int, int], tuple[int, int], Optional[tuple[int, int]]]
+] = None
 _last_corpus_check = 0.0
 
 
@@ -55,14 +62,26 @@ def _file_identity(path: str) -> tuple[int, int]:
     return stat.st_mtime_ns, stat.st_size
 
 
-def _current_corpus_signature() -> tuple[tuple[int, int], tuple[int, int]]:
+def _optional_file_identity(path: str) -> Optional[tuple[int, int]]:
+    try:
+        return _file_identity(path)
+    except FileNotFoundError:
+        return None
+
+
+def _current_corpus_signature() -> tuple[
+    tuple[int, int],
+    tuple[int, int],
+    Optional[tuple[int, int]],
+]:
     return (
         _file_identity(SETTINGS["corpus_path"]),
         _file_identity(SETTINGS["stats_path"]),
+        _optional_file_identity(SETTINGS["embedding_model_path"]),
     )
 
 
-def _get_index() -> BM25Index:
+def _get_index() -> SearchIndex:
     """Validate the corpus periodically and reload the index after a rebuild."""
     global _corpus_signature, _index, _last_corpus_check
 
@@ -84,7 +103,10 @@ def _get_index() -> BM25Index:
         ensure_corpus(SETTINGS, rebuild=False)
         signature = _current_corpus_signature()
         if _index is None or signature != _corpus_signature:
-            _index = BM25Index(load_corpus(SETTINGS["corpus_path"]))
+            _index = build_retrieval_index(
+                load_corpus(SETTINGS["corpus_path"]),
+                SETTINGS,
+            )
             _corpus_signature = signature
         _last_corpus_check = now
         return _index
@@ -102,13 +124,14 @@ def model_status() -> dict:
 
 
 def corpus_stats() -> dict:
-    _get_index()
+    index = _get_index()
     with open(SETTINGS["stats_path"], encoding="utf-8") as file:
         stats = json.load(file)
     return {
         **stats,
         "pipeline": "soprano_qa",
         "model": model_status(),
+        "retrieval": retrieval_diagnostics(index),
     }
 
 
@@ -168,6 +191,10 @@ def _result_to_evidence(
         "in_requested_scope": in_requested_scope,
         "score": round(result.score, 6),
         "text_score": round(result.text_score, 6),
+        "dense_score": round(result.dense_score, 6),
+        "dense_content_score": round(result.dense_content_score, 6),
+        "fusion_score": round(result.fusion_score, 6),
+        "retrieval_mode": result.retrieval_mode,
         "measure_score": round(result.measure_score, 6),
         "alias_score": round(result.alias_score, 6),
         "concept_coverage": round(result.concept_coverage, 6),
@@ -290,7 +317,9 @@ def ask(
                         "local model returned no usable answer"
                     )
             elif results and grounded_answer_unusable:
-                answer = build_extractive_answer(results)
+                answer = build_extractive_answer(
+                    select_extractive_fallback_evidence(results)
+                )
                 generation_mode = "extractive"
                 if measure_ranges and not has_primary_grounding(results):
                     answer_basis = "retrieved_secondary_context"
@@ -304,7 +333,9 @@ def ask(
                     )
             elif context_limited and not raw_answer:
                 if results:
-                    answer = build_extractive_answer(results)
+                    answer = build_extractive_answer(
+                        select_extractive_fallback_evidence(results)
+                    )
                     generation_fallback_reason = (
                         "model context limit exceeded"
                     )
@@ -336,7 +367,12 @@ def ask(
                     )
                 )
                 answer = (
-                    build_extractive_answer(results)
+                    build_extractive_answer(
+                        select_extractive_fallback_evidence(
+                            results,
+                            exclude_local_examples=True,
+                        )
+                    )
                     if local_scope_rejected
                     else finalize_answer_citations(raw_answer, results)
                 )
@@ -370,7 +406,9 @@ def ask(
                 top_k=top_k,
             )
             if results:
-                answer = build_extractive_answer(results)
+                answer = build_extractive_answer(
+                    select_extractive_fallback_evidence(results)
+                )
                 if measure_ranges and not has_primary_grounding(results):
                     answer_basis = "retrieved_secondary_context"
             else:
@@ -392,7 +430,12 @@ def ask(
             top_k=top_k,
         )
         if results:
-            answer = build_extractive_answer(results)
+            answer = build_extractive_answer(
+                select_extractive_fallback_evidence(results)
+                if generate
+                else results,
+                max_items=None if generate else 4,
+            )
             if measure_ranges and not has_primary_grounding(results):
                 answer_basis = "retrieved_secondary_context"
         elif generate:
@@ -424,6 +467,7 @@ def ask(
         ),
         "pipeline": "soprano_qa",
         "model": status,
+        "retrieval": retrieval_diagnostics(index),
         "evidence": [
             _result_to_evidence(
                 result,
