@@ -18,13 +18,12 @@ The pipeline returned 240 grounded LLM answers, 126 extractive safeguards,
 and six unavailable answers where the retriever admitted no corpus evidence
 and internal model knowledge was intentionally disabled. These generation
 path counts and retrieval metrics do not establish semantic answer correctness.
-No LLM judge
-was run for this synthesized evaluation; compare the human expected answer
+No LLM judge was run for this synthesized evaluation; compare the human expected answer
 and generated answer manually in the local viewer.
 
 ## Dataset and protocol
 
-The variant source files live in the dataset worktree under
+The variant source files live in the primary dataset repository under
 `expert_curation/evaluation_question_variants/`. They are joined to the human
 evaluation-question inventories and reviewed expert knowledge units by stable
 source IDs. The synthesized wording is not added to the retrieval corpus or

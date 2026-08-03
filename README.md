@@ -128,7 +128,7 @@ reformulations of all 79 active questions across the five pieces:
 ```bash
 conda run -n soprano-qa python \
   evaluation/run_synthesized_questions.py \
-  --dataset-root ../soprano-qa-dataset-evaluation-set-synthesized \
+  --dataset-root ../soprano-qa-dataset \
   --output evaluation/synthesized_question_results.json
 ```
 

@@ -79,7 +79,7 @@ lexical fallback or missing/incompatible models, and always calls the service
 with generation enabled and internal model knowledge disabled:
 
 ```bash
-SQA_VARIANT_DATASET=/home/minhee/soprano-qa-dataset-evaluation-set-synthesized
+SQA_VARIANT_DATASET=/home/minhee/soprano-qa-dataset
 
 conda run -n soprano-qa python \
   evaluation/run_synthesized_questions.py \

@@ -35,7 +35,7 @@ from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_DATASET_ROOT = (
-    PROJECT_ROOT.parent / "soprano-qa-dataset-evaluation-set-synthesized"
+    PROJECT_ROOT.parent / "soprano-qa-dataset"
 )
 DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "synthesized_question_results.json"
 ARTIFACT_TYPE = "soprano_qa_synthesized_hybrid_rag_llm_evaluation"

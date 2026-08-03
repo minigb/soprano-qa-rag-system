@@ -262,6 +262,9 @@ def build_case_snapshot(model_path: Path, *, eligible: bool = True) -> dict:
 
 
 class SynthesizedQuestionsRunnerTests(unittest.TestCase):
+    def test_default_dataset_root_uses_primary_dataset_repository(self) -> None:
+        self.assertEqual(runner.DEFAULT_DATASET_ROOT.name, "soprano-qa-dataset")
+
     def test_loader_binds_mixed_schemas_and_skips_excluded_source(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             root = Path(temporary)
