@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Run the lightweight five-piece qualitative RAG+LLM evaluation.
 
-This runner is deliberately separate from the strict schema-1.3 automatic-
-pass protocol in ``run_question_evaluation.py``.  It checkpoints the real
-service response plus deterministic retrieval diagnostics and authoritative
-reference material for later human inspection or a future LLM-as-a-judge
-pass.  It does not issue an automatic quality verdict.
+It checkpoints the real service response plus deterministic retrieval
+diagnostics and authoritative reference material for later human inspection
+or a separate LLM-as-a-judge pass. It does not issue an automatic quality
+verdict.
 """
 
 from __future__ import annotations
@@ -568,8 +567,8 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
         "automatic_quality_verdict": None,
         "automatic_quality_verdict_note": (
-            "This qualitative artifact records diagnostics only; it is not "
-            "the strict schema-1.3 automatic-pass protocol."
+            "This qualitative artifact records inference and retrieval "
+            "diagnostics only; answer-fidelity judgment is a separate run."
         ),
     }
 

@@ -110,38 +110,19 @@ python scripts/ask.py \
 Omit `--measures` for a whole-work question. Add `--json` for structured
 retrieval, evidence, rights, citation, and answer metadata.
 
-To inspect the selected evaluation results in a local qualitative-review
-workspace, pass an existing schema-8 snapshot explicitly:
+Run the current five-piece qualitative inference and optional local-Qwen
+answer-fidelity review with:
 
 ```bash
-conda run -n soprano-qa python evaluation/server.py \
-  --results-file /path/to/schema-8-results.json
+conda run -n soprano-qa python evaluation/run_qualitative.py --generate
+conda run -n soprano-qa python evaluation/judge_qualitative.py
 ```
 
-Then open `http://127.0.0.1:8766/`. The page keeps manual ratings and notes in
-the browser and can export them as JSON; it does not modify the inference
-snapshot. The schema-8/v13 evaluation treats generated-answer reliability as
-the primary quality outcome. Curator-scoped target claims are `R` items and are
-the only completeness targets; expert claims from the records actually
-retrieved for generation are corpus-authenticated, range-checked `S` items
-that may support candidate factuality but can never replace a missing `R`
-item. An independent required-claim NLI gate always checks curator-split
-atomic `R` coverage. Whenever authenticated `S` context exists, it also checks
-every covered non-atomic `direct_required` or `mixed_or_ambiguous` `R`,
-preventing paraphrased or unlinked `S` factuality from being transferred into
-`R` completeness. The 25-control judge calibration exercises this boundary.
-An exact leading `검토 주의:` disclosure is reconstructed from authenticated
-corpus metadata, validated, and stripped exactly once before candidate `C`
-segmentation and every downstream semantic, normalized-full-answer,
-atomic-claim, range, and NLI check. Its separate
-`review_disclosure_validation` audit is visible in the viewer. Missing,
-mismatched, non-leading, extra, unexpected, or untrusted disclosures block an
-automatic pass, and a disclosure-only response supplies no `C` coverage.
-Judge JSON remains strict: only a single decoder-pointed invalid `\'` escape
-may have that backslash removed on retry, with the raw output retained and the
-normalization audited; arbitrary malformed JSON is still rejected. Exact
-source and knowledge-unit retrieval remain secondary diagnostics. See
-[evaluation/README.md](evaluation/README.md) for details.
+The inference runner writes `evaluation/qualitative.json`; the judge writes a
+separate `evaluation/qualitative_judged.json` and never changes the inference
+artifact. The retained synthesized-question snapshot can still be inspected
+with the read-only local viewer documented in
+[evaluation/README.md](evaluation/README.md).
 
 Applications can import the service facade while this repository is on
 `PYTHONPATH`:

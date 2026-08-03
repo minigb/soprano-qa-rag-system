@@ -1,11 +1,9 @@
 #!/usr/bin/env python3
 """Judge answers for qualitative expert-answer fidelity.
 
-This is a lightweight LLM-as-a-judge pass over
-``qualitative.json``.  It is deliberately *not* the strict
-schema-1.3 automatic-pass protocol implemented by
-``run_question_evaluation.py``.  Its pass/review/fail labels are conservative
-qualitative triage for later human inspection.
+This is a lightweight LLM-as-a-judge pass over ``qualitative.json``. Its
+pass/review/fail labels are conservative qualitative triage for later human
+inspection, not an automatic production-acceptance gate.
 
 The judge sees the generated answer, evaluation question, selected measure
 range, exact annotator answer, and linked knowledge-unit answers.  Retrieval
@@ -478,7 +476,7 @@ def build_judge_messages(case: Mapping[str, Any]) -> list[dict[str, str]]:
     }
     system = """\
 너는 성악 전문가 주석에 대한 답변 충실도를 보수적으로 판정하는 심사자다.
-이 평가는 간단한 정성적 선별이며 schema-1.3 자동 통과 프로토콜이 아니다.
+이 평가는 자동 승인 게이트가 아닌 보수적인 정성적 선별이다.
 
 평가 기준:
 1. 질문과 선택 마디 범위에 맞게 생성 답변의 핵심 내용이 정확한지 본다.
@@ -801,7 +799,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         "metric_note": (
             "Pass rate measures qualitative generated-answer fidelity to "
             "expert references. It does not use exact retrieval recall and "
-            "is not the strict schema-1.3 automatic-pass metric."
+            "is not an automatic production-acceptance metric."
         ),
     }
 

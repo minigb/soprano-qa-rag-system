@@ -108,16 +108,10 @@ verdicts.
   synthesized-question RAG and evaluation results.
 - `synthesized_retrieval_bm25.json`, `synthesized_retrieval_dense.json`, and
   `synthesized_retrieval_final.json` preserve retrieval development results.
-- `judge_calibration_results.json` and
-  `judge_calibration_synthesized_final.json` preserve older model-bound judge
-  calibration results for provenance.
 
-The legacy evaluator and calibration implementation remain in
-`run_question_evaluation.py` and `calibrate_judge.py` so the retained artifacts
-can be interpreted. They are not the current operational workflow and their
-old piece exclusions, environment instructions, and judge commands are
-intentionally omitted here. Do not relabel their saved verdicts as results
-from `judge_qualitative.py`.
+The synthesized-question snapshot includes the historical verdicts recorded
+by that run. They are preserved as part of the result, but they are not output
+from the current `judge_qualitative.py` workflow.
 
 Runtime `*.log` and `*.json.lock` files are ignored and should not be
 committed.

@@ -255,7 +255,6 @@ Current primary artifacts are:
 - `synthesized_retrieval_bm25.json`;
 - `synthesized_retrieval_dense.json`;
 - `synthesized_retrieval_final.json`;
-- `judge_calibration_synthesized_final.json`; and
 - `synthesized_question_results_final.json`.
 
 Files whose names contain `_pre_` are archived diagnostics only and are not
