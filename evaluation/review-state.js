@@ -444,6 +444,14 @@
         if (typeof item.status === "string" && item.status.trim() !== "") {
           value.status = item.status;
         }
+        ["scope", "scope_authority", "knowledge_unit_id"].forEach(function (key) {
+          if (typeof item[key] === "string" && item[key].trim() !== "") {
+            value[key] = item[key];
+          }
+        });
+        if (Array.isArray(item.flags)) {
+          value.flags = item.flags.slice();
+        }
         if (Array.isArray(item.candidate_ids)) {
           value.candidate_ids = item.candidate_ids.slice();
         }
@@ -466,7 +474,17 @@
         ? semantic.reference_authority
         : {};
       var input = isRecord(run.inference_input) ? run.inference_input : {};
+      var caseReferenceAuthority = isRecord(input.case_reference_authority)
+        ? input.case_reference_authority
+        : {};
       var directSources = [
+        [
+          caseReferenceAuthority.source
+            ? "inference_input.case_reference_authority:" +
+              caseReferenceAuthority.source
+            : "inference_input.case_reference_authority.items",
+          caseReferenceAuthority.items,
+        ],
         [
           "authoritative_reference_items",
           run.authoritative_reference_items,

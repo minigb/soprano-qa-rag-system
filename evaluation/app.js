@@ -64,12 +64,18 @@ const state = {
   reviewStatus: "all",
   range: "all",
   basis: "all",
+  generationMode: "all",
+  runStatus: "all",
+  variant: "all",
   semantic: "all",
   completion: "all",
   manualReviewEnabled: false,
 };
 
 const elements = {
+  viewerEyebrow: document.getElementById("viewer-eyebrow"),
+  viewerTitle: document.getElementById("viewer-title"),
+  viewerSubtitle: document.getElementById("viewer-subtitle"),
   findingBanner: document.getElementById("finding-banner"),
   findingTitle: document.getElementById("finding-title"),
   findingCopy: document.getElementById("finding-copy"),
@@ -85,6 +91,9 @@ const elements = {
   statusFilter: document.getElementById("status-filter"),
   rangeFilter: document.getElementById("range-filter"),
   basisFilter: document.getElementById("basis-filter"),
+  generationModeFilter: document.getElementById("generation-mode-filter"),
+  runStatusFilter: document.getElementById("run-status-filter"),
+  variantFilter: document.getElementById("variant-filter"),
   semanticFilter: document.getElementById("semantic-filter"),
   completionFilter: document.getElementById("completion-filter"),
   resetFilters: document.getElementById("reset-filters"),
@@ -144,9 +153,25 @@ function objectOrEmpty(value) {
 }
 
 function isSemanticPayload(payload) {
-  return ["2.0", "3.0", "4.0", "5.0", "6.0", "7.0", "8.0"].includes(
-    payload?.schema_version,
-  );
+  const supported = [
+    "2.0", "3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "8.1",
+  ];
+  return supported.includes(payload?.schema_version);
+}
+
+function isSynthesizedPayload(payload = state.payload) {
+  if (
+    payload?.artifact_type
+    === "soprano_qa_synthesized_hybrid_rag_llm_evaluation"
+  ) {
+    return true;
+  }
+  return listOrEmpty(payload?.results).some(result => (
+    listOrEmpty(result.synthesized_question_variants).length > 0
+    || listOrEmpty(result.inference_runs).some(
+      run => Boolean(objectOrEmpty(run.inference_input).synthesized_variant_id),
+    )
+  ));
 }
 
 function semanticRunProgress() {
@@ -174,6 +199,101 @@ function listOrEmpty(value) {
   return Array.isArray(value) ? value : [];
 }
 
+function runVariantId(run) {
+  return objectOrEmpty(run?.inference_input).synthesized_variant_id || "";
+}
+
+function variantSlot(variantId) {
+  const match = String(variantId || "").match(/-(syn-\d+)$/);
+  return match ? match[1] : String(variantId || "");
+}
+
+function runQuestion(run) {
+  return objectOrEmpty(run?.inference_input).question || "";
+}
+
+function executionStatus(run) {
+  if (run?.error) return "error";
+  const declared = String(run?.status || "").toLocaleLowerCase();
+  if (["failed", "error"].includes(declared)) return "error";
+  if (["completed", "complete", "success", "succeeded"].includes(declared)) {
+    return "completed";
+  }
+  if (generatedOutput(run).answer) return "completed";
+  return "pending";
+}
+
+function runMatchesFilters(run) {
+  const generated = generatedOutput(run);
+  if (
+    state.basis !== "all"
+    && state.basis !== "other"
+    && generated.answer_basis !== state.basis
+  ) {
+    return false;
+  }
+  if (
+    state.basis === "other"
+    && ["retrieved_evidence", "internal_knowledge"].includes(
+      generated.answer_basis,
+    )
+  ) {
+    return false;
+  }
+  if (
+    state.generationMode !== "all"
+    && generated.generation_mode !== state.generationMode
+  ) {
+    return false;
+  }
+  if (
+    state.runStatus !== "all"
+    && executionStatus(run) !== state.runStatus
+  ) {
+    return false;
+  }
+  return state.variant === "all"
+    || variantSlot(runVariantId(run)) === state.variant;
+}
+
+function runMatchesQuery(result, run) {
+  const query = state.query.toLocaleLowerCase();
+  if (!query) return true;
+  const reference = objectOrEmpty(result.authoritative_reference);
+  const general = [
+    result.source_id,
+    result.piece_id,
+    result.annotator,
+    result.original_question,
+    result.paraphrased_question,
+    ...listOrEmpty(result.knowledge_unit_ids),
+    ...listOrEmpty(result.expected_retrieval_eligible_knowledge_unit_ids),
+    reference.source_answer,
+    ...listOrEmpty(reference.linked_knowledge_units).flatMap(unit => [
+      unit.knowledge_unit_id,
+      unit.answer,
+    ]),
+  ]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase();
+  if (general.includes(query)) return true;
+
+  const matchingVariantIds = new Set(
+    listOrEmpty(result.synthesized_question_variants)
+      .filter(variant => flattenSearchValues(variant)
+        .join(" ")
+        .toLocaleLowerCase()
+        .includes(query))
+      .map(variant => variant.variant_id),
+  );
+  if (matchingVariantIds.has(runVariantId(run))) return true;
+  return flattenSearchValues(run)
+    .join(" ")
+    .toLocaleLowerCase()
+    .includes(query);
+}
+
 function flattenSearchValues(value) {
   if (value === null || value === undefined) return [];
   if (Array.isArray(value)) {
@@ -189,17 +309,22 @@ function semanticStatus(result) {
   return ReviewState.semanticQuestionStatus(result);
 }
 
-function resultCases(result) {
+function resultCases(result, { applyRunFilters = true } = {}) {
   const questionReview = state.draft.questions[result.source_id];
-  return result.inference_runs.map((run, index) => {
-    const key = ReviewState.caseKey(result, run, index);
-    return {
-      key,
-      index,
-      run,
-      review: questionReview.cases[key],
-    };
-  });
+  return result.inference_runs
+    .map((run, index) => {
+      const key = ReviewState.caseKey(result, run, index);
+      return {
+        key,
+        index,
+        run,
+        review: questionReview.cases[key],
+      };
+    })
+    .filter(item => (
+      !applyRunFilters
+      || (runMatchesFilters(item.run) && runMatchesQuery(result, item.run))
+    ));
 }
 
 function ratingNeedsNote(value) {
@@ -219,7 +344,7 @@ function questionComplete(result) {
   const review = questionReview(result);
   return ReviewState.isQuestionComplete(
     review,
-    resultCases(result).map(item => item.review),
+    resultCases(result, { applyRunFilters: false }).map(item => item.review),
   );
 }
 
@@ -227,7 +352,7 @@ function questionFlagged(result) {
   const review = questionReview(result);
   return ReviewState.isFlagged(
     review,
-    resultCases(result).map(item => item.review),
+    resultCases(result, { applyRunFilters: false }).map(item => item.review),
   );
 }
 
@@ -240,70 +365,17 @@ function generatedBasis(result) {
 }
 
 function rangeKind(result) {
-  const ranged = result.inference_runs.filter(
-    run => Array.isArray(run.inference_input.measure_range),
+  const ranges = new Set(
+    result.inference_runs
+      .map(run => objectOrEmpty(run.inference_input).measure_range)
+      .filter(Array.isArray)
+      .map(range => `${range[0]}-${range[1]}`),
   );
-  if (ranged.length === 0) return "none";
-  return ranged.length === 1 ? "single" : "multiple";
-}
-
-function searchableText(result) {
-  const runs = result.inference_runs.flatMap(run => [
-    generatedOutput(run).answer,
-    retrievalOutput(run).answer,
-    ...listOrEmpty(generatedOutput(run).evidence).flatMap(item => [
-      item.id,
-      item.text,
-      item.topic,
-    ]),
-    ...Object.values(objectOrEmpty(run.semantic_evaluation?.frames))
-      .flatMap(frame => {
-        const assessment = objectOrEmpty(frame.assessment);
-        return flattenSearchValues(assessment);
-      }),
-    ...flattenSearchValues(
-      objectOrEmpty(run.semantic_evaluation?.range_scope).assessment,
-    ),
-    ...flattenSearchValues(
-      objectOrEmpty(run.semantic_evaluation?.range_scope).requirement,
-    ),
-    ...flattenSearchValues(
-      run.semantic_evaluation?.range_scope_guard,
-    ),
-  ]);
-  const reference = objectOrEmpty(result.authoritative_reference);
-  return [
-    result.source_id,
-    result.piece_id,
-    result.annotator,
-    result.original_question,
-    result.paraphrased_question,
-    ...listOrEmpty(result.knowledge_unit_ids),
-    ...listOrEmpty(result.expected_retrieval_eligible_knowledge_unit_ids),
-    reference.source_answer,
-    ...listOrEmpty(reference.linked_knowledge_units).flatMap(unit => [
-      unit.knowledge_unit_id,
-      unit.answer,
-    ]),
-    ...runs,
-  ]
-    .filter(Boolean)
-    .join(" ")
-    .toLocaleLowerCase();
-}
-
-function matchesBasis(result) {
-  if (state.basis === "all") return true;
-  const bases = generatedBasis(result);
-  if (state.basis === "other") {
-    return !bases.has("retrieved_evidence")
-      && !bases.has("internal_knowledge");
-  }
-  return bases.has(state.basis);
+  if (ranges.size === 0) return "none";
+  return ranges.size === 1 ? "single" : "multiple";
 }
 
 function filteredResults() {
-  const query = state.query.toLocaleLowerCase();
   return state.payload.results.filter(result => {
     if (state.pieceId !== "all" && result.piece_id !== state.pieceId) {
       return false;
@@ -320,7 +392,13 @@ function filteredResults() {
     if (state.range !== "all" && rangeKind(result) !== state.range) {
       return false;
     }
-    if (!matchesBasis(result)) return false;
+    if (
+      !result.inference_runs.some(
+        run => runMatchesFilters(run) && runMatchesQuery(result, run),
+      )
+    ) {
+      return false;
+    }
     if (
       state.semantic !== "all"
       && semanticStatus(result) !== state.semantic
@@ -333,7 +411,7 @@ function filteredResults() {
     if (state.completion === "complete" && !complete) return false;
     if (state.completion === "incomplete" && complete) return false;
     if (state.completion === "flagged" && !flagged) return false;
-    return !query || searchableText(result).includes(query);
+    return true;
   });
 }
 
@@ -398,13 +476,41 @@ function countRating(field, value) {
   return count;
 }
 
+function synthesizedRunStats() {
+  const stats = {
+    total: 0,
+    completed: 0,
+    pending: 0,
+    error: 0,
+    llm: 0,
+    extractive: 0,
+    other_mode: 0,
+    variants: new Set(),
+  };
+  state.payload.results.forEach(result => {
+    result.inference_runs.forEach(run => {
+      stats.total += 1;
+      stats[executionStatus(run)] += 1;
+      const mode = generatedOutput(run).generation_mode;
+      if (mode === "llm") stats.llm += 1;
+      else if (mode && mode.includes("extract")) stats.extractive += 1;
+      else if (mode) stats.other_mode += 1;
+      const variantId = runVariantId(run);
+      if (variantId) stats.variants.add(variantId);
+    });
+  });
+  return stats;
+}
+
 function renderSummary() {
   const progress = ReviewState.computeProgress(state.payload, state.draft);
   const summary = state.payload.summary;
   const semantic = ReviewState.semanticStatusCounts(state.payload);
   const answerQuality = objectOrEmpty(summary.answer_quality_metric);
   const isSemanticRun = isSemanticPayload(state.payload);
+  const isSynthesisRun = isSynthesizedPayload() && !isSemanticRun;
   const judgeProgress = isSemanticRun ? semanticRunProgress() : null;
+  const synthesis = isSynthesisRun ? synthesizedRunStats() : null;
   const cards = isSemanticRun
     ? [
       [
@@ -422,6 +528,19 @@ function renderSummary() {
       [semantic.cases.fail, "Judge fail", "fail"],
       [semantic.cases.pending, "Judge pending", "pending"],
     ]
+    : isSynthesisRun
+      ? [
+        [state.payload.results.length, "Human source questions"],
+        [synthesis.variants.size, "Synthesized formulations"],
+        [synthesis.completed, `Completed cases / ${synthesis.total}`, "pass"],
+        [synthesis.llm, "LLM answers", "reliable"],
+        [synthesis.extractive, "Extractive safeguards", "review"],
+        [
+          synthesis.error,
+          "Inference errors",
+          synthesis.error ? "fail" : "pass",
+        ],
+      ]
     : [
       [
         progress.completed_questions,
@@ -441,13 +560,19 @@ function renderSummary() {
   );
   const completionPercent = isSemanticRun
     ? judgeProgress.completion_percent
-    : progress.completion_percent;
+    : isSynthesisRun
+      ? (synthesis.total ? (synthesis.completed / synthesis.total) * 100 : 0)
+      : progress.completion_percent;
   elements.progressLabel.textContent = isSemanticRun
     ? "Judge 진행률"
-    : "수동 검토 진행률";
+    : isSynthesisRun
+      ? "Inference 진행률"
+      : "수동 검토 진행률";
   elements.progressCopy.textContent = isSemanticRun
     ? `${judgeProgress.judged_cases} / ${judgeProgress.total_cases} cases judged`
-    : `${progress.completed_questions} / ${progress.total_questions} questions`;
+    : isSynthesisRun
+      ? `${synthesis.completed} / ${synthesis.total} cases completed`
+      : `${progress.completed_questions} / ${progress.total_questions} questions`;
   elements.progressTrack.setAttribute(
     "aria-valuenow",
     String(completionPercent),
@@ -509,6 +634,24 @@ function renderFinding() {
     } else if (rate >= 0.5) {
       elements.findingBadge.classList.add("warning");
     }
+    return;
+  }
+  if (isSynthesizedPayload()) {
+    const stats = synthesizedRunStats();
+    elements.findingBanner.hidden = false;
+    elements.findingBadge.classList.remove("success", "warning");
+    elements.findingTitle.textContent =
+      "Human expected answer and synthesized-question output comparison";
+    elements.findingCopy.textContent =
+      `${stats.variants.size}개 합성 질문의 ${stats.total}개 범위별 추론 사례 중 `
+      + `${stats.completed}개가 완료되었다. 각 사례에서 인간 주석 기반 `
+      + "expected/reference "
+      + "answer와 생성 답변을 좌우로 비교할 수 있다.";
+    elements.findingBadge.textContent =
+      `${stats.completed} / ${stats.total} complete`;
+    elements.findingBadge.classList.add(
+      stats.error || stats.pending ? "warning" : "success",
+    );
     return;
   }
   const runCount = summary.inference_runs_completed;
@@ -611,6 +754,10 @@ function renderQueue(items) {
   }
 
   items.forEach(result => {
+    const matchingRun = result.inference_runs.find(
+      run => runMatchesFilters(run) && runMatchesQuery(result, run),
+    )
+      || result.inference_runs[0];
     const button = createElement("button", "queue-item");
     button.type = "button";
     button.setAttribute("role", "option");
@@ -632,7 +779,11 @@ function renderQueue(items) {
     );
     button.append(
       idLine,
-      createElement("span", "queue-preview", result.paraphrased_question),
+      createElement(
+        "span",
+        "queue-preview",
+        runQuestion(matchingRun) || result.paraphrased_question,
+      ),
     );
     const badges = createElement("span", "badge-row");
     appendBadge(
@@ -652,6 +803,26 @@ function renderQueue(items) {
     appendBadge(badges, reviewLabel, reviewTone);
     if (generatedBasis(result).has("internal_knowledge")) {
       appendBadge(badges, "Internal", "plum");
+    }
+    if (isSynthesizedPayload()) {
+      const generated = generatedOutput(matchingRun);
+      const variantId = runVariantId(matchingRun);
+      if (variantId) appendBadge(badges, variantSlot(variantId), "info");
+      if (generated.generation_mode) {
+        appendBadge(
+          badges,
+          generated.generation_mode,
+          generated.generation_mode === "llm" ? "success" : "warning",
+        );
+      }
+      const status = executionStatus(matchingRun);
+      appendBadge(
+        badges,
+        status,
+        status === "completed"
+          ? "success"
+          : status === "error" ? "danger" : "warning",
+      );
     }
     button.appendChild(badges);
     button.addEventListener("click", () => {
@@ -864,8 +1035,12 @@ function renderCaseReview(caseItem) {
     createElement(
       "p",
       "review-subtitle",
-      "이 사례의 정확한 judge 권위와 생성 답변 사이의 의미 충실도를 "
-      + "평가한다. 검색/KU 적중은 보조 진단으로 따로 기록한다.",
+      isSynthesizedPayload() && !isSemanticPayload(state.payload)
+        ? "이 사례의 인간 expected/reference answer와 생성 답변 사이의 "
+          + "의미 충실도를 평가한다. 검색/KU 적중은 보조 진단으로 "
+          + "따로 기록한다."
+        : "이 사례의 정확한 judge 권위와 생성 답변 사이의 의미 충실도를 "
+          + "평가한다. 검색/KU 적중은 보조 진단으로 따로 기록한다.",
     ),
   );
   const grid = createElement("div", "review-grid");
@@ -1026,15 +1201,53 @@ function renderReferenceReviewNotice(run) {
   return notice;
 }
 
-function renderCaseAuthorityComparison(run) {
+function fallbackHumanReference(result) {
+  const reference = objectOrEmpty(result?.authoritative_reference);
+  const sourceAnswer = reference.source_answer || reference.answer;
+  if (sourceAnswer) {
+    return {
+      source: "authoritative_reference.source_answer",
+      items: [{ reference_id: "HUMAN", text: sourceAnswer }],
+    };
+  }
+  const items = listOrEmpty(reference.linked_knowledge_units)
+    .filter(unit => unit?.answer)
+    .map((unit, index) => ({
+      reference_id: unit.knowledge_unit_id || `KU-${index + 1}`,
+      text: unit.answer,
+    }));
+  return {
+    source: items.length
+      ? "authoritative_reference.linked_knowledge_units"
+      : null,
+    items,
+  };
+}
+
+function renderCaseAuthorityComparison(run, result) {
   const authority = ReviewState.caseReferenceAuthority(run);
+  const isSynthesisRun = isSynthesizedPayload()
+    && !isSemanticPayload(state.payload);
+  const comparisonReference = authority.items.length || !isSynthesisRun
+    ? authority
+    : fallbackHumanReference(result);
   const generated = generatedOutput(run);
   const section = createElement("section", "authority-comparison");
   const heading = createElement("div", "comparison-heading");
   const title = createElement("div");
   title.append(
-    createElement("p", "eyebrow", "Primary qualitative audit"),
-    createElement("h3", "", "Exact case authority vs generated answer"),
+    createElement(
+      "p",
+      "eyebrow",
+      isSynthesisRun ? "Expected vs generated" : "Primary qualitative audit",
+    ),
+    createElement(
+      "h3",
+      "",
+      isSynthesisRun
+        ? "Human expected answer vs generated answer"
+        : "Exact case authority vs generated answer",
+    ),
   );
   const badges = createElement("div", "badge-row");
   appendBadge(
@@ -1042,8 +1255,14 @@ function renderCaseAuthorityComparison(run) {
     formatRange(objectOrEmpty(run.inference_input).measure_range),
     "accent",
   );
-  if (authority.items.length) {
-    appendBadge(badges, `${authority.items.length} exact R item(s)`, "info");
+  if (comparisonReference.items.length) {
+    appendBadge(
+      badges,
+      isSynthesisRun
+        ? `${comparisonReference.items.length} human reference item(s)`
+        : `${comparisonReference.items.length} exact R item(s)`,
+      "info",
+    );
   } else {
     appendBadge(badges, "Exact R items pending", "warning");
   }
@@ -1053,18 +1272,25 @@ function renderCaseAuthorityComparison(run) {
   const grid = createElement("div", "comparison-grid");
   const referenceColumn = createElement("article", "comparison-column authority");
   referenceColumn.appendChild(
-    createElement("h4", "", "Exact per-case judge authority"),
+    createElement(
+      "h4",
+      "",
+      isSynthesisRun
+        ? "Human expected/reference answer"
+        : "Exact per-case judge authority",
+    ),
   );
-  if (authority.items.length) {
+  if (comparisonReference.items.length) {
     referenceColumn.appendChild(
       createElement(
         "p",
         "comparison-source",
-        `Validated source: ${authority.source}`,
+        `${isSynthesisRun ? "Reference source" : "Validated source"}: `
+          + comparisonReference.source,
       ),
     );
     const list = createElement("div", "authority-item-list");
-    authority.items.forEach(item => {
+    comparisonReference.items.forEach(item => {
       const card = createElement("article", "authority-item");
       const itemHeading = createElement("div", "authority-item-heading");
       itemHeading.appendChild(
@@ -1077,10 +1303,23 @@ function renderCaseAuthorityComparison(run) {
           assessmentTone(item.status),
         );
       }
+      if (item.scope) appendBadge(itemHeading, item.scope, "info");
+      if (item.knowledge_unit_id) {
+        appendBadge(itemHeading, item.knowledge_unit_id, "accent");
+      }
       card.append(
         itemHeading,
         createElement("p", "", item.text),
       );
+      if (listOrEmpty(item.flags).length) {
+        card.appendChild(
+          createElement(
+            "p",
+            "comparison-source",
+            `Reference flags: ${item.flags.join(", ")}`,
+          ),
+        );
+      }
       list.appendChild(card);
     });
     referenceColumn.appendChild(list);
@@ -1108,6 +1347,14 @@ function renderCaseAuthorityComparison(run) {
       generated.answer_basis === "retrieved_evidence" ? "success" : "warning",
     );
   }
+  const status = executionStatus(run);
+  appendBadge(
+    candidateBadges,
+    status,
+    status === "completed"
+      ? "success"
+      : status === "error" ? "danger" : "warning",
+  );
   if (candidateBadges.childElementCount) {
     candidateColumn.appendChild(candidateBadges);
   }
@@ -1118,8 +1365,32 @@ function renderCaseAuthorityComparison(run) {
       generated.answer || "아직 생성된 답변이 없다.",
     ),
   );
+  if (generated.generation_fallback_reason) {
+    candidateColumn.appendChild(
+      createElement(
+        "div",
+        "notice",
+        `Generation note: ${generated.generation_fallback_reason}`,
+      ),
+    );
+  }
   grid.append(referenceColumn, candidateColumn);
   section.appendChild(grid);
+  const caseAuthority = objectOrEmpty(
+    objectOrEmpty(run.inference_input).case_reference_authority,
+  );
+  if (caseAuthority.manual_review_required) {
+    section.appendChild(
+      createElement(
+        "div",
+        "notice comparison-review-warning",
+        caseAuthority.manual_review_reason
+          ? `Human reference review note: ${caseAuthority.manual_review_reason}`
+          : "This case uses range-applicable supporting reference material "
+            + "and needs human review.",
+      ),
+    );
+  }
   const reviewNotice = renderReferenceReviewNotice(run);
   if (reviewNotice) section.appendChild(reviewNotice);
   return section;
@@ -2221,6 +2492,14 @@ function renderCasePanel(result, caseItem, tabId, panelId) {
     "Range context applied",
     input.measure_range_applied ? "Yes" : "No",
   );
+  if (runVariantId(caseItem.run)) {
+    addMetaBox(
+      caseMetadata,
+      "Synthesized variant",
+      runVariantId(caseItem.run),
+    );
+  }
+  addMetaBox(caseMetadata, "Run status", executionStatus(caseItem.run));
   const badges = createElement("div", "badge-row");
   const generated = generatedOutput(caseItem.run);
   const caseSemanticStatus = ReviewState.semanticCaseStatus(caseItem.run);
@@ -2247,7 +2526,32 @@ function renderCasePanel(result, caseItem, tabId, panelId) {
   }
   heading.append(headingCopy, badges);
   panel.append(heading, caseMetadata);
-  panel.appendChild(renderCaseAuthorityComparison(caseItem.run));
+  if (runQuestion(caseItem.run)) {
+    const question = createElement("article", "case-question-card");
+    question.append(
+      createElement(
+        "p",
+        "content-label",
+        runVariantId(caseItem.run)
+          ? "Selected synthesized inference question"
+          : "Inference question",
+      ),
+      createElement("p", "question-text", runQuestion(caseItem.run)),
+    );
+    panel.appendChild(question);
+  }
+  panel.appendChild(renderCaseAuthorityComparison(caseItem.run, result));
+  if (caseItem.run.error) {
+    const runError = objectOrEmpty(caseItem.run.error);
+    panel.appendChild(
+      createElement(
+        "div",
+        "notice run-error-notice",
+        `${runError.type || "InferenceError"}: `
+          + (runError.message || String(caseItem.run.error)),
+      ),
+    );
+  }
   if (
     isSemanticPayload(state.payload)
     || caseItem.run.semantic_evaluation
@@ -2269,11 +2573,14 @@ function renderCasePanel(result, caseItem, tabId, panelId) {
       "",
       JSON.stringify(
         {
+          case_id: caseItem.run.case_id,
+          status: caseItem.run.status,
           inference_input: caseItem.run.inference_input,
           retrieval_probe: caseItem.run.retrieval_probe,
           generated_answer: caseItem.run.generated_answer,
           semantic_evaluation: caseItem.run.semantic_evaluation,
           phase_errors: caseItem.run.phase_errors,
+          error: caseItem.run.error,
         },
         null,
         2,
@@ -2449,7 +2756,9 @@ function renderDetail(result) {
       "detail-path",
       `${isSemanticPayload(state.payload)
         ? "semantic evaluation snapshot"
-        : "legacy manual-check snapshot"} · ${result.annotator}`,
+        : isSynthesizedPayload()
+          ? "synthesized hybrid RAG+LLM snapshot"
+          : "legacy manual-check snapshot"} · ${result.annotator}`,
     ),
   );
   const badges = createElement("div", "badge-row");
@@ -2506,12 +2815,21 @@ function renderDetail(result) {
     createElement(
       "div",
       "notice",
-      "적용 범위는 연결된 specific knowledge unit의 확정 마디 범위에서 가져온 evaluation query context다.",
+      isSynthesizedPayload()
+        ? "합성 질문 표현만 달라지며, 작품과 마디 범위는 원래 인간 주석 "
+          + "평가 "
+          + "사례의 구조화된 context를 그대로 사용한다."
+        : "적용 범위는 연결된 specific knowledge unit의 확정 마디 범위에서 "
+          + "가져온 evaluation query context다.",
     ),
   );
+  const synthesisComparison = isSynthesizedPayload()
+    && !isSemanticPayload(state.payload);
   const reference = renderAuthoritativeReference(result);
-  if (reference) elements.detail.appendChild(reference);
-  elements.detail.appendChild(renderQuestionReview(result));
+  if (!synthesisComparison) {
+    if (reference) elements.detail.appendChild(reference);
+    elements.detail.appendChild(renderQuestionReview(result));
+  }
 
   const cases = resultCases(result);
   if (!cases.length) {
@@ -2527,7 +2845,7 @@ function renderDetail(result) {
   const tabs = createElement("div", "case-tabs");
   tabs.setAttribute("role", "tablist");
   tabs.setAttribute("aria-label", "Inference cases");
-  cases.forEach(item => {
+  cases.forEach((item, visibleIndex) => {
     const tabId = `case-tab-${result.source_id}-${item.index}`;
     const button = createElement("button", "case-tab");
     button.type = "button";
@@ -2537,7 +2855,12 @@ function renderDetail(result) {
     button.setAttribute("aria-controls", panelId);
     button.tabIndex = item.key === selected.key ? 0 : -1;
     button.append(
-      document.createTextNode(formatRange(item.run.inference_input.measure_range)),
+      document.createTextNode(
+        [
+          variantSlot(runVariantId(item.run)),
+          formatRange(item.run.inference_input.measure_range),
+        ].filter(Boolean).join(" · "),
+      ),
       createElement(
         "span",
         "tab-status",
@@ -2558,9 +2881,9 @@ function renderDetail(result) {
     button.addEventListener("keydown", event => {
       let targetIndex = null;
       if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        targetIndex = (item.index + 1) % cases.length;
+        targetIndex = (visibleIndex + 1) % cases.length;
       } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        targetIndex = (item.index - 1 + cases.length) % cases.length;
+        targetIndex = (visibleIndex - 1 + cases.length) % cases.length;
       } else if (event.key === "Home") {
         targetIndex = 0;
       } else if (event.key === "End") {
@@ -2583,6 +2906,10 @@ function renderDetail(result) {
     tabs,
     renderCasePanel(result, selected, selectedTabId, panelId),
   );
+  if (synthesisComparison) {
+    elements.detail.appendChild(renderQuestionReview(result));
+    if (reference) elements.detail.appendChild(reference);
+  }
 }
 
 function updateNavigation(items) {
@@ -2664,6 +2991,9 @@ function resetFilters() {
   state.reviewStatus = "all";
   state.range = "all";
   state.basis = "all";
+  state.generationMode = "all";
+  state.runStatus = "all";
+  state.variant = "all";
   state.semantic = "all";
   state.completion = "all";
   state.pieceId = "all";
@@ -2672,6 +3002,9 @@ function resetFilters() {
   elements.statusFilter.value = "all";
   elements.rangeFilter.value = "all";
   elements.basisFilter.value = "all";
+  elements.generationModeFilter.value = "all";
+  elements.runStatusFilter.value = "all";
+  elements.variantFilter.value = "all";
   elements.semanticFilter.value = "all";
   elements.completionFilter.value = "all";
   state.selectedSourceId = null;
@@ -2765,6 +3098,21 @@ function wireControls() {
     state.selectedSourceId = null;
     render();
   });
+  elements.generationModeFilter.addEventListener("change", event => {
+    state.generationMode = event.target.value;
+    state.selectedSourceId = null;
+    render();
+  });
+  elements.runStatusFilter.addEventListener("change", event => {
+    state.runStatus = event.target.value;
+    state.selectedSourceId = null;
+    render();
+  });
+  elements.variantFilter.addEventListener("change", event => {
+    state.variant = event.target.value;
+    state.selectedSourceId = null;
+    render();
+  });
   elements.semanticFilter.addEventListener("change", event => {
     state.semantic = event.target.value;
     state.selectedSourceId = null;
@@ -2791,6 +3139,57 @@ function wireControls() {
       moveSelection(-1, true);
     }
   });
+}
+
+function appendFilterOptions(select, values) {
+  values.forEach(value => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+}
+
+function configurePayloadControls() {
+  const runs = state.payload.results.flatMap(result => result.inference_runs);
+  const generationModes = new Set();
+  const variants = new Set();
+  state.payload.results.forEach(result => {
+    listOrEmpty(result.synthesized_question_variants).forEach(variant => {
+      if (variant?.variant_id) variants.add(variantSlot(variant.variant_id));
+    });
+  });
+  runs.forEach(run => {
+    const mode = generatedOutput(run).generation_mode;
+    if (mode) generationModes.add(mode);
+    const variantId = runVariantId(run);
+    if (variantId) variants.add(variantSlot(variantId));
+  });
+  appendFilterOptions(
+    elements.generationModeFilter,
+    [...generationModes].sort(),
+  );
+  appendFilterOptions(elements.variantFilter, [...variants].sort());
+
+  const synthesized = isSynthesizedPayload();
+  elements.generationModeFilter.closest(".filter").hidden =
+    generationModes.size === 0;
+  elements.runStatusFilter.closest(".filter").hidden = runs.length === 0;
+  elements.variantFilter.closest(".filter").hidden = !synthesized;
+  elements.semanticFilter.closest(".filter").hidden =
+    !isSemanticPayload(state.payload);
+
+  if (synthesized && !isSemanticPayload(state.payload)) {
+    document.title = "Soprano QA · Expected vs generated";
+    elements.viewerEyebrow.textContent =
+      "Soprano QA · five-piece synthesized evaluation";
+    elements.viewerTitle.textContent = "Expected answer vs generated answer";
+    elements.viewerSubtitle.textContent =
+      "5개 작품의 인간 주석 기반 expected/reference answer와, 동일한 의미를 "
+      + "다른 표현으로 물은 합성 질문에 대한 hybrid RAG+LLM 답변을 "
+      + "좌우로 비교한다. 생성 모드·실행 상태·합성 질문 필터로 "
+      + "사례를 줄일 수 있다.";
+  }
 }
 
 function configureManualReviewControls() {
@@ -2824,7 +3223,9 @@ function configureManualReviewControls() {
 function validatePayload(payload) {
   if (
     !payload
-    || !["1.0", "2.0", "3.0", "4.0", "5.0", "6.0", "7.0", "8.0"].includes(
+    || ![
+      "1.0", "2.0", "3.0", "4.0", "5.0", "6.0", "7.0", "8.0", "8.1",
+    ].includes(
       payload.schema_version,
     )
     || !Array.isArray(payload.results)
@@ -2886,6 +3287,7 @@ async function initialize() {
     state.draft = readStoredDraft();
     readLocation();
     wireControls();
+    configurePayloadControls();
     configureManualReviewControls();
     if (state.manualReviewEnabled) {
       persistDraft("이 실행의 로컬 semantic-fidelity 검토 준비됨");

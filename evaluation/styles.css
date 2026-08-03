@@ -1005,6 +1005,19 @@ h1 {
   padding: 14px;
 }
 
+.case-question-card {
+  margin-bottom: 12px;
+  border: 1px solid #b6d3ce;
+  border-left: 4px solid var(--accent);
+  border-radius: 10px;
+  background: var(--accent-soft);
+  padding: 10px 12px;
+}
+
+.case-question-card .question-text {
+  margin-bottom: 0;
+}
+
 .semantic-panel {
   margin-bottom: 12px;
   border-color: #a9c2df;
@@ -1123,6 +1136,21 @@ h1 {
   border-color: #d9b172;
   background: var(--warning-soft);
   color: #6f491a;
+}
+
+.comparison-review-warning {
+  margin-top: 10px;
+  border-left-color: var(--warning);
+  background: var(--warning-soft);
+  color: #6f491a;
+}
+
+.run-error-notice {
+  margin-bottom: 12px;
+  border-left-color: var(--danger);
+  background: var(--danger-soft);
+  color: var(--danger);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 .reference-review-notice ul {

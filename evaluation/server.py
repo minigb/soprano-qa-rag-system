@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Serve the local, read-only qualitative RAG evaluation viewer."""
+"""Serve the local, read-only RAG expected-vs-generated answer viewer."""
 
 from __future__ import annotations
 
@@ -29,7 +29,7 @@ RESULTS_ROUTE: Final = "/api/results"
 
 
 class EvaluationViewerServer(ThreadingHTTPServer):
-    """HTTP server carrying the exact evaluation directory to expose."""
+    """HTTP server carrying the evaluation result snapshot to expose."""
 
     daemon_threads = True
 
@@ -46,7 +46,7 @@ class EvaluationViewerServer(ThreadingHTTPServer):
 
 
 class EvaluationViewerRequestHandler(BaseHTTPRequestHandler):
-    """Serve only the qualitative viewer and its immutable result snapshot."""
+    """Serve only the evaluation viewer and its immutable result snapshot."""
 
     server_version = "SopranoQAEvaluationViewer/1.0"
 
@@ -280,12 +280,15 @@ def main() -> None:
         "--results-file",
         type=Path,
         required=True,
-        help="Exact schema-8 JSON snapshot exposed at /api/results.",
+        help=(
+            "Evaluation JSON exposed at /api/results (current synthesized "
+            "RAG+LLM or retained qualitative/schema-8 snapshot)."
+        ),
     )
     arguments = parser.parse_args()
     if not arguments.results_file.is_file():
         parser.error(
-            "--results-file must point to an existing schema-8 JSON snapshot"
+            "--results-file must point to an existing evaluation JSON snapshot"
         )
 
     server = create_server(
@@ -294,7 +297,7 @@ def main() -> None:
     )
     host, port = server.server_address[:2]
     print(
-        f"Serving qualitative RAG review at http://{host}:{port}/",
+        f"Serving RAG answer comparison at http://{host}:{port}/",
         flush=True,
     )
     print(

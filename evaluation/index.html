@@ -17,9 +17,9 @@
 
   <header class="masthead">
     <div class="masthead-copy">
-      <p class="eyebrow">Soprano QA · qualitative evaluation</p>
-      <h1>RAG answer semantic-fidelity review</h1>
-      <p class="subtitle">
+      <p class="eyebrow" id="viewer-eyebrow">Soprano QA · qualitative evaluation</p>
+      <h1 id="viewer-title">RAG answer semantic-fidelity review</h1>
+      <p class="subtitle" id="viewer-subtitle">
         각 추론 사례에 실제로 사용된 judge 권위와 생성 답변의 의미 일치
         여부를 먼저 비교한다. 검색 및 KU 적중은 접힌 보조 진단에서 확인한다.
         수동 semantic-fidelity 평가는 judge 완료 후 안정된 스냅샷에서만 저장된다.
@@ -101,7 +101,7 @@
         </select>
       </label>
       <label class="filter">
-        <span>Review status</span>
+        <span>Curation status</span>
         <select id="status-filter">
           <option value="all">전체</option>
           <option value="retrievable">Retrievable</option>
@@ -125,6 +125,27 @@
           <option value="retrieved_evidence">Retrieved evidence</option>
           <option value="internal_knowledge">Internal knowledge</option>
           <option value="other">Other</option>
+        </select>
+      </label>
+      <label class="filter">
+        <span>Generation mode</span>
+        <select id="generation-mode-filter">
+          <option value="all">전체</option>
+        </select>
+      </label>
+      <label class="filter">
+        <span>Run status</span>
+        <select id="run-status-filter">
+          <option value="all">전체</option>
+          <option value="completed">Completed</option>
+          <option value="pending">Pending</option>
+          <option value="error">Error</option>
+        </select>
+      </label>
+      <label class="filter">
+        <span>Synthesized variant</span>
+        <select id="variant-filter">
+          <option value="all">전체</option>
         </select>
       </label>
       <label class="filter">
