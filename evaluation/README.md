@@ -65,53 +65,62 @@ Useful judge controls include `--piece PIECE_ID`, `--case-id CASE_ID`,
 `--limit N`, `--max-attempts N`, and `--minimum-pass-rate RATE`. Resume is
 allowed only when the source cases and all fingerprinted judge inputs match.
 
-## Synthesized retrieval development benchmark
+## Synthesized-question hybrid RAG+LLM benchmark
 
-`run_synthesized_retrieval.py` evaluates three Korean reformulations of each
-case in the retained development-variant dataset. That dataset contains 153
-cases for Die Forelle, In Flowery Clouds, and La Capinera. Its three-piece
-scope describes the available synthesized benchmark data; it does not limit
-the five-piece qualitative workflow above.
+`run_synthesized_questions.py` evaluates three Korean reformulations of every
+active expert question across all five pieces: 79 source questions, 237
+variant formulations, and 372 range-expanded inference cases. The excluded
+unanswerable Nella Fantasia source remains in the dataset for provenance but
+is never expanded or sent to the pipeline.
 
-The main repository is currently configured for hybrid retrieval, so a valid
-current run is:
+The runner requires clean hybrid retrieval and grounded local generation. It
+loads both GGUF checkpoints before creating the result artifact, refuses
+lexical fallback or missing/incompatible models, and always calls the service
+with generation enabled and internal model knowledge disabled:
 
 ```bash
 SQA_VARIANT_DATASET=/home/minhee/soprano-qa-dataset-evaluation-set-synthesized
 
 conda run -n soprano-qa python \
-  evaluation/run_synthesized_retrieval.py \
-  --system-root /home/minhee/soprano-qa-rag-system \
+  evaluation/run_synthesized_questions.py \
   --dataset-root "$SQA_VARIANT_DATASET" \
-  --output evaluation/synthesized_retrieval_hybrid.json \
-  --top-k 6 \
-  --require-retrieval-mode hybrid
+  --output evaluation/synthesized_question_results.json \
+  --top-k 6
 ```
 
-The runner separates the benchmark dataset from the evaluated system, turns
-off generation and internal-knowledge fallback, fingerprints the target code,
-configuration, corpus, and dense assets, and checkpoints after every case.
-Use a separately configured lexical system root for a new lexical-versus-
-hybrid comparison; the removed historical worktrees are not required by the
-retained result files.
+The single JSON artifact contains the human source answer, linked knowledge
+units, exact case authority where schema 1.3 provides it, generated answers,
+evidence, retrieval diagnostics, generation modes and reasons, model hashes,
+and runtime fingerprints. It checkpoints atomically after every case and can
+resume only when the authenticated benchmark, corpus, code, models, runtime,
+and settings still match. `--limit N` is useful for a bounded invocation.
 
-The tracked `synthesized_retrieval_bm25.json`,
-`synthesized_retrieval_dense.json`, and `synthesized_retrieval_final.json`
-files are retrieval-only development snapshots. They do not contain LLM judge
-verdicts.
+The current completed artifact has validated integrity and contains 372/372
+successful inference cases. It records 240 grounded LLM answers, 126
+retrieval-extractive safeguards, and six unavailable answers where the
+retriever admitted no corpus evidence and internal model knowledge remained
+disabled. Expected knowledge-unit Hit@6 is 359/372 (96.51%), and all three
+variants achieve
+Hit@6 in 119/124 canonical source/range groups (95.97%). See
+[`synthesized_question_comparison.md`](synthesized_question_comparison.md) for
+the complete retrieval and generation-path report. No output uses an internal
+knowledge answer basis or contains the removed `제공된 검색 근거` footer.
 
-## Retained artifacts
+No semantic LLM judge was run for this synthesized result. Retrieval and
+generation-path metrics are diagnostics, not answer-accuracy verdicts. Use
+the viewer below to compare each human expected/reference answer with the
+generated answer manually.
+
+## Current result artifacts
 
 - `qualitative.json` preserves the current five-piece evaluation questions,
   generated answers, expert references, and retrieval diagnostics.
-- `synthesized_question_results_final.json` preserves the completed
-  synthesized-question RAG and evaluation results.
-- `synthesized_retrieval_bm25.json`, `synthesized_retrieval_dense.json`, and
-  `synthesized_retrieval_final.json` preserve retrieval development results.
+- `synthesized_question_results.json` preserves the completed five-piece
+  synthesized-question hybrid RAG+LLM run and its human references.
 
-The synthesized-question snapshot includes the historical verdicts recorded
-by that run. They are preserved as part of the result, but they are not output
-from the current `judge_qualitative.py` workflow.
+`qualitative_judged.json` is created only when the optional qualitative judge
+is run. It is separate from both inference artifacts; the synthesized runner
+does not create judge verdicts.
 
 Runtime `*.log` and `*.json.lock` files are ignored and should not be
 committed.
@@ -123,11 +132,14 @@ modifying it. For example:
 
 ```bash
 conda run -n soprano-qa python evaluation/server.py \
-  --results-file evaluation/synthesized_question_results_final.json
+  --results-file evaluation/synthesized_question_results.json
 ```
 
-Open <http://127.0.0.1:8766/>. Manual review state is stored in the browser's
-`localStorage`; export it from the viewer if it must be retained or shared.
+Open <http://127.0.0.1:8766/>. The synthesized-result view shows the human
+expected/reference answer beside the generated answer and supports piece,
+generation-mode, status, and variant filters. Manual review state is stored
+in the browser's `localStorage`; export it from the viewer if it must be
+retained or shared.
 
 ## Tests
 
@@ -137,7 +149,9 @@ Run the focused evaluation tests:
 conda run -n soprano-qa python -m unittest -v \
   tests.test_qualitative_runner \
   tests.test_qualitative_judge \
-  tests.test_annotator_retrieval_coverage
+  tests.test_annotator_retrieval_coverage \
+  tests.test_synthesized_questions_runner \
+  tests.test_evaluation_server
 ```
 
 Run the complete repository suite:

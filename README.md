@@ -110,8 +110,8 @@ python scripts/ask.py \
 Omit `--measures` for a whole-work question. Add `--json` for structured
 retrieval, evidence, rights, citation, and answer metadata.
 
-Run the current five-piece qualitative inference and optional local-Qwen
-answer-fidelity review with:
+Run the current five-piece canonical qualitative inference and optional
+local-Qwen answer-fidelity review with:
 
 ```bash
 conda run -n soprano-qa python evaluation/run_qualitative.py --generate
@@ -120,9 +120,33 @@ conda run -n soprano-qa python evaluation/judge_qualitative.py
 
 The inference runner writes `evaluation/qualitative.json`; the judge writes a
 separate `evaluation/qualitative_judged.json` and never changes the inference
-artifact. The retained synthesized-question snapshot can still be inspected
-with the read-only local viewer documented in
-[evaluation/README.md](evaluation/README.md).
+artifact.
+
+To test wording robustness, run the hybrid RAG+LLM pipeline over three Korean
+reformulations of all 79 active questions across the five pieces:
+
+```bash
+conda run -n soprano-qa python \
+  evaluation/run_synthesized_questions.py \
+  --dataset-root ../soprano-qa-dataset-evaluation-set-synthesized \
+  --output evaluation/synthesized_question_results.json
+```
+
+The current completed result contains 237 variant formulations and 372
+range-expanded inference cases. No semantic LLM judge was run for this
+synthesized artifact; retrieval metrics and generation modes do not establish
+answer accuracy. Inspect the human expected/reference answer beside each
+generated answer with the read-only viewer:
+
+```bash
+conda run -n soprano-qa python evaluation/server.py \
+  --results-file evaluation/synthesized_question_results.json
+```
+
+Open <http://127.0.0.1:8766/>. See
+[evaluation/README.md](evaluation/README.md) for the complete workflow and
+[the synthesized evaluation report](evaluation/synthesized_question_comparison.md)
+for current retrieval and generation-path metrics.
 
 Applications can import the service facade while this repository is on
 `PYTHONPATH`:

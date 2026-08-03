@@ -1,281 +1,206 @@
-# Synthesized Korean question development evaluation
+# Five-piece synthesized-question RAG+LLM evaluation
 
 ## Executive summary
 
-This development set contains three intended meaning-preserving Korean
-reformulations for each of 40 schema-1.3 expert questions. Canonical
-source/range expansion produces 153 cases across 51 three-formulation groups.
+The current synthesized-question development evaluation covers all five
+supported pieces. It applies three intended meaning-preserving Korean
+reformulations to each of 79 active human-annotated questions, producing 237
+variant formulations and 372 range-expanded inference cases.
 
-Dense-enhanced retrieval is decisively more robust than the existing BM25
-system. At `top_k=6`, BM25 retrieves any benchmark-linked expected knowledge
-unit for 13.73% of cases, the separate dense/hybrid worktree reaches 97.39%,
-and the final tuned system reaches 100.00%. The final system was therefore
-selected for generation evaluation. This establishes better retrieval
-robustness on this routed development set; by itself it does not prove better
-answer correctness.
+The current hybrid RAG+LLM pipeline completed all 372 cases with zero runtime
+errors, and the artifact passed its post-run integrity checks. At `top_k=6`,
+at least one benchmark-linked expected knowledge unit was retrieved in
+359/372 cases (96.51%). All three variants succeeded at Hit@6 in 119/124
+canonical source/range groups (95.97%). No case used a dense-error or lexical
+fallback.
 
-Retrieval and generation completed all 153 cases without an error and with
-validated pipeline integrity. The generator produced 127 answers from the LLM
-and used a compact expert-first extractive safeguard for 26. All 153 retrievals
-are target-source grounded, and every generated answer cites at least one
-benchmark-linked expected unit.
+The pipeline returned 240 grounded LLM answers, 126 extractive safeguards,
+and six unavailable answers where the retriever admitted no corpus evidence
+and internal model knowledge was intentionally disabled. These generation
+path counts and retrieval metrics do not establish semantic answer correctness.
+No LLM judge
+was run for this synthesized evaluation; compare the human expected answer
+and generated answer manually in the local viewer.
 
 ## Dataset and protocol
 
-The synthesized formulations are stored in the dataset repository under
-`expert_curation/evaluation_question_variants/`. They are benchmark data tied
-to stable expert source IDs and schema validation, so the dataset repository
-is the appropriate source of truth. They remain separate from expert source
-text and corpus aliases, preventing the retriever from indexing the evaluation
-wordings as evidence. Evaluation runners and result artifacts remain in the
-RAG repository.
+The variant source files live in the dataset worktree under
+`expert_curation/evaluation_question_variants/`. They are joined to the human
+evaluation-question inventories and reviewed expert knowledge units by stable
+source IDs. The synthesized wording is not added to the retrieval corpus or
+its aliases.
 
-The dataset contains:
+The active benchmark contains:
 
-- 40 canonical expert questions and 120 synthesized formulations;
-- 51 canonical source/range groups, expanding to 153 cases;
-- 33 Die Forelle, 30 In Flowery Clouds, and 90 La Capinera cases; and
-- 96 lexical substitutions, 95 syntactic reframings, 68
-  information-structure changes, 32 word-order changes, and 13 colloquial
-  reframings. A variant may carry more than one transformation label.
+| Piece | Active questions | Variant formulations | Inference cases |
+|---|---:|---:|---:|
+| Die Forelle | 10 | 30 | 33 |
+| In Flowery Clouds | 10 | 30 | 30 |
+| La Capinera | 20 | 60 | 90 |
+| Nella fantasia | 14 | 42 | 60 |
+| Una voce poco fa | 25 | 75 | 159 |
+| **Overall** | **79** | **237** | **372** |
 
-An AI semantic audit corrected eight high-confidence meaning or wording
-problems and rewrote 13 formulations whose structural diversity was too weak.
-The variants have not received independent human semantic review. They are
-therefore intended meaning-preserving development data, not a human-validated
-or untouched benchmark.
+The stored Nella fantasia question `kim-nella-fantasia-01` remains excluded:
+its recorded answer asks for existing web material rather than supplying an
+expert answer. It is retained only for provenance and is not synthesized or
+sent to the pipeline. One La Capinera range, measures 78–81 for
+`kim-la-capinera-01`, is also excluded because the linked lyric anchor does
+not apply to that range.
 
-Retrieval receives the canonical piece ID and, when applicable, the canonical
-measure range as structured metadata. The synthesized wording does not add a
-measure locator. These results measure evidence retrieval after oracle
-piece/range routing, not free-text piece identification or range extraction.
-One La Capinera inference range, measures 78-81 for
-`kim-la-capinera-01`, is excluded because its lyric anchor does not apply
-there.
+Each inference request receives the canonical piece ID and, when applicable,
+the canonical measure range as structured metadata. The benchmark therefore
+tests wording robustness after oracle piece/range routing; it does not test
+piece recognition or measure extraction from free text.
 
-All systems use `top_k=6` and the same authenticated 223-record corpus.
+The runner uses `top_k=6`, requires the configured embedding and generation
+GGUF checkpoints, and initializes both before writing results. Hybrid mode is
+fail-closed: an unavailable dense backend aborts the run instead of silently
+switching to lexical retrieval. Every request uses `generate=True` and
+`allow_internal_knowledge=False`.
 
-Metric definitions:
+## Retrieval results
 
-- Hit@1 and Hit@6 mean that at least one ID from the canonical question's
-  `knowledge_unit_ids` appears by that rank.
-- “All listed @6” means that every listed ID appears in the first six results.
-- MRR uses the rank of the first listed expected unit.
-- “Target-source grounded” means that an in-scope unit linked to the canonical
-  source appears in the first six results.
-- “Three-wording consistency” means that all three formulations in a
-  source/range group achieve Hit@6.
+The artifact reports several target lanes because not every linked knowledge
+unit is retrieval-eligible and not every linked unit applies to every selected
+range:
 
-These are benchmark-linked metrics, not uniformly curator-certified retrieval
-metrics. Nine In Flowery Clouds cases derived from three
-`rewrite_review_pending` sources have empty
-`retrieval_eligible_knowledge_unit_ids`; the evaluator deliberately scores
-their canonical linked IDs for development diagnostics. Those nine cases
-remain subject to reference review.
+| Target lane | Eligible cases | Hit@1 | Hit@6 | All targets @6 | MRR |
+|---|---:|---:|---:|---:|---:|
+| All benchmark-linked units | 372 | 91.13% | 96.51% | 85.48% | 0.9348 |
+| Range-applicable linked units | 372 | 91.13% | 96.51% | 88.71% | 0.9348 |
+| Retrieval-eligible units | 360 | 90.83% | 96.39% | 88.33% | 0.9331 |
+| Range-applicable retrieval-eligible units | 360 | 90.83% | 96.39% | 88.33% | 0.9331 |
 
-## Retrieval comparison
+Twelve cases have no retrieval-eligible target and are omitted from the two
+eligible-lane denominators rather than counted as misses. Target-source
+grounding is 359/372 (96.51%).
 
-| System | Hit@1 | Hit@6 | All listed @6 | MRR | Target-source grounded | Three-wording consistency |
+Results against all benchmark-linked units by piece are:
+
+| Piece | Cases | Hit@1 | Hit@6 | All targets @6 | MRR | Target-source grounded |
 |---|---:|---:|---:|---:|---:|---:|
-| Existing BM25 | 13.73% | 13.73% | 13.07% | 0.1373 | 13.73% | 0.00% |
-| Separate dense/hybrid worktree | 94.12% | 97.39% | 89.54% | 0.9575 | 97.39% | 92.16% |
-| Final tuned system | **94.12%** | **100.00%** | **93.46%** | **0.9651** | **100.00%** | **100.00%** |
-
-Compared with BM25, the final system improves Hit@6 by 86.27 percentage
-points. Compared with the separate dense/hybrid worktree, it removes all four
-Hit@6 failures, improves all-listed coverage by 3.92 points, and raises
-three-wording consistency by 7.84 points without reducing overall Hit@1.
-
-Final-system results by piece are:
-
-| Piece | Cases | Hit@1 | Hit@6 | All listed @6 | MRR | Target-source grounded |
-|---|---:|---:|---:|---:|---:|---:|
-| Die Forelle | 33 | 81.82% | 100.00% | 72.73% | 0.8889 | 100.00% |
+| Die Forelle | 33 | 81.82% | 100.00% | 69.70% | 0.8889 | 100.00% |
 | In Flowery Clouds | 30 | 90.00% | 100.00% | 100.00% | 0.9444 | 100.00% |
 | La Capinera | 90 | 100.00% | 100.00% | 98.89% | 1.0000 | 100.00% |
+| Nella fantasia | 60 | 88.33% | 100.00% | 85.00% | 0.9417 | 100.00% |
+| Una voce poco fa | 159 | 89.31% | 91.82% | 78.62% | 0.9030 | 91.82% |
+| **Overall** | **372** | **91.13%** | **96.51%** | **85.48%** | **0.9348** | **96.51%** |
 
-The final router executed 151 cases in hybrid mode and dense candidates
-contributed in all 151. Two broad-guidance formulations were intentionally
-routed through lexical expansion. No case used a dense-error fallback. The
-separate dense worktree predates contribution instrumentation, so its 153
-contribution values are recorded as unknown, not as zero.
+The five source/range groups in which not all three variants hit at `k=6` are
+all in Una voce poco fa:
+`kim-una-voce-poco-fa-13` at measures 62–62 and
+`kim-una-voce-poco-fa-15` at measures 68–69, 72–73, 92–93, and 96–97.
+The latter four groups miss at Hit@6 for all three variants; the first misses
+only its third variant.
 
-There are no Hit@6 failures. Ten cases do not retrieve every listed unit: six
-omit optional Schubert background `die-forelle-ku-003`, two omit optional
-verse-colour guidance `die-forelle-ku-015`, one broad Die Forelle formulation
-omits direct diction guidance `die-forelle-ku-017`, and one La Capinera opening
-formulation omits `la-capinera-ku-002`. Nine cases place their first expected
-unit below rank 1; the lowest first-expected rank is 6.
+Retrieval execution consisted of 363 hybrid searches with a contributing
+dense result, six hybrid searches with no admitted dense match, and three
+intentional lexical routes inside the configured hybrid pipeline. All 369
+dense-attempted cases completed cleanly, and `fallback_used_cases` is zero.
+
+### Miss analysis
+
+All 13 Hit@6 misses are concentrated in two Una voce poco fa questions:
+
+- For `kim-una-voce-poco-fa-13` at measure 62, variants 1 and 2 retrieve the
+  expected vowel-change unit, but variant 3 retrieves a different generic
+  vowel-sustaining unit. The expected dense candidate exceeds the configured
+  relevance-to-content alias-gap guard by 0.0157.
+- All 12 cases for `kim-una-voce-poco-fa-15` miss the expected displaced-accent
+  unit. Its curated answer describes Rosina's lively character but omits the
+  central words “accent” and “first beat”; those concepts occur only in its
+  source question/retrieval alias. The conservative content and alias-gap
+  guards therefore reject it for all three variants.
+- At measures 68–69 and 72–73, no other evidence is admitted, producing the
+  six unavailable answers. At measures 92–93 and 96–97, an unrelated
+  ossia/alternative-melody unit with an overlapping range is admitted instead,
+  producing six extractive answers that do not address the expected accent
+  question.
+
+This is a corpus-rewrite and conservative-admission interaction, not a missing
+model or an execution fallback.
 
 ## Generation diagnostics
 
-Generation was evaluated only for the final tuned system; BM25 and the
-separate dense/hybrid worktree are compared only at retrieval.
-
-Retrieval and generation both completed 153/153 cases with zero errors:
-
 | Generation path | Cases | Rate |
 |---|---:|---:|
-| LLM from retrieved evidence | 127 | 83.01% |
-| Expert-first extractive safeguard | 26 | 16.99% |
+| LLM from retrieved evidence | 240 | 64.52% |
+| Retrieval-extractive safeguard | 126 | 33.87% |
+| Unavailable because retrieval admitted no corpus evidence | 6 | 1.61% |
 
-The safeguard was used 18 times because the grounded model returned no usable
-answer and eight times because a local example did not support a whole-piece
-generalization. By piece, it was used for 11 Die Forelle, 14 In Flowery Clouds,
-and one La Capinera case.
+The extractive safeguard was used 105 times because the grounded model
+returned no usable answer and 21 times because the safety checks rejected an
+unsupported whole-piece generalization from a local example. The six
+unavailable cases did not use the model's internal knowledge.
 
-The final expert-first selector prefers a direct expert anchor, preserves
-same-source split units, admits at most one independent non-local expert
-contender, and does not append web or local-example evidence after a non-local
-expert anchor. Review warnings are derived only from evidence actually cited
-or selected. Retrieval diagnostics still retain the full candidate list.
+No answer used an `internal_knowledge` basis, and the serialized artifact
+contains zero occurrences of the removed `제공된 검색 근거` footer.
 
-Across all answers, the serialized answer strings total 30,960 Unicode code
-points, including citation text and whitespace, with a mean of 202.35 and
-median of 169. Compared with the intermediate selector, overall text is 11.39%
-shorter and extractive text is 28.73% shorter. The 26 extractive answers
-contain 45 citations, zero web citations, zero `local_example` citations, and
-nine warnings that all concern the queried In Flowery Clouds unit directly.
+Generation modes by piece are:
 
-Generated-answer citation coverage is:
+| Piece | LLM | Extractive | Unavailable |
+|---|---:|---:|---:|
+| Die Forelle | 22 | 11 | 0 |
+| In Flowery Clouds | 16 | 14 | 0 |
+| La Capinera | 89 | 1 | 0 |
+| Nella fantasia | 44 | 16 | 0 |
+| Una voce poco fa | 69 | 84 | 6 |
+| **Overall** | **240** | **126** | **6** |
 
-- at least one listed expected unit: 153/153;
-- all listed expected units: 137/153 (89.54%);
-- at least one retrieval-eligible unit among cases with an eligible target:
-  144/144; and
-- all retrieval-eligible units among those cases: 128/144.
+An extractive or unavailable mode is an explicit pipeline outcome, not an
+operational model fallback: both local checkpoints and the `llama_cpp`
+backend passed preflight, and the run recorded zero execution errors.
 
-Citation presence is a structural grounding proxy, not proof that every claim
-is semantically correct. Sixteen multi-unit answers omit a secondary listed
-unit: six omit optional Schubert background, three omit optional verse-colour
-guidance, one omits broad-question diction guidance, three omit an additional
-In Flowery Clouds unit, and three omit La Capinera opening pronunciation.
+## Manual answer comparison
 
-The earlier zero-expected fallback failures are fixed:
+No semantic LLM judge was run for this artifact. Retrieval hits, evidence
+links, and generation modes are structural diagnostics; they cannot decide
+whether an answer is complete, precise, or faithful to the human annotation.
 
-- `kim-die-forelle-04-syn-03` now leads with `die-forelle-ku-006`;
-- `kim-die-forelle-08-syn-01` and `syn-03` include
-  `die-forelle-ku-011`; and
-- all three In Flowery Clouds meter-return formulations now use
-  `in-flowery-clouds-ku-011` and no longer answer the earlier transition.
+Use the read-only viewer to inspect the human expected/reference answer beside
+the generated answer:
 
-All three transposition/too-high formulations now use
-`in-flowery-clouds-ku-007` to explain that changing key is allowed for this art
-song. The unrelated fermata warning and local examples no longer leak into
-those answers.
+```bash
+conda run -n soprano-qa python evaluation/server.py \
+  --results-file evaluation/synthesized_question_results.json
+```
 
-Remaining visible precision issues include generic Die Forelle difficulty or
-timbre supplements in several extractive answers, a broad transposition
-supplement in one small-notes answer, and six Die Forelle LLM answers with
-broad six-ID citation footers. These are useful targets for a future reranker
-or evidence-aware answer compressor.
+Then open <http://127.0.0.1:8766/>. Filters are available for piece,
+generation mode, case status, and synthesized variant. Manual review state is
+stored in browser `localStorage` and can be exported from the viewer.
 
-## Semantic-judge results
+For schema-1.3 inventory records, the artifact also exposes curator-defined
+claim scope and per-case reference authority. Schema-1.1 source answers do not
+have that claim partition and are marked for manual interpretation where
+appropriate.
 
-The exact-code calibration gate passed 25/25 fixed controls with 100% accuracy
-and zero terminal frame errors before judging began.
+## Reproducibility and artifact
 
-Judging completed 153/153 cases with zero operational errors. Raw conservative
-triage assigned 62 cases (40.52%) to `pass`, 80 (52.29%) to `human_review`, and
-11 (7.19%) to `fail`. Seven structured-output retry exhaustions are included
-in the human-review count as `unjudgeable`.
+The current result is
+`evaluation/synthesized_question_results.json`. It contains the benchmark
+inputs, human references, generated answers, evidence, retrieval diagnostics,
+generation modes and reasons, exclusions, model hashes, runtime information,
+and integrity state in one resumable artifact.
 
-| Piece | Cases | Semantic pass | Human review | Fail | Unjudgeable (in review) | Reliable RAG+LLM pass |
-|---|---:|---:|---:|---:|---:|---:|
-| Die Forelle | 33 | 6 | 21 | 6 | 2 | 4 |
-| In Flowery Clouds | 30 | 4 | 22 | 4 | 3 | 4 |
-| La Capinera | 90 | 52 | 37 | 1 | 2 | 52 |
-| **Overall** | **153** | **62** | **80** | **11** | **7** | **60** |
+`evaluation/run_synthesized_questions.py` fingerprints the variant and
+canonical input files, evaluator, selected pipeline code and settings,
+authenticated corpus and statistics, both model checkpoints, and runtime. It
+checkpoints atomically after each case, rejects incompatible resumes, and
+reauthenticates the inputs after inference. The current artifact is complete:
+372/372 cases, zero errors, and validated integrity.
 
-The run's primary `semantically_reliable_rag_llm_answer` metric additionally
-requires an LLM answer generated from retrieved expert evidence. It records
-60/153 passes (39.22%): two Die Forelle extractive safeguards received a
-semantic `pass` but are intentionally excluded. At canonical-question level,
-where any failed or human-review expanded case prevents a pass, 9/40 questions
-pass, 24 require human review, and seven fail.
+## Limitations and next review
 
-The counts must be interpreted as conservative triage rather than direct
-answer-accuracy estimates. The judge combines two prompts from the same
-Qwen3-4B checkpoint with an atomic Korean NLI guard; the two prompts are not
-statistically independent. In the final run, 130 cases received 100/100 raw
-weighted scores from both frames; 68 of them were nevertheless routed to human
-review, and 50 of those 68 carried atomic-entailment warnings. Across the 61
-dual-complete cases with an atomic-entailment warning, the median of each
-case's highest warning entailment was 0.00358 against a 0.8 threshold.
-Incomplete answers can receive similarly low guard scores, so simply lowering
-the threshold is not justified. “Human review” means automation declined to
-certify the answer, not that the answer is known to be wrong.
+This is a development evaluation, not an untouched generalization estimate.
+The variants are intended to preserve meaning, but structural validation of
+wording and protected anchors is not a substitute for independent human
+semantic review. Una voce poco fa accounts for all 13 Hit@6 misses and all six
+unavailable answers, so those cases are the clearest retrieval and corpus
+coverage targets.
 
-The 25/25 calibration result shows that the implementation matches its fixed
-safety controls. It is not a statistical calibration study of Korean
-paraphrase entailment.
-
-All seven `unjudgeable` cases exhausted four structured-output validation
-attempts and were routed to human review without an invented score.
-Deterministic coverage/range guard failures remain operational errors. Retry
-budgets and selected system roots are bound into calibration and evaluation
-fingerprints.
-
-## Changes made
-
-Retrieval changes include:
-
-- integration of dense/hybrid retrieval and a local embedding cache;
-- preventing bare `어느 쪽` from triggering a page constraint while still
-  recognizing explicit `어느 페이지` and `몇 쪽`;
-- lowering dense relevance/content admission thresholds to 0.44 and 0.43;
-- allowing strong dense candidates with ordinary lexical concept overlap to
-  compete while preserving source, piece, range, and requested-constraint
-  gates;
-- recognizing broader Korean performance-guidance constructions; and
-- expanding coherent same-source sibling units for broad guidance questions.
-
-Generation now uses an expert-first compact safeguard after grounded LLM
-generation fails, scopes review warnings to cited evidence, rejects unsupported
-local generalizations, and keeps answer prose bounded while retaining complete
-retrieval diagnostics.
-
-The evaluator now distinguishes intentional lexical routing, hybrid searches
-with and without dense contribution, and true lexical fallback. It binds the
-retry budget, selected system root, all pipeline modules, requirements,
-embedding model, and embedding cache; reauthenticates corpus/stats/model/cache
-after retrieval and generation; and cannot mark a result complete until its
-integrity state is validated.
-
-## Reproducibility and artifacts
-
-Each retrieval artifact fingerprints the variant and canonical question
-files, evaluator code, selected worktree code/configuration, exact corpus and
-statistics, and embedding checkpoint/cache when applicable. It rejects stale
-inputs, incompatible resumes, imports from the wrong worktree, target mutation,
-and unintended fallback. Checkpoints are atomic.
-
-Current primary artifacts are:
-
-- `synthesized_retrieval_bm25.json`;
-- `synthesized_retrieval_dense.json`;
-- `synthesized_retrieval_final.json`;
-- `synthesized_question_results_final.json`.
-
-Files whose names contain `_pre_` are archived diagnostics only and are not
-current benchmark results.
-
-## Limitations and next evaluation
-
-This is a tuned development result, not an untouched generalization estimate.
-The same formulations informed threshold, routing, and answer-selection
-changes. Only three pieces have the required schema-1.3 reference contract, La
-Capinera contributes 90 of 153 cases, and only 13 of 120 formulations are
-explicitly colloquial. A subsequent evaluation should use independently
-human-reviewed paraphrases from additional pieces, with more colloquial,
-elliptical, misspelled, and adversarial Korean, and should keep that set
-untouched until final comparison.
-
-The evaluation assumes oracle piece/range metadata. A separate benchmark is
-needed for piece recognition and measure-range extraction from free text.
-
-Finally, the inherited canonical contract for `kim-la-capinera-17`
-paraphrases the original question about rapid alternation of `ff` and `pp` as
-a more general question about their musical contrast. Its three variants
-preserve that canonical paraphrase and therefore do not test robustness to the
-original rapid-alternation detail.
+The next necessary evaluation step is manual expected-versus-generated answer
+review, especially for the 126 extractive safeguards, six unavailable cases,
+and the source/range groups without an expected Hit@6 retrieval. A future
+holdout should also include independently reviewed paraphrases and should test
+free-text piece/range routing separately.
