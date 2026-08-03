@@ -33,7 +33,15 @@
     ],
     "generate": true,
     "top_k": 6,
-    "input_fingerprint": "5980bb1a591da904eb292422856e825ed891f4100f9584b0d8040ffecac0377a",
+    "input_fingerprint": "43da880335396eff58fc46455af414c42ffac1b954c25defed26b653d98fe164",
+    "metadata_migrations": [
+      {
+        "type": "path_only_runner_rename",
+        "from": "/home/minhee/soprano-qa-rag-system/evaluation/run_five_piece_qualitative.py",
+        "to": "/home/minhee/soprano-qa-rag-system/evaluation/run_qualitative.py",
+        "content_sha256": "7fb13301d63019440fec0fb14b2fb218d647cf4b8c18b1ca6e2eae5a3260eadd"
+      }
+    ],
     "input_files": [
       {
         "path": "/home/minhee/soprano-qa-dataset/expert_curation/evaluation_questions/die-forelle.json",
@@ -88,7 +96,7 @@
         "sha256": "1a2aff0d5d8a6f20a98256a20d0c4813fd3f8c0566cf8ef2ee51244307e12561"
       },
       {
-        "path": "/home/minhee/soprano-qa-rag-system/evaluation/run_five_piece_qualitative.py",
+        "path": "/home/minhee/soprano-qa-rag-system/evaluation/run_qualitative.py",
         "sha256": "7fb13301d63019440fec0fb14b2fb218d647cf4b8c18b1ca6e2eae5a3260eadd"
       },
       {

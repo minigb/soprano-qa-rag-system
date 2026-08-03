@@ -346,7 +346,7 @@ class ParseMeasureRangesTests(unittest.TestCase):
             ["박자"],
         )
 
-    def test_completed_five_piece_annotations_share_natural_concepts(self) -> None:
+    def test_completed_annotations_share_natural_concepts(self) -> None:
         equivalent_pairs = (
             ("성별이나 성부의 제한", "성별 구분 없이 성부를 지정"),
             ("셋잇단음표에서 모음을 붙일까", "3연음보에서 모음의 위치"),

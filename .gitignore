@@ -9,8 +9,9 @@ models/*.json
 __pycache__/
 *.pyc
 
-# Evaluation runner lock sidecars
-evaluation/*.lock
+# Runtime lock and log artifacts
+*.json.lock
+*.log
 
 # Local intermediate evaluation checkpoints
 evaluation/*_pre_*.json

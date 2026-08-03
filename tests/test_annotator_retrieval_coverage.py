@@ -1,4 +1,4 @@
-"""Five-piece retrieval coverage for the annotator-question inventory.
+"""Annotator-question retrieval coverage for supported pieces.
 
 This is intentionally a retrieval-only regression.  The paraphrased benchmark
 questions stay outside the corpus: the test asks the normal BM25 index and
@@ -65,7 +65,7 @@ def _range_applicable_expected_ids(
     return applicable
 
 
-def evaluate_five_piece_retrieval(
+def evaluate_annotator_retrieval(
     *,
     index: BM25Index,
     dataset_root: Path,
@@ -295,7 +295,7 @@ def evaluate_five_piece_retrieval(
     }
 
 
-class FivePieceRetrievalCoverageTests(unittest.TestCase):
+class AnnotatorRetrievalCoverageTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.settings = load_settings(use_legacy_dataset_env=False)
@@ -308,8 +308,8 @@ class FivePieceRetrievalCoverageTests(unittest.TestCase):
             )
         cls.index = BM25Index(load_corpus(cls.settings["corpus_path"]))
 
-    def test_all_five_pieces_retrieve_linked_annotator_knowledge(self) -> None:
-        report = evaluate_five_piece_retrieval(
+    def test_supported_pieces_retrieve_linked_annotator_knowledge(self) -> None:
+        report = evaluate_annotator_retrieval(
             index=self.index,
             dataset_root=Path(self.settings["dataset_root"]),
         )

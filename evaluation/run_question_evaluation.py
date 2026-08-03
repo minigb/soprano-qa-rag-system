@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the three-piece expert-question RAG reliability evaluation.
+"""Run the expert-question RAG reliability evaluation.
 
 The evaluator deliberately separates retrieval, answer generation, and
 semantic judging.  Every successful case or judge frame is checkpointed with
@@ -32,7 +32,7 @@ import unicodedata
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
-DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "three_piece_results.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "question_results.json"
 DEFAULT_SYNTHESIZED_OUTPUT = (
     PROJECT_ROOT / "evaluation" / "synthesized_question_results.json"
 )

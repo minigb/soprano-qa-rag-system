@@ -1,4 +1,4 @@
-"""Focused tests for the lightweight five-piece qualitative runner."""
+"""Focused tests for the lightweight qualitative runner."""
 
 from __future__ import annotations
 
@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import unittest
 from unittest.mock import patch
 
-from evaluation import run_five_piece_qualitative as qualitative
+from evaluation import run_qualitative as qualitative
 
 
 def write_json(path: Path, value: dict) -> None:
@@ -20,7 +20,7 @@ def write_json(path: Path, value: dict) -> None:
     )
 
 
-class FivePieceQualitativeRunnerTests(unittest.TestCase):
+class QualitativeRunnerTests(unittest.TestCase):
     def build_dataset(self, root: Path) -> None:
         piece_id = "die-forelle"
         sources = [
@@ -210,6 +210,38 @@ class FivePieceQualitativeRunnerTests(unittest.TestCase):
         self.assertNotIn(
             "kim-la-capinera-01__m78-81",
             [case["case_id"] for case in cases],
+        )
+
+    def test_committed_artifact_tracks_the_renamed_runner(self):
+        project_root = Path(__file__).resolve().parents[1]
+        artifact = qualitative.load_json(
+            project_root / "evaluation" / "qualitative.json"
+        )
+        runner_path = project_root / "evaluation" / "run_qualitative.py"
+        runner_record = next(
+            record
+            for record in artifact["run"]["input_files"]
+            if record["path"] == str(runner_path)
+        )
+
+        self.assertEqual(
+            runner_record["sha256"],
+            qualitative.file_sha256(runner_path),
+        )
+        self.assertEqual(
+            artifact["run"]["input_fingerprint"],
+            qualitative.build_input_fingerprint(
+                input_files=artifact["run"]["input_files"],
+                generate=artifact["run"]["generate"],
+                top_k=artifact["run"]["top_k"],
+                retrieval_embedding_model=artifact["run"].get(
+                    "retrieval_embedding_model"
+                ),
+            ),
+        )
+        self.assertEqual(
+            artifact["run"]["metadata_migrations"][0]["type"],
+            "path_only_runner_rename",
         )
 
     def test_diagnostics_report_expected_unit_and_source_ranks(self):
