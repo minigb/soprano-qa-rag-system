@@ -1,13 +1,15 @@
-"""Focused tests for the five-piece qualitative answer-fidelity judge."""
+"""Focused tests for qualitative answer-fidelity judgment."""
 
 from __future__ import annotations
 
 from copy import deepcopy
 import json
 from pathlib import Path
+import tempfile
 import unittest
+from unittest import mock
 
-from evaluation import judge_five_piece_qualitative as judge
+from evaluation import judge_qualitative as judge
 
 
 def completed_source_artifact() -> dict:
@@ -126,25 +128,50 @@ def completed_source_artifact() -> dict:
 
 def new_snapshot(source: dict | None = None) -> dict:
     source = source or completed_source_artifact()
-    model = {
-        "path": "/models/Qwen3-4B",
-        "backend": "transformers",
-        "kind": "directory",
-        "checkpoint_exists": True,
-        "sha256": "judge-model",
+    runtime = {
+        "backend": "llama-cpp",
+        "backend_version": "0.test",
+        "declared_model_repo_id": "Qwen/Qwen3-8B-GGUF",
+        "model": {
+            "path": "/models/Qwen3-8B.gguf",
+            "backend": "llama-cpp",
+            "kind": "file",
+            "checkpoint_exists": True,
+            "size": 123,
+            "sha256": "judge-model",
+        },
+        "settings": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 512,
+            "chat_format": "chatml",
+        },
+        "environment": {
+            "conda_environment": "soprano-qa",
+            "conda_prefix": "/envs/soprano-qa",
+            "python_executable": "/envs/soprano-qa/bin/python",
+        },
+        "answer_generator_comparison": {
+            "recorded_model_paths": ["/models/Qwen3-8B.gguf"],
+            "configured_path_matches": True,
+            "checkpoint_identity_available_in_source": False,
+            "same_checkpoint_verified": False,
+        },
+        "fallback_enabled": False,
     }
     return judge.new_snapshot(
         source=source,
         source_path=Path("/evaluation/qualitative.json"),
         source_sha256="source-artifact",
-        judge_model=model,
-        judge_max_tokens=512,
+        judge_runtime=runtime,
         input_fingerprint="fingerprint",
         implementation_sha256="implementation",
     )
 
 
-class FivePieceQualitativeJudgeTests(unittest.TestCase):
+class QualitativeJudgeTests(unittest.TestCase):
     def test_prompt_uses_expert_references_but_not_retrieval_exactness(self):
         snapshot = new_snapshot()
         case = snapshot["cases"][0]
@@ -173,6 +200,7 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
         self.assertNotIn("retrieval_diagnostics", serialized_messages)
         self.assertIn("추가 전문가 근거", serialized_messages)
         self.assertIn("검색 성공 여부", messages[0]["content"])
+        self.assertIn("/no_think", messages[0]["content"])
 
     def test_response_validation_accepts_three_verdicts_and_is_strict(self):
         for verdict in judge.VERDICTS:
@@ -196,6 +224,10 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
             "```json\n{\"verdict\":\"pass\",\"reason\":\"좋다\"}\n```",
             '{"verdict":"automatic_pass","reason":"좋다"}',
             '{"verdict":"pass","reason":"좋다","score":1}',
+            json.dumps(
+                {"verdict": "pass", "reason": "가" * 181},
+                ensure_ascii=False,
+            ),
             "not json",
         )
         for raw in invalid_responses:
@@ -203,6 +235,310 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
                 judge.QualitativeJudgeResponseError
             ):
                 judge.validate_judge_response(raw)
+
+    def test_qwen_runtime_requires_soprano_qa_environment(self):
+        with (
+            mock.patch.dict(
+                judge.os.environ,
+                {"CONDA_DEFAULT_ENV": "base", "CONDA_PREFIX": "/base"},
+            ),
+            self.assertRaisesRegex(RuntimeError, "soprano-qa Conda"),
+        ):
+            judge.qwen_runtime_record(
+                Path("/missing.gguf"),
+                declared_model_repo_id="Qwen/Qwen3-8B-GGUF",
+                judge_settings={},
+                answer_generator_model_paths=[],
+            )
+
+    def test_qwen_runtime_fails_closed_for_missing_model(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            missing = Path(temporary) / "missing.gguf"
+            with (
+                mock.patch.dict(
+                    judge.os.environ,
+                    {
+                        "CONDA_DEFAULT_ENV": "soprano-qa",
+                        "CONDA_PREFIX": judge.sys.prefix,
+                    },
+                ),
+                self.assertRaisesRegex(FileNotFoundError, "download_model.py"),
+            ):
+                judge.qwen_runtime_record(
+                    missing,
+                    declared_model_repo_id="Qwen/Qwen3-8B-GGUF",
+                    judge_settings={},
+                    answer_generator_model_paths=[],
+                )
+
+    def test_qwen_runtime_fails_closed_without_llama_cpp(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            model_path = Path(temporary) / "Qwen3-test.gguf"
+            model_path.write_bytes(b"test-qwen-checkpoint")
+            with (
+                mock.patch.dict(
+                    judge.os.environ,
+                    {
+                        "CONDA_DEFAULT_ENV": "soprano-qa",
+                        "CONDA_PREFIX": judge.sys.prefix,
+                    },
+                ),
+                mock.patch.dict(judge.sys.modules, {"llama_cpp": None}),
+                self.assertRaisesRegex(
+                    judge.QualitativeJudgeBackendError,
+                    "llama-cpp-python",
+                ),
+            ):
+                judge.qwen_runtime_record(
+                    model_path,
+                    declared_model_repo_id="Qwen/Qwen3-8B-GGUF",
+                    judge_settings={},
+                    answer_generator_model_paths=[],
+                )
+
+    def test_qwen_runtime_fingerprints_model_backend_and_settings(self):
+        settings = {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 512,
+            "chat_format": "chatml",
+        }
+        with tempfile.TemporaryDirectory() as temporary:
+            model_path = Path(temporary) / "Qwen3-test.gguf"
+            model_path.write_bytes(b"test-qwen-checkpoint")
+            with (
+                mock.patch.dict(
+                    judge.os.environ,
+                    {
+                        "CONDA_DEFAULT_ENV": "soprano-qa",
+                        "CONDA_PREFIX": judge.sys.prefix,
+                    },
+                ),
+                mock.patch.object(
+                    judge.importlib.metadata,
+                    "version",
+                    return_value="0.test",
+                ),
+            ):
+                runtime = judge.qwen_runtime_record(
+                    model_path,
+                    declared_model_repo_id="Qwen/Qwen3-8B-GGUF",
+                    judge_settings=settings,
+                    answer_generator_model_paths=[str(model_path.resolve())],
+                )
+
+        self.assertEqual(runtime["backend"], "llama-cpp")
+        self.assertEqual(runtime["backend_version"], "0.test")
+        self.assertEqual(runtime["model"]["size"], 20)
+        self.assertTrue(runtime["model"]["checkpoint_exists"])
+        self.assertEqual(runtime["settings"], settings)
+        self.assertTrue(
+            runtime["answer_generator_comparison"][
+                "configured_path_matches"
+            ]
+        )
+        self.assertFalse(
+            runtime["answer_generator_comparison"][
+                "same_checkpoint_verified"
+            ]
+        )
+        self.assertFalse(runtime["fallback_enabled"])
+
+    def test_qwen_model_preflight_fails_before_judgment(self):
+        with mock.patch(
+            "soprano_qa.llm.load_llama",
+            side_effect=ValueError("invalid GGUF"),
+        ):
+            with self.assertRaisesRegex(
+                judge.QualitativeJudgeBackendError,
+                "Cannot initialize",
+            ):
+                judge.preflight_qwen_model(
+                    Path("/models/Qwen3.gguf"),
+                    judge_settings={
+                        "n_ctx": 8192,
+                        "n_gpu_layers": -1,
+                        "chat_format": "chatml",
+                    },
+                )
+
+    def test_qwen_model_preflight_rejects_non_qwen_gguf(self):
+        loaded = mock.Mock(metadata={"general.architecture": "llama"})
+        with mock.patch("soprano_qa.llm.load_llama", return_value=loaded):
+            with self.assertRaisesRegex(
+                judge.QualitativeJudgeBackendError,
+                "not a Qwen model",
+            ):
+                judge.preflight_qwen_model(
+                    Path("/models/not-qwen.gguf"),
+                    judge_settings={
+                        "n_ctx": 8192,
+                        "n_gpu_layers": -1,
+                        "chat_format": "chatml",
+                    },
+                )
+
+    def test_qwen_model_preflight_records_qwen_architecture(self):
+        loaded = mock.Mock(metadata={"general.architecture": "qwen3"})
+        with mock.patch("soprano_qa.llm.load_llama", return_value=loaded):
+            architecture = judge.preflight_qwen_model(
+                Path("/models/Qwen3.gguf"),
+                judge_settings={
+                    "n_ctx": 8192,
+                    "n_gpu_layers": -1,
+                    "chat_format": "chatml",
+                },
+            )
+
+        self.assertEqual(architecture, "qwen3")
+
+    def test_invalid_input_is_rejected_before_model_preflight(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            input_path = root / "invalid.json"
+            input_path.write_text(
+                '{"artifact_type":"wrong","questions":[]}',
+                encoding="utf-8",
+            )
+            output_path = root / "output.json"
+            with (
+                mock.patch.object(judge, "preflight_qwen_model") as preflight,
+                self.assertRaises(judge.QualitativeJudgeInputError),
+            ):
+                judge.main(
+                    [
+                        "--input",
+                        str(input_path),
+                        "--output",
+                        str(output_path),
+                    ]
+                )
+
+            preflight.assert_not_called()
+            self.assertFalse(output_path.exists())
+
+    def test_main_preflight_failure_does_not_create_output(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            model_path = root / "Qwen3-test.gguf"
+            model_path.write_bytes(b"test-qwen-checkpoint")
+            input_path = root / "qualitative.json"
+            input_path.write_text(
+                json.dumps(completed_source_artifact(), ensure_ascii=False),
+                encoding="utf-8",
+            )
+            output_path = root / "qualitative_judged.json"
+            settings = {
+                "model_path": str(model_path),
+                "model_repo_id": "Qwen/Qwen3-8B-GGUF",
+                "llm": {},
+            }
+            with (
+                mock.patch.dict(
+                    judge.os.environ,
+                    {
+                        "CONDA_DEFAULT_ENV": "soprano-qa",
+                        "CONDA_PREFIX": judge.sys.prefix,
+                    },
+                ),
+                mock.patch(
+                    "soprano_qa.settings.load_settings",
+                    return_value=settings,
+                ),
+                mock.patch.object(
+                    judge,
+                    "preflight_qwen_model",
+                    side_effect=judge.QualitativeJudgeBackendError(
+                        "invalid GGUF"
+                    ),
+                ),
+                self.assertRaises(judge.QualitativeJudgeBackendError),
+            ):
+                judge.main(
+                    [
+                        "--input",
+                        str(input_path),
+                        "--output",
+                        str(output_path),
+                    ]
+                )
+
+            self.assertFalse(output_path.exists())
+            self.assertFalse(
+                output_path.with_suffix(".json.lock").exists()
+            )
+
+    def test_local_qwen_judge_calls_llama_cpp_directly_without_fallback(self):
+        messages = [
+            {"role": "system", "content": "rubric /no_think"},
+            {"role": "user", "content": "case"},
+        ]
+        settings = {"temperature": 0.0, "max_tokens": 512}
+        with mock.patch(
+            "soprano_qa.llm.generate",
+            return_value='{"verdict":"pass","reason":"충실하다."}',
+        ) as generate:
+            qwen_judge = judge.build_local_qwen_judge(
+                Path("/models/Qwen3.gguf"),
+                judge_settings=settings,
+            )
+            raw = qwen_judge(messages)
+
+        self.assertEqual(judge.validate_judge_response(raw)["verdict"], "pass")
+        generate.assert_called_once_with(
+            "/models/Qwen3.gguf",
+            messages,
+            settings,
+        )
+
+    def test_backend_failure_checkpoints_once_and_aborts_all_cases(self):
+        snapshot = new_snapshot()
+        checkpoints = []
+
+        with self.assertRaisesRegex(
+            judge.QualitativeJudgeBackendError,
+            "inference unavailable",
+        ):
+            judge.run_judgments(
+                snapshot,
+                judge_fn=lambda _messages: (_ for _ in ()).throw(
+                    judge.QualitativeJudgeBackendError(
+                        "inference unavailable"
+                    )
+                ),
+                checkpoint=lambda: checkpoints.append(True),
+                max_attempts=3,
+            )
+
+        self.assertEqual(
+            snapshot["cases"][0]["judgment"]["attempt_count"],
+            1,
+        )
+        self.assertEqual(snapshot["cases"][1]["judgment"]["status"], "pending")
+        self.assertEqual(len(checkpoints), 2)
+
+    def test_unexpected_error_checkpoints_once_and_aborts_all_cases(self):
+        snapshot = new_snapshot()
+        checkpoints = []
+
+        with self.assertRaisesRegex(KeyError, "broken packet"):
+            judge.run_judgments(
+                snapshot,
+                judge_fn=lambda _messages: (_ for _ in ()).throw(
+                    KeyError("broken packet")
+                ),
+                checkpoint=lambda: checkpoints.append(True),
+                max_attempts=3,
+            )
+
+        self.assertEqual(
+            snapshot["cases"][0]["judgment"]["attempt_count"],
+            1,
+        )
+        self.assertEqual(snapshot["cases"][1]["judgment"]["status"], "pending")
+        self.assertEqual(len(checkpoints), 2)
 
     def test_selected_range_separates_applicable_and_other_linked_units(self):
         snapshot = new_snapshot()
@@ -383,7 +719,7 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
             0,
         )
 
-    def test_resume_rejects_changed_inputs_or_model_configuration(self):
+    def test_resume_rejects_changed_inputs_or_qwen_configuration(self):
         snapshot = new_snapshot()
 
         judge.validate_resume_snapshot(
@@ -419,17 +755,17 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
             judge.source_judgment_input_sha256(changed_answer),
         )
 
-    def test_legacy_resume_migrates_only_identical_judge_packets(self):
+    def test_resume_migration_requires_identical_judge_packets(self):
         source = completed_source_artifact()
         snapshot = new_snapshot(source)
-        model = snapshot["run"]["judge_model"]
+        runtime = snapshot["run"]["judge_runtime"]
 
         self.assertTrue(
             judge.can_migrate_semantically_identical_resume(
                 snapshot,
                 source=source,
-                judge_model=model,
-                judge_max_tokens=512,
+                judge_runtime=runtime,
+                implementation_sha256="implementation",
             )
         )
 
@@ -441,14 +777,53 @@ class FivePieceQualitativeJudgeTests(unittest.TestCase):
             judge.can_migrate_semantically_identical_resume(
                 snapshot,
                 source=changed_source,
-                judge_model=model,
-                judge_max_tokens=512,
+                judge_runtime=runtime,
+                implementation_sha256="implementation",
             )
+        )
+
+        self.assertFalse(
+            judge.can_migrate_semantically_identical_resume(
+                snapshot,
+                source=source,
+                judge_runtime=runtime,
+                implementation_sha256="changed-implementation",
+            )
+        )
+
+    def test_input_fingerprint_binds_runtime_and_implementation(self):
+        runtime = new_snapshot()["run"]["judge_runtime"]
+        original = judge.build_input_fingerprint(
+            source_judgment_input_sha256="source",
+            judge_runtime=runtime,
+            implementation_sha256="implementation",
+        )
+        changed_runtime = deepcopy(runtime)
+        changed_runtime["settings"]["top_p"] = 0.7
+
+        self.assertNotEqual(
+            original,
+            judge.build_input_fingerprint(
+                source_judgment_input_sha256="source",
+                judge_runtime=changed_runtime,
+                implementation_sha256="implementation",
+            ),
+        )
+        self.assertNotEqual(
+            original,
+            judge.build_input_fingerprint(
+                source_judgment_input_sha256="source",
+                judge_runtime=runtime,
+                implementation_sha256="changed",
+            ),
         )
 
     def test_default_minimum_pass_rate_is_ninety_percent(self):
         arguments = judge.parse_arguments([])
         self.assertEqual(arguments.minimum_pass_rate, 0.90)
+        self.assertEqual(arguments.judge_max_tokens, 512)
+        self.assertFalse(hasattr(arguments, "judge_backend"))
+        self.assertFalse(hasattr(arguments, "judge_model_path"))
 
 
 if __name__ == "__main__":

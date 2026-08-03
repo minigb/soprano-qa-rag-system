@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Judge five-piece answers for qualitative expert-answer fidelity.
+"""Judge answers for qualitative expert-answer fidelity.
 
 This is a lightweight LLM-as-a-judge pass over
 ``qualitative.json``.  It is deliberately *not* the strict
@@ -23,6 +23,7 @@ from copy import deepcopy
 from datetime import datetime, timezone
 import fcntl
 import hashlib
+import importlib.metadata
 import json
 import os
 from pathlib import Path
@@ -39,8 +40,8 @@ if str(PROJECT_ROOT) not in sys.path:
 
 SOURCE_ARTIFACT_TYPE = "five_piece_qualitative_rag_llm_evaluation"
 ARTIFACT_TYPE = "five_piece_qualitative_answer_fidelity_judgment"
-SCHEMA_VERSION = "1.0"
-PROTOCOL_VERSION = "qualitative-answer-fidelity-v2"
+SCHEMA_VERSION = "1.1"
+PROTOCOL_VERSION = "qualitative-answer-fidelity-v3-qwen-llama-cpp"
 PIECE_IDS = (
     "die-forelle",
     "in-flowery-clouds",
@@ -52,15 +53,9 @@ DEFAULT_INPUT = PROJECT_ROOT / "evaluation" / "qualitative.json"
 DEFAULT_OUTPUT = (
     PROJECT_ROOT / "evaluation" / "qualitative_judged.json"
 )
-QWEN3_4B_CACHE_ROOT = (
-    Path.home()
-    / ".cache"
-    / "huggingface"
-    / "hub"
-    / "models--Qwen--Qwen3-4B"
-)
 VERDICTS = ("pass", "review", "fail")
-MAX_REASON_CHARACTERS = 400
+MAX_REASON_CHARACTERS = 180
+DEFAULT_JUDGE_MAX_TOKENS = 512
 
 
 JudgeFunction = Callable[[list[dict[str, str]]], str]
@@ -72,7 +67,11 @@ class QualitativeJudgeInputError(ValueError):
 
 
 class QualitativeJudgeResponseError(ValueError):
-    """Raised when the local judge does not return the requested JSON."""
+    """Raised when the judge does not return the requested JSON."""
+
+
+class QualitativeJudgeBackendError(RuntimeError):
+    """Raised when the local Qwen backend cannot judge safely."""
 
 
 def utc_now() -> str:
@@ -98,62 +97,142 @@ def file_sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
-def default_qwen3_4b_path() -> Path:
-    """Resolve the locally cached immutable Qwen3-4B snapshot, if present."""
+def model_record(path: Path) -> dict[str, Any]:
+    """Fingerprint one local GGUF judge checkpoint."""
 
-    revision_file = QWEN3_4B_CACHE_ROOT / "refs" / "main"
-    if revision_file.is_file():
-        revision = revision_file.read_text(encoding="utf-8").strip()
-        if revision:
-            return QWEN3_4B_CACHE_ROOT / "snapshots" / revision
-    return QWEN3_4B_CACHE_ROOT
-
-
-def _directory_identity(path: Path) -> str:
-    """Hash a model manifest without rereading every weight shard."""
-
-    files = []
-    for candidate in sorted(path.rglob("*")):
-        if not candidate.is_file():
-            continue
-        stat = candidate.stat()
-        files.append(
-            {
-                "path": str(candidate.relative_to(path)),
-                "size": stat.st_size,
-                "symlink_target": (
-                    os.readlink(candidate) if candidate.is_symlink() else None
-                ),
-            }
-        )
-    manifest = {
-        "resolved_path": str(path.resolve()),
-        "snapshot_revision": (
-            path.name if path.parent.name == "snapshots" else None
-        ),
-        "files": files,
-    }
-    return hashlib.sha256(canonical_json_bytes(manifest)).hexdigest()
-
-
-def model_record(path: Path, *, backend: str) -> dict[str, Any]:
     resolved = path.resolve()
-    if resolved.is_dir():
-        kind = "directory"
-        identity = _directory_identity(resolved)
-    elif resolved.is_file():
-        kind = "file"
-        identity = file_sha256(resolved)
-    else:
-        kind = "missing"
-        identity = None
     return {
         "path": str(resolved),
-        "backend": backend,
-        "kind": kind,
-        "checkpoint_exists": identity is not None,
-        "sha256": identity,
+        "backend": "llama-cpp",
+        "kind": "file" if resolved.is_file() else "missing",
+        "checkpoint_exists": resolved.is_file(),
+        "size": resolved.stat().st_size if resolved.is_file() else None,
+        "sha256": file_sha256(resolved) if resolved.is_file() else None,
     }
+
+
+def soprano_qa_environment_record() -> dict[str, str]:
+    """Require the project's supported Conda environment."""
+
+    environment_name = os.environ.get("CONDA_DEFAULT_ENV", "")
+    environment_prefix = os.environ.get("CONDA_PREFIX", "")
+    if environment_name != "soprano-qa":
+        raise RuntimeError(
+            "The qualitative Qwen judge must run in the soprano-qa Conda "
+            "environment. Use: conda run -n soprano-qa python "
+            "evaluation/judge_qualitative.py"
+        )
+    if not environment_prefix or Path(environment_prefix).resolve() != Path(
+        sys.prefix
+    ).resolve():
+        raise RuntimeError(
+            "The active Conda prefix does not match the current Python "
+            "interpreter; run the judge with conda run -n soprano-qa."
+        )
+    return {
+        "conda_environment": environment_name,
+        "conda_prefix": str(Path(environment_prefix).resolve()),
+        "python_executable": str(Path(sys.executable).resolve()),
+    }
+
+
+def normalized_judge_settings(
+    settings: Mapping[str, Any],
+    *,
+    max_tokens: int,
+) -> dict[str, Any]:
+    """Return every llama.cpp setting that can affect a judgment."""
+
+    return {
+        "n_ctx": int(settings.get("n_ctx", 8192)),
+        "n_gpu_layers": int(settings.get("n_gpu_layers", -1)),
+        "temperature": 0.0,
+        "top_p": float(settings.get("top_p", 0.8)),
+        "max_tokens": max_tokens,
+        "chat_format": str(settings.get("chat_format", "chatml")),
+    }
+
+
+def qwen_runtime_record(
+    model_path: Path,
+    *,
+    declared_model_repo_id: str,
+    judge_settings: Mapping[str, Any],
+    answer_generator_model_paths: Sequence[str],
+) -> dict[str, Any]:
+    """Fail fast and fingerprint the local Qwen llama.cpp runtime."""
+
+    environment = soprano_qa_environment_record()
+    if not declared_model_repo_id.startswith("Qwen/"):
+        raise QualitativeJudgeInputError(
+            "Configured judge model must be a Qwen model"
+        )
+    resolved_model_path = model_path.resolve()
+    if not resolved_model_path.is_file():
+        raise FileNotFoundError(
+            f"Local Qwen judge model not found: {resolved_model_path}. "
+            "Download it with: conda run -n soprano-qa python "
+            "scripts/download_model.py"
+        )
+    if resolved_model_path.suffix.lower() != ".gguf":
+        raise QualitativeJudgeInputError(
+            "Local Qwen judge model must be a GGUF file"
+        )
+    try:
+        import llama_cpp  # noqa: F401
+    except ImportError as error:
+        raise QualitativeJudgeBackendError(
+            "llama-cpp-python is required for the Qwen judge. Run this "
+            "command from the soprano-qa Conda environment."
+        ) from error
+    try:
+        backend_version = importlib.metadata.version("llama-cpp-python")
+    except importlib.metadata.PackageNotFoundError:
+        backend_version = "unknown"
+    model = model_record(resolved_model_path)
+    if not model["checkpoint_exists"]:
+        raise FileNotFoundError(
+            f"Local Qwen judge model disappeared during preflight: "
+            f"{resolved_model_path}"
+        )
+    recorded_generator_paths = sorted(set(answer_generator_model_paths))
+    return {
+        "backend": "llama-cpp",
+        "backend_version": backend_version,
+        "declared_model_repo_id": declared_model_repo_id,
+        "model": model,
+        "settings": dict(judge_settings),
+        "environment": environment,
+        "answer_generator_comparison": {
+            "recorded_model_paths": recorded_generator_paths,
+            "configured_path_matches": (
+                bool(recorded_generator_paths)
+                and recorded_generator_paths == [str(resolved_model_path)]
+            ),
+            "checkpoint_identity_available_in_source": False,
+            "same_checkpoint_verified": False,
+        },
+        "fallback_enabled": False,
+    }
+
+
+def recorded_answer_generator_model_paths(
+    source: Mapping[str, Any],
+) -> list[str]:
+    """Collect model paths persisted with source inference results."""
+
+    paths: set[str] = set()
+    for question in source.get("questions") or []:
+        for case in question.get("inference_runs") or []:
+            result = case.get("pipeline_result")
+            model = result.get("model") if isinstance(result, Mapping) else None
+            path = model.get("path") if isinstance(model, Mapping) else None
+            if isinstance(path, str) and path.strip():
+                candidate = Path(path).expanduser()
+                if not candidate.is_absolute():
+                    candidate = PROJECT_ROOT / candidate
+                paths.add(str(candidate.resolve()))
+    return sorted(paths)
 
 
 def validate_source_artifact(source: Mapping[str, Any]) -> None:
@@ -166,7 +245,7 @@ def validate_source_artifact(source: Mapping[str, Any]) -> None:
     source_run = source.get("run")
     if not isinstance(source_run, Mapping) or source_run.get("generate") is not True:
         raise QualitativeJudgeInputError(
-            "Input must be produced by run_five_piece_qualitative.py "
+            "Input must be produced by run_qualitative.py "
             "with --generate"
         )
 
@@ -427,7 +506,8 @@ def build_judge_messages(case: Mapping[str, Any]) -> list[dict[str, str]]:
 reason은 판정의 가장 중요한 근거만 180자 이내로 간결하게 쓴다.
 reason에는 일치ㆍ누락ㆍ모순한 구체적인 음악 또는 가창 내용을 적고,
 단순히 "근거와 일치한다" 같은 일반적인 문구만 쓰지 않는다.
-코드 펜스, 설명, 머리말을 JSON 밖에 쓰지 않는다."""
+코드 펜스, 설명, 머리말을 JSON 밖에 쓰지 않는다.
+/no_think"""
     return [
         {"role": "system", "content": system},
         {
@@ -478,16 +558,16 @@ def validate_judge_response(raw: str) -> dict[str, str]:
 def build_input_fingerprint(
     *,
     source_judgment_input_sha256: str,
-    judge_model: Mapping[str, Any],
-    judge_max_tokens: int,
+    judge_runtime: Mapping[str, Any],
+    implementation_sha256: str,
 ) -> str:
     payload = {
         "artifact_type": ARTIFACT_TYPE,
         "schema_version": SCHEMA_VERSION,
         "protocol_version": PROTOCOL_VERSION,
         "source_judgment_input_sha256": source_judgment_input_sha256,
-        "judge_model": dict(judge_model),
-        "judge_max_tokens": judge_max_tokens,
+        "judge_runtime": dict(judge_runtime),
+        "implementation_sha256": implementation_sha256,
     }
     return hashlib.sha256(canonical_json_bytes(payload)).hexdigest()
 
@@ -534,8 +614,7 @@ def new_snapshot(
     source_path: Path,
     source_sha256: str,
     source_judgment_sha256: str | None = None,
-    judge_model: Mapping[str, Any],
-    judge_max_tokens: int,
+    judge_runtime: Mapping[str, Any],
     input_fingerprint: str,
     implementation_sha256: str,
 ) -> dict[str, Any]:
@@ -544,15 +623,17 @@ def new_snapshot(
         "artifact_type": ARTIFACT_TYPE,
         "schema_version": SCHEMA_VERSION,
         "protocol": {
-            "name": "five-piece qualitative answer-fidelity judge",
+            "name": "qualitative answer-fidelity local Qwen judge",
             "version": PROTOCOL_VERSION,
             "purpose": (
                 "Conservative pass/review/fail triage of generated answers "
-                "against exact expert references."
+                "against exact expert references with a local Qwen GGUF."
             ),
             "strict_schema_1_3_automatic_pass_protocol": False,
             "issues_strict_automatic_pass_verdicts": False,
             "retrieval_exactness_is_answer_quality": False,
+            "judge_independence_from_answer_generator": "not_established",
+            "backend_fallback": False,
             "human_review_remains_authoritative": True,
         },
         "run": {
@@ -569,8 +650,7 @@ def new_snapshot(
                 "schema_version": source.get("schema_version"),
                 "source_run_status": source.get("run", {}).get("status"),
             },
-            "judge_model": dict(judge_model),
-            "judge_max_tokens": judge_max_tokens,
+            "judge_runtime": dict(judge_runtime),
             "input_fingerprint": input_fingerprint,
             "implementation_sha256": implementation_sha256,
             "last_minimum_pass_rate": None,
@@ -597,7 +677,7 @@ def validate_resume_snapshot(
         )
     if snapshot.get("run", {}).get("input_fingerprint") != input_fingerprint:
         raise QualitativeJudgeInputError(
-            "Inference artifact, judge model, or judge configuration changed; "
+            "Inference artifact or Qwen judge configuration changed; "
             "choose a new --output path rather than mixing judgments"
         )
 
@@ -606,8 +686,8 @@ def can_migrate_semantically_identical_resume(
     snapshot: Mapping[str, Any],
     *,
     source: Mapping[str, Any],
-    judge_model: Mapping[str, Any],
-    judge_max_tokens: int,
+    judge_runtime: Mapping[str, Any],
+    implementation_sha256: str,
 ) -> bool:
     """Allow old full-file hashes to migrate after timestamp-only changes."""
 
@@ -618,9 +698,9 @@ def can_migrate_semantically_identical_resume(
     if snapshot.get("protocol", {}).get("version") != PROTOCOL_VERSION:
         return False
     run = snapshot.get("run", {})
-    if run.get("judge_model") != dict(judge_model):
+    if run.get("judge_runtime") != dict(judge_runtime):
         return False
-    if run.get("judge_max_tokens") != judge_max_tokens:
+    if run.get("implementation_sha256") != implementation_sha256:
         return False
     try:
         expected_cases = build_judgment_cases(source)
@@ -804,13 +884,29 @@ def run_judgments(
                 judgment["reason"] = assessment["reason"]
                 judgment["status"] = "completed"
                 judgment["completed_at"] = utc_now()
-            except Exception as error:  # preserve local-model/parser failures
+            except QualitativeJudgeBackendError as error:
                 attempt["error"] = {
                     "type": type(error).__name__,
                     "message": str(error),
                 }
                 judgment["status"] = "error"
                 judgment["error"] = deepcopy(attempt["error"])
+                raise
+            except QualitativeJudgeResponseError as error:
+                attempt["error"] = {
+                    "type": type(error).__name__,
+                    "message": str(error),
+                }
+                judgment["status"] = "error"
+                judgment["error"] = deepcopy(attempt["error"])
+            except Exception as error:
+                attempt["error"] = {
+                    "type": type(error).__name__,
+                    "message": str(error),
+                }
+                judgment["status"] = "error"
+                judgment["error"] = deepcopy(attempt["error"])
+                raise
             finally:
                 attempt["completed_at"] = utc_now()
                 checkpoint()
@@ -866,35 +962,62 @@ def exclusive_output_lock(path: Path):
         yield
 
 
-def build_local_judge(
+def preflight_qwen_model(
     model_path: Path,
     *,
-    backend: str,
-    max_tokens: int,
-) -> JudgeFunction:
-    """Build a local deterministic judge, reusing the existing backend."""
+    judge_settings: Mapping[str, Any],
+) -> str:
+    """Initialize the configured Qwen checkpoint before writing output."""
 
-    if backend == "transformers":
-        from evaluation.run_question_evaluation import build_transformers_judge
+    from soprano_qa.llm import load_llama
 
-        return build_transformers_judge(model_path, max_tokens=max_tokens)
-    if backend != "llama-cpp":
-        raise QualitativeJudgeInputError(
-            f"Unsupported local judge backend {backend}"
+    try:
+        model = load_llama(
+            model_path=str(model_path.resolve()),
+            n_ctx=int(judge_settings["n_ctx"]),
+            n_gpu_layers=int(judge_settings["n_gpu_layers"]),
+            chat_format=str(judge_settings["chat_format"]),
         )
+    except Exception as error:
+        raise QualitativeJudgeBackendError(
+            f"Cannot initialize local Qwen judge model: {model_path.resolve()}"
+        ) from error
+    metadata = getattr(model, "metadata", {})
+    architecture = (
+        str(metadata.get("general.architecture", "")).strip().casefold()
+        if isinstance(metadata, Mapping)
+        else ""
+    )
+    if not architecture.startswith("qwen"):
+        raise QualitativeJudgeBackendError(
+            "Configured judge GGUF is not a Qwen model: "
+            f"general.architecture={architecture or 'missing'}"
+        )
+    return architecture
+
+
+def build_local_qwen_judge(
+    model_path: Path,
+    *,
+    judge_settings: Mapping[str, Any],
+) -> JudgeFunction:
+    """Build the single supported, deterministic local Qwen judge."""
 
     from soprano_qa.llm import generate as generate_llm
-    from soprano_qa.settings import load_settings
 
-    settings = load_settings(use_legacy_dataset_env=False)
-    judge_settings = {
-        **settings["llm"],
-        "temperature": 0.0,
-        "max_tokens": max_tokens,
-    }
+    immutable_settings = dict(judge_settings)
 
     def generate(messages: list[dict[str, str]]) -> str:
-        return generate_llm(str(model_path), messages, judge_settings)
+        try:
+            return generate_llm(
+                str(model_path.resolve()),
+                messages,
+                immutable_settings,
+            )
+        except Exception as error:
+            raise QualitativeJudgeBackendError(
+                "Local Qwen judge inference failed"
+            ) from error
 
     return generate
 
@@ -904,17 +1027,11 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT)
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT)
     parser.add_argument(
-        "--judge-model-path",
-        type=Path,
-        default=default_qwen3_4b_path(),
-        help="Local Qwen3-4B Transformers directory or local GGUF file.",
+        "--judge-max-tokens",
+        type=int,
+        default=DEFAULT_JUDGE_MAX_TOKENS,
+        help="Maximum tokens for the configured local Qwen judge response.",
     )
-    parser.add_argument(
-        "--judge-backend",
-        choices=("auto", "transformers", "llama-cpp"),
-        default="auto",
-    )
-    parser.add_argument("--judge-max-tokens", type=int, default=512)
     parser.add_argument("--max-attempts", type=int, default=3)
     parser.add_argument(
         "--piece",
@@ -967,30 +1084,34 @@ def main(argv: Sequence[str] | None = None) -> int:
     validate_source_artifact(source)
     source_sha256 = file_sha256(source_path)
     source_judgment_sha256 = source_judgment_input_sha256(source)
-    judge_model_path = arguments.judge_model_path.resolve()
-    judge_backend = arguments.judge_backend
-    if judge_backend == "auto":
-        judge_backend = (
-            "transformers" if judge_model_path.is_dir() else "llama-cpp"
-        )
-    judge_model = model_record(judge_model_path, backend=judge_backend)
-    if not judge_model["checkpoint_exists"]:
-        raise FileNotFoundError(f"Local judge model not found: {judge_model_path}")
-    if judge_backend == "transformers" and not judge_model_path.is_dir():
-        raise QualitativeJudgeInputError(
-            "Transformers judge requires a local model directory"
-        )
-    if judge_backend == "llama-cpp" and not judge_model_path.is_file():
-        raise QualitativeJudgeInputError(
-            "llama-cpp judge requires a local GGUF file"
-        )
 
+    from soprano_qa.settings import load_settings
+
+    settings = load_settings(use_legacy_dataset_env=False)
+    judge_model_path = Path(settings["model_path"]).resolve()
+    judge_settings = normalized_judge_settings(
+        settings.get("llm") or {},
+        max_tokens=arguments.judge_max_tokens,
+    )
+    judge_runtime = qwen_runtime_record(
+        judge_model_path,
+        declared_model_repo_id=str(settings.get("model_repo_id", "")),
+        judge_settings=judge_settings,
+        answer_generator_model_paths=recorded_answer_generator_model_paths(
+            source
+        ),
+    )
+    judge_runtime["model"]["gguf_architecture"] = preflight_qwen_model(
+        judge_model_path,
+        judge_settings=judge_settings,
+    )
+
+    implementation_sha256 = file_sha256(Path(__file__).resolve())
     input_fingerprint = build_input_fingerprint(
         source_judgment_input_sha256=source_judgment_sha256,
-        judge_model=judge_model,
-        judge_max_tokens=arguments.judge_max_tokens,
+        judge_runtime=judge_runtime,
+        implementation_sha256=implementation_sha256,
     )
-    implementation_sha256 = file_sha256(Path(__file__).resolve())
     with exclusive_output_lock(output_path):
         migrated_resume = False
         if output_path.exists():
@@ -1004,8 +1125,8 @@ def main(argv: Sequence[str] | None = None) -> int:
                 if not can_migrate_semantically_identical_resume(
                     snapshot,
                     source=source,
-                    judge_model=judge_model,
-                    judge_max_tokens=arguments.judge_max_tokens,
+                    judge_runtime=judge_runtime,
+                    implementation_sha256=implementation_sha256,
                 ):
                     raise
                 snapshot["run"]["input_fingerprint"] = input_fingerprint
@@ -1026,8 +1147,7 @@ def main(argv: Sequence[str] | None = None) -> int:
                 source_path=source_path,
                 source_sha256=source_sha256,
                 source_judgment_sha256=source_judgment_sha256,
-                judge_model=judge_model,
-                judge_max_tokens=arguments.judge_max_tokens,
+                judge_runtime=judge_runtime,
                 input_fingerprint=input_fingerprint,
                 implementation_sha256=implementation_sha256,
             )
@@ -1042,10 +1162,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             refresh_summary(snapshot)
             atomic_write_json(output_path, snapshot)
 
-        judge_fn = build_local_judge(
+        judge_fn = build_local_qwen_judge(
             judge_model_path,
-            backend=judge_backend,
-            max_tokens=arguments.judge_max_tokens,
+            judge_settings=judge_settings,
         )
         attempted = run_judgments(
             snapshot,
