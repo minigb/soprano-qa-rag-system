@@ -5,8 +5,11 @@ from __future__ import annotations
 import tempfile
 import unittest
 from pathlib import Path
+from types import SimpleNamespace
 from typing import Any, Dict, List, Sequence
+from unittest import mock
 
+from soprano_qa import answer as answer_cli
 from soprano_qa.dense import (
     DenseRetrievalUnavailable,
     HybridIndex,
@@ -15,6 +18,7 @@ from soprano_qa.dense import (
     dense_query_text,
     missing_dense_answer_constraints,
     retrieval_diagnostics,
+    validate_retrieval_requirements,
 )
 from soprano_qa.retrieval import BM25Index
 
@@ -69,6 +73,32 @@ class FakeEmbedder:
 
 
 class DenseRetrievalTests(unittest.TestCase):
+    def test_cli_missing_hybrid_model_exits_before_corpus_work(self) -> None:
+        settings = {
+            "embedding_model_path": "/does/not/exist.gguf",
+            "retrieval": {"mode": "hybrid"},
+        }
+        with (
+            mock.patch.object(
+                answer_cli,
+                "parse_args",
+                return_value=SimpleNamespace(settings=None),
+            ),
+            mock.patch.object(
+                answer_cli,
+                "load_settings",
+                return_value=settings,
+            ),
+            mock.patch.object(answer_cli, "ensure_corpus") as ensure_corpus,
+        ):
+            with self.assertRaisesRegex(
+                SystemExit,
+                r"download_embedding_model\.py.*never falls back silently",
+            ):
+                answer_cli.main()
+
+        ensure_corpus.assert_not_called()
+
     def test_dense_lane_rescues_unseen_korean_paraphrase(self) -> None:
         relevant = make_record(
             "relevant",
@@ -773,7 +803,7 @@ class DenseRetrievalTests(unittest.TestCase):
 
         self.assertEqual(results, [])
 
-    def test_query_embedding_failure_returns_lexical_results(self) -> None:
+    def test_query_embedding_failure_never_falls_back(self) -> None:
         record = make_record("record", "breath phrasing")
 
         class FailingQueryEmbedder(FakeEmbedder):
@@ -786,32 +816,6 @@ class DenseRetrievalTests(unittest.TestCase):
                 document_vectors={"breath phrasing": [1.0, 0.0]},
                 query_vectors={},
             ),
-        )
-
-        results = index.search("breath phrasing", piece="test-piece")
-
-        self.assertEqual([result.record["id"] for result in results], ["record"])
-        self.assertIn("query backend stopped", str(index.last_dense_error))
-        diagnostics = retrieval_diagnostics(index)
-        self.assertEqual(diagnostics["last_search_mode"], "lexical_fallback")
-        self.assertTrue(diagnostics["dense_attempted"])
-        self.assertFalse(diagnostics["dense_contributed"])
-        self.assertTrue(diagnostics["fallback_used"])
-
-    def test_runtime_fallback_can_be_disabled(self) -> None:
-        record = make_record("record", "breath phrasing")
-
-        class FailingQueryEmbedder(FakeEmbedder):
-            def embed_query(self, text: str) -> List[float]:
-                raise DenseRetrievalUnavailable("query backend stopped")
-
-        index = HybridIndex(
-            [record],
-            embedder=FailingQueryEmbedder(
-                document_vectors={"breath phrasing": [1.0, 0.0]},
-                query_vectors={},
-            ),
-            fallback_to_lexical=False,
         )
 
         with self.assertRaisesRegex(
@@ -819,6 +823,28 @@ class DenseRetrievalTests(unittest.TestCase):
             "query backend stopped",
         ):
             index.search("breath phrasing", piece="test-piece")
+
+        self.assertIn("query backend stopped", str(index.last_dense_error))
+        diagnostics = retrieval_diagnostics(index)
+        self.assertEqual(diagnostics["last_search_mode"], "hybrid_error")
+        self.assertTrue(diagnostics["dense_attempted"])
+        self.assertFalse(diagnostics["dense_contributed"])
+        self.assertFalse(diagnostics["fallback_used"])
+
+    def test_legacy_runtime_fallback_flag_is_rejected(self) -> None:
+        record = make_record("record", "breath phrasing")
+        with self.assertRaisesRegex(
+            ValueError,
+            "fallback_to_lexical is not supported",
+        ):
+            HybridIndex(
+                [record],
+                embedder=FakeEmbedder(
+                    document_vectors={"breath phrasing": [1.0, 0.0]},
+                    query_vectors={},
+                ),
+                fallback_to_lexical=True,
+            )
 
     def test_persistent_document_cache_is_reused(self) -> None:
         record = make_record("record", "semantic passage")
@@ -856,30 +882,96 @@ class DenseRetrievalTests(unittest.TestCase):
 
         self.assertEqual(second.document_calls, [["changed passage"]])
 
-    def test_factory_reports_missing_checkpoint_lexical_fallback(self) -> None:
+    def test_hybrid_preflight_rejects_missing_checkpoint(self) -> None:
         record = make_record("record", "breath phrasing")
         with tempfile.TemporaryDirectory() as directory:
-            index = build_retrieval_index(
-                [record],
-                {
-                    "embedding_model_path": str(Path(directory) / "missing.gguf"),
-                    "embedding_cache_path": str(Path(directory) / "cache.json"),
-                    "retrieval": {
-                        "mode": "hybrid",
-                        "fallback_to_lexical": True,
-                    },
+            settings = {
+                "embedding_model_path": str(Path(directory) / "missing.gguf"),
+                "embedding_cache_path": str(Path(directory) / "cache.json"),
+                "retrieval": {
+                    "mode": "hybrid",
+                    "fallback_to_lexical": True,
                 },
-            )
+            }
+            with self.assertRaisesRegex(
+                DenseRetrievalUnavailable,
+                r"download_embedding_model\.py.*never falls back silently",
+            ):
+                validate_retrieval_requirements(settings)
+            with self.assertRaisesRegex(
+                DenseRetrievalUnavailable,
+                "Required hybrid-retrieval embedding checkpoint not found",
+            ):
+                build_retrieval_index(
+                    [record],
+                    settings,
+                )
 
+    def test_explicit_lexical_mode_needs_no_embedding_checkpoint(self) -> None:
+        record = make_record("record", "breath phrasing")
+        index = build_retrieval_index(
+            [record],
+            {
+                "embedding_model_path": "/does/not/exist.gguf",
+                "retrieval": {
+                    "mode": "lexical",
+                    "fallback_to_lexical": False,
+                },
+            },
+        )
+
+        results = index.search(
+            "breath phrasing",
+            piece="test-piece",
+        )
+        self.assertEqual(
+            [result.record["id"] for result in results],
+            ["record"],
+        )
         diagnostics = retrieval_diagnostics(index)
-        self.assertEqual(diagnostics["configured_mode"], "hybrid")
-        self.assertEqual(diagnostics["active_mode"], "lexical")
-        self.assertFalse(diagnostics["dense_available"])
-        self.assertIn("Embedding checkpoint not found", diagnostics["fallback_reason"])
-        self.assertEqual(diagnostics["last_search_mode"], "lexical_fallback")
-        self.assertTrue(diagnostics["dense_attempted"])
-        self.assertFalse(diagnostics["dense_contributed"])
-        self.assertTrue(diagnostics["fallback_used"])
+        self.assertEqual(diagnostics["configured_mode"], "lexical")
+        self.assertFalse(diagnostics["fallback_used"])
+
+    def test_hybrid_preflight_rejects_missing_embedding_backend(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            model_path = Path(directory) / "embedding.gguf"
+            model_path.write_bytes(b"checkpoint")
+            settings = {
+                "embedding_model_path": str(model_path),
+                "retrieval": {
+                    "mode": "hybrid",
+                    "fallback_to_lexical": False,
+                },
+            }
+            with mock.patch(
+                "soprano_qa.dense._require_llama_cpp_embedding_backend",
+                side_effect=DenseRetrievalUnavailable(
+                    "llama-cpp-python is unavailable"
+                ),
+            ):
+                with self.assertRaisesRegex(
+                    DenseRetrievalUnavailable,
+                    "llama-cpp-python is unavailable",
+                ):
+                    validate_retrieval_requirements(settings)
+
+    def test_hybrid_preflight_rejects_legacy_fallback_configuration(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            model_path = Path(directory) / "embedding.gguf"
+            model_path.write_bytes(b"checkpoint")
+            with self.assertRaisesRegex(
+                DenseRetrievalUnavailable,
+                "fallback_to_lexical is not supported",
+            ):
+                validate_retrieval_requirements(
+                    {
+                        "embedding_model_path": str(model_path),
+                        "retrieval": {
+                            "mode": "hybrid",
+                            "fallback_to_lexical": True,
+                        },
+                    }
+                )
 
     def test_factory_does_not_hide_invalid_dense_configuration(self) -> None:
         record = make_record("record", "semantic passage")

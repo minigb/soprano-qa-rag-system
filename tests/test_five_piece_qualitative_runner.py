@@ -5,7 +5,9 @@ from __future__ import annotations
 import json
 from pathlib import Path
 import tempfile
+from types import SimpleNamespace
 import unittest
+from unittest.mock import patch
 
 from evaluation import run_five_piece_qualitative as qualitative
 
@@ -358,6 +360,58 @@ class FivePieceQualitativeRunnerTests(unittest.TestCase):
         self.assertTrue(present["checkpoint_exists"])
         self.assertEqual(present["kind"], "file")
         self.assertNotEqual(missing_fingerprint, present_fingerprint)
+
+    def test_missing_retrieval_model_fails_before_corpus_or_output(self):
+        with tempfile.TemporaryDirectory() as temporary:
+            root = Path(temporary)
+            output = root / "result.json"
+            settings = {
+                "dataset_root": str(root),
+                "embedding_model_path": str(root / "missing.gguf"),
+                "retrieval": {"mode": "hybrid"},
+            }
+            arguments = SimpleNamespace(
+                dataset_root=root,
+                output=output,
+                generate=False,
+                top_k=6,
+            )
+            with (
+                patch.dict(qualitative.os.environ, {}, clear=False),
+                patch.object(
+                    qualitative,
+                    "parse_arguments",
+                    return_value=arguments,
+                ),
+                patch.object(
+                    qualitative,
+                    "load_settings",
+                    return_value=settings,
+                ),
+                patch.object(
+                    qualitative,
+                    "validate_retrieval_requirements",
+                    side_effect=RuntimeError("embedding checkpoint missing"),
+                ) as validate,
+                patch("soprano_qa.answer.ensure_corpus") as ensure_corpus,
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    "embedding checkpoint missing",
+                ):
+                    qualitative.main([])
+
+            validate.assert_called_once_with(settings)
+            ensure_corpus.assert_not_called()
+            self.assertFalse(output.exists())
+
+    def test_explicit_lexical_mode_does_not_require_embedding_model(self):
+        qualitative.validate_retrieval_requirements(
+            {
+                "embedding_model_path": "/definitely/missing.gguf",
+                "retrieval": {"mode": "lexical"},
+            }
+        )
 
 
 if __name__ == "__main__":

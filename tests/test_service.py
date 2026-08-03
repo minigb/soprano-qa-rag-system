@@ -29,6 +29,57 @@ def _first_local_prompt_evidence(prompt: str) -> dict[str, str]:
 
 
 class ServicePipelineTests(unittest.TestCase):
+    def setUp(self) -> None:
+        """Keep model-free service tests explicit about lexical retrieval."""
+        self._retrieval_settings_patch = mock.patch.dict(
+            qa.SETTINGS,
+            {
+                "retrieval": {
+                    **qa.SETTINGS["retrieval"],
+                    "mode": "lexical",
+                    "fallback_to_lexical": False,
+                }
+            },
+        )
+        self._retrieval_settings_patch.start()
+
+    def tearDown(self) -> None:
+        self._retrieval_settings_patch.stop()
+
+    def test_missing_hybrid_model_fails_before_corpus_or_llm_work(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary:
+            missing_model = Path(temporary) / "missing-embedding.gguf"
+            settings = {
+                **qa.SETTINGS,
+                "embedding_model_path": str(missing_model),
+                "retrieval": {
+                    **qa.SETTINGS["retrieval"],
+                    "mode": "hybrid",
+                    "fallback_to_lexical": True,
+                },
+            }
+            with (
+                mock.patch.object(qa, "SETTINGS", settings),
+                mock.patch.object(qa, "_index", None),
+                mock.patch.object(qa, "ensure_corpus") as ensure_corpus,
+                mock.patch.object(qa, "load_corpus") as load_corpus,
+                mock.patch.object(qa, "generate_llm") as generate_llm,
+            ):
+                with self.assertRaisesRegex(
+                    RuntimeError,
+                    r"download_embedding_model\.py.*never falls back silently",
+                ):
+                    qa.ask(
+                        piece_id="die-forelle",
+                        question="어떻게 표현해야 하나요?",
+                        measure_range=None,
+                        generate=True,
+                    )
+
+            ensure_corpus.assert_not_called()
+            load_corpus.assert_not_called()
+            generate_llm.assert_not_called()
+
     def test_media_dataset_and_rag_dataset_overrides_do_not_collide(self) -> None:
         with mock.patch.dict(
             os.environ,

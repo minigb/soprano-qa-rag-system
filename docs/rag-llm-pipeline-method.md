@@ -119,9 +119,10 @@ cases cosine similarity cannot separate: the query must have a music-domain
 anchor, and an answer must support explicitly requested attributes such as
 fingering, harmony analysis, BPM, page location, physical units, or a
 left-versus-right assignment. These checks apply only to dense-only admission,
-not to records already justified by the lexical path. If the checkpoint or
-embedding backend is unavailable, the active mode becomes lexical and
-structured diagnostics report the fallback reason.
+not to records already justified by the lexical path. Hybrid mode requires its
+embedding checkpoint and backend. A missing checkpoint fails before corpus or
+answer work begins, and runtime embedding failures propagate as hard errors;
+model-free retrieval is available only through explicit lexical mode.
 
 The soft relation path is deliberately separate from expert-question alias
 matching: aliases remain strict because a positive alias match is authoritative

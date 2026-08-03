@@ -21,9 +21,11 @@ from soprano_qa.corpus import (
     file_sha256,
 )
 from soprano_qa.dense import (
+    DenseRetrievalUnavailable,
     SearchIndex,
     build_retrieval_index,
     retrieval_diagnostics,
+    validate_retrieval_requirements,
 )
 from soprano_qa.llm import generate
 from soprano_qa.retrieval import (
@@ -2408,6 +2410,10 @@ def parse_args() -> argparse.Namespace:
 def main() -> None:
     args = parse_args()
     settings = load_settings(args.settings) if args.settings else load_settings()
+    try:
+        validate_retrieval_requirements(settings)
+    except DenseRetrievalUnavailable as exc:
+        raise SystemExit(str(exc)) from exc
     ensure_corpus(settings, args.rebuild_corpus)
 
     records = load_corpus(settings["corpus_path"])

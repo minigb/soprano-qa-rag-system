@@ -237,6 +237,57 @@ class DenseRetrievalUnavailable(RuntimeError):
     """Raised when the configured local embedding backend cannot start."""
 
 
+def _require_llama_cpp_embedding_backend() -> Any:
+    """Import a llama.cpp runtime that exposes sequence embeddings."""
+
+    try:
+        import llama_cpp
+    except (ImportError, OSError) as exc:
+        raise DenseRetrievalUnavailable(
+            "Required hybrid-retrieval backend `llama-cpp-python` is "
+            "unavailable. Activate the `soprano-qa` Conda environment and "
+            "install requirements.txt before starting Soprano QA."
+        ) from exc
+    if not hasattr(llama_cpp.Llama, "embed") or not hasattr(
+        llama_cpp,
+        "LLAMA_POOLING_TYPE_LAST",
+    ):
+        raise DenseRetrievalUnavailable(
+            "Installed llama-cpp-python lacks sequence embedding support; "
+            "install the version required by requirements.txt."
+        )
+    return llama_cpp
+
+
+def validate_retrieval_requirements(settings: Dict[str, Any]) -> None:
+    """Fail before corpus work when configured hybrid assets are unavailable."""
+
+    retrieval = settings.get("retrieval") or {}
+    mode = str(retrieval.get("mode") or "lexical").lower()
+    if mode == "lexical":
+        return
+    if mode != "hybrid":
+        raise ValueError("Unsupported retrieval mode: %s" % mode)
+
+    model_path = str(settings.get("embedding_model_path") or "").strip()
+    if not model_path or not os.path.isfile(model_path):
+        display_path = model_path or "(embedding_model_path is not configured)"
+        raise DenseRetrievalUnavailable(
+            "Required hybrid-retrieval embedding checkpoint not found: %s. "
+            "Run `python scripts/download_embedding_model.py` before starting "
+            "Soprano QA. To run without embeddings intentionally, configure "
+            "retrieval.mode as `lexical`; hybrid mode never falls back silently."
+            % display_path
+        )
+    if bool(retrieval.get("fallback_to_lexical", False)):
+        raise DenseRetrievalUnavailable(
+            "retrieval.fallback_to_lexical is not supported in hybrid mode. "
+            "Set retrieval.mode to `lexical` for an intentionally model-free "
+            "run; hybrid retrieval must fail when its dense backend fails."
+        )
+    _require_llama_cpp_embedding_backend()
+
+
 class LlamaCppQwen3Embedder:
     """Qwen3 GGUF embedding backend using the existing llama.cpp runtime."""
 
@@ -254,19 +305,7 @@ class LlamaCppQwen3Embedder:
             raise DenseRetrievalUnavailable(
                 "Embedding checkpoint not found: %s" % model_path
             )
-        try:
-            import llama_cpp
-        except ImportError as exc:
-            raise DenseRetrievalUnavailable(
-                "llama-cpp-python is unavailable for dense retrieval"
-            ) from exc
-        if not hasattr(llama_cpp.Llama, "embed") or not hasattr(
-            llama_cpp,
-            "LLAMA_POOLING_TYPE_LAST",
-        ):
-            raise DenseRetrievalUnavailable(
-                "Installed llama-cpp-python lacks sequence embedding support"
-            )
+        llama_cpp = _require_llama_cpp_embedding_backend()
 
         self.model_path = os.path.abspath(model_path)
         self.query_instruction = query_instruction.strip()
@@ -514,7 +553,7 @@ class HybridIndex:
         dense_weight: float = 0.65,
         rrf_k: int = 60,
         query_cache_size: int = 128,
-        fallback_to_lexical: bool = True,
+        fallback_to_lexical: bool = False,
         cache_path: str | None = None,
     ) -> None:
         if not -1.0 <= dense_min_score <= 1.0:
@@ -531,6 +570,11 @@ class HybridIndex:
             raise ValueError("rrf_k must be positive")
         if query_cache_size < 1:
             raise ValueError("query_cache_size must be positive")
+        if fallback_to_lexical:
+            raise ValueError(
+                "fallback_to_lexical is not supported by HybridIndex; "
+                "configure explicit lexical retrieval instead"
+            )
 
         self.records = records
         self.lexical = BM25Index(records)
@@ -543,7 +587,6 @@ class HybridIndex:
         self.dense_weight = float(dense_weight)
         self.rrf_k = int(rrf_k)
         self.query_cache_size = int(query_cache_size)
-        self.fallback_to_lexical = bool(fallback_to_lexical)
         self._search_state = threading.local()
         self._set_search_state(
             "not_searched",
@@ -882,15 +925,13 @@ class HybridIndex:
         except DenseRetrievalUnavailable as exc:
             dense_error = "%s: %s" % (type(exc).__name__, exc)
             self._set_search_state(
-                "lexical_fallback",
+                "hybrid_error",
                 reason="dense_query_error",
                 dense_attempted=True,
-                fallback_used=True,
+                fallback_used=False,
                 dense_error=dense_error,
             )
-            if not self.fallback_to_lexical:
-                raise
-            return lexical_results[:top_k]
+            raise
 
         lexical_ranks = {
             result.record["id"]: rank
@@ -1106,6 +1147,9 @@ def build_retrieval_index(
     if mode != "hybrid":
         raise ValueError("Unsupported retrieval mode: %s" % mode)
 
+    if embedder is None:
+        validate_retrieval_requirements(settings)
+
     try:
         active_embedder = embedder or LlamaCppQwen3Embedder(
             settings["embedding_model_path"],
@@ -1134,20 +1178,14 @@ def build_retrieval_index(
             rrf_k=int(retrieval.get("rrf_k", 60)),
             query_cache_size=int(retrieval.get("query_cache_size", 128)),
             fallback_to_lexical=bool(
-                retrieval.get("fallback_to_lexical", True)
+                retrieval.get("fallback_to_lexical", False)
             ),
             cache_path=settings.get("embedding_cache_path"),
         )
         index.configured_retrieval_mode = mode
         return index
-    except DenseRetrievalUnavailable as exc:
-        if not retrieval.get("fallback_to_lexical", True):
-            raise
-        return _lexical_fallback(
-            records,
-            configured_mode=mode,
-            reason="%s: %s" % (type(exc).__name__, exc),
-        )
+    except DenseRetrievalUnavailable:
+        raise
 
 
 def retrieval_diagnostics(index: SearchIndex) -> Dict[str, Any]:

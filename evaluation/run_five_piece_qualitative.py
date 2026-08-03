@@ -29,6 +29,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from soprano_qa.dense import validate_retrieval_requirements  # noqa: E402
 from soprano_qa.settings import load_settings  # noqa: E402
 
 
@@ -42,7 +43,7 @@ PIECE_IDS = (
     "una-voce-poco-fa",
 )
 ELIGIBLE_MEASURE_STATUSES = {"specific", "whole_piece", "unspecified"}
-DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "five_piece_qualitative.json"
+DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "qualitative.json"
 EXCLUDED_INFERENCE_CASES = {
     ("kim-la-capinera-01", (78, 81)): (
         "The linked unit transfers an opening pp idea to the reprise, but "
@@ -818,6 +819,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     settings = load_settings(use_legacy_dataset_env=False)
     settings["dataset_root"] = str(dataset_root)
     os.environ["SOPRANO_QA_RAG_DATASET_ROOT"] = str(dataset_root)
+    validate_retrieval_requirements(settings)
     # Make the service corpus current before hashing it.  Otherwise a first
     # service call could rebuild the corpus after the resume fingerprint was
     # captured and make the next invocation incomparable to its own output.

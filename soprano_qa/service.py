@@ -32,6 +32,7 @@ from soprano_qa.dense import (
     SearchIndex,
     build_retrieval_index,
     retrieval_diagnostics,
+    validate_retrieval_requirements,
 )
 from soprano_qa.retrieval import (
     SearchResult,
@@ -85,6 +86,7 @@ def _get_index() -> SearchIndex:
     """Validate the corpus periodically and reload the index after a rebuild."""
     global _corpus_signature, _index, _last_corpus_check
 
+    validate_retrieval_requirements(SETTINGS)
     now = time.monotonic()
     if (
         _index is not None
