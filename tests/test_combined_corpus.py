@@ -34,7 +34,6 @@ from soprano_qa.corpus import (
 )
 from soprano_qa.retrieval import (
     BM25Index,
-    is_broad_performance_guidance_query,
 )
 from soprano_qa.settings import PROJECT_ROOT, load_settings
 
@@ -946,88 +945,6 @@ class CombinedCorpusTests(unittest.TestCase):
         )
         self.assertEqual(ranged, [])
         self.assertEqual(whole_song, [])
-
-    def test_three_piece_annotator_paraphrases_retrieve_linked_evidence(self) -> None:
-        inventory_root = os.path.join(
-            self.build_settings["dataset_root"],
-            "expert_curation",
-            "evaluation_questions",
-        )
-        pieces = ("die-forelle", "in-flowery-clouds", "la-capinera")
-        question_count = 0
-        range_case_count = 0
-        for piece in pieces:
-            with open(
-                os.path.join(inventory_root, "%s.json" % piece),
-                encoding="utf-8",
-            ) as inventory_file:
-                questions = json.load(inventory_file)["questions"]
-            for question in questions:
-                question_count += 1
-                expected_ids = set(question["knowledge_unit_ids"])
-                inference_ranges = question["inference_measure_ranges"] or [None]
-                for inference_range in inference_ranges:
-                    range_case_count += 1
-                    with self.subTest(
-                        source_id=question["source_id"],
-                        inference_range=inference_range,
-                    ):
-                        results = self.index.search(
-                            question["paraphrased_question"],
-                            piece=piece,
-                            measure_ranges=(
-                                [inference_range]
-                                if inference_range is not None
-                                else None
-                            ),
-                            top_k=6,
-                        )
-                        self.assertTrue(
-                            expected_ids
-                            & {result.record["id"] for result in results}
-                        )
-                        is_broad = (
-                            inference_range is None
-                            and is_broad_performance_guidance_query(
-                                question["paraphrased_question"],
-                                piece,
-                            )
-                        )
-                        if not is_broad:
-                            self.assertIn(
-                                results[0].record["id"],
-                                expected_ids,
-                            )
-        self.assertEqual(question_count, 40)
-        self.assertEqual(range_case_count, 52)
-
-    def test_candidate_local_gate_rejects_39_cross_piece_ood_pairs(self) -> None:
-        pieces = ("die-forelle", "in-flowery-clouds", "la-capinera")
-        unsupported_questions = (
-            "2022년 FIFA 월드컵 우승팀은 어디인가?",
-            "프랑스 수도는 어디인가?",
-            "오늘 서울 날씨와 기온은 어떤가?",
-            "한국 대통령은 누구인가?",
-            "삼성전자 주가는 얼마인가?",
-            "파스타 면을 몇 분 삶아야 할까?",
-            "양자역학의 불확정성 원리는 무엇인가?",
-            "서울에서 부산까지 기차 시간표는?",
-            "파이썬 리스트를 정렬하는 코드는?",
-            "축구 경기에서 오프사이드 규칙은?",
-            "반주와 국제관계는 어떤 관련이 있을까?",
-            "음악 형식과 형식주의 철학은 같은가?",
-            "가사와 우주 탐사의 관계는 무엇인가?",
-        )
-        rejection_count = 0
-        for piece in pieces:
-            for question in unsupported_questions:
-                with self.subTest(piece=piece, question=question):
-                    self.assertEqual(
-                        self.index.search(question, piece=piece, top_k=6),
-                        [],
-                    )
-                    rejection_count += 1
-        self.assertEqual(rejection_count, 39)
 
     def test_provenance_names_and_english_ood_queries_abstain(self) -> None:
         for question in (

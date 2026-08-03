@@ -73,9 +73,11 @@ python scripts/download_model.py            # Optional; needed for generated ans
 ```
 
 The default generation checkpoint needs approximately 5 GB. Retrieval-only
-queries work without it by passing `--no-generate`. If the embedding checkpoint
-is unavailable, the service reports the reason and falls back to lexical BM25
-instead of downloading a model during a request.
+queries work without it by passing `--no-generate`. The embedding checkpoint
+is mandatory when `retrieval.mode` is `hybrid`: if it is missing, startup fails
+before corpus rebuilding, retrieval, or answer generation and reports the
+download command. To run intentionally without an embedding model, explicitly
+set `retrieval.mode` to `lexical`; hybrid mode never falls back silently.
 
 The embedding model is loaded when the retrieval index first initializes.
 `retrieval.n_gpu_layers` defaults to `-1` (all available GPU layers); lower it
@@ -109,10 +111,11 @@ Omit `--measures` for a whole-work question. Add `--json` for structured
 retrieval, evidence, rights, citation, and answer metadata.
 
 To inspect the selected evaluation results in a local qualitative-review
-workspace, run:
+workspace, pass an existing schema-8 snapshot explicitly:
 
 ```bash
-python3 evaluation/server.py
+conda run -n soprano-qa python evaluation/server.py \
+  --results-file /path/to/schema-8-results.json
 ```
 
 Then open `http://127.0.0.1:8766/`. The page keeps manual ratings and notes in

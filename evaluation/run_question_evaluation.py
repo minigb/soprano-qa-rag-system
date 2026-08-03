@@ -8642,6 +8642,58 @@ def _load_runtime_settings(
     return settings_module.load_settings(use_legacy_dataset_env=False)
 
 
+def validate_retrieval_phase_requirements(
+    *,
+    phase: str,
+    settings: Mapping[str, Any],
+    system_root: Path,
+) -> None:
+    """Fail before evaluation output when a retrieval phase cannot start."""
+
+    if phase == "judge":
+        return
+    try:
+        dense_module = _import_system_module(
+            "soprano_qa.dense",
+            system_root,
+        )
+    except ModuleNotFoundError as error:
+        if error.name != "soprano_qa.dense":
+            raise
+        dense_module = None
+    validator = getattr(
+        dense_module,
+        "validate_retrieval_requirements",
+        None,
+    )
+    if callable(validator):
+        validator(dict(settings))
+        return
+
+    retrieval = settings.get("retrieval") or {}
+    mode = str(retrieval.get("mode") or "lexical").lower()
+    if mode == "lexical":
+        return
+    if mode != "hybrid":
+        raise EvaluationInputError(
+            f"Unsupported retrieval.mode for evaluation: {mode!r}"
+        )
+    configured_path = str(
+        settings.get("embedding_model_path") or ""
+    ).strip()
+    if configured_path and Path(configured_path).expanduser().is_file():
+        return
+    display_path = configured_path or (
+        "(embedding_model_path is not configured)"
+    )
+    raise EvaluationInputError(
+        "Required hybrid-retrieval embedding checkpoint not found: "
+        f"{display_path}. Download the embedding model before running "
+        "retrieval evaluation, or explicitly configure retrieval.mode "
+        "as `lexical`."
+    )
+
+
 def _system_fingerprint_paths(
     system_root: Path,
     settings: Mapping[str, Any],
@@ -9026,6 +9078,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     pipeline_dataset_root = arguments.pipeline_dataset_root.resolve()
     output = arguments.output.resolve()
     settings = _load_runtime_settings(system_root)
+    validate_retrieval_phase_requirements(
+        phase=arguments.phase,
+        settings=settings,
+        system_root=system_root,
+    )
     validate_pipeline_dataset_root(settings, pipeline_dataset_root)
     corpus_module = _import_system_module("soprano_qa.corpus", system_root)
     corpus_fingerprint_fn = getattr(

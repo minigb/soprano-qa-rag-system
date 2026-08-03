@@ -790,6 +790,45 @@ def _remove_target_modules() -> None:
             sys.modules.pop(name, None)
 
 
+def validate_target_retrieval_requirements(
+    settings: Mapping[str, Any],
+    dense_module: ModuleType | None,
+) -> None:
+    """Preflight both current and pre-validator target worktrees."""
+
+    validator = getattr(
+        dense_module,
+        "validate_retrieval_requirements",
+        None,
+    )
+    if callable(validator):
+        validator(dict(settings))
+        return
+
+    retrieval = settings.get("retrieval") or {}
+    mode = str(retrieval.get("mode") or "lexical").lower()
+    if mode == "lexical":
+        return
+    if mode != "hybrid":
+        raise EvaluationInputError(
+            f"Unsupported retrieval.mode for evaluation: {mode!r}"
+        )
+    configured_path = str(
+        settings.get("embedding_model_path") or ""
+    ).strip()
+    if configured_path and Path(configured_path).expanduser().is_file():
+        return
+    display_path = configured_path or (
+        "(embedding_model_path is not configured)"
+    )
+    raise EvaluationInputError(
+        "Required hybrid-retrieval embedding checkpoint not found: "
+        f"{display_path}. Download the embedding model before running "
+        "retrieval evaluation, or explicitly configure retrieval.mode "
+        "as `lexical`."
+    )
+
+
 @contextmanager
 def target_runtime(
     system_root: Path,
@@ -843,6 +882,12 @@ def target_runtime(
             ) from error
         service = importlib.import_module("soprano_qa.service")
         corpus_module = importlib.import_module("soprano_qa.corpus")
+        try:
+            dense_module = importlib.import_module("soprano_qa.dense")
+        except ModuleNotFoundError as error:
+            if error.name != "soprano_qa.dense":
+                raise
+            dense_module = None
         foreign_modules = {
             name: str(getattr(module, "__file__", "<unknown>"))
             for name, module in sys.modules.items()
@@ -862,6 +907,10 @@ def target_runtime(
                 "Target soprano_qa.service must expose callable ask and SETTINGS"
             )
         original_settings = deepcopy(settings)
+        validate_target_retrieval_requirements(
+            original_settings,
+            dense_module,
+        )
         actual_dataset_root = Path(settings["dataset_root"]).resolve()
         pipeline_corpus_state = authenticate_pipeline_corpus(
             original_settings,

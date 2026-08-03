@@ -135,7 +135,7 @@ def new_snapshot(source: dict | None = None) -> dict:
     }
     return judge.new_snapshot(
         source=source,
-        source_path=Path("/evaluation/five_piece_qualitative.json"),
+        source_path=Path("/evaluation/qualitative.json"),
         source_sha256="source-artifact",
         judge_model=model,
         judge_max_tokens=512,

@@ -26,18 +26,6 @@ STATIC_ROUTES: Final = {
     "/app.js": ("app.js", "text/javascript; charset=utf-8"),
 }
 RESULTS_ROUTE: Final = "/api/results"
-DEFAULT_RESULTS_FILENAME: Final = "three_piece_results.json"
-LEGACY_RESULTS_FILENAME: Final = "manual_check_results.json"
-
-
-def default_results_file(evaluation_root: Path = EVALUATION_ROOT) -> Path:
-    """Prefer the semantic snapshot, retaining the legacy viewer fallback."""
-
-    root = evaluation_root.resolve()
-    semantic = root / DEFAULT_RESULTS_FILENAME
-    if semantic.is_file():
-        return semantic
-    return root / LEGACY_RESULTS_FILENAME
 
 
 class EvaluationViewerServer(ThreadingHTTPServer):
@@ -50,14 +38,10 @@ class EvaluationViewerServer(ThreadingHTTPServer):
         server_address: tuple[str, int],
         *,
         evaluation_root: Path = EVALUATION_ROOT,
-        results_file: Path | None = None,
+        results_file: Path,
     ) -> None:
         self.evaluation_root = evaluation_root.resolve()
-        self.results_file = (
-            results_file.resolve()
-            if results_file is not None
-            else default_results_file(self.evaluation_root)
-        )
+        self.results_file = results_file.resolve()
         super().__init__(server_address, EvaluationViewerRequestHandler)
 
 
@@ -278,7 +262,7 @@ def create_server(
     host: str = DEFAULT_HOST,
     port: int = DEFAULT_PORT,
     evaluation_root: Path = EVALUATION_ROOT,
-    results_file: Path | None = None,
+    results_file: Path,
 ) -> EvaluationViewerServer:
     """Create a viewer server; callers remain responsible for serving it."""
 
@@ -295,13 +279,14 @@ def main() -> None:
     parser.add_argument(
         "--results-file",
         type=Path,
-        help=(
-            "Exact JSON snapshot exposed at /api/results. By default, use "
-            "evaluation/three_piece_results.json when it exists, otherwise "
-            "evaluation/manual_check_results.json."
-        ),
+        required=True,
+        help="Exact schema-8 JSON snapshot exposed at /api/results.",
     )
     arguments = parser.parse_args()
+    if not arguments.results_file.is_file():
+        parser.error(
+            "--results-file must point to an existing schema-8 JSON snapshot"
+        )
 
     server = create_server(
         port=arguments.port,

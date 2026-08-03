@@ -2,7 +2,7 @@
 """Judge five-piece answers for qualitative expert-answer fidelity.
 
 This is a lightweight LLM-as-a-judge pass over
-``five_piece_qualitative.json``.  It is deliberately *not* the strict
+``qualitative.json``.  It is deliberately *not* the strict
 schema-1.3 automatic-pass protocol implemented by
 ``run_question_evaluation.py``.  Its pass/review/fail labels are conservative
 qualitative triage for later human inspection.
@@ -48,9 +48,9 @@ PIECE_IDS = (
     "nella-fantasia",
     "una-voce-poco-fa",
 )
-DEFAULT_INPUT = PROJECT_ROOT / "evaluation" / "five_piece_qualitative.json"
+DEFAULT_INPUT = PROJECT_ROOT / "evaluation" / "qualitative.json"
 DEFAULT_OUTPUT = (
-    PROJECT_ROOT / "evaluation" / "five_piece_qualitative_judged.json"
+    PROJECT_ROOT / "evaluation" / "qualitative_judged.json"
 )
 QWEN3_4B_CACHE_ROOT = (
     Path.home()

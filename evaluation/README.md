@@ -1,8 +1,8 @@
 # Qualitative evaluation viewer
 
 This local, read-only viewer presents the selected paraphrased questions and
-their saved retrieval and generation results from
-`three_piece_results.json`.
+their saved retrieval and generation results from an explicitly selected
+schema-8 evaluation snapshot.
 
 ## Synthesized development retrieval evaluation
 
@@ -78,8 +78,7 @@ conda run -n recsys-chall python \
 ```
 
 Both commands checkpoint each case and resume safely. Their default artifacts
-are `five_piece_qualitative.json` and
-`five_piece_qualitative_judged.json`. Retrieval ranks remain diagnostics;
+are `qualitative.json` and `qualitative_judged.json`. Retrieval ranks remain diagnostics;
 the qualitative judge evaluates final-answer fidelity against the expert
 source and range-applicable linked knowledge units. This protocol is useful
 for all-five coverage and manual review, but it is intentionally distinct
@@ -384,13 +383,16 @@ tmux new-session -d -s soprano-qa-3piece-eval \
 From the repository root, run:
 
 ```bash
-python3 evaluation/server.py
+conda run -n soprano-qa python evaluation/server.py \
+  --results-file /path/to/schema-8-results.json
 ```
 
 Open <http://127.0.0.1:8766/>. Use `--port` to choose another loopback port:
 
 ```bash
-python3 evaluation/server.py --port 9000
+conda run -n soprano-qa python evaluation/server.py \
+  --results-file /path/to/schema-8-results.json \
+  --port 9000
 ```
 
 The viewer supports:
@@ -425,9 +427,8 @@ The viewer supports:
   notes;
 - export and import of a compact manual-review JSON file.
 
-The server prefers `evaluation/three_piece_results.json` when it exists and
-falls back to the legacy manual snapshot. Use `--results-file PATH` to select
-an exact read-only snapshot.
+The server requires `--results-file PATH` and refuses to start if that exact
+read-only snapshot does not exist.
 
 Manual semantic-fidelity review is enabled only after the run declares itself
 complete and every inference case has an aggregate judge result. This prevents
@@ -437,11 +438,10 @@ state. Once enabled, review is automatically saved in the current browser's
 the result snapshot. Export the review JSON if it needs to be retained, shared,
 or version-controlled.
 
-Focused checks:
+Five-piece qualitative checks:
 
 ```bash
-python3 -m unittest -v \
-  tests.test_question_evaluation \
-  tests.test_evaluation_viewer_server
-node --test evaluation/test_review_state.js
+conda run -n soprano-qa python -m unittest -v \
+  tests.test_five_piece_qualitative_runner \
+  tests.test_five_piece_qualitative_judge
 ```
