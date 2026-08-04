@@ -43,23 +43,59 @@ new RAG+LLM pipeline approaches. Do not list routine development branches,
 baseline-only rollback points, dataset-repository branches, demo worktrees,
 evaluation-output directories, or historical cleanup work here.
 
-| Experimental snapshot | Branch | Worktree | Commit | State and purpose |
-| --- | --- | --- | --- | --- |
-| Strict grounding experiment | `codex/strict-grounded-pipeline-snapshot` | `/home/minhee/codex/strict-grounded-pipeline-snapshot` | `e3816ad` | Clean committed snapshot of the strict one-pass design that could reject/abstain. It is intentionally unmerged and retained only as a reproducible comparison/rollback point. |
-| Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
-| Source-locked KU rendering experiment | `codex/source-locked-ku-rendering` | `/home/minhee/codex/source-locked-ku-rendering` | `90fbddb` | Clean committed experiment that retains every selected primary KU, renders each KU in an isolated structured call, and composes multiple units deterministically. Targeted real-model checks pass; it remains unmerged pending a full 460-case run and direct review. |
+| Experimental snapshot | Branch | Worktree | Commit | Dataset commit | State and purpose |
+| --- | --- | --- | --- | --- | --- |
+| Strict grounding experiment | `codex/strict-grounded-pipeline-snapshot` | `/home/minhee/codex/strict-grounded-pipeline-snapshot` | `e3816ad` | not pinned | Clean committed snapshot of the strict one-pass design that could reject/abstain. It is intentionally unmerged and retained only as a reproducible comparison/rollback point. |
+| Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | `93415f0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
+| Source-locked KU rendering experiment | `codex/source-locked-ku-rendering` | `/home/minhee/codex/source-locked-ku-rendering` | `90fbddb` | `93415f0` | Clean committed experiment that retains every selected primary KU, renders each KU in an isolated structured call, and composes multiple units deterministically. Targeted real-model checks pass; it remains unmerged pending a full 460-case run and direct review. |
 
 Every snapshot listed above is committed and clean. These experimental branches
 are local and have not been pushed.
+
+A code commit alone does not reproduce an approach. Because every current
+design renders reviewed knowledge-unit prose closely, the finalized dataset is
+part of the experiment, so each row pins a `soprano-qa-dataset` commit as well.
+`93415f0` is the first commit that contains the finalized five-piece review
+states and the derived knowledge-unit question layer that approaches 5 and 6
+were developed against. The strict experiment predates those curation commits
+and its exact dataset state was never captured; treat its output as
+non-reproducible at the sentence level and compare it only structurally.
+
+Two related worktrees are deliberately **not** registry entries, because the
+rule above excludes baseline rollback points and dataset repositories. They are
+recorded here only so that they are discoverable:
+
+- `/home/minhee/codex/pre-fidelity-editor-snapshot`, branch
+  `codex/pre-fidelity-editor-snapshot`, commit `7e364b6` — clean committed
+  rollback point for the Approach 3 one-pass baseline as it stood before the
+  fidelity-editor experiments.
+- `/home/minhee/codex/pre-ku-question-coverage-dataset`, branch
+  `codex/pre-ku-question-coverage-dataset`, commit `d728ca8` — dataset-side
+  rollback point preceding the derived knowledge-unit question layer.
+
+Neither the pipeline nor the dataset branches have been pushed to `origin`.
+Every experiment in this log currently exists on one local disk only.
+
+Worktrees do not carry the gitignored generation and embedding checkpoints, and
+`config/settings.json` resolves its relative paths against the worktree's own
+`config/` directory. Supply the main checkout's assets explicitly when running
+an experiment:
+
+```
+SOPRANO_QA_RAG_DATASET_ROOT=/home/minhee/soprano-qa-dataset \
+SOPRANO_QA_MODEL_PATH=/home/minhee/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf \
+SOPRANO_QA_EMBEDDING_MODEL_PATH=/home/minhee/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf
+```
 
 For every future material RAG+LLM approach:
 
 1. create a `codex/...` branch and linked worktree before modifying the active
    approach;
 2. commit the complete reproducible approach in that worktree—do not leave a
-   rollback worktree dirty;
-3. add its branch, path, commit, purpose, evaluation artifact, known failures,
-   and merge/removal status to this table;
+   rollback worktree dirty, and commit the dataset repository before the run so
+   the approach is pinned to reviewed prose that cannot silently change;
+3. add its branch, path, commit, dataset commit, purpose, evaluation artifact,
+   known failures, and merge/removal status to this table;
 4. do not remove the worktree or branch until the replacement has been fully
    evaluated, committed on `main`, and the rollback is no longer useful.
 
@@ -450,6 +486,7 @@ For each new approach, record all of the following here before calling it
 final:
 
 - code/worktree/commit used for rollback;
+- the `soprano-qa-dataset` commit the run was executed against;
 - exact model and quantization;
 - original and synthesized case counts for all five pieces;
 - zero empty/refusal/unavailable/mechanical-leak cases;
