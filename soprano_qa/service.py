@@ -1,36 +1,34 @@
 """Reusable service facade for the measure-aware RAG and local-LLM pipeline."""
 from __future__ import annotations
 
-import importlib.util
 import json
-import os
-import sys
 import threading
-import time
 from pathlib import Path
 from typing import Optional
 
 from soprano_qa.answer import (
-    INTERNAL_GENERATION_UNAVAILABLE_MESSAGE,
-    answer_overgeneralizes_local_examples,
-    answer_references_secondary_evidence,
+    GeneratedAnswerRejected,
+    NO_CORPUS_EVIDENCE_MESSAGE,
     build_extractive_answer,
-    build_internal_knowledge_messages,
     build_evidence_notices,
     ensure_corpus,
-    expert_prompt_factuality_material,
-    finalize_answer_citations,
-    finalize_internal_knowledge_answer,
-    generate_with_context_retry,
+    finalize_grounded_generated_answer,
+    finalize_user_visible_answer,
     has_primary_grounding,
     has_selected_range_grounding,
     is_grounded_insufficiency_answer,
-    select_extractive_fallback_evidence,
+    is_underspecified_ranged_query,
+    retrieve_generation_evidence,
 )
-from soprano_qa.llm import generate as generate_llm
+from soprano_qa.llm import (
+    generate as generate_llm,
+    validate_generation_requirements,
+)
 from soprano_qa.dense import (
     SearchIndex,
     build_retrieval_index,
+    retrieval_abstained_for_ambiguity,
+    retrieval_abstained_for_missing_causal_authority,
     retrieval_diagnostics,
     validate_retrieval_requirements,
 )
@@ -45,17 +43,12 @@ from soprano_qa.settings import load_settings
 
 
 SETTINGS = load_settings(use_legacy_dataset_env=False)
-CORPUS_REFRESH_SECONDS = float(
-    os.environ.get("SOPRANO_QA_CORPUS_REFRESH_SECONDS", "5")
-)
 
 _index_lock = threading.Lock()
-_generation_lock = threading.Lock()
 _index: Optional[SearchIndex] = None
 _corpus_signature: Optional[
     tuple[tuple[int, int], tuple[int, int], Optional[tuple[int, int]]]
 ] = None
-_last_corpus_check = 0.0
 
 
 def _file_identity(path: str) -> tuple[int, int]:
@@ -83,25 +76,14 @@ def _current_corpus_signature() -> tuple[
 
 
 def _get_index() -> SearchIndex:
-    """Validate the corpus periodically and reload the index after a rebuild."""
-    global _corpus_signature, _index, _last_corpus_check
+    """Validate every request and reload the index after a corpus change."""
+    global _corpus_signature, _index
 
     validate_retrieval_requirements(SETTINGS)
-    now = time.monotonic()
-    if (
-        _index is not None
-        and now - _last_corpus_check < CORPUS_REFRESH_SECONDS
-    ):
-        return _index
-
     with _index_lock:
-        now = time.monotonic()
-        if (
-            _index is not None
-            and now - _last_corpus_check < CORPUS_REFRESH_SECONDS
-        ):
-            return _index
-
+        # Never let a warm index bypass source validation. In particular,
+        # ensure_corpus rebuilds from the expert-review documents and raises
+        # when any knowledge unit is no longer release-ready.
         ensure_corpus(SETTINGS, rebuild=False)
         signature = _current_corpus_signature()
         if _index is None or signature != _corpus_signature:
@@ -110,7 +92,6 @@ def _get_index() -> SearchIndex:
                 SETTINGS,
             )
             _corpus_signature = signature
-        _last_corpus_check = now
         return _index
 
 
@@ -119,9 +100,7 @@ def model_status() -> dict:
     return {
         "path": str(model_path),
         "checkpoint_exists": model_path.is_file(),
-        "llama_cpp_available": (
-            importlib.util.find_spec("llama_cpp") is not None
-        ),
+        "backend": "llama-cpp-python",
     }
 
 
@@ -150,7 +129,6 @@ def _result_to_evidence(
         in_requested_scope = result.scope_match in {
             "general_evidence",
             "local_example",
-            "unscoped_pending_review",
             "unspecified_scope",
         }
 
@@ -176,13 +154,6 @@ def _result_to_evidence(
         "is_local": bool(record_measure_ranges),
         "measure_scope": record.get("measure_scope"),
         "measure_status": record.get("measure_status"),
-        "measure_notes": record.get("measure_notes", ""),
-        "rewrite_status": record.get("rewrite_status"),
-        "rewrite_notes": record.get("rewrite_notes", ""),
-        "retrieval_review_warning": record.get(
-            "retrieval_review_warning",
-            "",
-        ),
         "scope_match": result.scope_match,
         "generation_role": scope_evidence_role(result.scope_match),
         "selected_range_claim_authority": (
@@ -216,18 +187,31 @@ def _result_to_evidence(
         "generated_text_license": record.get("generated_text_license"),
         "attributions": inherited_attributions,
     }
-    if record.get("evidence_type") == "expert_annotation":
-        evidence["generation_expert_authority"] = (
-            expert_prompt_factuality_material(
-                record,
-                measure_ranges,
-            )
-        )
     return evidence
 
 
-def _generation_unavailable_answer() -> str:
-    return INTERNAL_GENERATION_UNAVAILABLE_MESSAGE
+def _retrieval_unavailable_reason(
+    index: SearchIndex,
+    *,
+    question: str,
+    piece_id: str,
+    measure_ranges: list[list[int]],
+    results: list[SearchResult],
+) -> str:
+    if retrieval_abstained_for_ambiguity(index):
+        return "ambiguous_dense_grounding"
+    if retrieval_abstained_for_missing_causal_authority(index):
+        return "missing_scoped_causal_authority"
+    if (
+        not results
+        and is_underspecified_ranged_query(
+            question,
+            piece_id,
+            measure_ranges,
+        )
+    ):
+        return "underspecified_ranged_question"
+    return "no_corpus_evidence"
 
 
 def ask(
@@ -237,193 +221,94 @@ def ask(
     measure_range: Optional[tuple[int, int]],
     generate: bool,
     top_k: int = 6,
-    allow_internal_knowledge: bool = True,
 ) -> dict:
-    """Answer a question, optionally allowing an ungrounded true-no-hit fallback.
+    """Compose one grounded answer from the retrieved reviewed texts.
 
-    Internal knowledge is considered only when retrieval returns no evidence.
-    Retrieved evidence is never discarded because generation refuses or
-    returns an empty answer.
+    Generation eagerly validates the sole local GGUF backend before corpus
+    work. Every grounded case uses the same RAG+LLM composer; confidence never
+    switches the renderer to concatenated KU prose. If a deterministic scope
+    check questions the sole draft, the sanitized draft is still returned for
+    semantic red-flag review instead of being replaced by extraction or
+    internal model knowledge.
     """
 
-    measure_ranges = (
+    if generate:
+        validate_generation_requirements(
+            SETTINGS["model_path"],
+            SETTINGS["llm"],
+        )
+
+    selected_measure_ranges = (
         [[measure_range[0], measure_range[1]]]
         if measure_range is not None
         else []
     )
-    validate_question_measure_contract(question, measure_ranges)
+    question_measure_ranges = validate_question_measure_contract(
+        question,
+        selected_measure_ranges,
+    )
+    # A broad selection is only the allowed envelope. An explicit locator in
+    # the question is the effective retrieval and grounding scope.
+    measure_ranges = question_measure_ranges or selected_measure_ranges
+    measures = format_measure_range(measure_ranges) if measure_ranges else ""
 
     index = _get_index()
-    measures = format_measure_range(measure_ranges) if measure_ranges else ""
-    generation_mode = "extractive"
-    answer_basis = "retrieval_extractive"
-    generation_fallback_reason = None
-    context_limited = False
-    used_internal_knowledge = False
-    results: list[SearchResult]
+    unavailable_reason: str | None = None
+    generation_validation_warning: str | None = None
 
-    status = model_status()
-    if generate and status["checkpoint_exists"] and status["llama_cpp_available"]:
-        def run_generation(messages: list[dict[str, str]]) -> str:
-            return generate_llm(
+    if generate:
+        results, messages = retrieve_generation_evidence(
+            index,
+            query=question,
+            piece=piece_id,
+            measure_ranges=measure_ranges,
+            measures=measures,
+            topic=None,
+            top_k=top_k,
+        )
+        if not results or (
+            measure_ranges and not has_primary_grounding(results)
+        ):
+            answer = NO_CORPUS_EVIDENCE_MESSAGE
+            generation_mode = "unavailable"
+            answer_basis = "no_corpus_evidence"
+            unavailable_reason = _retrieval_unavailable_reason(
+                index,
+                question=question,
+                piece_id=piece_id,
+                measure_ranges=measure_ranges,
+                results=results,
+            )
+        else:
+            raw_answer = generate_llm(
                 SETTINGS["model_path"],
                 messages,
                 SETTINGS["llm"],
             )
-
-        try:
-            # Serialize the complete retry sequence so concurrent HTTP
-            # requests cannot interleave calls into one cached llama model.
-            with _generation_lock:
-                raw_answer, results, _, context_limited = (
-                    generate_with_context_retry(
-                        index,
-                        query=question,
-                        piece=piece_id,
-                        measure_ranges=measure_ranges,
-                        measures=measures,
-                        topic=None,
-                        top_k=top_k,
-                        generator=run_generation,
-                    )
+            try:
+                answer = finalize_grounded_generated_answer(
+                    raw_answer,
+                    results,
+                    messages,
+                    measure_ranges,
                 )
-                grounded_answer_unusable = (
-                    is_grounded_insufficiency_answer(raw_answer)
-                    or (
-                        not context_limited
-                        and not raw_answer.strip()
-                    )
-                )
+            except GeneratedAnswerRejected as exc:
+                # Preserve the sole grounded model draft for review instead
+                # of substituting an extractive or internal-knowledge answer.
+                # Presentation sanitization remains mandatory; semantic or
+                # scope concerns are recorded for the red-flag evaluation.
                 if (
-                    not results
-                    and allow_internal_knowledge
+                    not raw_answer.strip()
+                    or is_grounded_insufficiency_answer(raw_answer)
                 ):
-                    raw_answer = run_generation(
-                        build_internal_knowledge_messages(
-                            piece_id,
-                            measures,
-                            question,
-                        )
-                    )
-                    used_internal_knowledge = True
-            if used_internal_knowledge:
-                answer = finalize_internal_knowledge_answer(raw_answer)
-                if answer:
-                    generation_mode = "llm"
-                    answer_basis = "internal_knowledge"
-                else:
-                    answer = _generation_unavailable_answer()
-                    generation_mode = "unavailable"
-                    answer_basis = "generation_unavailable"
-                    generation_fallback_reason = (
-                        "local model returned no usable answer"
-                    )
-            elif results and grounded_answer_unusable:
-                answer = build_extractive_answer(
-                    select_extractive_fallback_evidence(results)
-                )
-                generation_mode = "extractive"
-                if measure_ranges and not has_primary_grounding(results):
-                    answer_basis = "retrieved_secondary_context"
-                    generation_fallback_reason = (
-                        "only other-range context retrieved"
-                    )
-                else:
-                    answer_basis = "retrieval_extractive"
-                    generation_fallback_reason = (
-                        "grounded model returned no usable answer"
-                    )
-            elif context_limited and not raw_answer:
-                if results:
-                    answer = build_extractive_answer(
-                        select_extractive_fallback_evidence(results)
-                    )
-                    generation_fallback_reason = (
-                        "model context limit exceeded"
-                    )
-                else:
-                    answer = (
-                        "검색 근거가 모델 컨텍스트 한도를 초과하여 안전하게 "
-                        "답변하지 못했습니다."
-                    )
-                    generation_mode = "unavailable"
-                    answer_basis = "generation_unavailable"
-            elif not results:
-                answer = build_extractive_answer(results)
-                generation_mode = "unavailable"
-                answer_basis = "no_corpus_evidence"
-                generation_fallback_reason = (
-                    "internal knowledge fallback disabled"
-                )
-            else:
-                secondary_citation_rejected = (
-                    answer_references_secondary_evidence(
-                        raw_answer,
-                        results,
-                    )
-                )
-                local_scope_rejected = (
-                    answer_overgeneralizes_local_examples(
-                        raw_answer,
-                        results,
-                    )
-                )
-                answer = (
-                    build_extractive_answer(
-                        select_extractive_fallback_evidence(
-                            results,
-                            exclude_local_examples=True,
-                        )
-                    )
-                    if local_scope_rejected
-                    else finalize_answer_citations(raw_answer, results)
-                )
-                if secondary_citation_rejected:
-                    generation_mode = "extractive"
-                    answer_basis = "retrieval_extractive"
-                    generation_fallback_reason = (
-                        "secondary evidence citation rejected"
-                    )
-                elif local_scope_rejected:
-                    generation_mode = "extractive"
-                    answer_basis = "retrieval_extractive"
-                    generation_fallback_reason = (
-                        "unsupported local-example generalization rejected"
-                    )
-                else:
-                    generation_mode = "llm"
-                    answer_basis = "retrieved_evidence"
-        except Exception as exc:  # keep consumers usable without CUDA
-            print(
-                "[qa] local generation failed; using extractive retrieval: "
-                f"{type(exc).__name__}: {exc}",
-                file=sys.stderr,
-            )
-            generation_fallback_reason = "local generation failed"
-            results = index.search(
-                query=question,
-                piece=piece_id,
-                measure_ranges=measure_ranges,
-                topic=None,
-                top_k=top_k,
-            )
-            if results:
-                answer = build_extractive_answer(
-                    select_extractive_fallback_evidence(results)
-                )
-                if measure_ranges and not has_primary_grounding(results):
-                    answer_basis = "retrieved_secondary_context"
-            else:
-                answer = _generation_unavailable_answer()
-                generation_mode = "unavailable"
-                answer_basis = "generation_unavailable"
+                    raise
+                answer = finalize_user_visible_answer(raw_answer, results)
+                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
+                    raise
+                generation_validation_warning = str(exc)
+            generation_mode = "llm"
+            answer_basis = "retrieved_evidence"
     else:
-        if generate:
-            generation_fallback_reason = (
-                "model checkpoint not found"
-                if not status["checkpoint_exists"]
-                else "llama-cpp-python is unavailable"
-            )
         results = index.search(
             query=question,
             piece=piece_id,
@@ -431,23 +316,37 @@ def ask(
             topic=None,
             top_k=top_k,
         )
-        if results:
-            answer = build_extractive_answer(
-                select_extractive_fallback_evidence(results)
-                if generate
-                else results,
-                max_items=None if generate else 4,
-            )
-            if measure_ranges and not has_primary_grounding(results):
-                answer_basis = "retrieved_secondary_context"
-        elif generate:
-            answer = _generation_unavailable_answer()
-            generation_mode = "unavailable"
-            answer_basis = "generation_unavailable"
+        answer = build_extractive_answer(results, max_items=4)
+        generation_mode = (
+            "retrieval_only" if results else "unavailable"
+        )
+        if results and has_primary_grounding(results):
+            answer_basis = "retrieved_evidence"
+        elif results:
+            answer_basis = "retrieved_secondary_context"
         else:
-            answer = build_extractive_answer(results)
             answer_basis = "no_corpus_evidence"
+            unavailable_reason = _retrieval_unavailable_reason(
+                index,
+                question=question,
+                piece_id=piece_id,
+                measure_ranges=measure_ranges,
+                results=results,
+            )
 
+    answer = finalize_user_visible_answer(answer, results)
+    if (
+        answer == NO_CORPUS_EVIDENCE_MESSAGE
+        and answer_basis not in {
+            "no_corpus_evidence",
+            "retrieved_secondary_context",
+        }
+    ):
+        generation_mode = "unavailable"
+        answer_basis = "no_corpus_evidence"
+        unavailable_reason = "forbidden_internal_metadata"
+
+    status = model_status()
     return {
         "piece_id": piece_id,
         "scope": "range" if measure_range else "whole_piece",
@@ -455,12 +354,12 @@ def ask(
         "answer": answer,
         "generation_mode": generation_mode,
         "answer_basis": answer_basis,
-        "generation_fallback_reason": generation_fallback_reason,
-        "context_limited": context_limited,
+        "unavailable_reason": unavailable_reason,
+        "generation_validation_warning": generation_validation_warning,
         "has_primary_grounding": has_primary_grounding(results),
         "has_selected_range_grounding": (
             has_selected_range_grounding(results)
-            if measure_ranges
+            if selected_measure_ranges
             else None
         ),
         "has_confirmed_local_examples": any(
