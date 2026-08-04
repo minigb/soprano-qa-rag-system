@@ -39,9 +39,10 @@ chronological engineering record, including unsuccessful approaches.
 
 ## RAG+LLM approach branch/worktree registry
 
-Only branches and worktrees created to preserve or develop a distinct RAG+LLM
-pipeline approach belong in this registry. Dataset, demo, and ordinary
-evaluation-output directories are deliberately excluded.
+This registry is intentionally limited to committed snapshots of distinct,
+new RAG+LLM pipeline approaches. Do not list routine development branches,
+dataset-repository branches, demo worktrees, evaluation-output directories, or
+historical cleanup work here.
 
 | Experimental snapshot | Branch | Worktree | Commit | State and purpose |
 | --- | --- | --- | --- | --- |
@@ -49,7 +50,7 @@ evaluation-output directories are deliberately excluded.
 | Pre-fidelity-editor baseline | `codex/pre-fidelity-editor-snapshot` | `/home/minhee/codex/pre-fidelity-editor-snapshot` | `7e364b6` | Clean committed snapshot of the answer-required one-pass code immediately before the proposed fidelity-editor change. It is intentionally unmerged and is the primary rollback point for the next experiment. |
 | Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
 
-All three snapshot worktrees are committed and clean. Their experimental branches
+Every snapshot listed above is committed and clean. These experimental branches
 are local and have not been pushed.
 
 For every future material RAG+LLM approach:

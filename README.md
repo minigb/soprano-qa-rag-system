@@ -168,7 +168,8 @@ intentionally pending until both artifacts have been rerun with the final
 pipeline code.
 
 The chronological rationale, failed approaches, concrete red-flag samples,
-rollback worktrees, and current experiment status are maintained in
+new RAG+LLM experimental snapshot branches/worktrees, and current experiment
+status are maintained in
 [`docs/pipeline-evolution-log.md`](docs/pipeline-evolution-log.md). Update that
 living handoff before starting and after evaluating every materially different
 pipeline version.
