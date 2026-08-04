@@ -1,52 +1,142 @@
 """Integration checks for the reusable QA service facade."""
 from __future__ import annotations
 
-from concurrent.futures import ThreadPoolExecutor
 import os
 from pathlib import Path
+import re
 import tempfile
-import threading
-import time
 import unittest
 from unittest import mock
 
 from soprano_qa import service as qa
-from soprano_qa.retrieval import SearchResult, format_measure_range
+from soprano_qa.answer import (
+    GeneratedAnswerRejected,
+    NO_CORPUS_EVIDENCE_MESSAGE,
+    answer_uses_formal_polite_korean,
+)
+from soprano_qa.dense import (
+    AMBIGUOUS_DENSE_ONLY_RANGE_REASON,
+    SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON,
+)
+from soprano_qa.retrieval import SearchResult
 from soprano_qa.settings import load_settings
-
-
-def _first_local_prompt_evidence(prompt: str) -> dict[str, str]:
-    local_block = next(
-        block
-        for block in prompt.split("\n\n---\n\n")
-        if "evidence_role: local_example" in block
-    )
-    return {
-        line.split(": ", 1)[0]: line.split(": ", 1)[1]
-        for line in local_block.splitlines()
-        if ": " in line
-    }
 
 
 class ServicePipelineTests(unittest.TestCase):
     def setUp(self) -> None:
-        """Keep model-free service tests explicit about lexical retrieval."""
-        self._retrieval_settings_patch = mock.patch.dict(
-            qa.SETTINGS,
-            {
-                "retrieval": {
-                    **qa.SETTINGS["retrieval"],
-                    "mode": "lexical",
-                    "fallback_to_lexical": False,
-                }
-            },
+        """Isolate generation while exercising configured strict retrieval."""
+        self._generation_preflight_patch = mock.patch.object(
+            qa,
+            "validate_generation_requirements",
         )
-        self._retrieval_settings_patch.start()
+        self.generation_preflight = self._generation_preflight_patch.start()
 
     def tearDown(self) -> None:
-        self._retrieval_settings_patch.stop()
+        self._generation_preflight_patch.stop()
 
-    def test_missing_hybrid_model_fails_before_corpus_or_llm_work(self) -> None:
+    def assert_public_answer_contract(self, result: dict) -> None:
+        """Check display prose while keeping provenance in structured evidence."""
+
+        answer = result["answer"]
+        self.assertIsInstance(answer, str)
+        self.assertTrue(answer.strip())
+        self.assertTrue(
+            answer_uses_formal_polite_korean(answer),
+            msg=f"answer is not consistently formal-polite Korean: {answer!r}",
+        )
+        compact = re.sub(r"[\s*_~`]", "", answer)
+        self.assertNotIn("제공된검색근거", compact)
+        for internal_label in (
+            "범위안내:",
+            "확인된국소예시",
+            "일반참고근거:",
+            "citation_label",
+            "evidence_role",
+            "query_scope_relation",
+            "measure_range",
+            "measure_scope",
+            "scope_match",
+            "usage_constraint",
+            "source_ids",
+            "web_source_ids",
+            "claim_ids",
+            "annotators",
+            "rewrite_status",
+            "measure_status",
+            "retrieval_review_warning",
+            "record_id",
+            "knowledge_unit_id",
+        ):
+            self.assertNotIn(internal_label, compact)
+        self.assertNotRegex(
+            answer,
+            r"(?:검색(?:된|한)?|제공(?:된|한)?)\s*(?:코퍼스|말뭉치)",
+        )
+        self.assertNotIn("로컬 LLM", answer)
+        self.assertNotRegex(
+            answer,
+            r"[\[【]\s*(?:E(?:vidence)?|근거|출처)\s*"
+            r"(?:[:：#._–—-]\s*)?(?:no\.?\s*)?[0-9]+",
+        )
+        self.assertNotRegex(
+            answer,
+            r"(?<![A-Za-z0-9_-])(?:sqa-|webchunk-|source[_ -]?id\b)",
+        )
+        for evidence in result.get("evidence", []):
+            evidence_id = evidence.get("id")
+            self.assertIsInstance(evidence_id, str)
+            self.assertTrue(evidence_id)
+            self.assertNotIn(evidence_id, answer)
+            for key in ("source_ids", "web_source_ids", "claim_ids"):
+                for provenance_id in evidence.get(key, []):
+                    self.assertNotIn(str(provenance_id), answer)
+        if result.get("measure_range") is None:
+            for evidence in result.get("evidence", []):
+                if evidence.get("scope_match") != "local_example":
+                    continue
+                for start, end in evidence.get("measure_ranges", []):
+                    if start == end:
+                        locator_patterns = (
+                            rf"(?<!\d){start}\s*(?:번째\s*)?마디",
+                            rf"마디\s*{start}(?!\d)",
+                        )
+                    else:
+                        locator_patterns = (
+                            rf"(?<!\d){start}\s*[-–—~]\s*{end}\s*마디",
+                            rf"마디\s*{start}\s*[-–—~]\s*{end}(?!\d)",
+                            rf"(?<!\d){start}\s*마디부터\s*{end}\s*마디",
+                        )
+                    for pattern in locator_patterns:
+                        self.assertNotRegex(answer, pattern)
+
+    def test_generation_preflight_error_propagates_before_retrieval(self) -> None:
+        failure = RuntimeError("required generation checkpoint is missing")
+        with (
+            mock.patch.object(
+                qa,
+                "validate_generation_requirements",
+                side_effect=failure,
+            ) as validate,
+            mock.patch.object(qa, "_get_index") as get_index,
+            mock.patch.object(qa, "generate_llm") as generate,
+        ):
+            with self.assertRaises(RuntimeError) as raised:
+                qa.ask(
+                    piece_id="die-forelle",
+                    question="어떻게 표현해야 하나요?",
+                    measure_range=None,
+                    generate=True,
+                )
+
+        self.assertIs(raised.exception, failure)
+        validate.assert_called_once_with(
+            qa.SETTINGS["model_path"],
+            qa.SETTINGS["llm"],
+        )
+        get_index.assert_not_called()
+        generate.assert_not_called()
+
+    def test_missing_hybrid_checkpoint_fails_before_corpus_work(self) -> None:
         with tempfile.TemporaryDirectory() as temporary:
             missing_model = Path(temporary) / "missing-embedding.gguf"
             settings = {
@@ -55,7 +145,6 @@ class ServicePipelineTests(unittest.TestCase):
                 "retrieval": {
                     **qa.SETTINGS["retrieval"],
                     "mode": "hybrid",
-                    "fallback_to_lexical": True,
                 },
             }
             with (
@@ -73,7 +162,7 @@ class ServicePipelineTests(unittest.TestCase):
                         piece_id="die-forelle",
                         question="어떻게 표현해야 하나요?",
                         measure_range=None,
-                        generate=True,
+                        generate=False,
                     )
 
             ensure_corpus.assert_not_called()
@@ -147,6 +236,56 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertIsNotNone(with_checkpoint[2])
         self.assertNotEqual(without_checkpoint, with_checkpoint)
 
+    def test_warm_index_still_validates_corpus_on_every_request(self) -> None:
+        cached_index = object()
+        signature = ((1, 10), (2, 20), None)
+        with (
+            mock.patch.object(qa, "_index", cached_index),
+            mock.patch.object(qa, "_corpus_signature", signature),
+            mock.patch.object(qa, "ensure_corpus") as ensure_corpus,
+            mock.patch.object(
+                qa,
+                "_current_corpus_signature",
+                return_value=signature,
+            ),
+            mock.patch.object(qa, "build_retrieval_index") as build_index,
+        ):
+            self.assertIs(qa._get_index(), cached_index)
+            self.assertIs(qa._get_index(), cached_index)
+
+        self.assertEqual(ensure_corpus.call_count, 2)
+        ensure_corpus.assert_called_with(qa.SETTINGS, rebuild=False)
+        build_index.assert_not_called()
+
+    def test_warm_index_propagates_release_readiness_failure(self) -> None:
+        cached_index = object()
+        signature = ((1, 10), (2, 20), None)
+        with (
+            mock.patch.object(qa, "_index", cached_index),
+            mock.patch.object(qa, "_corpus_signature", signature),
+            mock.patch.object(
+                qa,
+                "ensure_corpus",
+                side_effect=ValueError(
+                    "Expert review corpus is not release-ready"
+                ),
+            ) as ensure_corpus,
+            mock.patch.object(
+                qa,
+                "_current_corpus_signature",
+            ) as current_signature,
+            mock.patch.object(qa, "build_retrieval_index") as build_index,
+        ):
+            with self.assertRaisesRegex(
+                ValueError,
+                "Expert review corpus is not release-ready",
+            ):
+                qa._get_index()
+
+        ensure_corpus.assert_called_once_with(qa.SETTINGS, rebuild=False)
+        current_signature.assert_not_called()
+        build_index.assert_not_called()
+
     def test_measure_query_uses_pipeline_scope_and_ids(self) -> None:
         result = qa.ask(
             piece_id="die-forelle",
@@ -156,8 +295,8 @@ class ServicePipelineTests(unittest.TestCase):
         )
 
         self.assertEqual(result["pipeline"], "soprano_qa")
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
+        self.assertEqual(result["generation_mode"], "retrieval_only")
+        self.assertEqual(result["answer_basis"], "retrieved_evidence")
         self.assertEqual(
             result["evidence"][0]["id"],
             "die-forelle-ku-010",
@@ -174,7 +313,8 @@ class ServicePipelineTests(unittest.TestCase):
             result["evidence"][0]["selected_range_claim_authority"]
         )
         self.assertTrue(result["has_selected_range_grounding"])
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
+        self.assertIn("긴장감과 분위기 전환", result["answer"])
+        self.assert_public_answer_contract(result)
 
     def test_korean_synonyms_retrieve_the_same_second_beat_evidence(self) -> None:
         questions = (
@@ -218,7 +358,7 @@ class ServicePipelineTests(unittest.TestCase):
                 )
                 self.assertIn("송어가 뛰어노는 모습", result["answer"])
 
-    def test_korean_relation_fallback_reranks_explanatory_units(self) -> None:
+    def test_dense_retrieval_keeps_intended_explanatory_units(self) -> None:
         cases = (
             (
                 "la-capinera",
@@ -241,42 +381,21 @@ class ServicePipelineTests(unittest.TestCase):
                     measure_range=measure_range,
                     generate=False,
                 )
-                self.assertEqual(
-                    [evidence["id"] for evidence in result["evidence"]],
-                    [expected_id],
+                evidence_ids = [
+                    evidence["id"] for evidence in result["evidence"]
+                ]
+                self.assertIn(expected_id, evidence_ids)
+                target = next(
+                    evidence
+                    for evidence in result["evidence"]
+                    if evidence["id"] == expected_id
                 )
                 self.assertEqual(
-                    result["evidence"][0]["semantic_match_type"],
-                    "answer_relation_fallback",
+                    target["scope_match"],
+                    "overlaps_query_range",
                 )
-                self.assertEqual(
-                    result["evidence"][0]["answer_relation_score"],
-                    1.0,
-                )
-
-    def test_relation_fallback_does_not_promote_alias_only_global_context(
-        self,
-    ) -> None:
-        result = qa.ask(
-            piece_id="die-forelle",
-            question=(
-                "피아노 반주에서 두 번째 박의 악센트는 무엇을 "
-                "의미하는가?"
-            ),
-            measure_range=(28, 40),
-            generate=False,
-        )
-
-        self.assertEqual(
-            [evidence["id"] for evidence in result["evidence"]],
-            ["die-forelle-ku-002"],
-        )
-        self.assertEqual(
-            result["evidence"][0]["scope_match"],
-            "other_range_context",
-        )
-        self.assertEqual(result["answer_basis"], "retrieved_secondary_context")
-        self.assertFalse(result["has_primary_grounding"])
+                self.assertEqual(target["semantic_match_type"], "dense")
+                self.assertGreater(target["dense_content_score"], 0.0)
 
     def test_terminal_answer_predicates_preserve_definition_queries(self) -> None:
         cases = (
@@ -346,10 +465,7 @@ class ServicePipelineTests(unittest.TestCase):
         local = next(
             item
             for item in result["evidence"]
-            if (
-                item["scope_match"] == "local_example"
-                and f'[{item["id"]}]' in result["answer"]
-            )
+            if item["scope_match"] == "local_example"
         )
         self.assertEqual(local["scope_match"], "local_example")
         self.assertEqual(local["generation_role"], "local_example")
@@ -357,13 +473,11 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertIsNone(local["selected_range_claim_authority"])
         self.assertEqual(local["measure_status"], "specific")
         self.assertTrue(local["measure_ranges"])
-        canonical_range = format_measure_range(local["measure_ranges"])
         self.assertTrue(result["has_confirmed_local_examples"])
-        self.assertIn(f'[{local["id"]}]', result["answer"])
-        self.assertIn(
-            f"확인된 국소 예시(마디 {canonical_range})",
-            result["answer"],
-        )
+        self.assertIn(local["id"], [item["id"] for item in result["evidence"]])
+        self.assertNotIn("범위 안내", result["answer"])
+        self.assertNotIn("확인된 국소 예시", result["answer"])
+        self.assert_public_answer_contract(result)
 
     def test_retrieval_only_answer_is_bounded_but_evidence_is_complete(
         self,
@@ -377,14 +491,10 @@ class ServicePipelineTests(unittest.TestCase):
                 "work": "Die Forelle",
                 "topic": "performance",
                 "question": "",
-                "answer": f"검색 답변 {index}",
+                "answer": f"검색 답변 {index}입니다.",
                 "measure_range": [],
                 "measure_scope": "whole_piece",
                 "measure_status": "whole_piece",
-                "measure_notes": "",
-                "rewrite_status": "ready",
-                "rewrite_notes": "",
-                "retrieval_review_warning": "",
                 "source_ids": [f"source-{index}"],
                 "web_source_ids": [],
                 "claim_ids": [],
@@ -408,15 +518,7 @@ class ServicePipelineTests(unittest.TestCase):
             def search(**_kwargs):
                 return results
 
-        unavailable = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": False,
-            "llama_cpp_available": False,
-        }
-        with (
-            mock.patch.object(qa, "_get_index", return_value=FixedIndex()),
-            mock.patch.object(qa, "model_status", return_value=unavailable),
-        ):
+        with mock.patch.object(qa, "_get_index", return_value=FixedIndex()):
             response = qa.ask(
                 piece_id="die-forelle",
                 question="어떻게 표현할까?",
@@ -426,57 +528,27 @@ class ServicePipelineTests(unittest.TestCase):
             )
 
         self.assertEqual(len(response["evidence"]), 6)
-        cited_ids = [
-            item["id"]
-            for item in response["evidence"]
-            if f'[{item["id"]}]' in response["answer"]
-        ]
-        self.assertEqual(cited_ids, [result.record["id"] for result in results[:4]])
+        self.assertEqual(
+            [item["id"] for item in response["evidence"]],
+            [result.record["id"] for result in results],
+        )
+        for result in results[:4]:
+            self.assertIn(result.record["answer"], response["answer"])
         self.assertNotIn(results[4].record["answer"], response["answer"])
+        self.assertNotIn(results[5].record["answer"], response["answer"])
+        self.assert_public_answer_contract(response)
 
-    def test_broad_rag_generation_can_cite_a_confirmed_local_example(
+    def test_broad_guidance_uses_the_same_grounded_llm_path(
         self,
     ) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        selected_local = {}
-
-        def grounded_local_example(
-            _model_path: str,
-            messages: list[dict[str, str]],
-            _llm_settings: dict,
-        ) -> str:
-            prompt = messages[1]["content"]
-            self.assertIn("evidence_role: local_example", prompt)
-            self.assertIn(
-                "canonical measure_range",
-                prompt,
-            )
-            fields = _first_local_prompt_evidence(prompt)
-            selected_local.update(
-                {
-                    "id": fields["id"],
-                    "label": fields["citation_label"],
-                    "measure_range": fields["measure_range"],
-                }
-            )
-            return (
-                f'{selected_local["measure_range"]}마디에서는 확인된 '
-                "가창 조언에 유의한다. "
-                f'[{selected_local["label"]}]'
-            )
-
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                side_effect=grounded_local_example,
+        with mock.patch.object(
+            qa,
+            "generate_llm",
+            return_value=(
+                "가창자의 입장에서는 호흡과 표현을 함께 고려하는 "
+                "것이 좋습니다. [E1]"
             ),
-        ):
+        ) as generate:
             result = qa.ask(
                 piece_id="la-capinera",
                 question=(
@@ -488,83 +560,15 @@ class ServicePipelineTests(unittest.TestCase):
                 top_k=6,
             )
 
+        generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
         self.assertEqual(result["generation_mode"], "llm")
         self.assertEqual(result["answer_basis"], "retrieved_evidence")
-        self.assertIn(selected_local["measure_range"], result["answer"])
-        self.assertIn(f'[{selected_local["id"]}]', result["answer"])
-
-    def test_broad_rag_rejects_locally_cited_piece_wide_claim(
-        self,
-    ) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        calls = []
-        selected_local = {}
-
-        def overgeneralized_answer(
-            _model_path: str,
-            messages: list[dict[str, str]],
-            _llm_settings: dict,
-        ) -> str:
-            calls.append(messages)
-            prompt = messages[1]["content"]
-            fields = _first_local_prompt_evidence(prompt)
-            selected_local.update(
-                {
-                    "id": fields["id"],
-                    "label": fields["citation_label"],
-                    "measure_range": fields["measure_range"],
-                }
-            )
-            return (
-                "이 곡 전반에는 도약음이 많이 나오므로 항상 고음을 "
-                f'약하게 불러야 한다. [{selected_local["label"]}]'
-            )
-
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                side_effect=overgeneralized_answer,
-            ),
-        ):
-            result = qa.ask(
-                piece_id="la-capinera",
-                question=(
-                    "이 노래를 부를 때 가창자의 입장에서 유의해야 "
-                    "할 점은 무엇인가?"
-                ),
-                measure_range=None,
-                generate=True,
-                top_k=6,
-            )
-
-        self.assertEqual(len(calls), 2)
-        self.assertIn(
-            "unsupported whole-piece or frequency claim",
-            calls[1][-1]["content"],
-        )
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "unsupported local-example generalization rejected",
-        )
-        self.assertNotIn("항상 고음을 약하게", result["answer"])
-        self.assertNotIn(f'[{selected_local["id"]}]', result["answer"])
-        cited = [
-            item
-            for item in result["evidence"]
-            if f'[{item["id"]}]' in result["answer"]
-        ]
-        self.assertTrue(cited)
-        self.assertTrue(
-            all(item["scope_match"] != "local_example" for item in cited)
-        )
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertTrue(result["evidence"])
+        self.assertNotEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertNotIn("확인된 국소 예시", result["answer"])
+        self.assert_public_answer_contract(result)
 
     def test_ranged_query_retains_confirmed_other_range_context(self) -> None:
         result = qa.ask(
@@ -602,14 +606,10 @@ class ServicePipelineTests(unittest.TestCase):
             "piece": "die-forelle",
             "work": "Die Forelle",
             "topic": "performance",
-            "answer": "다른 구간에서만 적용되는 주석",
+            "answer": "다른 구간에서만 적용되는 주석입니다.",
             "measure_range": [[30, 32]],
             "measure_scope": "local",
             "measure_status": "specific",
-            "measure_notes": "",
-            "rewrite_status": "ready",
-            "rewrite_notes": "",
-            "retrieval_review_warning": "",
             "source_ids": ["kim-die-forelle-01"],
             "annotators": ["kim"],
             "source_answer_context": [],
@@ -629,18 +629,12 @@ class ServicePipelineTests(unittest.TestCase):
             def search(**_kwargs):
                 return [secondary]
 
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
         with (
             mock.patch.object(
                 qa,
                 "_get_index",
                 return_value=SecondaryOnlyIndex(),
             ),
-            mock.patch.object(qa, "model_status", return_value=available),
             mock.patch.object(qa, "generate_llm") as generate,
         ):
             result = qa.ask(
@@ -655,31 +649,29 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertFalse(result["has_selected_range_grounding"])
         self.assertEqual(
             result["answer_basis"],
-            "retrieved_secondary_context",
+            "no_corpus_evidence",
         )
-        self.assertIn(
-            "선택한 마디 범위를 직접 뒷받침하는 근거는 없습니다.",
-            result["answer"],
-        )
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["unavailable_reason"], "no_corpus_evidence")
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
         self.assertEqual(
             result["evidence"][0]["generation_role"],
             "other_range_context_only",
         )
+        self.generation_preflight.assert_called_once()
+        self.assert_public_answer_contract(result)
 
-    def test_generation_runs_context_and_citation_pipeline(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value="검색 근거를 사용한 답변입니다. [E1]",
-            ) as generate,
-        ):
+    def test_finalized_expert_is_composed_by_the_grounded_llm(
+        self,
+    ) -> None:
+        with mock.patch.object(
+            qa,
+            "generate_llm",
+            return_value=(
+                "긴장감과 분위기 전환을 자연스럽게 표현하는 것이 "
+                "좋습니다. [E1]"
+            ),
+        ) as generate:
             result = qa.ask(
                 piece_id="die-forelle",
                 question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
@@ -688,423 +680,367 @@ class ServicePipelineTests(unittest.TestCase):
             )
 
         generate.assert_called_once()
+        self.generation_preflight.assert_called_once_with(
+            qa.SETTINGS["model_path"],
+            qa.SETTINGS["llm"],
+        )
         self.assertEqual(result["generation_mode"], "llm")
         self.assertEqual(result["answer_basis"], "retrieved_evidence")
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-        self.assertNotIn("[E1]", result["answer"])
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertIn("긴장감과 분위기 전환", result["answer"])
+        self.assertEqual(result["evidence"][0]["id"], "die-forelle-ku-010")
+        self.assertNotIn("die-forelle-ku-010", result["answer"])
+        self.assert_public_answer_contract(result)
 
-    def test_secondary_citation_fallback_is_reported_as_extractive(
+    def test_ambiguous_dense_range_returns_explicit_unavailable_reason(
         self,
     ) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
+        class AmbiguousIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid_no_dense_match"
+            last_route_reason = AMBIGUOUS_DENSE_ONLY_RANGE_REASON
+            last_ambiguous_candidates = [
+                {
+                    "id": "nella-fantasia-ku-008",
+                    "source_ids": ["source-b"],
+                    "scope_match": "overlaps_query_range",
+                    "dense_score": 0.563439,
+                    "dense_content_score": 0.563237,
+                },
+                {
+                    "id": "nella-fantasia-ku-006",
+                    "source_ids": ["source-a"],
+                    "scope_match": "overlaps_query_range",
+                    "dense_score": 0.558445,
+                    "dense_content_score": 0.537356,
+                },
+            ]
+
+            @staticmethod
+            def search(**_kwargs):
+                return []
+
         with (
-            mock.patch.object(qa, "model_status", return_value=available),
             mock.patch.object(
                 qa,
-                "generate_llm",
-                return_value="다른 구간의 주장을 잘못 사용했다. [E2]",
-            ) as generate,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question=(
-                    "피아노 파트에서 두 번째 박의 악센트는 "
-                    "무엇을 표현할까?"
-                ),
-                measure_range=(28, 40),
-                generate=True,
-            )
-
-        generate.assert_called_once()
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "secondary evidence citation rejected",
-        )
-        self.assertIn("[die-forelle-ku-003]", result["answer"])
-        self.assertNotIn("[die-forelle-ku-002]", result["answer"])
-        self.assertNotIn("잘못 사용했다", result["answer"])
-
-    def test_no_hit_uses_separate_internal_knowledge_prompt(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=(
-                    "일반 음악 지식으로 답한 내용입니다. "
-                    "[E1; sqa-0001] [sqa-0001, sqa-0002] "
-                    "[die-forelle-ku-001] "
-                    "[출처: E2] 【Evidence 3】 "
-                    "[webchunk-a, webchunk-b] "
-                    "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다."
-                ),
-            ) as generate,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="2022년 FIFA 월드컵 우승팀은 어디인가요?",
-                measure_range=None,
-                generate=True,
-            )
-
-        generate.assert_called_once()
-        messages = generate.call_args.args[1]
-        self.assertIn("No matching corpus evidence", messages[0]["content"])
-        self.assertNotIn("Retrieved evidence", messages[1]["content"])
-        self.assertEqual(result["generation_mode"], "llm")
-        self.assertEqual(result["answer_basis"], "internal_knowledge")
-        self.assertEqual(result["evidence"], [])
-        self.assertEqual(result["evidence_notices"], [])
-        self.assertIn("일반 음악 지식", result["answer"])
-        self.assertNotIn("[E1]", result["answer"])
-        self.assertNotIn("sqa-", result["answer"])
-        self.assertNotIn("-ku-", result["answer"])
-        self.assertNotIn("webchunk-", result["answer"])
-        self.assertNotIn("Evidence", result["answer"])
-        self.assertNotIn(
-            "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다.",
-            result["answer"],
-        )
-
-    def test_grounded_refusal_preserves_retrieved_extractive_evidence(
-        self,
-    ) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=(
-                    "현재 답변 가능 자료에서 이 질문을 뒷받침할 "
-                    "근거를 찾지 못했습니다."
-                ),
-            ) as generate,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-            )
-
-        generate.assert_called_once()
-        self.assertIn(
-            "Retrieved evidence",
-            generate.call_args.args[1][1]["content"],
-        )
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertTrue(result["evidence"])
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-        self.assertNotIn("현재 답변 가능 자료에서", result["answer"])
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "grounded model returned no usable answer",
-        )
-
-    def test_empty_grounded_answer_preserves_retrieved_evidence(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(qa, "generate_llm", return_value="") as generate,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-            )
-
-        generate.assert_called_once()
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertTrue(result["evidence"])
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "grounded model returned no usable answer",
-        )
-
-    def test_footer_only_grounded_answer_uses_extractive_evidence(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=(
-                    "\"제공된 검색 근거\":\n"
-                    "[Evidence no. 1] [근거 2]"
-                ),
-            ) as generate,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-            )
-
-        generate.assert_called_once()
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-        self.assertNotIn("제공된 검색 근거", result["answer"])
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "grounded model returned no usable answer",
-        )
-
-    def test_no_hit_can_disable_internal_knowledge_fallback(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
+                "_get_index",
+                return_value=AmbiguousIndex(),
+            ),
             mock.patch.object(qa, "generate_llm") as generate,
         ):
             result = qa.ask(
-                piece_id="die-forelle",
-                question="2022년 FIFA 월드컵 우승팀은 어디인가요?",
-                measure_range=None,
+                piece_id="nella-fantasia",
+                question=(
+                    "갑작스러운 상행 도약을 자연스럽게 소화하려면 "
+                    "어떻게 해야 할까?"
+                ),
+                measure_range=(11, 17),
                 generate=True,
-                allow_internal_knowledge=False,
             )
 
         generate.assert_not_called()
+        self.generation_preflight.assert_called_once()
         self.assertEqual(result["generation_mode"], "unavailable")
         self.assertEqual(result["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(result["evidence"], [])
-        self.assertEqual(result["answer"], "검색된 코퍼스 근거가 없습니다.")
         self.assertEqual(
-            result["generation_fallback_reason"],
-            "internal knowledge fallback disabled",
+            result["unavailable_reason"],
+            "ambiguous_dense_grounding",
+        )
+        self.assertEqual(result["evidence"], [])
+        self.assertEqual(
+            result["retrieval"]["route_reason"],
+            AMBIGUOUS_DENSE_ONLY_RANGE_REASON,
+        )
+        self.assertEqual(
+            [item["id"] for item in result["retrieval"]["ambiguous_candidates"]],
+            ["nella-fantasia-ku-008", "nella-fantasia-ku-006"],
+        )
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assert_public_answer_contract(result)
+
+    def test_missing_scoped_causal_authority_returns_explicit_reason(
+        self,
+    ) -> None:
+        class MissingCausalAuthorityIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid_no_dense_match"
+            last_route_reason = SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON
+            last_ambiguous_candidates = []
+
+            def __init__(self) -> None:
+                self.search_calls = []
+
+            def search(self, **kwargs):
+                self.search_calls.append(kwargs)
+                return []
+
+        index = MissingCausalAuthorityIndex()
+        with (
+            mock.patch.object(qa, "_get_index", return_value=index),
+            mock.patch.object(qa, "generate_llm") as generate,
+        ):
+            result = qa.ask(
+                piece_id="una-voce-poco-fa",
+                question=(
+                    "63마디에서 로시니가 겹부점 리듬을 사용한 "
+                    "이유는 무엇일까?"
+                ),
+                measure_range=(14, 63),
+                generate=True,
+            )
+
+        generate.assert_not_called()
+        self.generation_preflight.assert_called_once()
+        self.assertEqual(index.search_calls[0]["measure_ranges"], [[63, 63]])
+        self.assertEqual(result["measure_range"], [14, 63])
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
+        self.assertEqual(
+            result["unavailable_reason"],
+            "missing_scoped_causal_authority",
+        )
+        self.assertEqual(result["evidence"], [])
+        self.assertEqual(
+            result["retrieval"]["route_reason"],
+            SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON,
+        )
+        self.assert_public_answer_contract(result)
+
+    def test_underspecified_range_returns_explicit_unavailable_reason(
+        self,
+    ) -> None:
+        class EmptyIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "no_lexical_match"
+            last_ambiguous_candidates = []
+
+            @staticmethod
+            def search(**_kwargs):
+                return []
+
+        with (
+            mock.patch.object(qa, "_get_index", return_value=EmptyIndex()),
+            mock.patch.object(qa, "generate_llm") as generate,
+        ):
+            result = qa.ask(
+                piece_id="nella-fantasia",
+                question="이 부분은 어떻게 노래해야 할까?",
+                measure_range=(11, 17),
+                generate=True,
+            )
+
+        generate.assert_not_called()
+        self.generation_preflight.assert_called_once()
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
+        self.assertEqual(
+            result["unavailable_reason"],
+            "underspecified_ranged_question",
+        )
+        self.assertEqual(result["evidence"], [])
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assert_public_answer_contract(result)
+
+    @staticmethod
+    def _grounded_web_result() -> SearchResult:
+        return SearchResult(
+            record={
+                "id": "webchunk-grounded-test",
+                "evidence_type": "web_database",
+                "piece": "die-forelle",
+                "work": "Die Forelle",
+                "topic": "historical_editions",
+                "answer": "이 작품의 역사적 판본을 설명하는 검토 자료입니다.",
+                "measure_range": [],
+                "measure_scope": "global",
+                "measure_status": "whole_piece",
+                "source_ids": [],
+                "web_source_ids": ["web-source"],
+                "claim_ids": ["web-claim"],
+                "sources": [],
+            },
+            score=0.75,
+            text_score=2.0,
+            measure_score=1.5,
+            piece_score=1.0,
+            scope_match="general_evidence",
+            alias_score=0.0,
+            concept_coverage=1.0,
+            content_concept_coverage=1.0,
+            semantic_match_type="strict",
+            dense_score=0.55,
+            dense_content_score=0.50,
+            retrieval_mode="hybrid",
         )
 
-    def test_grounded_secondary_limitation_does_not_trigger_internal_retry(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
+    def test_generation_backend_error_propagates_after_one_call(self) -> None:
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [ServicePipelineTests._grounded_web_result()]
+
+        failure = RuntimeError("backend stopped")
         with (
-            mock.patch.object(qa, "model_status", return_value=available),
+            mock.patch.object(qa, "_get_index", return_value=WebIndex()),
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=(
-                    "제공된 근거로는 판본 정보가 부족하지만, 28마디의 "
-                    "분위기 변화는 어둡게 표현합니다. [E1]"
-                ),
+                side_effect=failure,
             ) as generate,
+        ):
+            with self.assertRaises(RuntimeError) as raised:
+                qa.ask(
+                    piece_id="die-forelle",
+                    question="이 작품의 역사적 판본은 무엇인가요?",
+                    measure_range=None,
+                    generate=True,
+                )
+
+        self.assertIs(raised.exception, failure)
+        generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
+
+    def test_rejected_generated_draft_propagates_after_one_call(self) -> None:
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [ServicePipelineTests._grounded_web_result()]
+
+        with (
+            mock.patch.object(qa, "_get_index", return_value=WebIndex()),
+            mock.patch.object(
+                qa,
+                "generate_llm",
+                return_value="<NO_GROUNDED_ANSWER>",
+            ) as generate,
+        ):
+            with self.assertRaises(GeneratedAnswerRejected):
+                qa.ask(
+                    piece_id="die-forelle",
+                    question="이 작품의 역사적 판본은 무엇인가요?",
+                    measure_range=None,
+                    generate=True,
+                )
+
+        generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
+
+    def test_natural_insufficiency_draft_propagates_after_one_call(self) -> None:
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [ServicePipelineTests._grounded_web_result()]
+
+        refusal = (
+            "제공된 근거만으로는 이 질문에 정확히 답변할 수 없습니다."
+        )
+        with (
+            mock.patch.object(qa, "_get_index", return_value=WebIndex()),
+            mock.patch.object(
+                qa,
+                "generate_llm",
+                return_value=refusal,
+            ) as generate,
+        ):
+            with self.assertRaises(GeneratedAnswerRejected):
+                qa.ask(
+                    piece_id="die-forelle",
+                    question="이 작품의 역사적 판본은 무엇인가요?",
+                    measure_range=None,
+                    generate=True,
+                )
+
+        generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
+
+    def test_empty_generated_draft_propagates_after_one_call(self) -> None:
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [ServicePipelineTests._grounded_web_result()]
+
+        with (
+            mock.patch.object(qa, "_get_index", return_value=WebIndex()),
+            mock.patch.object(
+                qa,
+                "generate_llm",
+                return_value=" \n\t",
+            ) as generate,
+        ):
+            with self.assertRaises(GeneratedAnswerRejected):
+                qa.ask(
+                    piece_id="die-forelle",
+                    question="이 작품의 역사적 판본은 무엇인가요?",
+                    measure_range=None,
+                    generate=True,
+                )
+
+        generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
+
+    def test_other_rejected_draft_remains_a_review_warning(self) -> None:
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [ServicePipelineTests._grounded_web_result()]
+
+        raw_answer = "판본에 따라 연주 방식이 달라집니다. [E1]"
+        warning = "Generated answer overgeneralizes local evidence"
+        with (
+            mock.patch.object(qa, "_get_index", return_value=WebIndex()),
+            mock.patch.object(
+                qa,
+                "generate_llm",
+                return_value=raw_answer,
+            ) as generate,
+            mock.patch.object(
+                qa,
+                "finalize_grounded_generated_answer",
+                side_effect=GeneratedAnswerRejected(warning),
+            ),
         ):
             result = qa.ask(
                 piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
+                question="이 작품의 역사적 판본은 무엇인가요?",
+                measure_range=None,
                 generate=True,
             )
 
         generate.assert_called_once()
+        self.generation_preflight.assert_called_once()
+        self.assertEqual(result["generation_mode"], "llm")
         self.assertEqual(result["answer_basis"], "retrieved_evidence")
-        self.assertTrue(result["evidence"])
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-
-    def test_empty_internal_answer_is_classified_as_unavailable(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=(
-                    "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다."
-                ),
-            ),
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="2022년 FIFA 월드컵 우승팀은 어디인가요?",
-                measure_range=None,
-                generate=True,
-            )
-
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "generation_unavailable")
-        self.assertIn("로컬 LLM을 사용할 수 없어", result["answer"])
-
-    def test_no_hit_reports_model_unavailable_without_old_abstention(self) -> None:
-        unavailable = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": False,
-        }
-        with mock.patch.object(qa, "model_status", return_value=unavailable):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="2022년 FIFA 월드컵 우승팀은 어디인가요?",
-                measure_range=None,
-                generate=True,
-            )
-
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "generation_unavailable")
-        self.assertIn("로컬 LLM을 사용할 수 없어", result["answer"])
-        self.assertNotIn("현재 답변 가능 자료에서", result["answer"])
-        self.assertEqual(result["evidence"], [])
-
-    def test_no_hit_generation_failure_reports_unavailable(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                side_effect=RuntimeError("test generation failure"),
-            ),
-            mock.patch.object(qa.sys, "stderr"),
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="2022년 FIFA 월드컵 우승팀은 어디인가요?",
-                measure_range=None,
-                generate=True,
-            )
-
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "generation_unavailable")
-        self.assertEqual(result["generation_fallback_reason"], "local generation failed")
-        self.assertNotIn("현재 답변 가능 자료에서", result["answer"])
-
-    def test_exhausted_context_retry_keeps_extractive_evidence(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                side_effect=ValueError(
-                    "requested tokens exceed the context window"
-                ),
-            ),
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-                top_k=2,
-            )
-
-        self.assertTrue(result["context_limited"])
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertTrue(result["evidence"])
-        self.assertIn(f"[{result['evidence'][0]['id']}]", result["answer"])
-
-    def test_generation_falls_back_to_cited_pipeline_results(self) -> None:
-        unavailable = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": False,
-        }
-        with mock.patch.object(
-            qa,
-            "model_status",
-            return_value=unavailable,
-        ):
-            result = qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-            )
-
-        self.assertEqual(result["generation_mode"], "extractive")
-        self.assertEqual(result["answer_basis"], "retrieval_extractive")
-        self.assertEqual(
-            result["generation_fallback_reason"],
-            "llama-cpp-python is unavailable",
-        )
-        self.assertIn("[die-forelle-ku-010]", result["answer"])
-
-    def test_concurrent_generation_is_serialized(self) -> None:
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        counter_lock = threading.Lock()
-        active = 0
-        peak = 0
-
-        def fake_generate(*args, **kwargs) -> str:
-            nonlocal active, peak
-            with counter_lock:
-                active += 1
-                peak = max(peak, active)
-            time.sleep(0.03)
-            with counter_lock:
-                active -= 1
-            return "답변 [E1]"
-
-        def ask_once() -> dict:
-            return qa.ask(
-                piece_id="die-forelle",
-                question="28마디부터 분위기 변화를 어떻게 표현해야 하나요?",
-                measure_range=(28, 30),
-                generate=True,
-            )
-
-        with (
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(qa, "generate_llm", side_effect=fake_generate),
-            ThreadPoolExecutor(max_workers=2) as executor,
-        ):
-            results = list(executor.map(lambda _: ask_once(), range(2)))
-
-        self.assertEqual(peak, 1)
-        self.assertTrue(
-            all(result["generation_mode"] == "llm" for result in results)
-        )
+        self.assertEqual(result["generation_validation_warning"], warning)
+        self.assertEqual(result["answer"], "판본에 따라 연주 방식이 달라집니다.")
 
     def test_web_results_keep_deterministic_rights_notices(self) -> None:
         result = qa.ask(
@@ -1124,8 +1060,19 @@ class ServicePipelineTests(unittest.TestCase):
     def test_corpus_stats_come_from_pipeline_snapshot(self) -> None:
         stats = qa.corpus_stats()
         self.assertEqual(stats["pipeline"], "soprano_qa")
+        self.assertEqual(stats["corpus_schema_version"], 8)
         self.assertEqual(stats["total_records"], 223)
-        self.assertEqual(stats["retrievable_records"], 223)
+        self.assertEqual(
+            stats["records_by_evidence_type"],
+            {"expert_annotation": 122, "web_database": 101},
+        )
+        for deprecated in (
+            "expert_records_by_rewrite_status",
+            "expert_records_by_retrieval_exclusion_reason",
+            "expert_records_by_retrieval_review_warning",
+            "expert_retrieval_review_warnings",
+        ):
+            self.assertNotIn(deprecated, stats)
 
 
 if __name__ == "__main__":

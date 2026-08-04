@@ -7,10 +7,12 @@ from typing import Any, Dict, List, Optional
 
 from soprano_qa.retrieval import (
     BM25Index,
+    SearchResult,
     answer_relation_query_concepts,
     extract_question_measure_ranges,
     is_broad_performance_guidance_query,
     parse_measure_ranges,
+    performance_guidance_profile,
     query_components,
     ranges_cover,
     scope_evidence_role,
@@ -190,7 +192,9 @@ class ParseMeasureRangesTests(unittest.TestCase):
             },
         )
 
-    def test_terminal_answer_relations_are_classified_as_soft_intent(self) -> None:
+    def test_terminal_answer_relations_are_classified_for_diagnostics(
+        self,
+    ) -> None:
         base_concepts = [
             "피아노",
             "반주",
@@ -322,6 +326,7 @@ class ParseMeasureRangesTests(unittest.TestCase):
             ("음의 길이가 다르면", "음이 길게 들리는 차이"),
             ("분위기는 달라질까", "분위기가 변화한다"),
             ("이전 박자로 돌아온다", "처음 박자로 돌아온다"),
+            ("앞서 쓰던 박자로 되돌렸다", "다시 처음 박자로 돌아왔다"),
             ("기교가 들어갈 때", "기교가 들어가면"),
             ("반주가 없는 곳에서 박자를 잡아야", "반주가 없는 대목에서 박자를 잡아가나요"),
         )
@@ -457,15 +462,13 @@ class MeasureAwareSearchTests(unittest.TestCase):
         )
         self.assertEqual(results[-1].measure_score, -1.0)
 
-    def test_ranged_search_still_excludes_unconfirmed_locations(self) -> None:
-        pending = make_record("pending", [])
-        pending["measure_status"] = "waiting_for_review"
+    def test_ranged_search_excludes_finalized_unspecified_locations(self) -> None:
         unspecified = make_record("unspecified", [])
         unspecified["measure_status"] = "unspecified"
         confirmed_other = make_record("confirmed-other", [[30, 32]])
 
         ids = result_ids(
-            BM25Index([pending, unspecified, confirmed_other]),
+            BM25Index([unspecified, confirmed_other]),
             query="breath phrasing",
             piece="test-piece",
             measure_ranges=[[11, 11]],
@@ -474,7 +477,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
 
         self.assertEqual(ids, ["confirmed-other"])
 
-    def test_no_range_ranks_global_above_equally_relevant_local(self) -> None:
+    def test_no_range_gives_finalized_expert_scopes_equal_measure_weight(
+        self,
+    ) -> None:
         records = [
             make_record("local", [[10, 12]]),
             make_record("global", []),
@@ -487,8 +492,14 @@ class MeasureAwareSearchTests(unittest.TestCase):
             top_k=10,
         )
 
-        self.assertEqual([result.record["id"] for result in results], ["global", "local"])
-        self.assertGreater(results[0].measure_score, results[1].measure_score)
+        self.assertCountEqual(
+            [result.record["id"] for result in results],
+            ["global", "local"],
+        )
+        self.assertEqual(
+            {result.measure_score for result in results},
+            {1.0},
+        )
 
     def test_broad_singer_question_keeps_confirmed_local_examples(self) -> None:
         whole = make_record(
@@ -507,19 +518,13 @@ class MeasureAwareSearchTests(unittest.TestCase):
                 "음악적 강세에 유의해 고음을 유연하게 노래해야 한다."
             ),
         )
-        pending = make_record(
-            "pending-guidance",
-            [],
-            text="프레이즈와 호흡에 유의하며 연습하는 것이 중요하다.",
-        )
-        pending["measure_status"] = "waiting_for_review"
         distractor = make_record(
             "web-biography",
             [],
             text="작곡가의 출생과 생애를 설명한다.",
             evidence_type="web_database",
         )
-        index = BM25Index([whole, local, pending, distractor])
+        index = BM25Index([whole, local, distractor])
         question = (
             "이 노래를 부를 때 가창자의 입장에서 유의해야 할 "
             "점은 무엇인가?"
@@ -592,21 +597,23 @@ class MeasureAwareSearchTests(unittest.TestCase):
                     )
                 )
 
-    def test_no_range_prefers_confirmed_local_over_pending_scope(self) -> None:
-        local = make_record("local", [[10, 12]])
-        pending = make_record("pending", [])
-        pending["measure_status"] = "waiting_for_review"
-
-        results = BM25Index([pending, local]).search(
-            query="breath phrasing",
-            piece="test-piece",
-            top_k=10,
+    def test_runtime_index_rejects_legacy_review_records(self) -> None:
+        legacy_updates = (
+            {"measure_status": "waiting_for_review"},
+            {"rewrite_status": "needs_review"},
+            {"rewrite_notes": "legacy note"},
+            {"measure_notes": "legacy note"},
+            {"retrieval_review_warning": "legacy warning"},
         )
-
-        self.assertEqual(
-            [result.record["id"] for result in results],
-            ["local", "pending"],
-        )
+        for updates in legacy_updates:
+            with self.subTest(updates=updates):
+                record = make_record("legacy", [[10, 12]])
+                record.update(updates)
+                with self.assertRaisesRegex(
+                    ValueError,
+                    "finalized release expert records",
+                ):
+                    BM25Index([record])
 
     def test_broad_singer_question_can_request_a_musical_facet(
         self,
@@ -679,6 +686,129 @@ class MeasureAwareSearchTests(unittest.TestCase):
             )
         )
 
+    def test_broad_timbre_query_uses_descriptive_guidance_not_transposition(
+        self,
+    ) -> None:
+        tone = make_record(
+            "tone",
+            [],
+            text="크게 지르기보다 가볍고 깔끔하게 부르는 것이 중요하다.",
+        )
+        transposition = make_record(
+            "transposition",
+            [],
+            text=(
+                "원래 조성을 유지한 채 노래한다. 다만 자신의 목소리와 "
+                "음색에 맞지 않으면 조성을 바꿀 수 있다."
+            ),
+        )
+        breathing = make_record(
+            "breathing",
+            [],
+            text="긴 프레이즈에서는 호흡을 안정적으로 유지하는 것이 중요하다.",
+        )
+        question = "이 곡을 잘 부르려면 음색과 호흡을 어떻게 준비해야 할까?"
+
+        self.assertTrue(
+            is_broad_performance_guidance_query(question, "test-piece")
+        )
+        ids = result_ids(
+            BM25Index([transposition, tone, breathing]),
+            query=question,
+            piece="test-piece",
+            top_k=6,
+        )
+        self.assertEqual(set(ids), {"tone", "breathing"})
+        self.assertNotIn("transposition", ids)
+        self.assertFalse(
+            is_broad_performance_guidance_query(
+                "이 곡을 잘 부르려면 어떤 음색을 써야 할까?",
+                "test-piece",
+            )
+        )
+
+    def test_guidance_profile_recognizes_explicit_recommendations(
+        self,
+    ) -> None:
+        recommendation = make_record(
+            "recommendation",
+            [],
+            text=(
+                "가창자가 호흡의 연결과 다이나믹 등 음악적 표현을 "
+                "깊이 고민해 보는 것을 추천한다."
+            ),
+        )
+
+        score, facets, matched_terms = performance_guidance_profile(
+            recommendation
+        )
+
+        self.assertGreater(score, 0.0)
+        self.assertIn("vocal_technique", facets)
+        self.assertIn("interpretation", facets)
+        self.assertIn("호흡", matched_terms)
+
+    def test_broad_guidance_distinguishes_piece_wide_advice_from_one_slot(
+        self,
+    ) -> None:
+        broad_questions = (
+            "이 곡을 부를 때 호흡과 발음을 어떻게 준비해야 할까?",
+            "이 곡을 더 설득력 있게 들려주려면 무엇을 챙겨야 할까?",
+            "이 노래의 완성도를 끌어올리려면?",
+        )
+        concrete_questions = (
+            "이 곡의 부점 리듬을 어떻게 부르면 좋을까?",
+            "이 곡에서 악센트는 어느 박에 놓아야 할까?",
+            "이 곡의 특정 자음을 어디에 붙여 발음해야 할까?",
+        )
+
+        for question in broad_questions:
+            with self.subTest(question=question):
+                self.assertTrue(
+                    is_broad_performance_guidance_query(
+                        question,
+                        "test-piece",
+                    )
+                )
+        for question in concrete_questions:
+            with self.subTest(question=question):
+                self.assertFalse(
+                    is_broad_performance_guidance_query(
+                        question,
+                        "test-piece",
+                    )
+                )
+
+    def test_source_sibling_expansion_does_not_cross_multi_source_bridge(
+        self,
+    ) -> None:
+        def result(record_id: str, source_ids: list[str]) -> SearchResult:
+            record = make_record(
+                record_id,
+                [],
+                text="명확한 발음으로 노래하는 것이 중요하다.",
+            )
+            record["source_ids"] = source_ids
+            return SearchResult(
+                record=record,
+                score=1.0,
+                text_score=1.0,
+                measure_score=0.0,
+                piece_score=1.0,
+                scope_match="general_evidence",
+            )
+
+        selected_bridge = result("bridge", ["source-a", "source-b"])
+        unrelated_b = result("unrelated-b", ["source-b"])
+
+        expanded = BM25Index._expand_guidance_source_siblings(
+            [selected_bridge],
+            [selected_bridge, unrelated_b],
+            top_k=6,
+        )
+
+        self.assertEqual(expanded, [selected_bridge])
+
     def test_broad_guidance_keeps_complementary_same_source_units(self) -> None:
         general = make_record(
             "general",
@@ -698,15 +828,73 @@ class MeasureAwareSearchTests(unittest.TestCase):
         tone["source_ids"] = ["expert-source"]
         diction["source_ids"] = ["expert-source"]
 
-        ids = result_ids(
-            BM25Index([general, tone, diction]),
-            query="이 곡을 잘 부르려면 무엇에 유의해야 할까?",
+        index = BM25Index([general, tone, diction])
+        for question in (
+            "이 곡을 잘 부르려면 무엇에 유의해야 할까?",
+            "이 곡의 가창 완성도를 높이는 데에는 어떤 접근이 필요할까?",
+        ):
+            with self.subTest(question=question):
+                self.assertTrue(
+                    is_broad_performance_guidance_query(
+                        question,
+                        "test-piece",
+                    )
+                )
+                ids = result_ids(
+                    index,
+                    query=question,
+                    piece="test-piece",
+                    top_k=3,
+                )
+                self.assertIn("tone", ids)
+                self.assertIn("diction-sibling", ids)
+
+    def test_broad_guidance_prioritizes_most_complete_direct_answer(
+        self,
+    ) -> None:
+        generic = make_record(
+            "generic",
+            [],
+            text=(
+                "호흡과 프레이즈와 음색과 딕션을 모두 정확히 "
+                "연습하는 것이 중요하다."
+            ),
+        )
+        merged = make_record(
+            "merged-direct",
+            [],
+            text="단어의 악센트를 파악해 노래하는 것이 좋다.",
+        )
+        tone = make_record(
+            "tone-direct",
+            [],
+            text="탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 중요하다.",
+        )
+        diction = make_record(
+            "diction-direct",
+            [],
+            text="딕션을 정확히 공부해 단어를 표현하는 것이 중요하다.",
+        )
+        alias = ["어떻게 하면 잘 부를 수 있을까?"]
+        merged["retrieval_aliases"] = alias
+        merged["source_ids"] = ["other-source", "target-source"]
+        for record in (tone, diction):
+            record["retrieval_aliases"] = alias
+            record["source_ids"] = ["target-source"]
+
+        results = BM25Index([generic, merged, tone, diction]).search(
+            query="이 곡을 잘 부르려면 어떻게 해야 할까?",
             piece="test-piece",
-            top_k=3,
+            top_k=4,
         )
 
-        self.assertIn("tone", ids)
-        self.assertIn("diction-sibling", ids)
+        direct = [result for result in results if result.alias_score > 0]
+        self.assertEqual(direct[0].record["id"], "merged-direct")
+        self.assertEqual(
+            set(direct[0].record["source_ids"]),
+            {"other-source", "target-source"},
+        )
+        self.assertIn("generic", [result.record["id"] for result in results])
 
     def test_broad_local_only_results_are_capped_at_three_examples(
         self,
@@ -748,6 +936,39 @@ class MeasureAwareSearchTests(unittest.TestCase):
         )
 
         self.assertEqual(ids, ["default-eligible"])
+
+    def test_disconnected_phrase_paraphrase_matches_continuity_advice(
+        self,
+    ) -> None:
+        continuity = make_record(
+            "continuity",
+            [],
+            text=(
+                "노래가 끊겨 들리는 것은 자음 때문이다. 자음을 짧게 "
+                "더하고 한 문장 안의 단어들을 연속적으로 발음하는 "
+                "연습이 도움이 된다."
+            ),
+        )
+        unrelated = make_record(
+            "unrelated",
+            [],
+            text="역사적 악보에서 독일어 철자와 음절을 확인할 수 있다.",
+            evidence_type="web_database",
+        )
+
+        results = BM25Index([unrelated, continuity]).search(
+            query=(
+                "프레이즈가 이어지지 않고 토막 난 듯 들리는 문제는 "
+                "어떻게 바로잡을까?"
+            ),
+            piece="test-piece",
+            top_k=6,
+        )
+
+        self.assertEqual(
+            [result.record["id"] for result in results],
+            ["continuity"],
+        )
 
     def test_zero_text_relevance_does_not_return_arbitrary_global_context(self) -> None:
         index = BM25Index([make_record("global", [], text="breath phrasing")])
@@ -834,7 +1055,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
             [],
         )
 
-    def test_korean_answer_relation_uses_a_single_anchored_fallback(self) -> None:
+    def test_synonymous_answer_relation_does_not_relax_strict_coverage(
+        self,
+    ) -> None:
         relevant = make_record(
             "relevant",
             [[2, 5]],
@@ -857,15 +1080,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
             top_k=6,
         )
 
-        self.assertEqual(
-            [result.record["id"] for result in results],
-            ["relevant"],
-        )
-        self.assertEqual(results[0].semantic_match_type, "answer_relation_fallback")
-        self.assertAlmostEqual(results[0].concept_coverage, 5 / 6)
-        self.assertEqual(results[0].alias_score, 0.0)
+        self.assertEqual(results, [])
 
-    def test_answer_relation_fallback_keeps_content_concepts_strict(self) -> None:
+    def test_answer_relation_does_not_relax_content_concepts(self) -> None:
         relevant = make_record(
             "relevant",
             [[2, 5]],
@@ -886,7 +1103,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
             [],
         )
 
-    def test_noun_meaning_does_not_enable_relation_fallback(self) -> None:
+    def test_noun_meaning_does_not_relax_strict_coverage(self) -> None:
         index = BM25Index(
             [
                 make_record(
@@ -906,7 +1123,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
             [],
         )
 
-    def test_alias_only_concepts_cannot_establish_relation_fallback(self) -> None:
+    def test_alias_only_concepts_cannot_bypass_strict_coverage(self) -> None:
         record = make_record(
             "alias-only",
             [[2, 5]],
@@ -925,7 +1142,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
 
         self.assertEqual(results, [])
 
-    def test_relation_fallback_requires_explanation_in_answer_content(self) -> None:
+    def test_answer_relation_question_requires_strict_predicate_coverage(
+        self,
+    ) -> None:
         records = [
             make_record(
                 "global",
@@ -982,7 +1201,9 @@ class MeasureAwareSearchTests(unittest.TestCase):
                     [],
                 )
 
-    def test_relation_fallback_prefers_answer_side_content_coverage(self) -> None:
+    def test_synonymous_relation_does_not_rank_without_strict_coverage(
+        self,
+    ) -> None:
         strong = make_record(
             "strong",
             [[2, 5]],
@@ -1007,20 +1228,16 @@ class MeasureAwareSearchTests(unittest.TestCase):
             top_k=6,
         )
 
-        self.assertEqual(
-            [result.record["id"] for result in results],
-            ["strong"],
-        )
-        self.assertEqual(results[0].content_concept_coverage, 1.0)
+        self.assertEqual(results, [])
 
-    def test_strict_same_scope_match_suppresses_relation_fallback(self) -> None:
+    def test_strict_same_scope_match_excludes_relation_paraphrase(self) -> None:
         strict = make_record(
             "strict",
             [[2, 5]],
             text="피아노 반주 두 번째 박자 악센트는 움직임을 묘사한다",
         )
-        fallback = make_record(
-            "fallback",
+        relation_paraphrase = make_record(
+            "relation-paraphrase",
             [[2, 5]],
             text=(
                 "피아노 피아노 반주 반주 두 번째 박자 악센트는 "
@@ -1028,7 +1245,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
             ),
         )
 
-        results = BM25Index([fallback, strict]).search(
+        results = BM25Index([relation_paraphrase, strict]).search(
             "피아노 반주에서 두 번째 박의 악센트는 무엇을 묘사하는가?",
             piece="test-piece",
             measure_ranges=[[2, 5]],
@@ -1037,6 +1254,7 @@ class MeasureAwareSearchTests(unittest.TestCase):
 
         self.assertEqual([result.record["id"] for result in results], ["strict"])
         self.assertEqual(results[0].semantic_match_type, "strict")
+        self.assertEqual(results[0].answer_relation_score, 1.0)
 
 
 if __name__ == "__main__":
