@@ -7,16 +7,14 @@ from pathlib import Path
 from typing import Optional
 
 from soprano_qa.answer import (
-    GeneratedAnswerRejected,
     NO_CORPUS_EVIDENCE_MESSAGE,
     build_extractive_answer,
     build_evidence_notices,
     ensure_corpus,
-    finalize_grounded_generated_answer,
     finalize_user_visible_answer,
+    generate_atomic_grounded_answer,
     has_primary_grounding,
     has_selected_range_grounding,
-    is_grounded_insufficiency_answer,
     is_underspecified_ranged_query,
     retrieve_generation_evidence,
 )
@@ -257,7 +255,7 @@ def ask(
     generation_validation_warning: str | None = None
 
     if generate:
-        results, messages = retrieve_generation_evidence(
+        results, _messages = retrieve_generation_evidence(
             index,
             query=question,
             piece=piece_id,
@@ -280,32 +278,18 @@ def ask(
                 results=results,
             )
         else:
-            raw_answer = generate_llm(
-                SETTINGS["model_path"],
-                messages,
-                SETTINGS["llm"],
-            )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    results,
-                    messages,
-                    measure_ranges,
+            answer, generation_validation_warning = (
+                generate_atomic_grounded_answer(
+                    model_path=SETTINGS["model_path"],
+                    llm_settings=SETTINGS["llm"],
+                    piece=piece_id,
+                    measures=measures,
+                    question=question,
+                    results=results,
+                    measure_ranges=measure_ranges,
+                    generate_fn=generate_llm,
                 )
-            except GeneratedAnswerRejected as exc:
-                # Preserve the sole grounded model draft for review instead
-                # of substituting an extractive or internal-knowledge answer.
-                # Presentation sanitization remains mandatory; semantic or
-                # scope concerns are recorded for the red-flag evaluation.
-                if (
-                    not raw_answer.strip()
-                    or is_grounded_insufficiency_answer(raw_answer)
-                ):
-                    raise
-                answer = finalize_user_visible_answer(raw_answer, results)
-                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
-                    raise
-                generation_validation_warning = str(exc)
+            )
             generation_mode = "llm"
             answer_basis = "retrieved_evidence"
     else:

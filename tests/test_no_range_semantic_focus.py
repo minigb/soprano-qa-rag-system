@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 from typing import Any, Dict
 from unittest import mock
@@ -475,10 +476,33 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=(
-                    "악보와 음원의 페르마타 길이가 다르더라도 편곡 "
-                    "차이일 수 있으므로, 두 경우를 모두 허용해 해석할 "
-                    "수 있습니다. [E1]"
+                side_effect=(
+                    json.dumps(
+                        {
+                            "selected_unit_ids": ["U1"],
+                            "units": [
+                                {
+                                    "unit_id": "U1",
+                                    "relation": "direct_answer",
+                                }
+                            ]
+                        }
+                    ),
+                    json.dumps(
+                        {
+                            "sentences": [
+                                {
+                                    "claim_id": "C1",
+                                    "text": (
+                                        "곡 첫머리의 페르마타 유무는 "
+                                        "악보에 따른 편곡의 차이일 수 "
+                                        "있습니다. 두 경우 모두 허용됩니다."
+                                    ),
+                                }
+                            ]
+                        },
+                        ensure_ascii=False,
+                    ),
                 ),
             ) as generate,
         ):
@@ -493,13 +517,13 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
                 top_k=6,
             )
 
-        generate.assert_called_once()
+        self.assertEqual(generate.call_count, 2)
         self.assertEqual(response["generation_mode"], "llm")
         self.assertEqual(response["answer_basis"], "retrieved_evidence")
         self.assertIsNone(response["unavailable_reason"])
         self.assertIsNone(response["generation_validation_warning"])
         self.assertIn("페르마타", response["answer"])
-        self.assertIn("두 경우를 모두 허용", response["answer"])
+        self.assertIn("두 경우 모두 허용", response["answer"])
         self.assertNotIn("[E1]", response["answer"])
         self.assertNotIn("범위 안내", response["answer"])
         self.assertNotIn("확인된 국소 예시", response["answer"])
@@ -527,8 +551,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             "llama_cpp_available": True,
         }
         overgeneralized = (
-            "이 곡 전반의 모든 간주에서는 항상 같은 연기를 해야 "
-            "한다. [E1]"
+            "이 곡 전반의 모든 간주에서는 항상 같은 연기를 해야 합니다."
         )
         with (
             mock.patch.object(qa, "validate_generation_requirements"),
@@ -541,7 +564,30 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=overgeneralized,
+                side_effect=(
+                    json.dumps(
+                        {
+                            "selected_unit_ids": ["U1"],
+                            "units": [
+                                {
+                                    "unit_id": "U1",
+                                    "relation": "direct_answer",
+                                }
+                            ]
+                        }
+                    ),
+                    json.dumps(
+                        {
+                            "sentences": [
+                                {
+                                    "claim_id": "C1",
+                                    "text": overgeneralized,
+                                }
+                            ]
+                        },
+                        ensure_ascii=False,
+                    ),
+                ),
             ) as generate,
         ):
             response = qa.ask(
@@ -552,13 +598,17 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
                 top_k=6,
             )
 
-        generate.assert_called_once()
+        self.assertEqual(generate.call_count, 2)
         self.assertEqual(response["generation_mode"], "llm")
         self.assertEqual(response["answer_basis"], "retrieved_evidence")
         self.assertIsNone(response["unavailable_reason"])
-        self.assertEqual(
+        self.assertIn(
+            "Atomic claim renderer changed reviewed source wording",
             response["generation_validation_warning"],
+        )
+        self.assertIn(
             "Generated answer overgeneralizes local evidence",
+            response["generation_validation_warning"],
         )
         self.assertIn("항상 같은 연기를 해야 합니다", response["answer"])
         self.assertNotIn("[E1]", response["answer"])

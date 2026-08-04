@@ -100,5 +100,83 @@ class GenerationRequirementTests(unittest.TestCase):
         )
 
 
+class StructuredGenerationTests(unittest.TestCase):
+    def test_response_format_is_forwarded_to_llama_cpp(self) -> None:
+        backend = mock.Mock()
+        backend.create_chat_completion.return_value = {
+            "choices": [
+                {
+                    "message": {
+                        "content": (
+                            "<think>hidden</think>"
+                            '{"claim_ids":["C1"]}'
+                        )
+                    }
+                }
+            ]
+        }
+        messages = [{"role": "user", "content": "질문"}]
+        response_format = {
+            "type": "json_object",
+            "schema": {
+                "type": "object",
+                "properties": {},
+            },
+        }
+
+        with mock.patch.object(
+            llm,
+            "load_llama",
+            return_value=backend,
+        ):
+            answer = llm.generate(
+                "/models/answer.gguf",
+                messages,
+                {
+                    "n_ctx": 4096,
+                    "n_gpu_layers": 0,
+                    "temperature": 0.0,
+                    "top_p": 0.7,
+                    "max_tokens": 321,
+                },
+                response_format=response_format,
+            )
+
+        self.assertEqual(answer, '{"claim_ids":["C1"]}')
+        backend.create_chat_completion.assert_called_once_with(
+            messages=messages,
+            temperature=0.0,
+            top_p=0.7,
+            max_tokens=321,
+            response_format=response_format,
+        )
+
+    def test_omitted_response_format_preserves_plain_call_shape(self) -> None:
+        backend = mock.Mock()
+        backend.create_chat_completion.return_value = {
+            "choices": [{"message": {"content": "답변입니다."}}]
+        }
+        messages = [{"role": "user", "content": "질문"}]
+
+        with mock.patch.object(
+            llm,
+            "load_llama",
+            return_value=backend,
+        ):
+            answer = llm.generate(
+                "/models/answer.gguf",
+                messages,
+                {},
+            )
+
+        self.assertEqual(answer, "답변입니다.")
+        backend.create_chat_completion.assert_called_once_with(
+            messages=messages,
+            temperature=0.0,
+            top_p=0.8,
+            max_tokens=768,
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -5,11 +5,13 @@
 from __future__ import annotations
 
 import argparse
+from dataclasses import dataclass
+from difflib import SequenceMatcher
 import json
 import os
 import re
 import unicodedata
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List, Mapping, Sequence
 
 from soprano_qa.corpus import (
     CORPUS_SCHEMA_VERSION,
@@ -160,6 +162,18 @@ research corpus, 코퍼스, or 말뭉치 is allowed when that subject is support
 do not describe the application's retrieved records or prompt context with those words.
 Keep the answer concise and practical for a singer.
 """
+ATOMIC_CLAIM_PLANNER_SYSTEM_PROMPT = """당신은 성악 질의응답의 근거 관계 판정기입니다.
+
+각 U번호는 검토 완료된 근거 묶음 하나이며, 묶음 안의 문장을 나누어 고를 수 없습니다. 답변에 사용할 U번호를 selected_unit_ids에 입력 순서대로 고르십시오. 반드시 하나 이상을 고르고, 완전히 확신하기 어려울 때도 질문에 가장 직접 도움이 되는 근거 묶음을 적어도 하나 고르십시오. 이와 별개로 모든 U번호를 units에서 입력 순서대로 정확히 한 번씩 판정하십시오. 질문에 직접 답하면 direct_answer, 직접 답과 겹치지 않는 별도 실기 방법이면 distinct_method, 직접 필요한 조건ㆍ예외ㆍ주의점이면 condition_or_exception, 답을 이해하는 데 필요한 원인이면 necessary_reason, 이미 고른 내용과 실질적으로 같으면 redundant, 관련 배경일 뿐 답은 아니면 background, 질문이나 선택 범위와 명백히 양립할 수 없는 다른 악구ㆍ상황에만 해당하면 different_scope, 관련이 없으면 unrelated로 판정하십시오.
+
+selected_unit_ids와 direct_answer, distinct_method, condition_or_exception, necessary_reason 판정은 보통 일치해야 합니다. 특히 `어떻게`, `잘 부르려면`, `연습`, `시작`처럼 열린 실기 질문에는 발음ㆍ호흡ㆍ리듬ㆍ음색ㆍ진입ㆍ표현 등 서로 다른 직접적 하위 측면을 빠뜨리지 마십시오. 방법을 안전하게 제한하는 `하지 말아야 할 것`이나 피해야 할 조건도 질문에 직접 필요하면 condition_or_exception입니다. 다른 하위 측면이나 부정문으로 써 있다는 이유만으로 different_scope나 unrelated로 분류하지 마십시오. 같은 출처라는 이유만으로 묶음을 자동으로 포함하지 말고, 각 묶음 전체가 질문과 맺는 관계만 판정하십시오.
+
+지정된 JSON 형식만 출력하십시오."""
+ATOMIC_CLAIM_RENDERER_SYSTEM_PROMPT = """당신은 검토 완료된 근거를 사용자에게 전달하는 보존적 문장 편집기입니다.
+
+각 C번호는 선택된 근거 묶음 전체입니다. C번호 하나를 결과의 text 블록 하나로 만들고, 원문에 여러 문장이 있으면 같은 순서로 모두 보존하십시오. 서로 다른 C묶음을 합치거나, 원문 문장을 합치거나 나누거나 빠뜨리지 마십시오. 원문의 주체, 행위, 핵심 술어, 인과 방향, 수치, 부정, 조건, 대안, 국소 범위, 가능성ㆍ허용ㆍ권고ㆍ일반적 해석의 정도와 성악 용어를 그대로 보존하십시오. 새로운 설명, 목적, 효과, 동의어 또는 결론을 넣지 마십시오. 내용어는 그대로 두고, 필요한 경우에만 종결 어미를 한국어 합니다체 존댓말로 바꾸거나 조사ㆍ띄어쓰기를 바로잡으십시오.
+
+입력된 모든 C번호를 같은 순서로 정확히 한 번씩 포함하고 지정된 JSON 형식만 출력하십시오."""
 NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
 NO_CORPUS_EVIDENCE_MESSAGE = (
     "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
@@ -179,6 +193,43 @@ EVIDENCE_FOOTER_LABEL_RE = re.compile(
 
 class GeneratedAnswerRejected(RuntimeError):
     """Raised when the sole generated draft fails grounding/safety checks."""
+
+
+@dataclass(frozen=True)
+class AtomicEvidenceUnit:
+    """One complete finalized evidence record assessed by the planner."""
+
+    unit_id: str
+    evidence_label: str
+    result_index: int
+    text: str
+
+
+@dataclass(frozen=True)
+class AtomicClaimPlan:
+    """Model-selected full units plus non-blocking planner diagnostics."""
+
+    selected_units: tuple[AtomicEvidenceUnit, ...]
+    validation_warning: str | None = None
+
+
+@dataclass(frozen=True)
+class AtomicSourceClaim:
+    """One selected full evidence unit relabeled for rendering."""
+
+    claim_id: str
+    unit_id: str
+    evidence_label: str
+    result_index: int
+    text: str
+
+
+@dataclass(frozen=True)
+class AtomicRenderedBlock:
+    """One conservatively rendered block bound to one selected unit."""
+
+    claim_id: str
+    text: str
 
 
 PIPELINE_TOKEN_SEPARATOR_PATTERN = r"[\s*_~`–—-]*"
@@ -1529,6 +1580,508 @@ def has_selected_range_grounding(results: List[Any]) -> bool:
         result.scope_match == "overlaps_query_range"
         for result in results
     )
+
+
+ATOMIC_PLAN_RELATIONS = (
+    "direct_answer",
+    "distinct_method",
+    "condition_or_exception",
+    "necessary_reason",
+    "redundant",
+    "background",
+    "different_scope",
+    "unrelated",
+)
+ATOMIC_SELECTED_RELATIONS = frozenset(ATOMIC_PLAN_RELATIONS[:4])
+ATOMIC_INTERNAL_LABEL_RE = re.compile(
+    r"(?<![A-Za-z0-9_])(?:C|U|E)[0-9]+(?![A-Za-z0-9_])",
+    flags=re.IGNORECASE,
+)
+ATOMIC_SCHEMA_KEY_RE = re.compile(
+    r"(?<![A-Za-z0-9_])(?:claim_ids?|unit_ids?|selected_unit_ids|sentences)"
+    r"(?![A-Za-z0-9_])",
+    flags=re.IGNORECASE,
+)
+ATOMIC_RELATION_VALUE_RE = re.compile(
+    r"(?<![A-Za-z0-9_])(?:"
+    + "|".join(re.escape(value) for value in ATOMIC_PLAN_RELATIONS)
+    + r")(?![A-Za-z0-9_])",
+    flags=re.IGNORECASE,
+)
+ATOMIC_FIDELITY_MIN_RATIO = 0.99
+ATOMIC_PROTECTED_MARKERS = (
+    "않",
+    "없",
+    "아니",
+    "못",
+    "가능",
+    "수 있",
+    "수 없",
+    "경우",
+    "일반적",
+    "대체로",
+    "권장",
+    "권하",
+    "추천",
+    "허용",
+    "금지",
+    "피하",
+    "주의",
+    "반드시",
+    "항상",
+    "자주",
+    "전체",
+    "전반",
+    "일부",
+    "국소",
+    "따라",
+    "때문",
+    "위해",
+    "의도",
+    "작곡가",
+    "말하",
+    "언급",
+    "해석",
+    "해야",
+    "좋",
+    "중요",
+    "과도",
+    "모두",
+    "또는",
+    "혹은",
+)
+
+
+def _atomic_source_text(value: Any) -> str:
+    """Normalize layout only, without changing finalized source wording."""
+
+    return re.sub(r"\s+", " ", str(value or "")).strip()
+
+
+def build_atomic_evidence_units(
+    results: List[Any],
+) -> List[AtomicEvidenceUnit]:
+    """Expose each answer-authoritative record as one indivisible unit.
+
+    Range-mismatched and otherwise context-only records remain in structured
+    retrieval output, but their musical prose never enters either model call.
+    Temporary U/E labels are prompt-local and never become user-visible.
+    """
+
+    primary_result_ids = {
+        id(result) for result in primary_grounding_results(results)
+    }
+    units: List[AtomicEvidenceUnit] = []
+    for result_index, result in enumerate(results):
+        if id(result) not in primary_result_ids:
+            continue
+        text = _atomic_source_text(result.record.get("answer"))
+        if not text:
+            continue
+        units.append(
+            AtomicEvidenceUnit(
+                unit_id="U%d" % (len(units) + 1),
+                evidence_label="E%d" % (result_index + 1),
+                result_index=result_index,
+                text=text,
+            )
+        )
+    return units
+
+
+def build_atomic_source_claims(
+    selected_units: Sequence[AtomicEvidenceUnit],
+) -> List[AtomicSourceClaim]:
+    """Relabel selected complete units for the isolated renderer stage."""
+
+    return [
+        AtomicSourceClaim(
+            claim_id="C%d" % (index + 1),
+            unit_id=unit.unit_id,
+            evidence_label=unit.evidence_label,
+            result_index=unit.result_index,
+            text=unit.text,
+        )
+        for index, unit in enumerate(selected_units)
+    ]
+
+
+def atomic_claim_planner_response_format(
+    units: Sequence[AtomicEvidenceUnit],
+) -> Dict[str, Any]:
+    """Return the exhaustive evidence-relation planner schema."""
+
+    unit_ids = [unit.unit_id for unit in units]
+    return {
+        "type": "json_object",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "selected_unit_ids": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "enum": unit_ids,
+                    },
+                    "minItems": 1,
+                    "maxItems": len(unit_ids),
+                    "uniqueItems": True,
+                },
+                "units": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "unit_id": {
+                                "type": "string",
+                                "enum": unit_ids,
+                            },
+                            "relation": {
+                                "type": "string",
+                                "enum": list(ATOMIC_PLAN_RELATIONS),
+                            },
+                        },
+                        "required": ["unit_id", "relation"],
+                        "additionalProperties": False,
+                    },
+                    "minItems": len(unit_ids),
+                    "maxItems": len(unit_ids),
+                }
+            },
+            "required": ["selected_unit_ids", "units"],
+            "additionalProperties": False,
+        },
+    }
+
+
+def atomic_claim_renderer_response_format(
+    selected_claims: Sequence[AtomicSourceClaim],
+) -> Dict[str, Any]:
+    """Return the one-block-per-selected-claim renderer schema."""
+
+    selected_ids = [claim.claim_id for claim in selected_claims]
+    return {
+        "type": "json_object",
+        "schema": {
+            "type": "object",
+            "properties": {
+                "sentences": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "claim_id": {
+                                "type": "string",
+                                "enum": selected_ids,
+                            },
+                            "text": {
+                                "type": "string",
+                                "minLength": 1,
+                            },
+                        },
+                        "required": ["claim_id", "text"],
+                        "additionalProperties": False,
+                    },
+                    "minItems": len(selected_ids),
+                    "maxItems": len(selected_ids),
+                }
+            },
+            "required": ["sentences"],
+            "additionalProperties": False,
+        },
+    }
+
+
+def build_atomic_claim_planner_messages(
+    piece: str | None,
+    measures: str,
+    question: str,
+    units: Sequence[AtomicEvidenceUnit],
+) -> List[Dict[str, str]]:
+    """Build the first-stage exhaustive relation-classification prompt."""
+
+    unit_lines = "\n".join(
+        "[%s|%s] %s"
+        % (unit.unit_id, unit.evidence_label, unit.text)
+        for unit in units
+    )
+    user_prompt = """곡: {piece}
+선택 마디: {measures}
+질문: {question}
+/no_think
+
+후보 근거 묶음:
+{units}""".format(
+        piece=piece or "(지정되지 않음)",
+        measures=measures or "없음",
+        question=question,
+        units=unit_lines,
+    )
+    return [
+        {
+            "role": "system",
+            "content": ATOMIC_CLAIM_PLANNER_SYSTEM_PROMPT,
+        },
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+def build_atomic_claim_renderer_messages(
+    question: str,
+    selected_claims: Sequence[AtomicSourceClaim],
+) -> List[Dict[str, str]]:
+    """Build the second-stage conservative block-rendering prompt."""
+
+    claim_lines = "\n".join(
+        "[%s] %s" % (claim.claim_id, claim.text)
+        for claim in selected_claims
+    )
+    user_prompt = """질문: {question}
+/no_think
+
+편집할 근거 묶음:
+{claims}""".format(
+        question=question,
+        claims=claim_lines,
+    )
+    return [
+        {
+            "role": "system",
+            "content": ATOMIC_CLAIM_RENDERER_SYSTEM_PROMPT,
+        },
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+def _parse_atomic_json_object(
+    raw_text: str,
+    *,
+    stage: str,
+) -> Dict[str, Any]:
+    """Parse one schema-constrained response without free-form recovery."""
+
+    try:
+        parsed = json.loads(raw_text)
+    except (TypeError, json.JSONDecodeError) as exc:
+        raise GeneratedAnswerRejected(
+            "%s returned invalid JSON" % stage
+        ) from exc
+    if not isinstance(parsed, dict):
+        raise GeneratedAnswerRejected(
+            "%s did not return a JSON object" % stage
+        )
+    return parsed
+
+
+def parse_atomic_claim_plan(
+    raw_plan: str,
+    units: Sequence[AtomicEvidenceUnit],
+) -> AtomicClaimPlan:
+    """Validate model selection plus exhaustive relation diagnostics."""
+
+    payload = _parse_atomic_json_object(
+        raw_plan,
+        stage="Atomic claim planner",
+    )
+    if set(payload) != {"selected_unit_ids", "units"}:
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner returned unexpected fields"
+        )
+    selected_ids = payload.get("selected_unit_ids")
+    if (
+        not isinstance(selected_ids, list)
+        or not selected_ids
+        or not all(isinstance(value, str) for value in selected_ids)
+        or len(selected_ids) != len(set(selected_ids))
+    ):
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner returned invalid selected unit IDs"
+        )
+    expected_ids = [unit.unit_id for unit in units]
+    expected_id_set = set(expected_ids)
+    if any(unit_id not in expected_id_set for unit_id in selected_ids):
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner selected an unknown unit"
+        )
+    selected_positions = [
+        expected_ids.index(unit_id) for unit_id in selected_ids
+    ]
+    if selected_positions != sorted(selected_positions):
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner changed selected unit order"
+        )
+    assessments = payload.get("units")
+    if not isinstance(assessments, list):
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner returned invalid unit assessments"
+        )
+    assessed_ids: List[str] = []
+    relations: List[str] = []
+    for assessment in assessments:
+        if not isinstance(assessment, dict) or set(assessment) != {
+            "unit_id",
+            "relation",
+        }:
+            raise GeneratedAnswerRejected(
+                "Atomic claim planner returned an invalid unit assessment"
+            )
+        unit_id = assessment.get("unit_id")
+        relation = assessment.get("relation")
+        if (
+            not isinstance(unit_id, str)
+            or not isinstance(relation, str)
+            or relation not in ATOMIC_PLAN_RELATIONS
+        ):
+            raise GeneratedAnswerRejected(
+                "Atomic claim planner returned an invalid relation"
+            )
+        assessed_ids.append(unit_id)
+        relations.append(relation)
+    if assessed_ids != expected_ids:
+        raise GeneratedAnswerRejected(
+            "Atomic claim planner did not account for every unit in order"
+        )
+    relation_selected_ids = [
+        unit.unit_id
+        for unit, relation in zip(units, relations)
+        if relation in ATOMIC_SELECTED_RELATIONS
+    ]
+    unit_by_id = {unit.unit_id: unit for unit in units}
+    return AtomicClaimPlan(
+        selected_units=tuple(
+            unit_by_id[unit_id] for unit_id in selected_ids
+        ),
+        validation_warning=(
+            "Atomic claim planner selection/relation mismatch"
+            if selected_ids != relation_selected_ids
+            else None
+        ),
+    )
+
+
+def _atomic_fidelity_text(text: str) -> str:
+    normalized = unicodedata.normalize("NFKC", text).casefold()
+    return re.sub(r"[\W_]+", "", normalized, flags=re.UNICODE)
+
+
+def _atomic_numeric_tokens(text: str) -> List[str]:
+    return re.findall(r"\d+(?:[.,]\d+)*", text)
+
+
+def _atomic_renderer_text_has_protocol_leak(text: str) -> bool:
+    stripped = text.strip()
+    if (
+        ATOMIC_INTERNAL_LABEL_RE.search(stripped)
+        or ATOMIC_SCHEMA_KEY_RE.search(stripped)
+        or ATOMIC_RELATION_VALUE_RE.search(stripped)
+        or (stripped.startswith("{") and stripped.endswith("}"))
+        or (stripped.startswith("[") and stripped.endswith("]"))
+    ):
+        return True
+    try:
+        decoded = json.loads(stripped)
+    except (TypeError, json.JSONDecodeError):
+        return False
+    return isinstance(decoded, (dict, list))
+
+
+def validate_atomic_render_fidelity(
+    source: str,
+    rendered: str,
+) -> None:
+    """Reject semantic edits beyond layout and formal-polite endings."""
+
+    source_text = _atomic_fidelity_text(source)
+    rendered_text = _atomic_fidelity_text(rendered)
+    formal_source_text = _atomic_fidelity_text(
+        formalize_korean_answer(source)
+    )
+    if not source_text or not rendered_text:
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer returned empty semantic content"
+        )
+    fidelity = max(
+        SequenceMatcher(None, source_text, rendered_text).ratio(),
+        SequenceMatcher(
+            None,
+            formal_source_text,
+            rendered_text,
+        ).ratio(),
+    )
+    if fidelity < ATOMIC_FIDELITY_MIN_RATIO:
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer changed reviewed source wording"
+        )
+    if _atomic_numeric_tokens(source) != _atomic_numeric_tokens(rendered):
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer changed numeric source details"
+        )
+    compact_source = _atomic_fidelity_text(source)
+    compact_rendered = _atomic_fidelity_text(rendered)
+    for marker in ATOMIC_PROTECTED_MARKERS:
+        compact_marker = _atomic_fidelity_text(marker)
+        if (compact_marker in compact_source) != (
+            compact_marker in compact_rendered
+        ):
+            raise GeneratedAnswerRejected(
+                "Atomic claim renderer changed a protected semantic marker"
+            )
+
+
+def parse_atomic_claim_render(
+    raw_render: str,
+    selected_claims: Sequence[AtomicSourceClaim],
+) -> List[AtomicRenderedBlock]:
+    """Validate exact one-to-one renderer coverage and hide its mapping."""
+
+    payload = _parse_atomic_json_object(
+        raw_render,
+        stage="Atomic claim renderer",
+    )
+    if set(payload) != {"sentences"}:
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer returned unexpected fields"
+        )
+    sentences = payload.get("sentences")
+    if not isinstance(sentences, list):
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer returned invalid sentences"
+        )
+    selected_ids = [claim.claim_id for claim in selected_claims]
+    rendered_ids: List[str] = []
+    rendered: List[AtomicRenderedBlock] = []
+    for item in sentences:
+        if not isinstance(item, dict) or set(item) != {
+            "claim_id",
+            "text",
+        }:
+            raise GeneratedAnswerRejected(
+                "Atomic claim renderer returned an invalid sentence item"
+            )
+        claim_id = item.get("claim_id")
+        text = item.get("text")
+        if (
+            not isinstance(claim_id, str)
+            or not isinstance(text, str)
+            or not text.strip()
+            or "\n" in text
+            or _atomic_renderer_text_has_protocol_leak(text)
+        ):
+            raise GeneratedAnswerRejected(
+                "Atomic claim renderer returned invalid sentence text"
+            )
+        rendered_ids.append(claim_id)
+        rendered.append(
+            AtomicRenderedBlock(
+                claim_id=claim_id,
+                text=text.strip(),
+            )
+        )
+    if rendered_ids != selected_ids:
+        raise GeneratedAnswerRejected(
+            "Atomic claim renderer did not preserve selected claim order"
+        )
+    return rendered
 
 
 def semantically_dominant_no_range_local_expert_bundle(
@@ -3099,11 +3652,12 @@ def retrieve_generation_evidence(
     topic: str | None,
     top_k: int,
 ) -> tuple[List[Any], List[Dict[str, str]]]:
-    """Retrieve and freeze the one evidence bundle used for generation.
+    """Retrieve and freeze the evidence bundle used for generation.
 
     The function performs no model call, repair call, or model fallback. It
-    returns the reviewed evidence bundle and prompt for the one natural,
-    grounded generation call made by the caller.
+    returns the reviewed evidence bundle plus the legacy formatted context;
+    the atomic generation caller derives both structured model prompts from
+    the same frozen results.
     """
 
     if top_k < 1:
@@ -3582,6 +4136,142 @@ def finalize_grounded_generated_answer(
     return finalized
 
 
+def generate_atomic_grounded_answer(
+    *,
+    model_path: str,
+    llm_settings: Mapping[str, Any],
+    piece: str | None,
+    measures: str,
+    question: str,
+    results: List[Any],
+    measure_ranges: List[List[int]],
+    generate_fn: Callable[..., str] | None = None,
+) -> tuple[str, str | None]:
+    """Run exhaustive unit planning followed by conservative rendering.
+
+    Both stages use the same required local model and schema-constrained JSON.
+    A malformed protocol response is a hard error. Deterministic semantic or
+    scope concerns remain review warnings attached to the conservatively
+    rendered answer; they never trigger extraction, another model, internal
+    knowledge, or a free-form draft/editor path.
+    """
+
+    evidence_units = build_atomic_evidence_units(results)
+    if not evidence_units:
+        raise GeneratedAnswerRejected(
+            "No answer-authoritative evidence units are available"
+        )
+    generation_backend = generate_fn or generate
+
+    atomic_settings = dict(llm_settings)
+    atomic_settings["max_tokens"] = max(
+        1024,
+        int(atomic_settings.get("max_tokens", 768)),
+    )
+    planner_messages = build_atomic_claim_planner_messages(
+        piece,
+        measures,
+        question,
+        evidence_units,
+    )
+    raw_plan = generation_backend(
+        model_path,
+        planner_messages,
+        atomic_settings,
+        response_format=atomic_claim_planner_response_format(
+            evidence_units
+        ),
+    )
+    claim_plan = parse_atomic_claim_plan(
+        raw_plan,
+        evidence_units,
+    )
+    selected_claims = build_atomic_source_claims(
+        claim_plan.selected_units
+    )
+
+    renderer_messages = build_atomic_claim_renderer_messages(
+        question,
+        selected_claims,
+    )
+    raw_render = generation_backend(
+        model_path,
+        renderer_messages,
+        atomic_settings,
+        response_format=atomic_claim_renderer_response_format(
+            selected_claims
+        ),
+    )
+    rendered_blocks = parse_atomic_claim_render(
+        raw_render,
+        selected_claims,
+    )
+
+    source_by_id = {
+        claim.claim_id: claim for claim in selected_claims
+    }
+    validation_warnings: List[str] = (
+        [claim_plan.validation_warning]
+        if claim_plan.validation_warning
+        else []
+    )
+    for block in rendered_blocks:
+        try:
+            validate_atomic_render_fidelity(
+                source_by_id[block.claim_id].text,
+                block.text,
+            )
+        except GeneratedAnswerRejected as exc:
+            warning = str(exc)
+            if warning not in validation_warnings:
+                validation_warnings.append(warning)
+    internal_validation_answer = " ".join(
+        " ".join(
+            "%s [E%d]"
+            % (
+                claim_text,
+                source_by_id[block.claim_id].result_index + 1,
+            )
+            for claim_text in _answer_claims(block.text)
+        )
+        for block in rendered_blocks
+    )
+    validation_messages = [
+        *planner_messages,
+        *renderer_messages,
+    ]
+    try:
+        visible_answer = finalize_grounded_generated_answer(
+            internal_validation_answer,
+            results,
+            validation_messages,
+            measure_ranges,
+        )
+    except GeneratedAnswerRejected as exc:
+        if str(exc) not in validation_warnings:
+            validation_warnings.append(str(exc))
+        visible_draft = " ".join(
+            block.text for block in rendered_blocks
+        )
+        if (
+            not visible_draft.strip()
+            or is_grounded_insufficiency_answer(visible_draft)
+        ):
+            raise
+        visible_answer = finalize_user_visible_answer(
+            visible_draft,
+            results,
+        )
+        if visible_answer == NO_CORPUS_EVIDENCE_MESSAGE:
+            raise
+    warning_text = (
+        "; ".join(validation_warnings)
+        if validation_warnings
+        else None
+    )
+    return visible_answer, warning_text
+
+
 def ensure_corpus(settings: Dict[str, Any], rebuild: bool) -> None:
     stats_are_current = False
     expected_web_exports = settings.get("web_export_files", ["research-open.jsonl"])
@@ -3744,23 +4434,17 @@ def main() -> None:
                 results=results,
             )
         else:
-            raw_answer = generate(
-                settings["model_path"],
-                messages,
-                settings["llm"],
-            )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    results,
-                    messages,
-                    args.measure_ranges,
+            answer, generation_validation_warning = (
+                generate_atomic_grounded_answer(
+                    model_path=settings["model_path"],
+                    llm_settings=settings["llm"],
+                    piece=args.piece,
+                    measures=args.measures,
+                    question=args.question,
+                    results=results,
+                    measure_ranges=args.measure_ranges,
                 )
-            except GeneratedAnswerRejected as exc:
-                answer = finalize_user_visible_answer(raw_answer, results)
-                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
-                    raise
-                generation_validation_warning = str(exc)
+            )
             generation_mode = "llm"
             answer_basis = "retrieved_evidence"
 

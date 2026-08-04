@@ -8,7 +8,7 @@ from functools import lru_cache
 import os
 import re
 import threading
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Mapping
 
 
 _INFERENCE_LOCK = threading.Lock()
@@ -107,6 +107,8 @@ def generate(
     model_path: str,
     messages: List[Dict[str, str]],
     llm_settings: Dict[str, Any],
+    *,
+    response_format: Mapping[str, Any] | None = None,
 ) -> str:
     # Consumers may serve requests concurrently, while llama.cpp completions
     # are not reentrant. Keep lazy model loading and inference within one
@@ -118,10 +120,15 @@ def generate(
             n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
             chat_format=_configured_chat_format(llm_settings),
         )
+        completion_options: Dict[str, Any] = {
+            "messages": messages,
+            "temperature": float(llm_settings.get("temperature", 0.0)),
+            "top_p": float(llm_settings.get("top_p", 0.8)),
+            "max_tokens": int(llm_settings.get("max_tokens", 768)),
+        }
+        if response_format is not None:
+            completion_options["response_format"] = dict(response_format)
         response = llm.create_chat_completion(
-            messages=messages,
-            temperature=float(llm_settings.get("temperature", 0.0)),
-            top_p=float(llm_settings.get("top_p", 0.8)),
-            max_tokens=int(llm_settings.get("max_tokens", 768)),
+            **completion_options,
         )
     return strip_thinking(response["choices"][0]["message"]["content"])
