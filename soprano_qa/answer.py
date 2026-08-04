@@ -9,7 +9,7 @@ import json
 import os
 import re
 import unicodedata
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List, Mapping
 
 from soprano_qa.corpus import (
     CORPUS_SCHEMA_VERSION,
@@ -27,6 +27,7 @@ from soprano_qa.dense import (
     SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN,
     SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE,
     build_retrieval_index,
+    has_causal_answer_authority,
     is_causal_answer_request,
     missing_dense_answer_constraints,
     retrieval_abstained_for_ambiguity,
@@ -55,6 +56,19 @@ from soprano_qa.retrieval import (
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.source_locked import (
+    SourceLockedProtocolError,
+    SourceLockedWarning,
+    build_source_locked_messages,
+    build_source_locked_units,
+    copy_llm_settings,
+    format_source_locked_answer,
+    legacy_warning_text,
+    parse_source_locked_render,
+    source_locked_fidelity_warnings,
+    source_locked_response_format,
+    warning_dicts,
+)
 
 
 SYSTEM_PROMPT = """You are a measure-aware soprano performance QA assistant.
@@ -601,6 +615,18 @@ KOREAN_SENTENCE_FINAL_WORD_RE = re.compile(
     r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
     r"))"
 )
+PROTECTED_QUOTED_SPAN_RE = re.compile(
+    r"“[^”]*”|「[^」]*」|『[^』]*』",
+    flags=re.DOTALL,
+)
+PROTECTED_FORMALIZATION_SPAN_RE = re.compile(
+    r"“[^”]*”|「[^」]*」|『[^』]*』|"
+    r"(?<![A-Za-z])(?:"
+    r"(?:[A-Za-z]\.){2,}|"
+    r"(?:dim|cresc|decresc|rit|rall|accel|sfz|smorz)\."
+    r")(?=[가-힣])",
+    flags=re.DOTALL | re.IGNORECASE,
+)
 FORMAL_POLITE_NONDECLARATIVE_SUFFIXES = (
     "습니까",
     "입니까",
@@ -615,6 +641,10 @@ FORMAL_POLITE_NONDECLARATIVE_SUFFIXES = (
 FORMAL_POLITE_WORD_OVERRIDES = {
     "근거다": "근거입니다",
     "자료다": "자료입니다",
+    # Finalized expert units use ``...하는 것이 좋겠다`` as a performance
+    # recommendation.  ``좋습니다`` preserves that recommendation naturally;
+    # ``좋겠습니다`` is stiff and can sound future-like.
+    "좋겠다": "좋습니다",
 }
 
 
@@ -689,23 +719,38 @@ def _formalize_korean_declarative_word(word: str) -> str:
 def formalize_korean_answer(answer: str) -> str:
     """Deterministically normalize sentence-final plain Korean to 합니다체."""
 
+    protected_spans: List[str] = []
+
+    def protect_span(match: re.Match[str]) -> str:
+        protected_spans.append(match.group(0))
+        return "\ue000%d\ue001" % (len(protected_spans) - 1)
+
+    protected = PROTECTED_FORMALIZATION_SPAN_RE.sub(protect_span, answer)
     formalized = PLAIN_DECLARATIVE_ENDING_RE.sub(
         lambda match: _formalize_korean_declarative_word(match.group("word")),
-        answer,
+        protected,
     )
-    return re.sub(
+    formalized = re.sub(
         r"([.!?。！？][\"'”’」』】)]*)(?=[가-힣])",
         r"\1 ",
         formalized,
     )
+    for span_index, span in enumerate(protected_spans):
+        formalized = formalized.replace(
+            "\ue000%d\ue001" % span_index,
+            span,
+        )
+    return formalized
 
 
 def answer_uses_formal_polite_korean(answer: str) -> bool:
     """Return whether every Korean sentence uses a polite final ending."""
 
-    if not re.search(r"[가-힣]", answer):
+    checkable = PROTECTED_QUOTED_SPAN_RE.sub("", answer)
+    if not re.search(r"[가-힣]", checkable):
         return False
-    for match in KOREAN_SENTENCE_FINAL_WORD_RE.finditer(answer):
+    matches = list(KOREAN_SENTENCE_FINAL_WORD_RE.finditer(checkable))
+    for match in matches:
         word = match.group("word")
         if word.endswith("다"):
             if not (
@@ -716,6 +761,15 @@ def answer_uses_formal_polite_korean(answer: str) -> bool:
         elif not word.endswith(FORMAL_POLITE_NONDECLARATIVE_SUFFIXES):
             return False
     return True
+
+
+def answer_uses_source_locked_formal_polite_korean(answer: str) -> bool:
+    """Require a recognized polite terminal for one rendered source sentence."""
+
+    checkable = PROTECTED_QUOTED_SPAN_RE.sub("", answer)
+    return bool(list(KOREAN_SENTENCE_FINAL_WORD_RE.finditer(checkable))) and (
+        answer_uses_formal_polite_korean(answer)
+    )
 
 
 def finalize_user_visible_answer(
@@ -883,6 +937,57 @@ NO_RANGE_COORDINATED_RELATION_MIN_SEMANTIC_RATIO = 0.75
 NO_RANGE_COORDINATED_RELATION_MIN_CONCEPT_COVERAGE = 0.40
 NO_RANGE_LEXICAL_SUPPLEMENT_MIN_SEMANTIC_RATIO = 0.72
 NO_RANGE_LEXICAL_SUPPLEMENT_MIN_DIRECT_CONCEPT_COVERAGE = 1.0 / 3.0
+WHOLE_PIECE_CHANGE_MIN_DENSE_SCORE = 0.50
+WHOLE_PIECE_CHANGE_MIN_LEADER_RATIO = 0.82
+REPEATED_CHANGE_SCOPE_RE = re.compile(
+    r"(?:"
+    r"여러\s*(?:번|차례|곳|구간|부분|대목|마디)"
+    r"|여러번|수차례|몇\s*차례"
+    r"|반복(?:해서|적으로)?|계속|자꾸|곳곳"
+    r"|(?:곡|작품|노래)\s*(?:전체|전반)"
+    r"|(?:전체|전반)적(?:인|으로)?\s*(?:흐름|변화|구조)"
+    r"|처음(?:부터)?.{0,24}(?:끝|마지막)(?:까지)?"
+    r")"
+)
+CHANGE_PREDICATE_RE = re.compile(
+    r"(?:바뀌|바꾸|변하|변화|전환|달라지|돌아오|되돌아|오가|교대|전조)"
+)
+WHOLE_CHANGE_OVERVIEW_RE = re.compile(
+    r"(?:흐름|양상|과정|구조).{0,40}(?:어떻|설명)"
+    r"|(?:전체|전반|처음).{0,80}(?:흐름|양상|과정)"
+)
+TRAJECTORY_PHASE_RES = (
+    re.compile(r"(?:시작|처음|첫머리)"),
+    re.compile(r"(?:뒤|이후|이어|다음|변화하면서|전환하면서)"),
+    re.compile(r"(?:다시|돌아|되돌아|마지막|끝)"),
+)
+REPEATED_CHANGE_ANSWER_RE = re.compile(
+    r"(?:여러\s*(?:번|차례)|수차례|반복|계속|오가|교대)"
+)
+GENERIC_WHOLE_CHANGE_CONCEPTS = {
+    "변화",
+    "변하",
+    "여러",
+    "여러번",
+    "차례",
+    "계속",
+    "전체",
+    "전체적인",
+    "흐름",
+    "양상",
+    "과정",
+    "구조",
+    "구간",
+    "부분",
+    "대목",
+    "마디",
+    "곡",
+    "작품",
+    "노래",
+    "처음",
+    "끝까",
+    "설명할",
+}
 
 
 def _broad_guidance_requested_groups(
@@ -1510,6 +1615,47 @@ def has_primary_grounding(results: List[Any]) -> bool:
     """Return whether results contain answer-authoritative evidence."""
 
     return bool(primary_grounding_results(results))
+
+
+def finalized_primary_grounding_results(results: List[Any]) -> List[Any]:
+    """Return finalized primary source records allowed into generation.
+
+    Context-only results remain available in structured retrieval diagnostics,
+    but neither their prose nor provisional/raw expert material enters a
+    source-locked rendering prompt.  Primary web summaries are already
+    finalized runtime records; provenance and license metadata stay outside
+    the prompt and remain available through structured evidence output.
+    """
+
+    return [
+        result
+        for result in primary_grounding_results(results)
+        if (
+            expert_record_is_runtime_final(result.record)
+            or web_record_is_runtime_final(result.record)
+        )
+    ]
+
+
+def web_record_is_runtime_final(record: Mapping[str, Any]) -> bool:
+    """Return whether a primary web summary satisfies its runtime contract."""
+
+    if record.get("evidence_type") != "web_database":
+        return False
+    if record.get("usage_class") not in {
+        "research_open",
+        "research_conditional",
+    }:
+        return False
+    if not str(record.get("answer") or "").strip():
+        return False
+    if not str(record.get("generated_text_license") or "").strip():
+        return False
+    for field in ("claim_ids", "web_source_ids", "sources"):
+        value = record.get(field)
+        if not isinstance(value, list) or not value:
+            return False
+    return True
 
 
 def has_only_web_grounding(results: List[Any]) -> bool:
@@ -2545,6 +2691,132 @@ def _lexical_supplement_is_semantically_compatible(
     return bool(leader_sources & _result_source_ids(result))
 
 
+def _query_requests_repeated_whole_piece_change(query: str) -> bool:
+    """Return whether a no-range question requests a change trajectory.
+
+    Multiplicity alone is not enough: an existence or practice question must
+    not widen one local annotation into whole-piece evidence.  The route is
+    reserved for an explicit repeated/whole-work change plus either a causal
+    request or a request to explain the overall trajectory.
+    """
+
+    return bool(
+        REPEATED_CHANGE_SCOPE_RE.search(query)
+        and CHANGE_PREDICATE_RE.search(query)
+        and (
+            is_causal_answer_request(query)
+            or WHOLE_CHANGE_OVERVIEW_RE.search(query)
+        )
+    )
+
+
+def _repeated_change_subject_concepts(
+    query: str,
+    piece: str,
+    leader: Any,
+    candidate: Any,
+) -> set[str]:
+    """Return musical subjects shared by query, local, and global answers."""
+
+    query_concepts = set(
+        semantic_concepts(query, piece, query=True)
+    ) - GENERIC_WHOLE_CHANGE_CONCEPTS
+    leader_concepts = set(
+        semantic_concepts(
+            str(leader.record.get("answer") or ""),
+            piece,
+            query=False,
+        )
+    )
+    candidate_concepts = set(
+        semantic_concepts(
+            str(candidate.record.get("answer") or ""),
+            piece,
+            query=False,
+        )
+    )
+    return query_concepts & leader_concepts & candidate_concepts
+
+
+def _answer_has_whole_piece_change_trajectory(answer: str) -> bool:
+    """Require repeated change wording or at least two trajectory phases."""
+
+    if not CHANGE_PREDICATE_RE.search(answer):
+        return False
+    if REPEATED_CHANGE_ANSWER_RE.search(answer):
+        return True
+    return sum(bool(pattern.search(answer)) for pattern in TRAJECTORY_PHASE_RES) >= 2
+
+
+def _whole_piece_change_trajectory_supplement(
+    leader: Any,
+    semantic_pool: List[Any],
+    *,
+    query: str,
+    piece: str,
+) -> List[Any]:
+    """Return at most one strong global trajectory after a local leader.
+
+    Normal near-tie thresholds intentionally favor precision.  A question
+    about several changes throughout a work is the narrow exception: one
+    local causal unit cannot describe the requested full trajectory.  The
+    added unit must be finalized, global, independently strong in both dense
+    views, share the musical subject, and explicitly encode a trajectory.
+    """
+
+    if (
+        leader.scope_match != "local_example"
+        or not _query_requests_repeated_whole_piece_change(query)
+    ):
+        return []
+    leader_score = _answer_semantic_score(leader)
+    if leader_score <= 0:
+        return []
+    causal_query = is_causal_answer_request(query)
+    candidates: List[Any] = []
+    for candidate in semantic_pool:
+        if (
+            candidate is leader
+            or candidate.scope_match != "general_evidence"
+            or not _expert_record_is_finalized(candidate.record)
+            or min(
+                float(candidate.dense_score or 0.0),
+                float(candidate.dense_content_score or 0.0),
+            )
+            < WHOLE_PIECE_CHANGE_MIN_DENSE_SCORE
+            or _answer_semantic_score(candidate)
+            < leader_score * WHOLE_PIECE_CHANGE_MIN_LEADER_RATIO
+            or not _repeated_change_subject_concepts(
+                query,
+                piece,
+                leader,
+                candidate,
+            )
+            or not _answer_has_whole_piece_change_trajectory(
+                str(candidate.record.get("answer") or "")
+            )
+            or (
+                causal_query
+                and not has_causal_answer_authority(candidate, query)
+            )
+        ):
+            continue
+        candidates.append(candidate)
+    if not candidates:
+        return []
+    return [
+        max(
+            candidates,
+            key=lambda result: (
+                _answer_semantic_score(result),
+                float(result.dense_score or 0.0),
+                float(result.dense_content_score or 0.0),
+                str(result.record.get("id") or ""),
+            ),
+        )
+    ]
+
+
 def _focus_no_range_semantic_bundle(
     base_results: List[Any],
     semantic_pool: List[Any],
@@ -2630,13 +2902,36 @@ def _focus_no_range_semantic_bundle(
             if len(group) > 1
             for result in group
         ]
+    semantic_leader = (
+        eligible_semantic_pool[0]
+        if eligible_semantic_pool
+        else None
+    )
+    whole_change_supplements = (
+        _whole_piece_change_trajectory_supplement(
+            semantic_leader,
+            eligible_semantic_pool,
+            query=query,
+            piece=piece,
+        )
+        if semantic_leader is not None
+        else []
+    )
     if (
         not eligible_semantic_pool
-        or any(result.alias_score > 0 for result in finalized_experts)
-        or any(
-            result.semantic_match_type
-            == SOURCE_QUESTION_LED_MATCH_TYPE
-            for result in finalized_experts
+        or (
+            not whole_change_supplements
+            and (
+                any(
+                    result.alias_score > 0
+                    for result in finalized_experts
+                )
+                or any(
+                    result.semantic_match_type
+                    == SOURCE_QUESTION_LED_MATCH_TYPE
+                    for result in finalized_experts
+                )
+            )
         )
     ):
         return None
@@ -2647,7 +2942,7 @@ def _focus_no_range_semantic_bundle(
     # an unrelated source family with weaker answer-side concept coverage.
     # Exact-source companions remain eligible so split, compatible expert
     # claims can still form a complete answer.
-    semantic_leader = eligible_semantic_pool[0]
+    assert semantic_leader is not None
     direct_lexical_anchors = [
         result
         for result in finalized_experts
@@ -2687,6 +2982,7 @@ def _focus_no_range_semantic_bundle(
         return _merge_unique_results(
             direct_lexical_anchors,
             exact_source_companions,
+            whole_change_supplements,
         )[:top_k]
 
     leader_score = _answer_semantic_score(eligible_semantic_pool[0])
@@ -2763,9 +3059,11 @@ def _focus_no_range_semantic_bundle(
             and adds_distinct_detail
         )
 
-    has_direct_supplement = any(
-        is_direct_explicit_slot_supplement(result)
-        or is_coordinated_relation_supplement(result)
+    has_direct_supplement = bool(whole_change_supplements) or any(
+        (
+            is_direct_explicit_slot_supplement(result)
+            or is_coordinated_relation_supplement(result)
+        )
         for result in eligible_semantic_pool
         if result is not leader
     )
@@ -2778,9 +3076,10 @@ def _focus_no_range_semantic_bundle(
         or has_direct_supplement
     )
     if should_focus:
-        semantic_supplements = [
-            leader,
-            *[
+        semantic_supplements = _merge_unique_results(
+            [leader],
+            whole_change_supplements,
+            [
                 result
                 for result in eligible_semantic_pool
                 if result is not leader
@@ -2806,7 +3105,7 @@ def _focus_no_range_semantic_bundle(
                     or is_coordinated_relation_supplement(result)
                 )
             ],
-        ]
+        )
         semantic_supplements = _prune_unsupported_local_supplements(
             semantic_supplements
         )
@@ -2921,6 +3220,7 @@ def _focus_no_range_semantic_bundle(
     ]
     return _merge_unique_results(
         _prune_unsupported_local_supplements(finalized_experts),
+        whole_change_supplements,
         supported_web,
     )[:top_k]
 
@@ -3582,6 +3882,139 @@ def finalize_grounded_generated_answer(
     return finalized
 
 
+def _build_source_locked_validation_answer(
+    rendered_units: List[Any],
+) -> str:
+    """Attach application-owned citations at legacy validator boundaries.
+
+    Source-lock sentence boundaries intentionally preserve quotations and
+    score abbreviations. The older free-form validator may split those same
+    sentences more finely, so cite every validator-sized claim from the
+    immutable unit/result mapping instead of asking the model to emit labels.
+    """
+
+    cited_claims: List[str] = []
+    for unit in rendered_units:
+        for sentence in unit.rendered_sentences:
+            claims = _answer_claims(sentence.text)
+            if not claims:
+                raise GeneratedAnswerRejected(
+                    "Source-locked renderer produced no substantive claim"
+                )
+            cited_claims.extend(
+                "%s [%s]" % (claim, unit.evidence_label)
+                for claim in claims
+            )
+    return " ".join(cited_claims)
+
+
+def generate_source_locked_grounded_answer(
+    *,
+    model_path: str,
+    llm_settings: Mapping[str, Any],
+    results: List[Any],
+    measure_ranges: List[List[int]],
+    generate_fn: Callable[..., str] | None = None,
+) -> tuple[str, str | None, List[Dict[str, Any]]]:
+    """Render every finalized primary KU through one isolated schema call.
+
+    The model never receives the user question, peer knowledge units, stable
+    record/provenance IDs, or result metadata.  It only performs a constrained
+    formal-polite conversion for one complete finalized KU at a time.  Source
+    mappings and citations are application-owned.  Fidelity and scope concerns
+    are returned as warnings beside the same nonempty answer; they never select
+    extraction, a one-pass draft, another model, or internal knowledge.
+    """
+
+    primary = finalized_primary_grounding_results(results)
+    primary_ids = {id(result) for result in primary}
+    source_items = [
+        (result_index, result.record.get("answer"))
+        for result_index, result in enumerate(results)
+        if id(result) in primary_ids
+    ]
+    units = build_source_locked_units(source_items)
+    if not units:
+        raise GeneratedAnswerRejected(
+            "No finalized primary source unit is available"
+        )
+
+    generation_backend = generate_fn or generate
+    render_settings = copy_llm_settings(llm_settings)
+    rendered_units = []
+    validation_messages: List[Dict[str, str]] = []
+    warnings: List[SourceLockedWarning] = []
+    for unit in units:
+        messages = build_source_locked_messages(unit)
+        validation_messages.extend(messages)
+        raw = generation_backend(
+            model_path,
+            messages,
+            render_settings,
+            response_format=source_locked_response_format(unit),
+        )
+        try:
+            rendered = parse_source_locked_render(
+                raw,
+                unit,
+                formalize_fn=formalize_korean_answer,
+                polite_check_fn=(
+                    answer_uses_source_locked_formal_polite_korean
+                ),
+            )
+        except SourceLockedProtocolError:
+            # A malformed/empty structured response is a hard protocol error.
+            # There is deliberately no raw-KU or alternate-generation path.
+            raise
+        rendered_units.append(rendered)
+        warnings.extend(source_locked_fidelity_warnings(rendered))
+
+    visible_draft = format_source_locked_answer(rendered_units)
+    if not visible_draft.strip():
+        raise GeneratedAnswerRejected(
+            "Source-locked renderer returned no usable answer"
+        )
+    if is_grounded_insufficiency_answer(visible_draft):
+        # A refusal is not an answer-required result and must never be
+        # promoted merely because it is nonempty.  There is no alternate
+        # renderer or extractive substitution; the sole protocol call fails.
+        raise GeneratedAnswerRejected(
+            "Source-locked renderer returned an insufficiency/refusal answer"
+        )
+
+    internal_validation_answer = _build_source_locked_validation_answer(
+        rendered_units
+    )
+    try:
+        finalize_grounded_generated_answer(
+            internal_validation_answer,
+            results,
+            validation_messages,
+            measure_ranges,
+        )
+    except GeneratedAnswerRejected as exc:
+        warnings.append(
+            SourceLockedWarning(
+                stage="grounding_validation",
+                code="grounding_validation_warning",
+                message=str(exc),
+            )
+        )
+
+    visible_answer = finalize_user_visible_answer(visible_draft, results)
+    if visible_answer == NO_CORPUS_EVIDENCE_MESSAGE:
+        raise GeneratedAnswerRejected(
+            "Source-locked answer contains forbidden internal metadata"
+        )
+
+    structured_warnings = warning_dicts(warnings)
+    return (
+        visible_answer,
+        legacy_warning_text(warnings),
+        structured_warnings,
+    )
+
+
 def ensure_corpus(settings: Dict[str, Any], rebuild: bool) -> None:
     stats_are_current = False
     expected_web_exports = settings.get("web_export_files", ["research-open.jsonl"])
@@ -3696,6 +4129,7 @@ def main() -> None:
     index = build_retrieval_index(records, settings)
     unavailable_reason: str | None = None
     generation_validation_warning: str | None = None
+    generation_validation_warnings: List[Dict[str, Any]] = []
 
     if args.no_generate:
         results = index.search(
@@ -3721,7 +4155,7 @@ def main() -> None:
                 results=results,
             )
     else:
-        results, messages = retrieve_generation_evidence(
+        results, _messages = retrieve_generation_evidence(
             index,
             query=args.question,
             piece=args.piece,
@@ -3744,23 +4178,16 @@ def main() -> None:
                 results=results,
             )
         else:
-            raw_answer = generate(
-                settings["model_path"],
-                messages,
-                settings["llm"],
+            (
+                answer,
+                generation_validation_warning,
+                generation_validation_warnings,
+            ) = generate_source_locked_grounded_answer(
+                model_path=settings["model_path"],
+                llm_settings=settings["llm"],
+                results=results,
+                measure_ranges=args.measure_ranges,
             )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    results,
-                    messages,
-                    args.measure_ranges,
-                )
-            except GeneratedAnswerRejected as exc:
-                answer = finalize_user_visible_answer(raw_answer, results)
-                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
-                    raise
-                generation_validation_warning = str(exc)
             generation_mode = "llm"
             answer_basis = "retrieved_evidence"
 
@@ -3799,6 +4226,9 @@ def main() -> None:
                     "unavailable_reason": unavailable_reason,
                     "generation_validation_warning": (
                         generation_validation_warning
+                    ),
+                    "generation_validation_warnings": (
+                        generation_validation_warnings
                     ),
                     "retrieval": retrieval_diagnostics(index),
                     "has_primary_grounding": has_primary_grounding(results),
@@ -3863,6 +4293,17 @@ def main() -> None:
         print("Answer")
         print("======")
         print(answer)
+        if generation_validation_warnings:
+            print()
+            print("Generation validation warnings")
+            print("==============================")
+            print(
+                json.dumps(
+                    generation_validation_warnings,
+                    ensure_ascii=False,
+                    indent=2,
+                )
+            )
     if evidence_notices:
         print()
         print("Evidence notices")

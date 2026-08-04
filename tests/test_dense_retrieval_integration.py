@@ -639,6 +639,90 @@ class LocalDenseModelIntegrationTests(unittest.TestCase):
                     ["in-flowery-clouds-ku-008"],
                 )
 
+    def test_repeated_whole_piece_change_keeps_local_and_global_trajectory(
+        self,
+    ) -> None:
+        questions = (
+            "이 곡에서 박자가 여러번 바뀌는 이유는 무엇인가?",
+            "곡 전반에서 박자가 계속 바뀌는 이유는 무엇일까?",
+            (
+                "처음부터 끝까지 박자가 여러 차례 변하는 흐름은 "
+                "어떻게 설명할 수 있을까?"
+            ),
+        )
+        for question in questions:
+            with self.subTest(question=question):
+                results, messages = retrieve_generation_evidence(
+                    self.index,
+                    query=question,
+                    piece="in-flowery-clouds",
+                    measure_ranges=[],
+                    measures="",
+                    topic=None,
+                    top_k=6,
+                )
+                self.assertEqual(
+                    [result.record["id"] for result in results],
+                    [
+                        "in-flowery-clouds-ku-008",
+                        "in-flowery-clouds-ku-011",
+                    ],
+                )
+                self.assertEqual(
+                    [result.scope_match for result in results],
+                    ["local_example", "general_evidence"],
+                )
+                prompt = messages[-1]["content"]
+                self.assertIn(results[0].record["answer"], prompt)
+                self.assertIn(results[1].record["answer"], prompt)
+                self.assertNotIn("39-49", prompt)
+
+        local_question = (
+            "박자가 바뀌는 이유는 무엇이며, 곡의 분위기는 어떻게 "
+            "달라질까?"
+        )
+        local_results, _messages = retrieve_generation_evidence(
+            self.index,
+            query=local_question,
+            piece="in-flowery-clouds",
+            measure_ranges=[],
+            measures="",
+            topic=None,
+            top_k=6,
+        )
+        self.assertEqual(
+            [result.record["id"] for result in local_results],
+            ["in-flowery-clouds-ku-008"],
+        )
+
+        ranged_results, _messages = retrieve_generation_evidence(
+            self.index,
+            query=questions[0],
+            piece="in-flowery-clouds",
+            measure_ranges=[[39, 49]],
+            measures="39-49",
+            topic=None,
+            top_k=6,
+        )
+        self.assertEqual(
+            [result.record["id"] for result in ranged_results],
+            ["in-flowery-clouds-ku-008"],
+        )
+
+        one_result, _messages = retrieve_generation_evidence(
+            self.index,
+            query=questions[0],
+            piece="in-flowery-clouds",
+            measure_ranges=[],
+            measures="",
+            topic=None,
+            top_k=1,
+        )
+        self.assertEqual(
+            [result.record["id"] for result in one_result],
+            ["in-flowery-clouds-ku-008"],
+        )
+
     def test_ranged_accent_variants_reject_ossia_and_keep_direct_unit(
         self,
     ) -> None:

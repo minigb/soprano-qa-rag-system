@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import unittest
 from typing import Any, Dict
 from unittest import mock
@@ -14,6 +15,32 @@ from soprano_qa.answer import (
 )
 from soprano_qa.dense import SOURCE_QUESTION_LED_MATCH_TYPE
 from soprano_qa.retrieval import SearchResult
+
+
+def source_locked_copy_backend(
+    _model_path: str,
+    messages: list[dict[str, str]],
+    _settings: dict[str, Any],
+    **_kwargs: Any,
+) -> str:
+    """Return the isolated source sentences in the renderer's JSON shape."""
+
+    prompt = messages[-1]["content"].rsplit("\n/no_think", 1)[0]
+    source_sentences = json.loads(prompt)["finalized_source_unit"][
+        "source_sentences"
+    ]
+    return json.dumps(
+        {
+            "sentences": [
+                {
+                    "sentence_id": sentence["sentence_id"],
+                    "text": sentence["exact_text"],
+                }
+                for sentence in source_sentences
+            ]
+        },
+        ensure_ascii=False,
+    )
 
 
 def make_result(
@@ -475,11 +502,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=(
-                    "악보와 음원의 페르마타 길이가 다르더라도 편곡 "
-                    "차이일 수 있으므로, 두 경우를 모두 허용해 해석할 "
-                    "수 있습니다. [E1]"
-                ),
+                side_effect=source_locked_copy_backend,
             ) as generate,
         ):
             response = qa.ask(
@@ -499,7 +522,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
         self.assertIsNone(response["unavailable_reason"])
         self.assertIsNone(response["generation_validation_warning"])
         self.assertIn("페르마타", response["answer"])
-        self.assertIn("두 경우를 모두 허용", response["answer"])
+        self.assertIn("두 경우 모두 허용", response["answer"])
         self.assertNotIn("[E1]", response["answer"])
         self.assertNotIn("범위 안내", response["answer"])
         self.assertNotIn("확인된 국소 예시", response["answer"])
@@ -526,10 +549,34 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             "checkpoint_exists": True,
             "llama_cpp_available": True,
         }
-        overgeneralized = (
-            "이 곡 전반의 모든 간주에서는 항상 같은 연기를 해야 "
-            "한다. [E1]"
-        )
+        def overgeneralized_backend(
+            _model_path: str,
+            messages: list[dict[str, str]],
+            _settings: dict[str, Any],
+            **_kwargs: Any,
+        ) -> str:
+            prompt = messages[-1]["content"].rsplit("\n/no_think", 1)[0]
+            source_sentences = json.loads(prompt)["finalized_source_unit"][
+                "source_sentences"
+            ]
+            mutated = (
+                "이 곡 전반의 모든 간주에서는 항상 같은 연기를 해야 합니다.",
+                "성악가는 전반적으로 늘 같은 움직임을 반복해야 합니다.",
+            )
+            self.assertEqual(len(source_sentences), len(mutated))
+            return json.dumps(
+                {
+                    "sentences": [
+                        {
+                            "sentence_id": source["sentence_id"],
+                            "text": text,
+                        }
+                        for source, text in zip(source_sentences, mutated)
+                    ]
+                },
+                ensure_ascii=False,
+            )
+
         with (
             mock.patch.object(qa, "validate_generation_requirements"),
             mock.patch.object(
@@ -541,7 +588,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=overgeneralized,
+                side_effect=overgeneralized_backend,
             ) as generate,
         ):
             response = qa.ask(
@@ -556,9 +603,16 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
         self.assertEqual(response["generation_mode"], "llm")
         self.assertEqual(response["answer_basis"], "retrieved_evidence")
         self.assertIsNone(response["unavailable_reason"])
-        self.assertEqual(
-            response["generation_validation_warning"],
+        self.assertIn(
             "Generated answer overgeneralizes local evidence",
+            response["generation_validation_warning"],
+        )
+        self.assertIn(
+            "grounding_validation_warning",
+            {
+                warning["code"]
+                for warning in response["generation_validation_warnings"]
+            },
         )
         self.assertIn("항상 같은 연기를 해야 합니다", response["answer"])
         self.assertNotIn("[E1]", response["answer"])

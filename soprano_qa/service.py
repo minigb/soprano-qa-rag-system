@@ -7,16 +7,14 @@ from pathlib import Path
 from typing import Optional
 
 from soprano_qa.answer import (
-    GeneratedAnswerRejected,
     NO_CORPUS_EVIDENCE_MESSAGE,
     build_extractive_answer,
     build_evidence_notices,
     ensure_corpus,
-    finalize_grounded_generated_answer,
     finalize_user_visible_answer,
+    generate_source_locked_grounded_answer,
     has_primary_grounding,
     has_selected_range_grounding,
-    is_grounded_insufficiency_answer,
     is_underspecified_ranged_query,
     retrieve_generation_evidence,
 )
@@ -255,9 +253,10 @@ def ask(
     index = _get_index()
     unavailable_reason: str | None = None
     generation_validation_warning: str | None = None
+    generation_validation_warnings: list[dict] = []
 
     if generate:
-        results, messages = retrieve_generation_evidence(
+        results, _messages = retrieve_generation_evidence(
             index,
             query=question,
             piece=piece_id,
@@ -280,32 +279,17 @@ def ask(
                 results=results,
             )
         else:
-            raw_answer = generate_llm(
-                SETTINGS["model_path"],
-                messages,
-                SETTINGS["llm"],
+            (
+                answer,
+                generation_validation_warning,
+                generation_validation_warnings,
+            ) = generate_source_locked_grounded_answer(
+                model_path=SETTINGS["model_path"],
+                llm_settings=SETTINGS["llm"],
+                results=results,
+                measure_ranges=measure_ranges,
+                generate_fn=generate_llm,
             )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    results,
-                    messages,
-                    measure_ranges,
-                )
-            except GeneratedAnswerRejected as exc:
-                # Preserve the sole grounded model draft for review instead
-                # of substituting an extractive or internal-knowledge answer.
-                # Presentation sanitization remains mandatory; semantic or
-                # scope concerns are recorded for the red-flag evaluation.
-                if (
-                    not raw_answer.strip()
-                    or is_grounded_insufficiency_answer(raw_answer)
-                ):
-                    raise
-                answer = finalize_user_visible_answer(raw_answer, results)
-                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
-                    raise
-                generation_validation_warning = str(exc)
             generation_mode = "llm"
             answer_basis = "retrieved_evidence"
     else:
@@ -356,6 +340,7 @@ def ask(
         "answer_basis": answer_basis,
         "unavailable_reason": unavailable_reason,
         "generation_validation_warning": generation_validation_warning,
+        "generation_validation_warnings": generation_validation_warnings,
         "has_primary_grounding": has_primary_grounding(results),
         "has_selected_range_grounding": (
             has_selected_range_grounding(results)

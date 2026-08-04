@@ -2626,6 +2626,22 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             scope_match="general_evidence",
         )
         web.record["answer"] = "렌더링하면 안 되는 웹 원문"
+        web.record.update(
+            {
+                "measure_range": [],
+                "measure_scope": "global",
+                "usage_class": "research_open",
+                "generated_text_license": "CC-BY-4.0",
+                "claim_ids": ["claim-web-only"],
+                "web_source_ids": ["source-web-only"],
+                "sources": [
+                    {
+                        "web_source_id": "source-web-only",
+                        "url": "https://example.invalid/web-only",
+                    }
+                ],
+            }
+        )
         web.content_concept_coverage = 1.0
 
         class WebIndex:

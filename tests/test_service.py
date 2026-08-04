@@ -1,10 +1,12 @@
 """Integration checks for the reusable QA service facade."""
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 import re
 import tempfile
+from typing import Any
 import unittest
 from unittest import mock
 
@@ -20,6 +22,66 @@ from soprano_qa.dense import (
 )
 from soprano_qa.retrieval import SearchResult
 from soprano_qa.settings import load_settings
+from soprano_qa.source_locked import SourceLockedProtocolError
+
+
+def source_locked_copy_backend(
+    _model_path: str,
+    messages: list[dict[str, str]],
+    _settings: dict[str, Any],
+    **_kwargs: Any,
+) -> str:
+    """Return every isolated source sentence in the strict JSON shape."""
+
+    prompt = messages[-1]["content"].rsplit("\n/no_think", 1)[0]
+    source_sentences = json.loads(prompt)["finalized_source_unit"][
+        "source_sentences"
+    ]
+    return json.dumps(
+        {
+            "sentences": [
+                {
+                    "sentence_id": sentence["sentence_id"],
+                    "text": sentence["exact_text"],
+                }
+                for sentence in source_sentences
+            ]
+        },
+        ensure_ascii=False,
+    )
+
+
+def source_locked_text_backend(*texts: str):
+    """Build a strict renderer backend with caller-supplied sentence text."""
+
+    def render(
+        _model_path: str,
+        messages: list[dict[str, str]],
+        _settings: dict[str, Any],
+        **_kwargs: Any,
+    ) -> str:
+        prompt = messages[-1]["content"].rsplit("\n/no_think", 1)[0]
+        source_sentences = json.loads(prompt)["finalized_source_unit"][
+            "source_sentences"
+        ]
+        if len(source_sentences) != len(texts):
+            raise AssertionError(
+                "structured test backend sentence count does not match source"
+            )
+        return json.dumps(
+            {
+                "sentences": [
+                    {
+                        "sentence_id": source["sentence_id"],
+                        "text": text,
+                    }
+                    for source, text in zip(source_sentences, texts)
+                ]
+            },
+            ensure_ascii=False,
+        )
+
+    return render
 
 
 class ServicePipelineTests(unittest.TestCase):
@@ -538,16 +600,13 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertNotIn(results[5].record["answer"], response["answer"])
         self.assert_public_answer_contract(response)
 
-    def test_broad_guidance_uses_the_same_grounded_llm_path(
+    def test_broad_guidance_uses_the_same_source_locked_llm_path(
         self,
     ) -> None:
         with mock.patch.object(
             qa,
             "generate_llm",
-            return_value=(
-                "가창자의 입장에서는 호흡과 표현을 함께 고려하는 "
-                "것이 좋습니다. [E1]"
-            ),
+            side_effect=source_locked_copy_backend,
         ) as generate:
             result = qa.ask(
                 piece_id="la-capinera",
@@ -560,7 +619,7 @@ class ServicePipelineTests(unittest.TestCase):
                 top_k=6,
             )
 
-        generate.assert_called_once()
+        self.assertEqual(generate.call_count, len(result["evidence"]))
         self.generation_preflight.assert_called_once()
         self.assertEqual(result["generation_mode"], "llm")
         self.assertEqual(result["answer_basis"], "retrieved_evidence")
@@ -661,16 +720,13 @@ class ServicePipelineTests(unittest.TestCase):
         self.generation_preflight.assert_called_once()
         self.assert_public_answer_contract(result)
 
-    def test_finalized_expert_is_composed_by_the_grounded_llm(
+    def test_finalized_expert_is_rendered_by_the_source_locked_llm(
         self,
     ) -> None:
         with mock.patch.object(
             qa,
             "generate_llm",
-            return_value=(
-                "긴장감과 분위기 전환을 자연스럽게 표현하는 것이 "
-                "좋습니다. [E1]"
-            ),
+            side_effect=source_locked_copy_backend,
         ) as generate:
             result = qa.ask(
                 piece_id="die-forelle",
@@ -861,7 +917,14 @@ class ServicePipelineTests(unittest.TestCase):
                 "source_ids": [],
                 "web_source_ids": ["web-source"],
                 "claim_ids": ["web-claim"],
-                "sources": [],
+                "sources": [
+                    {
+                        "web_source_id": "web-source",
+                        "url": "https://example.invalid/source",
+                    }
+                ],
+                "usage_class": "research_open",
+                "generated_text_license": "CC-BY-4.0",
             },
             score=0.75,
             text_score=2.0,
@@ -909,7 +972,7 @@ class ServicePipelineTests(unittest.TestCase):
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_rejected_generated_draft_propagates_after_one_call(self) -> None:
+    def test_invalid_structured_draft_propagates_after_one_call(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -925,10 +988,12 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value="<NO_GROUNDED_ANSWER>",
+                side_effect=source_locked_text_backend(
+                    "<NO_GROUNDED_ANSWER>"
+                ),
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
+            with self.assertRaises(SourceLockedProtocolError):
                 qa.ask(
                     piece_id="die-forelle",
                     question="이 작품의 역사적 판본은 무엇인가요?",
@@ -939,7 +1004,7 @@ class ServicePipelineTests(unittest.TestCase):
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_natural_insufficiency_draft_propagates_after_one_call(self) -> None:
+    def test_structured_insufficiency_propagates_without_fallback(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -958,10 +1023,13 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=refusal,
+                side_effect=source_locked_text_backend(refusal),
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
+            with self.assertRaisesRegex(
+                GeneratedAnswerRejected,
+                "insufficiency/refusal",
+            ):
                 qa.ask(
                     piece_id="die-forelle",
                     question="이 작품의 역사적 판본은 무엇인가요?",
@@ -988,10 +1056,10 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=" \n\t",
+                side_effect=source_locked_text_backend(" \n\t"),
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
+            with self.assertRaises(SourceLockedProtocolError):
                 qa.ask(
                     piece_id="die-forelle",
                     question="이 작품의 역사적 판본은 무엇인가요?",
@@ -1013,18 +1081,17 @@ class ServicePipelineTests(unittest.TestCase):
             def search(**_kwargs):
                 return [ServicePipelineTests._grounded_web_result()]
 
-        raw_answer = "판본에 따라 연주 방식이 달라집니다. [E1]"
+        rendered_answer = "판본에 따라 연주 방식이 달라집니다."
         warning = "Generated answer overgeneralizes local evidence"
         with (
             mock.patch.object(qa, "_get_index", return_value=WebIndex()),
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=raw_answer,
+                side_effect=source_locked_text_backend(rendered_answer),
             ) as generate,
-            mock.patch.object(
-                qa,
-                "finalize_grounded_generated_answer",
+            mock.patch(
+                "soprano_qa.answer.finalize_grounded_generated_answer",
                 side_effect=GeneratedAnswerRejected(warning),
             ),
         ):
@@ -1039,8 +1106,15 @@ class ServicePipelineTests(unittest.TestCase):
         self.generation_preflight.assert_called_once()
         self.assertEqual(result["generation_mode"], "llm")
         self.assertEqual(result["answer_basis"], "retrieved_evidence")
-        self.assertEqual(result["generation_validation_warning"], warning)
-        self.assertEqual(result["answer"], "판본에 따라 연주 방식이 달라집니다.")
+        self.assertIn(warning, result["generation_validation_warning"])
+        self.assertIn(
+            "grounding_validation_warning",
+            {
+                item["code"]
+                for item in result["generation_validation_warnings"]
+            },
+        )
+        self.assertEqual(result["answer"], rendered_answer)
 
     def test_web_results_keep_deterministic_rights_notices(self) -> None:
         result = qa.ask(
