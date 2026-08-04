@@ -12,17 +12,21 @@ from soprano_qa.answer import (
     build_context,
     build_evidence_notices,
     ensure_corpus,
+    GeneratedAnswerRejected,
     finalize_answer_citations,
     format_evidence_notice,
-    generate_with_context_retry,
 )
 from soprano_qa.corpus import (
+    CORPUS_RELEASE_FORBIDDEN_FIELDS,
+    EXPERT_RELEASE_RECORD_KEYS,
     apply_overrides,
     build_corpus,
+    build_expert_records,
     build_facts_only_audit_index,
     build_web_claim_index,
     build_web_source_index,
     effective_source_asset_class,
+    expert_unit_is_release_ready,
     expected_inherited_licenses,
     file_sha256,
     iter_jsonl,
@@ -30,12 +34,85 @@ from soprano_qa.corpus import (
     resolve_claim_assets,
     validate_claim_asset_rights,
     validate_expert_review_document,
+    validate_expert_release_readiness,
+    validate_expert_release_record,
     validate_web_chunk_lineage,
 )
 from soprano_qa.retrieval import (
     BM25Index,
 )
 from soprano_qa.settings import PROJECT_ROOT, load_settings
+
+
+class ExpertCorpusReleaseContractTests(unittest.TestCase):
+    def test_only_finalized_expert_units_are_release_ready(self) -> None:
+        self.assertTrue(expert_unit_is_release_ready("ready", "specific"))
+        self.assertTrue(expert_unit_is_release_ready("ready", "whole_piece"))
+        self.assertTrue(expert_unit_is_release_ready("ready", "unspecified"))
+        self.assertFalse(
+            expert_unit_is_release_ready("needs_review", "specific")
+        )
+        self.assertFalse(
+            expert_unit_is_release_ready("ready", "waiting_for_review")
+        )
+
+    def test_release_guard_reports_every_invalid_knowledge_unit(self) -> None:
+        documents = {
+            "die-forelle": {
+                "knowledge_units": [
+                    {
+                        "knowledge_unit_id": "die-forelle-ku-001",
+                        "rewrite_status": "ready",
+                        "measure_status": "specific",
+                    },
+                    {
+                        "knowledge_unit_id": "die-forelle-ku-002",
+                        "rewrite_status": "needs_review",
+                        "measure_status": "whole_piece",
+                    },
+                    {
+                        "knowledge_unit_id": "die-forelle-ku-003",
+                        "rewrite_status": "ready",
+                        "measure_status": "waiting_for_review",
+                    },
+                ]
+            }
+        }
+
+        with self.assertRaisesRegex(
+            ValueError,
+            "Expert review corpus is not release-ready",
+        ) as raised:
+            validate_expert_release_readiness(documents)
+
+        message = str(raised.exception)
+        self.assertIn("die-forelle-ku-002", message)
+        self.assertIn("rewrite_status='needs_review'", message)
+        self.assertIn("die-forelle-ku-003", message)
+        self.assertIn("measure_status='waiting_for_review'", message)
+        self.assertNotIn("die-forelle-ku-001", message)
+
+    def test_runtime_expert_record_build_is_fail_closed(self) -> None:
+        documents = {
+            "die-forelle": {
+                "knowledge_units": [
+                    {
+                        "knowledge_unit_id": "die-forelle-ku-004",
+                        "rewrite_status": "needs_review",
+                        "measure_status": "specific",
+                    }
+                ]
+            }
+        }
+        with mock.patch(
+            "soprano_qa.corpus.load_expert_review_documents",
+            return_value=documents,
+        ):
+            with self.assertRaisesRegex(
+                ValueError,
+                "die-forelle-ku-004.*rewrite_status='needs_review'",
+            ):
+                build_expert_records("unused", {})
 
 
 class CombinedCorpusTests(unittest.TestCase):
@@ -63,12 +140,12 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertEqual(settings["corpus_path"], os.path.join(PROJECT_ROOT, "data", "corpus.json"))
         self.assertEqual(
             settings["model_path"],
-            os.path.join(PROJECT_ROOT, "models", "Qwen3-8B-Q4_K_M.gguf"),
+            os.path.join(PROJECT_ROOT, "models", "Qwen3-14B-Q6_K.gguf"),
         )
         self.assertTrue(settings["dataset_root"].endswith("soprano-qa-dataset"))
 
     def test_combines_reviewed_expert_and_answer_eligible_web_lineages(self) -> None:
-        self.assertEqual(self.stats["corpus_schema_version"], 6)
+        self.assertEqual(self.stats["corpus_schema_version"], 8)
         self.assertEqual(len(self.stats["input_fingerprint"]), 64)
         self.assertEqual(len(self.stats["corpus_sha256"]), 64)
         self.assertEqual(
@@ -77,39 +154,28 @@ class CombinedCorpusTests(unittest.TestCase):
         )
         self.assertTrue(self.stats["dataset_root"].endswith("soprano-qa-dataset"))
         self.assertEqual(self.stats["total_records"], 223)
-        self.assertEqual(self.stats["retrievable_records"], 223)
         self.assertEqual(
             self.stats["records_by_evidence_type"],
             {"expert_annotation": 122, "web_database": 101},
         )
         self.assertEqual(
-            self.stats["expert_records_by_rewrite_status"],
-            {"needs_review": 13, "ready": 109},
-        )
-        self.assertEqual(
             self.stats["expert_records_by_measure_status"],
             {
-                "specific": 64,
+                "specific": 65,
                 "unspecified": 3,
-                "whole_piece": 55,
+                "whole_piece": 54,
             },
         )
-        self.assertEqual(
-            self.stats["expert_records_by_retrieval_exclusion_reason"],
-            {},
-        )
-        self.assertEqual(
-            self.stats["expert_records_by_retrieval_review_warning"],
-            {"rewrite_review_pending": 13},
-        )
-        self.assertEqual(
-            len(self.stats["expert_retrieval_review_warnings"]),
-            13,
-        )
-        self.assertEqual(
-            self.stats["expert_records_by_question_source"],
-            {"none": 122},
-        )
+        for removed_stat in (
+            "retrievable_records",
+            "expert_records_by_question_source",
+            "expert_records_by_rewrite_status",
+            "expert_records_by_retrieval_exclusion_reason",
+            "expert_records_by_retrieval_review_warning",
+            "excluded_from_retrieval",
+            "expert_retrieval_review_warnings",
+        ):
+            self.assertNotIn(removed_stat, self.stats)
         self.assertEqual(
             self.stats["web_records_by_usage_class"],
             {"research_conditional": 20, "research_open": 81},
@@ -123,7 +189,8 @@ class CombinedCorpusTests(unittest.TestCase):
             if record["evidence_type"] == "expert_annotation"
             for source_id in record["source_ids"]
         }
-        self.assertEqual(len(expert_source_ids), 132)
+        self.assertEqual(len(expert_source_ids), 131)
+        self.assertNotIn("yeon-die-forelle-08", expert_source_ids)
 
     def test_strict_measure_ranges_reject_lossy_values(self) -> None:
         for invalid in ([[1.9, 4]], [[True, 2]], [["1", 2]]):
@@ -210,7 +277,6 @@ class CombinedCorpusTests(unittest.TestCase):
         )
         reviewed_units = {}
         reviewed_sources = {}
-        reviewed_source_unit_ids = {}
         for filename in sorted(os.listdir(review_dir)):
             if not filename.endswith(".json"):
                 continue
@@ -227,11 +293,6 @@ class CombinedCorpusTests(unittest.TestCase):
             )
             for unit in review["knowledge_units"]:
                 reviewed_units[unit["knowledge_unit_id"]] = unit
-                for source_id in unit["source_ids"]:
-                    reviewed_source_unit_ids.setdefault(
-                        source_id,
-                        [],
-                    ).append(unit["knowledge_unit_id"])
         self.assertEqual(
             {record["id"] for record in expert_records},
             set(reviewed_units),
@@ -246,53 +307,14 @@ class CombinedCorpusTests(unittest.TestCase):
                 self.assertEqual(record["answer"], unit["answer"])
                 self.assertEqual(record["source_ids"], unit["source_ids"])
                 self.assertEqual(
-                    record["measure_range_hints"],
-                    unit["measure_range_hints"],
-                )
-                self.assertEqual(
-                    record["rewrite_status"],
-                    unit["rewrite_status"],
-                )
-                self.assertEqual(
-                    record["rewrite_notes"],
-                    unit["rewrite_notes"],
-                )
-                self.assertEqual(
                     record["measure_status"],
                     unit["measure_status"],
                 )
-                self.assertEqual(
-                    record["measure_notes"],
-                    unit["measure_notes"],
-                )
-                self.assertEqual(record["question"], "")
-                self.assertEqual(record["question_source"], "none")
-                self.assertEqual(record["topic"], "")
-                source_context = [
-                    {
-                        "source_id": source_id,
-                        "question": reviewed_sources[source_id]["question"],
-                        "answer": reviewed_sources[source_id]["answer"],
-                        "legacy_measure_range_hints": normalize_ranges(
-                            reviewed_sources[source_id][
-                                "legacy_measure_ranges"
-                            ]
-                        ),
-                        "linked_knowledge_unit_ids": (
-                            reviewed_source_unit_ids[source_id]
-                        ),
-                    }
-                    for source_id in unit["source_ids"]
-                ]
                 aliases = []
-                for source in source_context:
-                    question = source["question"].strip()
+                for source_id in unit["source_ids"]:
+                    question = reviewed_sources[source_id]["question"].strip()
                     if question and question not in aliases:
                         aliases.append(question)
-                self.assertEqual(
-                    record["source_answer_context"],
-                    source_context,
-                )
                 self.assertEqual(record["retrieval_aliases"], aliases)
                 expected_relevance_text = "\n".join(
                     [record["answer"]] + aliases
@@ -305,24 +327,9 @@ class CombinedCorpusTests(unittest.TestCase):
                     record["retrieval_text"],
                     expected_relevance_text,
                 )
-                self.assertTrue(record["retrieval_eligible"])
-                self.assertEqual(record["retrieval_exclusion_reason"], "")
-                if (
-                    record["rewrite_status"] == "needs_review"
-                    and record["measure_status"] == "waiting_for_review"
-                ):
-                    expected_review_warning = (
-                        "rewrite_and_measure_review_pending"
-                    )
-                elif record["rewrite_status"] == "needs_review":
-                    expected_review_warning = "rewrite_review_pending"
-                elif record["measure_status"] == "waiting_for_review":
-                    expected_review_warning = "measure_review_pending"
-                else:
-                    expected_review_warning = ""
-                self.assertEqual(
-                    record["retrieval_review_warning"],
-                    expected_review_warning,
+                self.assertIn(
+                    record["measure_status"],
+                    {"specific", "whole_piece", "unspecified"},
                 )
                 if record["measure_status"] == "specific":
                     self.assertEqual(
@@ -331,6 +338,84 @@ class CombinedCorpusTests(unittest.TestCase):
                     )
                 else:
                     self.assertEqual(record["measure_range"], [])
+
+    def test_release_corpus_omits_raw_and_editorial_review_data(self) -> None:
+        for record in self.records:
+            with self.subTest(record_id=record["id"]):
+                self.assertTrue(
+                    CORPUS_RELEASE_FORBIDDEN_FIELDS.isdisjoint(record)
+                )
+                if record["evidence_type"] == "expert_annotation":
+                    self.assertEqual(
+                        tuple(record),
+                        EXPERT_RELEASE_RECORD_KEYS,
+                    )
+
+        with open(
+            self.build_settings["corpus_path"],
+            encoding="utf-8",
+        ) as corpus_file:
+            serialized_records = json.load(corpus_file)
+        self.assertEqual(serialized_records, self.records)
+        self.assertTrue(
+            all(
+                CORPUS_RELEASE_FORBIDDEN_FIELDS.isdisjoint(record)
+                for record in serialized_records
+            )
+        )
+
+        serialized_text = json.dumps(serialized_records, ensure_ascii=False)
+        review_dir = os.path.join(
+            self.build_settings["dataset_root"],
+            "expert_curation",
+            "review",
+        )
+        for filename in sorted(os.listdir(review_dir)):
+            if not filename.endswith(".json"):
+                continue
+            with open(
+                os.path.join(review_dir, filename),
+                encoding="utf-8",
+            ) as review_file:
+                review = json.load(review_file)
+            for source in review["source_annotations"]:
+                raw_answer = source["answer"]
+                if raw_answer:
+                    self.assertNotIn(
+                        json.dumps(raw_answer, ensure_ascii=False),
+                        serialized_text,
+                    )
+
+    def test_expert_release_schema_rejects_forbidden_and_unexpected_fields(
+        self,
+    ) -> None:
+        expert = next(
+            record
+            for record in self.records
+            if record["evidence_type"] == "expert_annotation"
+        )
+        forbidden = copy.deepcopy(expert)
+        forbidden["rewrite_notes"] = "internal note"
+        with self.assertRaisesRegex(ValueError, "forbidden editorial"):
+            validate_expert_release_record(forbidden, label="test expert")
+
+        nested_forbidden = copy.deepcopy(expert)
+        nested_forbidden["retrieval_aliases"] = [
+            {"measure_notes": "internal note"}
+        ]
+        with self.assertRaisesRegex(
+            ValueError,
+            r"retrieval_aliases\[0\]\.measure_notes",
+        ):
+            validate_expert_release_record(
+                nested_forbidden,
+                label="test expert",
+            )
+
+        unexpected = copy.deepcopy(expert)
+        unexpected["unexpected"] = True
+        with self.assertRaisesRegex(ValueError, "keys must be exactly"):
+            validate_expert_release_record(unexpected, label="test expert")
 
     def test_expert_review_validation_rejects_unsafe_runtime_inputs(self) -> None:
         piece_id = "die-forelle"
@@ -406,66 +491,7 @@ class CombinedCorpusTests(unittest.TestCase):
             with open(settings["stats_path"], encoding="utf-8") as f:
                 self.assertIsInstance(json.load(f), dict)
 
-    def test_generation_context_overflow_retries_whole_records_and_stays_aligned(self) -> None:
-        attempted_counts = []
 
-        def fake_generator(messages):
-            evidence_count = messages[1]["content"].count("Evidence ")
-            attempted_counts.append(evidence_count)
-            if evidence_count > 2:
-                raise ValueError(
-                    "Requested tokens (11417) exceed context window of 8192"
-                )
-            return "grounded answer [E1]"
-
-        with mock.patch(
-            "soprano_qa.answer.select_generation_evidence",
-            side_effect=lambda results: results,
-        ):
-            raw_answer, results, messages, context_limited = (
-                generate_with_context_retry(
-                    self.index,
-                    query="발음",
-                    piece="die-forelle",
-                    measure_ranges=[],
-                    measures="",
-                    topic=None,
-                    top_k=1000,
-                    generator=fake_generator,
-                )
-            )
-        self.assertTrue(results)
-        self.assertTrue(context_limited)
-        self.assertGreater(attempted_counts[0], 2)
-        self.assertLessEqual(len(results), 2)
-        self.assertEqual(raw_answer, "grounded answer [E1]")
-        self.assertEqual(messages[1]["content"].count("Evidence "), len(results))
-        notice_ids = {
-            notice["record_id"] for notice in build_evidence_notices(results)
-        }
-        self.assertTrue(notice_ids.issubset({result.record["id"] for result in results}))
-
-    def test_context_overflow_preserves_last_nonempty_result_set(self) -> None:
-        def always_overflow(_messages):
-            raise ValueError(
-                "Requested tokens (9000) exceed context window of 8192"
-            )
-
-        raw_answer, results, messages, context_limited = generate_with_context_retry(
-            self.index,
-            query="발음",
-            piece="die-forelle",
-            measure_ranges=[],
-            measures="",
-            topic=None,
-            top_k=2,
-            generator=always_overflow,
-        )
-
-        self.assertEqual(raw_answer, "")
-        self.assertTrue(context_limited)
-        self.assertEqual(len(results), 1)
-        self.assertEqual(messages[1]["content"].count("Evidence "), 1)
 
     def test_web_chunk_lineage_rejects_unknown_claims_and_wrong_piece_sources(self) -> None:
         settings = load_settings()
@@ -785,15 +811,8 @@ class CombinedCorpusTests(unittest.TestCase):
             for record in expert_records
             if record["id"] == "una-voce-poco-fa-ku-027"
         )
-        self.assertEqual(reviewed["rewrite_status"], "ready")
         self.assertEqual(reviewed["measure_status"], "specific")
         self.assertEqual(reviewed["measure_range"], [[56, 56]])
-        self.assertTrue(reviewed["retrieval_eligible"])
-        self.assertEqual(
-            reviewed["retrieval_review_warning"],
-            "",
-        )
-        self.assertEqual(reviewed["retrieval_exclusion_reason"], "")
         unscoped = self.index.search(
             "이중모음은 어디에 음가를 붙여 부르나요?",
             piece="una-voce-poco-fa",
@@ -1103,7 +1122,9 @@ class CombinedCorpusTests(unittest.TestCase):
             piece="die-forelle",
             top_k=6,
         )
-        self.assertEqual(whole_song, [])
+        self.assertTrue(whole_song)
+        self.assertEqual(whole_song[0].record["id"], "die-forelle-ku-004")
+        self.assertEqual(whole_song[0].scope_match, "general_evidence")
 
     def test_short_inflected_korean_topics_still_retrieve(self) -> None:
         form = self.index.search("형식은 무엇인가요?", piece="die-forelle", top_k=3)
@@ -1126,7 +1147,7 @@ class CombinedCorpusTests(unittest.TestCase):
             natural_pronunciation[0].record["evidence_type"],
             "expert_annotation",
         )
-        self.assertEqual(genre[0].record["topic"], "genre_and_form")
+        self.assertEqual(genre[0].record["id"], "die-forelle-ku-004")
         for polite_form in (
             "어떤 형식이에요?",
             "무슨 형식이에요?",
@@ -1205,12 +1226,24 @@ class CombinedCorpusTests(unittest.TestCase):
         context = build_context(expert + web)
         self.assertIn("citation_label: E1", context)
         self.assertIn("evidence_type: expert_annotation", context)
-        self.assertIn("expert_source_ids:", context)
-        self.assertIn("measure_status:", context)
-        self.assertIn("expert_source_answer", context)
+        self.assertNotIn("expert_source_ids:", context)
+        self.assertNotIn("measure_status:", context)
+        self.assertNotIn("expert_source_answer", context)
+        self.assertIn(expert[0].record["answer"], context)
         self.assertIn("evidence_type: web_database", context)
         self.assertIn("web_source_ids:", context)
         self.assertIn("web_source:", context)
+        self.assertEqual(expert[0].record["id"], "die-forelle-ku-007")
+        self.assertEqual(
+            expert[0].record["source_ids"],
+            ["kim-die-forelle-05", "kim-die-forelle-09"],
+        )
+        self.assertEqual(
+            web[0].record["id"],
+            "webchunk-cecff2bace03ab67e32d",
+        )
+        self.assertTrue(web[0].record["web_source_ids"])
+        self.assertTrue(web[0].record["claim_ids"])
 
         notices = build_evidence_notices(web)
         self.assertEqual(notices[0]["record_id"], "webchunk-cecff2bace03ab67e32d")
@@ -1230,57 +1263,39 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertIn("source: websrc-", formatted_notice)
 
         labeled = finalize_answer_citations("근거입니다. [E1]", web)
-        self.assertEqual(labeled, "근거입니다. [webchunk-cecff2bace03ab67e32d]")
-        typo = finalize_answer_citations(
-            "근거입니다. [webchunk-cecff2bace003ab67e32d]",
-            web,
-        )
-        self.assertEqual(typo, "근거입니다. [webchunk-cecff2bace03ab67e32d]")
+        self.assertEqual(labeled, "근거입니다.")
+        with self.assertRaises(GeneratedAnswerRejected):
+            finalize_answer_citations(
+                "근거입니다. [webchunk-cecff2bace003ab67e32d]",
+                web,
+            )
         grouped = finalize_answer_citations("근거입니다. [E1, E2]", expert + web)
-        self.assertEqual(
-            grouped,
-            "근거입니다. [die-forelle-ku-007] "
-            "[webchunk-cecff2bace03ab67e32d]",
-        )
+        self.assertEqual(grouped, "근거입니다.")
         spaced = finalize_answer_citations("근거입니다. [ E1 ]", expert + web)
-        self.assertEqual(spaced, "근거입니다. [die-forelle-ku-007]")
+        self.assertEqual(spaced, "근거입니다.")
         trailing = finalize_answer_citations("근거입니다. [E1;]", expert + web)
-        self.assertEqual(trailing, "근거입니다. [die-forelle-ku-007]")
-        uncited = finalize_answer_citations("근거입니다.", web)
-        self.assertEqual(uncited, "근거입니다.")
-        unknown = finalize_answer_citations("근거입니다. [E99]", web)
-        self.assertEqual(unknown, "근거입니다.")
-        malformed = finalize_answer_citations(
-            "근거입니다. [websrc-fake] [die-forelle-ku-ABC] [A]",
-            web,
-        )
-        self.assertEqual(malformed, "근거입니다.   [A]")
-        prefixed = finalize_answer_citations(
-            "근거입니다. [1] [출처: E99] [Source: webchunk-not-retrieved]",
-            web,
-        )
-        self.assertNotIn("[1]", prefixed)
-        self.assertNotIn("E99", prefixed)
-        self.assertNotIn("not-retrieved", prefixed)
-        self.assertEqual(prefixed, "근거입니다.")
+        self.assertEqual(trailing, "근거입니다.")
+        for displayed in (labeled, grouped, spaced, trailing):
+            self.assertNotIn("[E", displayed)
+            self.assertNotIn("-ku-", displayed)
+            self.assertNotIn("webchunk-", displayed)
         expert_source_id = expert[0].record["source_ids"][0]
-        provenance_citation = finalize_answer_citations(
+        invalid_drafts = (
+            "근거입니다.",
+            "근거입니다. [E99]",
+            "근거입니다. [websrc-fake] [die-forelle-ku-ABC] [A]",
+            "근거입니다. [1] [출처: E99] [Source: webchunk-not-retrieved]",
             "근거입니다. [%s]" % expert_source_id,
-            expert,
-        )
-        self.assertNotIn(expert_source_id, provenance_citation)
-        self.assertEqual(provenance_citation, "근거입니다.")
-        grouped_provenance = finalize_answer_citations(
             "근거입니다. [%s]" % ", ".join(expert[0].record["source_ids"]),
-            expert,
-        )
-        for source_id in expert[0].record["source_ids"]:
-            self.assertNotIn(source_id, grouped_provenance)
-        model_footer = finalize_answer_citations(
             "근거입니다.\n\n제공된 검색 근거: [E1]",
-            web,
         )
-        self.assertEqual(model_footer, "근거입니다.")
+        for draft in invalid_drafts:
+            with self.subTest(draft=draft):
+                with self.assertRaises(GeneratedAnswerRejected):
+                    finalize_answer_citations(
+                        draft,
+                        expert if expert_source_id in draft else web,
+                    )
 
     def test_conditional_web_evidence_has_deterministic_rights_notice(self) -> None:
         for rights_question in (

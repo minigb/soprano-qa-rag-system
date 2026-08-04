@@ -1,142 +1,34 @@
 {
-  "corpus_schema_version": 6,
+  "corpus_schema_version": 8,
   "dataset_root": "/home/minhee/soprano-qa-dataset",
-  "input_fingerprint": "e3c6fefa57bb6b7022fcc5f58449ed95566da3d7eab1622e3225ea83676cde11",
-  "corpus_sha256": "866e0b03c31c89bb698efc8570474ca7de53c886c84bc0afe22b0ca0661cbe0a",
+  "input_fingerprint": "30c2e6c009f9cc51faafb44cf907e82a1d29a51b5b1342888663fbca0a93590b",
+  "corpus_sha256": "1ed03db054ae19fa0d6256d119fca1533fdea56e026de7edc1568add2e9ca848",
   "total_records": 223,
-  "retrievable_records": 223,
   "records_by_evidence_type": {
     "expert_annotation": 122,
     "web_database": 101
   },
   "records_by_piece": {
-    "die-forelle": 51,
+    "die-forelle": 50,
     "in-flowery-clouds": 38,
-    "la-capinera": 52,
+    "la-capinera": 53,
     "nella-fantasia": 25,
     "una-voce-poco-fa": 57
   },
   "records_by_measure_scope": {
-    "global": 159,
-    "local": 36,
-    "multi_range": 28
-  },
-  "expert_records_by_question_source": {
-    "none": 122
-  },
-  "expert_records_by_rewrite_status": {
-    "needs_review": 13,
-    "ready": 109
+    "global": 158,
+    "local": 38,
+    "multi_range": 27
   },
   "expert_records_by_measure_status": {
-    "specific": 64,
+    "specific": 65,
     "unspecified": 3,
-    "whole_piece": 55
-  },
-  "expert_records_by_retrieval_exclusion_reason": {},
-  "expert_records_by_retrieval_review_warning": {
-    "rewrite_review_pending": 13
+    "whole_piece": 54
   },
   "web_records_by_usage_class": {
     "research_conditional": 20,
     "research_open": 81
   },
-  "excluded_from_retrieval": [],
-  "expert_retrieval_review_warnings": [
-    {
-      "id": "una-voce-poco-fa-ku-004",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-una-voce-poco-fa-03",
-        "kim-una-voce-poco-fa-20"
-      ]
-    },
-    {
-      "id": "una-voce-poco-fa-ku-011",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-una-voce-poco-fa-08"
-      ]
-    },
-    {
-      "id": "una-voce-poco-fa-ku-021",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-una-voce-poco-fa-16"
-      ]
-    },
-    {
-      "id": "una-voce-poco-fa-ku-026",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-una-voce-poco-fa-04"
-      ]
-    },
-    {
-      "id": "la-capinera-ku-022",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-la-capinera-04"
-      ]
-    },
-    {
-      "id": "la-capinera-ku-024",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-la-capinera-06"
-      ]
-    },
-    {
-      "id": "die-forelle-ku-004",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-die-forelle-01"
-      ]
-    },
-    {
-      "id": "die-forelle-ku-018",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-die-forelle-08"
-      ]
-    },
-    {
-      "id": "in-flowery-clouds-ku-001",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-in-flowery-clouds-01"
-      ]
-    },
-    {
-      "id": "in-flowery-clouds-ku-008",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-in-flowery-clouds-07",
-        "yeon-in-flowery-clouds-08"
-      ]
-    },
-    {
-      "id": "in-flowery-clouds-ku-011",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "kim-in-flowery-clouds-10"
-      ]
-    },
-    {
-      "id": "in-flowery-clouds-ku-018",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-in-flowery-clouds-06"
-      ]
-    },
-    {
-      "id": "in-flowery-clouds-ku-020",
-      "warning": "rewrite_review_pending",
-      "source_ids": [
-        "yeon-in-flowery-clouds-09"
-      ]
-    }
-  ],
   "web_export_files": [
     "research-open.jsonl",
     "research-conditional.jsonl"

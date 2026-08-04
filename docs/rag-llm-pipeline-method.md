@@ -1,60 +1,68 @@
 # RAG+LLM pipeline
 
-The pipeline answers a musical-performance question from reviewed expert
-annotations and supporting web evidence.
+The system answers a soprano-performance question from finalized expert
+knowledge units and eligible supporting evidence. Retrieval selects the
+evidence, and one local instruction-following model call composes the natural
+answer. Retrieval confidence never selects a different answer renderer.
 
-Its central rule is:
+Its central scope rule is:
 
 > The question determines **what** to retrieve, while the optional measure
 > range determines **where** the evidence must apply.
 
 ```mermaid
 flowchart LR
-    A["Reviewed annotations<br/>and web evidence"]
-    B["Validated combined corpus"]
+    A["Finalized expert annotations<br/>and eligible web evidence"]
+    B["Validated release corpus"]
     C["Piece + question<br/>+ optional measure range"]
-    D["Piece and range filtering"]
-    E["BM25 + dense retrieval<br/>and rank fusion"]
-    F["Range-safe evidence context"]
-    G["Local LLM"]
-    H["Grounded answer<br/>with evidence IDs"]
+    P["Required model preflight"]
+    D["Piece, semantic,<br/>and range-aware retrieval"]
+    E["Frozen full-text<br/>evidence bundle"]
+    F["One Qwen3-14B<br/>native-chat call"]
+    G["Citation validation<br/>and presentation sanitization"]
+    H["Natural answer +<br/>structured evidence and warnings"]
 
     A --> B
-    C --> D
+    C --> P --> D
     B --> D
     D --> E --> F --> G --> H
 ```
 
-## 1. Build the corpus
+## 1. Build a release-only corpus
 
-The system first builds one local corpus from two sources:
+`python scripts/build_corpus.py` builds `data/corpus.json` from two sources:
 
-- **Expert annotations:** reviewed knowledge units from
-  `soprano-qa-dataset/expert_curation/review/`
-- **Web evidence:** validated, answer-eligible records from the scraped
-  database
+- reviewed knowledge units under
+  `soprano-qa-dataset/expert_curation/review/`; and
+- validated, answer-eligible records from the web database.
 
-An expert record contains:
+An expert corpus record contains only fields needed for retrieval, generation,
+and audit:
 
-- its curated answer;
-- permanent knowledge-unit and source IDs;
+- the complete curated `knowledge_units.answer` text;
+- the stable knowledge-unit and source identifiers;
 - original expert questions used as retrieval aliases;
-- confirmed measure ranges;
-- rewrite and measure-review states; and
-- the original source answer when it is safe to expose during generation.
+- confirmed measure ranges and finalized location status; and
+- materialized relevance text for lexical and dense retrieval.
 
-Human `source_ids` and web `web_source_ids` remain separate so the origin of
-each claim is clear.
+Raw source answers, legacy range hints, annotator names, rewrite notes, measure
+notes, conflict markers, and other editorial workflow fields are deliberately
+excluded. They remain in the dataset repository for audit, but cannot leak
+into a production prompt or answer.
 
-Only confirmed measure ranges are used for routing. Older range hints remain
-available for provenance and disambiguation, but they are not treated as
-confirmed locations.
+Corpus construction is fail-closed. Every expert unit must have
+`rewrite_status: ready` and a finalized measure status of `specific`,
+`whole_piece`, or `unspecified`. The builder reports every offending unit and
+stops rather than indexing provisional text. It validates all five review
+documents, projects the strict release schema, rejects unexpected fields, and
+atomically writes `data/corpus.json` and `data/corpus_stats.json`.
 
-The resulting searchable artifact is `data/corpus.json`.
+Stable record IDs remain important for provenance, artifact joins, and
+diagnostics. They are not answer content and are not exposed to users.
 
-## 2. Receive a query
+## 2. Receive and validate a query
 
-Every query contains:
+Every query supplies:
 
 ```text
 piece_id + question + optional measure_range
@@ -70,260 +78,250 @@ For example:
 }
 ```
 
-The measure range is structured metadata. It does not need to appear in the
-question text.
+The measure range is structured metadata and does not need to be repeated in
+the question. If the question itself names a measure, that location must fall
+inside the selected range. The explicit locator becomes the effective
+retrieval scope, while the structured selection remains its allowed envelope.
 
-If the question itself mentions a measure, that location must agree with the
-structured range. The question cannot silently create or override retrieval
-scope. Conversely, a structured range may be supplied even when the question
-does not repeat its measure numbers.
+No selected range means only that the user did not choose a score location. It
+does not assert that every retrieved claim applies throughout the piece. A
+measure-specific expert unit may still answer a semantically complete
+whole-song question, but the model must keep that advice tied to the described
+situation rather than generalizing it to the entire work.
 
-If no range is supplied, it means **no range was selected**. It does not
-automatically mean that every retrieved annotation applies to the whole
-piece.
+Generated requests preflight the configured answer model and backend before
+corpus or retrieval work. Hybrid retrieval likewise preflights its embedding
+model and backend. Missing, unreadable, or incompatible required resources
+raise an error; the system does not silently change models or retrieval modes.
 
-## 3. Retrieve relevant evidence
+## 3. Retrieve candidate evidence
 
 Retrieval proceeds in this order:
 
-1. Keep only records for the selected piece.
-2. Apply the selected measure range.
-3. Run the existing Korean concept and BM25 search, including strict
-   expert-question alias matching.
-4. Independently embed the natural-language question and retrieve semantically
-   similar knowledge units, allowing paraphrases outside the lexical concept
-   gate to enter the candidate set.
-5. Treat a terminal Korean answer relation such as `의미하다`, `표현하다`,
-   or `상징하다` as a soft intent concept when the remaining content concepts
-   are fully covered on the lexical path.
-6. Fuse lexical and dense ranks with weighted reciprocal-rank fusion. Exact
-   source-question aliases retain precedence within the same scope.
-7. Select a small set of records that collectively covers the question.
+1. Keep records for the selected piece.
+2. Apply the effective measure scope when one exists.
+3. Run Korean concept normalization, BM25 search, and strict source-question
+   alias matching.
+4. Embed the natural question and retrieve semantically similar knowledge
+   units.
+5. Fuse lexical and dense ranks with weighted reciprocal-rank fusion.
+6. Apply semantic, authority, and range checks independently of the similarity
+   score.
+7. Select a compact evidence set that collectively answers the question.
 
-Dense retrieval uses the local `Qwen3-Embedding-0.6B-Q8_0.gguf` checkpoint.
-Knowledge-unit relevance and answer vectors are normalized and cached using a
-fingerprint of the corpus text, model file, and embedding runtime settings. A
-question receives an English retrieval instruction and is embedded once per
-new normalized question in a process; a bounded hash-keyed cache reuses the
-query vector across generation retries. Direct dot products over the 446
-cached vector slots replace the need for a vector database. Dense model
-loading and inference use the existing `llama-cpp-python` runtime.
+Dense retrieval uses `Qwen3-Embedding-0.6B-Q8_0.gguf`. Corpus and answer
+vectors are normalized and cached using fingerprints of the corpus, model, and
+runtime settings. Query vectors use a bounded in-process cache. Hybrid mode
+requires this checkpoint and the `llama-cpp-python` backend; embedding failure
+is a hard error rather than a lexical fallback.
 
-Dense similarity never overrides corpus authority. Retrieval eligibility,
-piece identity, topic, confirmed measure status, and range relationship are
-checked independently for both candidate paths. A dense-only result for a
-selected range must overlap that range; confident lexical evidence may still
-report a confirmed non-overlapping annotation as secondary context. Low
-similarity floors remove remote neighbours, while two precision guards handle
-cases cosine similarity cannot separate: the query must have a music-domain
-anchor, and an answer must support explicitly requested attributes such as
-fingering, harmony analysis, BPM, page location, physical units, or a
-left-versus-right assignment. These checks apply only to dense-only admission,
-not to records already justified by the lexical path. Hybrid mode requires its
-embedding checkpoint and backend. A missing checkpoint fails before corpus or
-answer work begins, and runtime embedding failures propagate as hard errors;
-model-free retrieval is available only through explicit lexical mode.
+Similarity never overrides release-corpus authority, piece identity, evidence
+eligibility, or range applicability. Source-question aliases establish recall
+for an annotation family, but the reviewed answer text decides which split
+knowledge units actually address the requested relation. For example, a pure
+causal question must not be answered only by a technique sibling merely
+because both units came from the same original annotation. A question that
+explicitly asks both why and how may retain both compatible facets.
 
-The soft relation path is deliberately separate from expert-question alias
-matching: aliases remain strict because a positive alias match is authoritative
-for evidence selection. A range-overlapping soft match may replace a merely
-global surface-form hit, but the soft path returns only its best explanatory
-record. Noun uses such as `가사의 의미`, performance requests such as
-`어떻게 표현해야 하나요?`, and unmatched content concepts remain strict.
+### Selected-range queries
 
-### When a measure range is selected
+Ranges are inclusive. Each confirmed evidence interval is compared with the
+effective selected interval.
 
-Ranges are inclusive. The retriever checks every requested interval against
-every confirmed interval on each record.
-
-| Evidence scope | Retrieval relation | Result |
+| Evidence scope | Internal relation | Use |
 | --- | --- | --- |
-| A confirmed range intersects the selected range | `overlaps_query_range` | Kept and strongly preferred |
-| No local range; explicitly whole-piece or global | `global_context` | Kept only when semantically relevant |
-| Confirmed local ranges do not intersect | `other_range_context` | Kept as lower-ranked context only |
-| Location is `waiting_for_review` or `unspecified` | Unconfirmed | Not used in a range-selected query |
+| Confirmed range overlaps the query | `overlaps_query_range` | Primary local authority |
+| Explicitly whole-piece or global | `global_context` | Supporting background when relevant |
+| Confirmed local range does not overlap | `other_range_context` | Range-mismatch context only |
+| Location is unconfirmed | `unspecified_context` | Cannot establish a selected-range claim |
 
-For example, evidence with confirmed ranges `[[2, 27], [41, 54]]` overlaps a
-query for `[2, 27]`, but it does not overlap `[28, 40]`.
+Scope priority is applied before final evidence selection. A relevant
+overlapping expert unit outranks generic background. Non-overlapping records
+may remain in the structured result so developers can diagnose a range
+mismatch, but their musical claims are withheld from the generation context
+and cannot be cited or transferred to the selected passage.
 
-The range contribution to ranking is:
+A web record can establish an exact measure claim only when it identifies the
+applicable edition and its measure-numbering system. Otherwise it is general
+context only.
 
-| Relation | Score adjustment |
-| --- | ---: |
-| Overlapping recurring expert evidence | `+6.0` |
-| Other overlapping evidence | `+5.0` |
-| Global context | `+0.25` |
-| Confirmed non-overlapping local evidence | `-1.0` |
+### Queries without a selected range
 
-Scope priority is applied before lexical or fused relevance. Therefore, an
-overlapping record ranks ahead of global context even if the global record has
-more lexical overlap. If any semantically relevant overlapping candidate
-exists, the final selected set must contain overlapping evidence.
+No range-overlap filter is applied. Finalized units receive no automatic
+ranking bonus or penalty merely because their location is whole-piece,
+passage-specific, or unspecified. Their question and answer semantics decide
+relevance.
 
-Semantically relevant confirmed non-overlapping records are retained after
-overlapping and global records. They receive
-`evidence_role: other_range_context_only`. This preserves useful annotations
-for inspection and lets the pipeline detect a possible range mismatch, but
-their claims cannot be transferred to the selected passage or cited as its
-grounding.
+A clearly matching passage-specific unit is labeled `local_example`
+internally. Its confirmed range remains structured routing metadata and is
+withheld from the prompt when the user did not request a location. The model
+may use its advice naturally, but cannot claim that the same feature occurs
+throughout the work, frequently, or in many places without separate
+whole-piece authority.
 
-If no relevant overlapping record exists, semantically relevant global and
-other-range context may still be returned. Global evidence can explain
-general background. Other-range evidence is shown separately, while the
-answer states that no evidence directly supports the selected range.
+For broad questions such as how to sing a work well, retrieval may select
+several compatible units covering tone, diction, rhythm, technique, and
+interpretation. Multiple units are useful when they add distinct relevant
+details; evidence selection removes duplicates and merely related advice.
 
-A web record can support an exact measure claim only when it identifies both
-the applicable edition and its measure-numbering system. Otherwise it is
-treated only as global context.
+Semantic selection uses a stable candidate pool before caller-facing `top_k`
+truncation. This prevents an apparently confident answer from arising only
+because a competing candidate disappeared at a smaller display limit.
 
-Only the best one or two semantically matching other-range records are kept.
-In a mixed LLM prompt, only their IDs and range metadata are exposed as a
-range-mismatch signal; their musical claims are withheld from generation.
-The complete records are still returned in the service evidence list for
-inspection. A secondary-only result is not sent to the LLM as a grounded
-answer. If a generated draft nevertheless cites secondary evidence, the
-draft is discarded, a primary-only extractive answer is returned, and the
-result is classified as extractive rather than RAG+LLM.
+When a sparse no-range bundle has no original-question alias, the pipeline
+consults reviewed-answer embeddings to correct a semantically weak route or
+prune an oversized no-alias bundle. It keeps candidates in the strict 93%
+near-tie band; the wider 91% band additionally requires direct lexical support
+or explicit query-concept coverage. It does not fill the prompt to three units
+and never consults an expected evaluation KU ID. The same focus is applied
+when normal retrieval abstains but exposes diagnostic rejected candidates,
+so that list is not blindly copied into generation. This prevents a dominant
+match such as a fermata or interlude question from acquiring unrelated tempo,
+notation, or phrase advice while still allowing several genuinely competitive
+units for a broad question. When the absolute semantic score is weak, an
+oversized bundle is pruned more conservatively; unsupported web neighbors are
+also dropped when finalized expert evidence already grounds the question.
 
-### When no measure range is selected
+## 4. Freeze the complete evidence bundle
 
-- No range-overlap filter is applied.
-- Whole-piece and global evidence establishes claims about the piece in
-  general.
-- For a broad question about how to sing the piece, retrieval deliberately
-  mixes whole-piece guidance with a small, varied set of confirmed local
-  annotations about technique, diction, rhythm, and interpretation.
-- If one selected expert source was curated into several complementary
-  knowledge units, the broad result keeps its same-scope siblings together.
-  This preserves combinations such as tone-colour and diction advice without
-  joining unrelated annotations merely because the question is broad.
-- The question may also name one of those facets, such as breathing,
-  pronunciation, or musical expression. In that case, the broad search keeps
-  only guidance that actually mentions the requested facet.
-- A confirmed local annotation is labeled `local_example`. Its exact
-  `measure_range` may be named in the answer, but its advice remains attached
-  to those measures. It does not prove that the same feature occurs
-  throughout the piece, often, or in many places.
-- Pending annotations have no citable location and are not generalized to the
-  entire piece. They are used only when confirmed guidance is unavailable,
-  with their review limitation exposed.
+Once retrieval and scope checks finish, the selected evidence set is frozen.
+For every selected expert record, the prompt receives the complete reviewed
+knowledge-unit answer text. The pipeline does not reduce expert evidence to a
+record identifier and does not make a separate model call to select IDs.
 
-For example, if a local annotation says that a high note is not on the strong
-beat and has confirmed ranges `[[63, 63], [82, 83]]`, a broad answer may say:
+Temporary labels such as `[E1]` and `[E2]` are attached to the already selected
+records. They are short citation anchors for grounding validation, not stable
+knowledge-unit IDs and not an additional retrieval or selection stage.
 
-```text
-예를 들어 63마디와 82–83마디에서는 고음이 강박에 놓이지 않으므로 …
-```
+The frozen prompt may contain several selected units when their claims are
+compatible and materially improve completeness. The model sees their actual
+text together in the same answer-generation request and composes one coherent
+answer rather than returning an ordered list of excerpts.
 
-It may not turn those two examples into “이 곡에는 이런 부분이 많이
-나온다” unless separate whole-piece evidence explicitly supports that
-frequency claim. Only confirmed knowledge-unit ranges supply the printed
-numbers; old source-text locators and legacy hints are neutralized. If a
-review note contains disputed locations, the answer labels them only as
-unconfirmed locations rather than printing competing measure numbers.
+For selected-range requests, the prompt also describes each record's internal
+scope role. A non-overlapping context record exposes only the range-mismatch
+signal; its musical claim is not supplied. For no-range requests, an
+unrequested local unit's canonical measure numbers are withheld.
 
-The question is normalized before lexical matching: piece names, measure
-expressions, and generic question wording are removed from the lexical query.
-Korean concept normalization and BM25 are then used together. Dense query
-preparation removes piece and measure routing syntax but keeps the natural
-question wording. Structured output reports `concept_coverage`,
-`content_concept_coverage`, `answer_relation_score`, `dense_score`,
-`dense_content_score`, `fusion_score`, `retrieval_mode`, and
-`semantic_match_type`, making lexical,
-dense, strict, and soft matches distinguishable. Alias-enriched concepts can
-help find candidates, but a lexical soft match also requires explanatory
-language and content anchors in the knowledge-unit answer itself.
+## 5. Generate one natural answer
 
-Range overlap alone is never enough. A record must also be semantically
-relevant to the question.
+The answer model is `Qwen3-14B-Q6_K.gguf`, the post-trained
+instruction/chat checkpoint from `Qwen/Qwen3-14B-GGUF`. The configuration does
+not force `chatml` or another `chat_format`; `llama-cpp-python` reads the native
+`tokenizer.chat_template` embedded in the GGUF.
 
-When an original expert-question alias strongly matches the user question,
-the strongest range-applicable expert records remain primary. Up to two
-confirmed non-overlapping alias matches may follow as explicitly secondary
-context; a stronger other-range alias can never displace overlapping
-evidence.
+Every grounded generated request makes exactly one model call. There is no
+confidence-dependent direct-text renderer, preliminary ID selector, second
+model, repair call, extraction path, or internal-knowledge path.
 
-## 4. Construct a range-safe prompt
+The prompt instructs Qwen3-14B to:
 
-The prompt contains only the selected evidence, including:
+- answer only from the supplied evidence;
+- use formal-polite Korean consistently;
+- preserve uncertainty, alternatives, causality, negation, and scope;
+- combine distinct compatible details without repeating sentence frames;
+- omit retrieved material that is merely related to the question;
+- avoid inventing measures, notation, lyrics, pronunciation, or advice;
+- keep local evidence local unless whole-piece evidence supports a broader
+  statement;
+- cite each factual or advisory sentence with its temporary `[E#]` anchors;
+  and
+- never print internal field names, scope labels, record IDs, retrieval
+  explanations, or an evidence footer.
 
-- evidence IDs and provenance;
-- confirmed measure ranges and their relation to the query;
-- whether each record is selected-range support, general context, or
-  other-range context only;
-- curated expert answers;
-- applicable original expert context;
-- rewrite and measure-review notes; and
-- web edition and rights information when relevant.
+The full reviewed KU texts are prompt evidence, not text that must be copied
+word-for-word. Natural synthesis is intentional, while semantic fidelity is
+checked separately.
 
-Two safeguards prevent claims from leaking between ranges:
+## 6. Validate and sanitize the sole draft
 
-- If one knowledge unit combines source comments for different ranges, only
-  the source material applicable to the selected range is exposed.
-- If one source answer was split into several knowledge units, its full text
-  is not copied into every unit. Each unit contributes only its assigned
-  claim.
+The application validates the generated draft against the frozen evidence:
 
-The LLM is instructed to:
+- temporary citations must resolve to answer-authoritative records;
+- context-only claims cannot be cited as selected-range authority;
+- local evidence cannot silently become a whole-piece or frequency claim;
+- unrequested measure locators and unsupported facts are detected;
+- internal pipeline vocabulary, opaque IDs, and evidence footers are removed;
+  and
+- visible prose is normalized to formal-polite Korean.
 
-- answer only from retrieved evidence;
-- preserve the expert's uncertainty, alternatives, and practical nuance;
-- avoid inventing measures, notation, lyrics, pronunciation, or vocal advice;
-- use a `local_example` only with its confirmed measure numbers and keep its
-  claim local rather than generalizing it to the whole piece;
-- never cite, paraphrase, or apply an `other_range_context_only` claim to the
-  selected range; and
-- cite the supplied evidence labels.
+If all semantic and scope checks pass, the application removes the temporary
+labels and returns the sanitized answer. Exact provenance, rights information,
+ranges, and retrieval scores remain available separately in structured
+metadata.
 
-After generation, the pipeline checks these rules claim by claim. Every claim
-that cites a local example must name one of that item's canonical ranges in
-the same claim. A different whole-piece record does not silently broaden the
-local claim. Any printed measure locator must come from the selected query
-range or from a local example cited in that claim; source-only and legacy
-locators are rejected. An unsafe draft gets one focused repair pass. If it is
-still unsafe, the service returns a range-labeled expert extract instead.
+If deterministic validation questions the answer, the pipeline still returns
+the same model draft after mandatory presentation sanitization and records the
+reason in `generation_validation_warning`. That warning is an evaluation and
+review signal. It does not authorize a second call or replacement with
+retrieved text, another model, or model-internal knowledge.
 
-If an annotation still requires human review, its review note becomes a hard
-prompt constraint and the answer begins with a visible `검토 주의:` notice.
+Model-load, backend, context-window, and inference failures propagate as hard
+errors. When retrieval supplies no answer-authoritative evidence, production
+may return a structured unavailable result before generation; the evaluation
+runners do not accept that as a successfully completed answer case.
 
-## 5. Generate and finalize the answer
+## 7. Return answer and audit metadata
 
-The selected context is sent to the local Qwen3-8B model.
+For a grounded generated request, the service returns:
 
-After generation, the application:
-
-- checks for obvious decoding corruption and requests a grounded rewrite if
-  needed;
-- retries with fewer complete evidence records if the prompt exceeds the
-  model's context limit;
-- maps temporary labels such as `[E1]` to permanent corpus IDs;
-- removes unknown citations;
-- adds an evidence footer when needed; and
-- attaches deterministic source and rights notices for web evidence.
-
-If retrieved evidence exists but the LLM cannot produce a usable answer, the
-system returns a cited extractive answer instead of discarding the grounding.
-Optional internal model knowledge is considered only when retrieval finds no
-evidence, and that answer is explicitly marked as ungrounded.
-
-## 6. Returned result
-
-The service returns:
-
-- the generated answer;
-- whether it came from the LLM, extractive evidence, or internal knowledge;
-- whether its basis was retrieved evidence;
-- whether primary and selected-range grounding exist, plus the role of every
-  evidence record and whether confirmed local examples are present;
+- the natural user-visible answer;
+- `generation_mode: llm` and `answer_basis: retrieved_evidence`;
+- `generation_validation_warning`, or `null` when no deterministic concern was
+  raised;
+- whether primary and selected-range grounding exist;
 - the selected measure range; and
-- the exact evidence records and retrieval scores.
+- exact evidence records, provenance, rights information, scope roles, and
+  retrieval diagnostics.
 
-The most important distinction is:
+The answer field never displays opaque record IDs, `[E#]` anchors,
+`제공된 검색 근거`, `범위 안내`, `확인된 국소 예시`, or canonical measure numbers
+that the user did not select or request.
 
-```text
-retrieved evidence → grounded answer
-no retrieved evidence → optional, explicitly ungrounded fallback
-```
+With generation disabled, the service may return a separate retrieval-only
+diagnostic result. That is not a generated answer path and is not accepted as
+a completed evaluation answer.
+
+## 8. Evaluation protocol
+
+The five-piece evaluation contains 460 cases:
+
+- 105 original-question cases;
+- 306 paraphrase cases; and
+- 49 coverage cases derived from 36 finalized knowledge units that lacked an
+  original related question.
+
+The derived questions exist only in evaluation data. They are kept out of the
+corpus and retrieval aliases so that the benchmark does not leak its expected
+wording into retrieval. Their source unit is a reproducible reference and
+retrieval diagnostic target, not a required evidence ID: correctness is judged
+from the answer's meaning and support across the reviewed evidence actually
+used.
+
+Each measure-scoped question uses one deterministic representative confirmed
+range instead of being repeated for every annotated occurrence. A question
+that names an exact lyric, word, or syllable is range-only and never receives
+an artificial whole-song case. Two allowlisted whole-song KUs retain their
+claim scope while an explicit reviewed measure hint supplies only the UI
+selector context. Full range authority remains in the artifact. Hit@1, Hit@3,
+Hit@6, and MRR are retrieval diagnostics rather than answer acceptance
+criteria. Hit@3 is the primary early-recall signal, but a semantically correct
+answer may be supported by a different reviewed unit.
+
+Only `llm` / `retrieved_evidence` counts as a completed generated evaluation
+case. Retrieval hits and validation warnings are diagnostics, not semantic
+accuracy verdicts.
+
+Direct semantic review is stored separately in
+`evaluation/semantic_quality_review.json`. Every assessment is bound by a
+semantic hash to the exact question, range, reference authority, generated
+answer, ordered evidence bundle, and generation-validation warning. Flagged
+cases retain the original response plus severity, reason codes, and rationale.
+The complete comparison is available at `/`; the dedicated
+flagged-case queue is available at `/red-flags`.
+
+Fresh retrieval and semantic-quality metrics are pending until the final
+pipeline has rerun all 460 cases and the hash-bound review is complete.
 
 ## Implementation map
 
@@ -331,5 +329,9 @@ no retrieved evidence → optional, explicitly ungrounded fallback
 | --- | --- |
 | Corpus construction | `soprano_qa/corpus.py` |
 | Measure handling and retrieval | `soprano_qa/retrieval.py` |
+| Dense retrieval and index management | `soprano_qa/dense.py` |
 | Prompt construction and answer finalization | `soprano_qa/answer.py` |
 | End-to-end orchestration | `soprano_qa/service.py` |
+| Original evaluation | `evaluation/run_qualitative.py` |
+| Synthesized-family evaluation | `evaluation/run_synthesized_questions.py` |
+| Comparison and semantic-red-flag viewer | `evaluation/server.py` |
