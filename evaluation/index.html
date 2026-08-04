@@ -5,27 +5,33 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta
     name="description"
-    content="Qualitative review workspace for selected soprano QA inference results."
+    content="Compare every original and synthesized soprano QA inference result."
   >
-  <title>Soprano QA · Semantic-Fidelity Review</title>
+  <title>Soprano QA · Original and Synthesized Comparison</title>
   <link rel="stylesheet" href="/styles.css">
   <script defer src="/review-state.js"></script>
   <script defer src="/app.js"></script>
 </head>
-<body>
+<body data-viewer-mode="comparison">
   <a class="skip-link" href="#review-detail">검토 내용으로 건너뛰기</a>
 
   <header class="masthead">
     <div class="masthead-copy">
-      <p class="eyebrow" id="viewer-eyebrow">Soprano QA · qualitative evaluation</p>
-      <h1 id="viewer-title">RAG answer semantic-fidelity review</h1>
+      <p class="eyebrow" id="viewer-eyebrow">Soprano QA · all five-piece results</p>
+      <h1 id="viewer-title">Original and synthesized answer comparison</h1>
       <p class="subtitle" id="viewer-subtitle">
-        각 추론 사례에 실제로 사용된 judge 권위와 생성 답변의 의미 일치
-        여부를 먼저 비교한다. 검색 및 KU 적중은 접힌 보조 진단에서 확인한다.
-        수동 semantic-fidelity 평가는 judge 완료 후 안정된 스냅샷에서만 저장된다.
+        모든 인간 원본 질문, 의미 보존 합성 변형, 그리고 검토된 지식 단위에서
+        파생한 합성 전용 질문을 작품·질문·마디 맥락별로 구분해 보여 준다.
+        결과 수는 로드된 최신 평가 산출물에서 동적으로 표시된다.
       </p>
     </div>
     <div class="header-actions" aria-label="검토 데이터 작업">
+      <nav class="viewer-links" aria-label="Viewer pages">
+        <a class="button" id="comparison-page-link" href="/">All results</a>
+        <a class="button" id="red-flags-page-link" href="/red-flags">
+          Semantic red flags
+        </a>
+      </nav>
       <button class="button primary" id="export-review" type="button">
         Review JSON 내보내기
       </button>
@@ -47,39 +53,16 @@
     </div>
   </header>
 
-  <section class="finding-banner" id="finding-banner" hidden>
-    <div>
-      <p class="eyebrow">Run finding</p>
-      <strong id="finding-title"></strong>
-      <p id="finding-copy"></p>
-    </div>
-    <span class="finding-badge" id="finding-badge"></span>
-  </section>
-
-  <section class="summary-section" aria-label="검토 진행률">
-    <div class="summary-grid" id="summary-grid"></div>
-    <div class="progress-row">
-      <div>
-        <strong id="progress-label">검토 진행률</strong>
-        <span id="progress-copy">0 / 0</span>
-      </div>
-      <div
-        class="progress-track"
-        role="progressbar"
-        aria-labelledby="progress-label"
-        aria-valuemin="0"
-        aria-valuemax="100"
-        aria-valuenow="0"
-        id="progress-track"
-      >
-        <span id="progress-fill"></span>
-      </div>
-    </div>
-  </section>
-
   <nav class="piece-nav" aria-label="작품 선택">
     <div class="piece-tabs" id="piece-tabs"></div>
   </nav>
+
+  <section
+    class="quality-review-banner"
+    id="quality-review-banner"
+    aria-live="polite"
+    hidden
+  ></section>
 
   <section class="filter-bar" aria-label="질문 필터">
     <div class="filters">
@@ -91,6 +74,18 @@
           placeholder="질문, ID, 답변, KU 검색"
           autocomplete="off"
         >
+      </label>
+      <label class="filter">
+        <span>Question family</span>
+        <select id="question-origin-filter">
+          <option value="all">All question families</option>
+          <option value="original">Human originals only</option>
+          <option value="synthesized">All synthesized questions</option>
+          <option value="source_question_paraphrase">
+            Synthesized paraphrases only
+          </option>
+          <option value="knowledge_unit_derived">KU-derived only</option>
+        </select>
       </label>
       <label class="filter">
         <span>Annotator</span>
@@ -116,21 +111,6 @@
           <option value="none">No range</option>
           <option value="single">Single range</option>
           <option value="multiple">Multiple ranges</option>
-        </select>
-      </label>
-      <label class="filter">
-        <span>Answer basis</span>
-        <select id="basis-filter">
-          <option value="all">전체</option>
-          <option value="retrieved_evidence">Retrieved evidence</option>
-          <option value="internal_knowledge">Internal knowledge</option>
-          <option value="other">Other</option>
-        </select>
-      </label>
-      <label class="filter">
-        <span>Generation mode</span>
-        <select id="generation-mode-filter">
-          <option value="all">전체</option>
         </select>
       </label>
       <label class="filter">
@@ -160,6 +140,15 @@
         </select>
       </label>
       <label class="filter">
+        <span>Direct quality review</span>
+        <select id="quality-review-filter">
+          <option value="all">All review states</option>
+          <option value="flagged">Red flags only</option>
+          <option value="pass">Passed only</option>
+          <option value="not_available">Review unavailable</option>
+        </select>
+      </label>
+      <label class="filter">
         <span>Manual semantic fidelity</span>
         <select id="completion-filter">
           <option value="all">전체</option>
@@ -179,7 +168,7 @@
       <div class="panel-heading">
         <div>
           <p class="eyebrow">Review queue</p>
-          <h2 id="queue-title">질문</h2>
+          <h2 id="queue-title">Inference scenarios</h2>
         </div>
         <span class="count-pill" id="result-count">0 / 0</span>
       </div>

@@ -5,7 +5,8 @@ The benchmark manifest lives in the dataset repository, while the evaluated
 implementation is imported exclusively from ``--system-root``. Corpus,
 statistics, and embedding-cache writes are redirected to a temporary runtime
 directory so evaluating a worktree does not modify it. Every inference call
-uses grounded generation with internal model knowledge disabled.
+uses the production reviewed-evidence RAG+LLM answer path; semantic concerns
+are reviewed separately as red flags rather than replaced by abstentions.
 """
 
 from __future__ import annotations
@@ -31,16 +32,42 @@ import sys
 import tempfile
 from types import ModuleType
 from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
+import unicodedata
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from evaluation.no_range_semantic_policy import (  # noqa: E402
+    COHORT_NAME as NO_RANGE_COHORT_NAME,
+    INTRINSIC_RANGE_ONLY_SOURCES,
+    NO_RANGE_SEMANTIC_CASES,
+    NO_RANGE_SEMANTIC_EXCLUSIONS,
+    REVIEWED_HINT_CONTEXT_RANGE_SOURCES,
+    SHADOW_CASE_KIND,
+)
+from evaluation.representative_range import (  # noqa: E402
+    REPRESENTATIVE_RANGE_POLICY,
+    REPRESENTATIVE_RANGE_PROVENANCE,
+    REVIEWED_HINT_CONTEXT_CASE_KIND,
+    REVIEWED_HINT_CONTEXT_RANGE_POLICY,
+    REVIEWED_HINT_CONTEXT_RANGE_PROVENANCE,
+    select_representative_range,
+)
+from soprano_qa.answer import (  # noqa: E402
+    is_grounded_insufficiency_answer as local_insufficiency_detector,
+)
+
 DEFAULT_DATASET_ROOT = (
     PROJECT_ROOT.parent / "soprano-qa-dataset"
 )
 DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "synthesized_question_results.json"
 ARTIFACT_TYPE = "soprano_qa_synthesized_hybrid_rag_llm_evaluation"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.2"
+REQUIRED_CORPUS_SCHEMA_VERSION = 8
 VARIANT_SCHEMA_VERSION = "1.0"
+DERIVED_CATALOG_SCHEMA_VERSION = "1.0"
 BASE_SCHEMA_VERSION = "1.3"
 SUPPORTED_BASE_SCHEMA_VERSIONS = {"1.1", "1.3"}
 TARGET_PIECES = (
@@ -57,12 +84,7 @@ EXPECTED_QUESTION_COUNTS = {
     "nella-fantasia": 15,
     "una-voce-poco-fa": 25,
 }
-EXPECTED_BASE_QUESTION_COUNT = 80
-EXPECTED_ACTIVE_QUESTION_COUNT = 79
-EXPECTED_VARIANT_FORMULATION_COUNT = 237
-EXPECTED_CANONICAL_CASE_COUNT = 124
 VARIANTS_PER_QUESTION = 3
-EXPECTED_SYNTHESIZED_CASE_COUNT = 372
 TRANSFORMATIONS = {
     "colloquial_reframing",
     "information_structure",
@@ -70,10 +92,14 @@ TRANSFORMATIONS = {
     "syntactic_reframing",
     "word_order",
 }
-OPERATIONAL_GENERATION_FAILURE_REASONS = {
-    "local generation failed",
-    "model checkpoint not found",
-    "llama-cpp-python is unavailable",
+RETRIEVED_LLM_MODE = "llm"
+RETRIEVED_LLM_BASIS = "retrieved_evidence"
+REMOVED_GENERATION_RESPONSE_FIELDS = {
+    "authoritative_expert_succeeded",
+    "generation_fallback_reason",
+    "grounded_answer_succeeded",
+    "context_limited",
+    "rag_llm_succeeded",
 }
 VARIANT_TOP_LEVEL_FIELDS = (
     "schema_version",
@@ -93,8 +119,92 @@ VARIANT_FIELDS = (
     "question",
     "transformations",
 )
+DERIVED_CATALOG_TOP_LEVEL_FIELDS = (
+    "schema_version",
+    "piece_id",
+    "provenance",
+    "questions",
+)
+DERIVED_CATALOG_PROVENANCE_FIELDS = (
+    "origin",
+    "session_date",
+    "derivation_method",
+    "approval_scope",
+)
+DERIVED_CATALOG_QUESTION_FIELDS = (
+    "knowledge_unit_id",
+    "source_ids",
+    "knowledge_unit_answer_sha256",
+    "question",
+    "origin",
+    "review_status",
+    "range_policy",
+)
+DERIVED_CATALOG_PROVENANCE = {
+    "origin": "OpenAI Codex session",
+    "session_date": "2026-08-04",
+    "derivation_method": (
+        "manual semantic derivation from the exact reviewed knowledge-unit "
+        "answer"
+    ),
+    "approval_scope": (
+        "Codex semantic review only; no human approval is claimed"
+    ),
+}
+DERIVED_QUESTION_ORIGIN = (
+    "codex_session_derived_from_reviewed_knowledge_unit"
+)
+DERIVED_QUESTION_PROVENANCE = "knowledge_unit_derived"
+SOURCE_VARIANT_PROVENANCE = "synthesized_variant"
+DERIVED_EVALUATION_COHORT = "knowledge_unit_derived"
+DERIVED_REVIEW_STATUS = "approved"
+DERIVED_RANGE_POLICIES = {
+    "no_range_only",
+    "representative_range_only",
+    "no_range_and_representative_range",
+}
+DERIVED_INTRINSIC_RANGE_ONLY_KNOWLEDGE_UNIT_IDS = {
+    "die-forelle-ku-019",
+    "in-flowery-clouds-ku-003",
+    "in-flowery-clouds-ku-005",
+    "in-flowery-clouds-ku-019",
+    "in-flowery-clouds-ku-022",
+    "in-flowery-clouds-ku-023",
+    "la-capinera-ku-023",
+    "una-voce-poco-fa-ku-027",
+    "una-voce-poco-fa-ku-030",
+}
+DERIVED_REVIEWED_HINT_CONTEXT_RANGES = {
+    "in-flowery-clouds-ku-003": ((11, 11),),
+}
+DERIVED_EXPECTED_QUESTION_COUNTS = {
+    "die-forelle": 6,
+    "in-flowery-clouds": 12,
+    "la-capinera": 8,
+    "nella-fantasia": 2,
+    "una-voce-poco-fa": 8,
+}
+DERIVED_EXPECTED_CASE_COUNTS = {
+    "die-forelle": 6,
+    "in-flowery-clouds": 16,
+    "la-capinera": 14,
+    "nella-fantasia": 3,
+    "una-voce-poco-fa": 10,
+}
 ABSOLUTE_MEASURE_RE = re.compile(
     r"(?:\d+\s*(?:[-–—~]\s*\d+\s*)?(?:번째\s*)?마디|마디)"
+)
+DERIVED_KOREAN_RE = re.compile(r"[\uac00-\ud7a3]")
+DERIVED_SHA256_RE = re.compile(r"^[0-9a-f]{64}$")
+DERIVED_INTERNAL_ID_RE = re.compile(
+    r"(?:"
+    r"(?<![a-z0-9-])(?:[a-z0-9]+-)+ku-\d+(?![a-z0-9-])"
+    r"|(?<![a-z0-9-])(?:kim|yeon)-(?:[a-z0-9]+-)+\d+"
+    r"(?![a-z0-9-])"
+    r"|(?<![a-z0-9])\[?(?:E|KU)\d+\]?(?![a-z0-9])"
+    r"|knowledge[ _-]?unit"
+    r")",
+    re.IGNORECASE,
 )
 EXCLUDED_INFERENCE_CASES = {
     ("kim-la-capinera-01", (78, 81)): (
@@ -114,6 +224,50 @@ EXCLUDED_QUESTIONS = {
     },
 }
 
+EXPECTED_ACTIVE_QUESTION_COUNTS = {
+    piece_id: question_count
+    - sum(
+        exclusion["piece_id"] == piece_id
+        for exclusion in EXCLUDED_QUESTIONS.values()
+    )
+    for piece_id, question_count in EXPECTED_QUESTION_COUNTS.items()
+}
+EXPECTED_NO_RANGE_CONTEXT_COUNTS = Counter(
+    policy["piece_id"] for policy in NO_RANGE_SEMANTIC_CASES.values()
+)
+EXPECTED_CANONICAL_CONTEXT_COUNTS = {
+    piece_id: EXPECTED_ACTIVE_QUESTION_COUNTS[piece_id]
+    + EXPECTED_NO_RANGE_CONTEXT_COUNTS[piece_id]
+    for piece_id in TARGET_PIECES
+}
+EXPECTED_SYNTHESIZED_CASE_COUNTS = {
+    piece_id: context_count * VARIANTS_PER_QUESTION
+    + DERIVED_EXPECTED_CASE_COUNTS[piece_id]
+    for piece_id, context_count in EXPECTED_CANONICAL_CONTEXT_COUNTS.items()
+}
+EXPECTED_BASE_QUESTION_COUNT = sum(EXPECTED_QUESTION_COUNTS.values())
+EXPECTED_ACTIVE_QUESTION_COUNT = sum(
+    EXPECTED_ACTIVE_QUESTION_COUNTS.values()
+)
+EXPECTED_VARIANT_FORMULATION_COUNT = (
+    EXPECTED_ACTIVE_QUESTION_COUNT * VARIANTS_PER_QUESTION
+)
+EXPECTED_DERIVED_QUESTION_COUNT = sum(
+    DERIVED_EXPECTED_QUESTION_COUNTS.values()
+)
+EXPECTED_QUESTION_GROUP_COUNT = (
+    EXPECTED_ACTIVE_QUESTION_COUNT + EXPECTED_DERIVED_QUESTION_COUNT
+)
+EXPECTED_FORMULATION_COUNT = (
+    EXPECTED_VARIANT_FORMULATION_COUNT + EXPECTED_DERIVED_QUESTION_COUNT
+)
+EXPECTED_CANONICAL_CASE_COUNT = sum(
+    EXPECTED_CANONICAL_CONTEXT_COUNTS.values()
+) + sum(DERIVED_EXPECTED_CASE_COUNTS.values())
+EXPECTED_SYNTHESIZED_CASE_COUNT = sum(
+    EXPECTED_SYNTHESIZED_CASE_COUNTS.values()
+)
+
 
 class SynthesizedEvaluationError(RuntimeError):
     """Base class for deterministic evaluator failures."""
@@ -128,7 +282,7 @@ class ResumeMismatchError(SynthesizedEvaluationError, ValueError):
 
 
 class RetrievalModeMismatchError(SynthesizedEvaluationError):
-    """Raised when a requested retrieval mode is unavailable or fell back."""
+    """Raised when a requested retrieval mode is unavailable or inconsistent."""
 
 
 class ModelPreflightError(SynthesizedEvaluationError):
@@ -159,7 +313,8 @@ class TargetRuntime:
     ask: Callable[..., Mapping[str, Any]]
     model_status: Callable[[], Mapping[str, Any]]
     corpus_stats: Callable[[], Mapping[str, Any]]
-    load_generation_model: Callable[..., Any]
+    validate_generation_requirements: Callable[..., None]
+    is_grounded_insufficiency_answer: Callable[[str], bool]
     pipeline_settings: dict[str, Any]
     pipeline_dataset_root: Path
     module_paths: dict[str, str]
@@ -328,6 +483,220 @@ def _unique_mapping(
     return result
 
 
+def _normalized_derived_question(value: str) -> str:
+    normalized = unicodedata.normalize("NFKC", value).casefold()
+    return "".join(
+        character for character in normalized if character.isalnum()
+    )
+
+
+def _expected_derived_range_policy(
+    unit: Mapping[str, Any],
+) -> str:
+    if unit.get("knowledge_unit_id") in (
+        DERIVED_INTRINSIC_RANGE_ONLY_KNOWLEDGE_UNIT_IDS
+    ):
+        return "representative_range_only"
+    if unit.get("measure_status") == "whole_piece":
+        return "no_range_only"
+    return "no_range_and_representative_range"
+
+
+def _release_ready_questionless_units(
+    review: Mapping[str, Any],
+    *,
+    sources: Mapping[str, Mapping[str, Any]],
+) -> list[Mapping[str, Any]]:
+    units = review.get("knowledge_units")
+    if not isinstance(units, list):
+        raise EvaluationInputError("review.knowledge_units must be a list")
+    result: list[Mapping[str, Any]] = []
+    for unit in units:
+        if not isinstance(unit, Mapping):
+            raise EvaluationInputError(
+                "review.knowledge_units must contain only objects"
+            )
+        source_ids = _require_string_list(
+            unit.get("source_ids"),
+            label=f"{unit.get('knowledge_unit_id')}.source_ids",
+        )
+        try:
+            linked_sources = [sources[source_id] for source_id in source_ids]
+        except KeyError as error:
+            raise EvaluationInputError(
+                f"{unit.get('knowledge_unit_id')}: unknown source {error.args[0]}"
+            ) from error
+        for source in linked_sources:
+            if not isinstance(source.get("question"), str):
+                raise EvaluationInputError(
+                    f"{source.get('source_id')}.question: expected a string"
+                )
+        if (
+            unit.get("rewrite_status") == "ready"
+            and unit.get("measure_status")
+            in {"specific", "whole_piece", "unspecified"}
+            and not any(
+                source["question"].strip()
+                for source in linked_sources
+            )
+        ):
+            result.append(unit)
+    return result
+
+
+def _load_derived_catalog_shard(
+    path: Path,
+    *,
+    piece_id: str,
+    review: Mapping[str, Any],
+    sources: Mapping[str, Mapping[str, Any]],
+    units_by_id: Mapping[str, Mapping[str, Any]],
+    retrieval_aliases: set[str],
+    seen_question_texts: set[str],
+    enforce_expected_counts: bool,
+) -> list[dict[str, Any]]:
+    value = load_json(path)
+    if path.read_bytes() != pretty_json_bytes(value):
+        raise EvaluationInputError(
+            f"{path}: JSON must use canonical indentation and field order"
+        )
+    if not isinstance(value, Mapping) or tuple(value) != (
+        DERIVED_CATALOG_TOP_LEVEL_FIELDS
+    ):
+        raise EvaluationInputError(
+            f"{path}: non-canonical derived-catalog top-level fields"
+        )
+    if value.get("schema_version") != DERIVED_CATALOG_SCHEMA_VERSION:
+        raise EvaluationInputError(
+            f"{path}: unsupported derived-catalog schema_version"
+        )
+    if value.get("piece_id") != piece_id:
+        raise EvaluationInputError(
+            f"{path}: derived-catalog piece_id does not match filename"
+        )
+    provenance = value.get("provenance")
+    if (
+        not isinstance(provenance, Mapping)
+        or tuple(provenance) != DERIVED_CATALOG_PROVENANCE_FIELDS
+        or dict(provenance) != DERIVED_CATALOG_PROVENANCE
+    ):
+        raise EvaluationInputError(
+            f"{path}: derived-catalog provenance drift"
+        )
+
+    expected_units = _release_ready_questionless_units(
+        review,
+        sources=sources,
+    )
+    if enforce_expected_counts and len(expected_units) != (
+        DERIVED_EXPECTED_QUESTION_COUNTS[piece_id]
+    ):
+        raise EvaluationInputError(
+            f"{path}: expected {DERIVED_EXPECTED_QUESTION_COUNTS[piece_id]} "
+            f"release-ready questionless units, found {len(expected_units)}"
+        )
+    questions = value.get("questions")
+    if not isinstance(questions, list) or len(questions) != len(expected_units):
+        raise EvaluationInputError(
+            f"{path}: expected exactly {len(expected_units)} derived questions"
+        )
+
+    validated: list[dict[str, Any]] = []
+    for index, (item, unit) in enumerate(
+        zip(questions, expected_units, strict=True)
+    ):
+        label = f"{path}.questions[{index}]"
+        if not isinstance(item, Mapping) or tuple(item) != (
+            DERIVED_CATALOG_QUESTION_FIELDS
+        ):
+            raise EvaluationInputError(
+                f"{label}: non-canonical derived-question fields"
+            )
+        unit_id = str(unit.get("knowledge_unit_id") or "")
+        if not unit_id or item.get("knowledge_unit_id") != unit_id:
+            raise EvaluationInputError(
+                f"{label}: expected knowledge_unit_id {unit_id!r}"
+            )
+        if units_by_id.get(unit_id) is not unit:
+            raise EvaluationInputError(f"{label}: reviewed KU binding drift")
+        if item.get("source_ids") != list(unit.get("source_ids") or []):
+            raise EvaluationInputError(f"{label}: source_ids drifted from KU")
+        answer = unit.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise EvaluationInputError(
+                f"{label}: reviewed knowledge unit has no answer"
+            )
+        answer_hash = item.get("knowledge_unit_answer_sha256")
+        if (
+            not isinstance(answer_hash, str)
+            or not DERIVED_SHA256_RE.fullmatch(answer_hash)
+            or answer_hash
+            != hashlib.sha256(answer.encode("utf-8")).hexdigest()
+        ):
+            raise EvaluationInputError(
+                f"{label}: reviewed knowledge-unit answer hash drift"
+            )
+        if item.get("origin") != DERIVED_QUESTION_ORIGIN:
+            raise EvaluationInputError(f"{label}: question origin drift")
+        if item.get("review_status") != DERIVED_REVIEW_STATUS:
+            raise EvaluationInputError(f"{label}: question is not approved")
+
+        question = item.get("question")
+        if (
+            not isinstance(question, str)
+            or not question
+            or question != question.strip()
+            or "\n" in question
+            or question.count("?") != 1
+            or not question.endswith("?")
+            or not DERIVED_KOREAN_RE.search(question)
+        ):
+            raise EvaluationInputError(
+                f"{label}: question must be one approved Korean question line"
+            )
+        if ABSOLUTE_MEASURE_RE.search(question):
+            raise EvaluationInputError(
+                f"{label}: measure locators belong in range metadata"
+            )
+        if DERIVED_INTERNAL_ID_RE.search(question):
+            raise EvaluationInputError(
+                f"{label}: question leaks an internal identifier"
+            )
+        normalized = _normalized_derived_question(question)
+        if normalized in retrieval_aliases:
+            raise EvaluationInputError(
+                f"{label}: question duplicates a retrieval alias"
+            )
+        if normalized in seen_question_texts:
+            raise EvaluationInputError(
+                f"{label}: duplicate derived question text"
+            )
+        seen_question_texts.add(normalized)
+
+        range_policy = item.get("range_policy")
+        if range_policy not in DERIVED_RANGE_POLICIES:
+            raise EvaluationInputError(f"{label}: invalid range_policy")
+        expected_policy = _expected_derived_range_policy(unit)
+        if range_policy != expected_policy:
+            raise EvaluationInputError(
+                f"{label}: expected range_policy {expected_policy}"
+            )
+        evaluation_context_ranges = _derived_evaluation_context_ranges(
+            unit,
+            sources=sources,
+        )
+        if (
+            "representative_range" in str(range_policy)
+            and not evaluation_context_ranges
+        ):
+            raise EvaluationInputError(
+                f"{label}: representative range requires a confirmed KU "
+                "range or an explicit reviewed-hint evaluation context"
+            )
+        validated.append(deepcopy(dict(item)))
+    return validated
+
+
 def _case_suffix(measure_range: Sequence[int] | None) -> str:
     if measure_range is None:
         return "no-range"
@@ -400,6 +769,125 @@ def _confirmed_inference_ranges(
         else:
             merged.append([start, end])
     return merged
+
+
+def _derived_evaluation_context_ranges(
+    unit: Mapping[str, Any],
+    *,
+    sources: Mapping[str, Mapping[str, Any]],
+) -> list[list[int]]:
+    """Return canonical KU ranges or one allowlisted hint-backed context."""
+
+    confirmed = _confirmed_inference_ranges([unit])
+    unit_id = str(unit.get("knowledge_unit_id") or "")
+    override = DERIVED_REVIEWED_HINT_CONTEXT_RANGES.get(unit_id)
+    if override is None:
+        return confirmed
+    if confirmed:
+        raise EvaluationInputError(
+            f"{unit_id}: derived reviewed-hint context override is redundant"
+        )
+    ranges = [
+        validate_measure_range(
+            list(value),
+            label=f"{unit_id}.derived_reviewed_hint_context_ranges",
+        )
+        for value in override
+    ]
+    unit_hints = [
+        validate_measure_range(
+            value,
+            label=f"{unit_id}.measure_range_hints",
+        )
+        for value in unit.get("measure_range_hints") or []
+    ]
+    source_hints = sorted({
+        tuple(validate_measure_range(
+            value,
+            label=f"{source_id}.legacy_measure_ranges",
+        ))
+        for source_id in unit.get("source_ids") or []
+        for value in sources[str(source_id)].get("legacy_measure_ranges") or []
+    })
+    if unit_hints != ranges or [list(value) for value in source_hints] != ranges:
+        raise EvaluationInputError(
+            f"{unit_id}: derived reviewed-hint context no longer matches "
+            "its KU and source hints"
+        )
+    if (
+        unit.get("measure_status") != "whole_piece"
+        or unit.get("measure_ranges")
+    ):
+        raise EvaluationInputError(
+            f"{unit_id}: derived reviewed-hint context must preserve "
+            "whole-piece KU claim scope"
+        )
+    return ranges
+
+
+def _evaluation_inference_ranges(
+    *,
+    source_id: str,
+    piece_id: str,
+    source: Mapping[str, Any],
+    units: Sequence[Mapping[str, Any]],
+) -> list[list[int]]:
+    """Return KU ranges or an explicit hint-backed UI context override."""
+
+    confirmed = _confirmed_inference_ranges(units)
+    override = REVIEWED_HINT_CONTEXT_RANGE_SOURCES.get(source_id)
+    if override is None:
+        return confirmed
+    if confirmed:
+        raise EvaluationInputError(
+            f"{source_id}: reviewed-hint context override is redundant"
+        )
+    if override["piece_id"] != piece_id:
+        raise EvaluationInputError(
+            f"{source_id}: reviewed-hint context piece mismatch"
+        )
+    unit_ids = tuple(str(unit["knowledge_unit_id"]) for unit in units)
+    if unit_ids != tuple(override["knowledge_unit_ids"]):
+        raise EvaluationInputError(
+            f"{source_id}: reviewed-hint context KU binding drift"
+        )
+    ranges = [
+        validate_measure_range(
+            list(value),
+            label=f"{source_id}.reviewed_hint_context_ranges",
+        )
+        for value in override["measure_ranges"]
+    ]
+    source_hints = [
+        validate_measure_range(
+            value,
+            label=f"{source_id}.legacy_measure_ranges",
+        )
+        for value in source.get("legacy_measure_ranges") or []
+    ]
+    unit_hints = sorted({
+        tuple(validate_measure_range(
+            value,
+            label=f"{unit['knowledge_unit_id']}.measure_range_hints",
+        ))
+        for unit in units
+        for value in unit.get("measure_range_hints") or []
+    })
+    if source_hints != ranges or [list(value) for value in unit_hints] != ranges:
+        raise EvaluationInputError(
+            f"{source_id}: reviewed-hint context no longer matches its "
+            "source and KU hints"
+        )
+    if any(
+        unit.get("measure_status") != "whole_piece"
+        or unit.get("measure_ranges")
+        for unit in units
+    ):
+        raise EvaluationInputError(
+            f"{source_id}: reviewed-hint context must not replace canonical "
+            "specific KU ranges"
+        )
+    return ranges
 
 
 def _knowledge_unit_reference(
@@ -520,98 +1008,127 @@ def _case_reference_authority(
     *,
     measure_range: list[int] | None,
     applicable_ids: Sequence[str],
+    semantic_required_any_ids: Sequence[str],
+    semantic_supporting_ids: Sequence[str],
 ) -> dict[str, Any]:
-    """Expose exact source claims only when they apply to this case."""
+    """Use finalized, range-applicable knowledge units as case authority."""
 
+    range_label = (
+        "whole-piece case"
+        if measure_range is None
+        else f"measure range {measure_range[0]}-{measure_range[1]}"
+    )
     reference = result["authoritative_reference"]
     linked_units = reference["linked_knowledge_units"]
-    applicable = [
-        unit
-        for unit in linked_units
-        if unit["knowledge_unit_id"] in set(applicable_ids)
+    linked_by_id = {
+        str(unit["knowledge_unit_id"]): unit for unit in linked_units
+    }
+    missing_ids = [
+        unit_id for unit_id in applicable_ids if unit_id not in linked_by_id
     ]
-    source_id = result["source_id"]
-    non_applicable_source_split = any(
-        source_id in unit.get("source_ids", [])
-        and unit["knowledge_unit_id"] not in set(applicable_ids)
-        for unit in linked_units
-    )
-    source_hints = reference.get("source_legacy_measure_range_hints") or []
-    source_outside_range = bool(
-        measure_range is not None
-        and source_hints
-        and not any(ranges_overlap(hint, measure_range) for hint in source_hints)
-    )
-    exact_scope_applies = not source_outside_range and not non_applicable_source_split
+    if missing_ids:
+        raise EvaluationInputError(
+            f"{result['source_id']} ({range_label}): case authority refers "
+            f"to unlinked knowledge units {missing_ids}"
+        )
+
+    required_ids = list(semantic_required_any_ids)
+    supporting_ids = list(semantic_supporting_ids)
+    required_set = set(required_ids)
+    supporting_set = set(supporting_ids)
+    applicable_set = set(applicable_ids)
+    if required_ids or supporting_ids:
+        if (
+            not required_ids
+            or len(required_set) != len(required_ids)
+            or len(supporting_set) != len(supporting_ids)
+            or required_set & supporting_set
+            or required_set | supporting_set != applicable_set
+        ):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): semantic "
+                "reference roles must partition the applicable knowledge "
+                "units into a nonempty required-any set and a disjoint "
+                "supporting set"
+            )
+
     items: list[dict[str, Any]] = []
-    if exact_scope_applies:
-        claim_scope = reference.get("reference_claim_scope")
-        if isinstance(claim_scope, Mapping):
-            claim_items = _reference_claim_items(claim_scope)
-            items = [
-                {
-                    "reference_id": f"R{index:03d}",
-                    **deepcopy(item),
-                    "scope_authority": "question_level_curator",
-                }
-                for index, item in enumerate(claim_items, start=1)
-            ]
-            source = "reference_claim_scope"
-            review_required = any(
-                item["scope"] == "mixed_or_ambiguous" for item in items
+    for unit_id in applicable_ids:
+        unit = linked_by_id[unit_id]
+        rewrite_status = unit.get("rewrite_status")
+        measure_status = unit.get("measure_status")
+        if rewrite_status != "ready" or measure_status not in {
+            "specific",
+            "whole_piece",
+            "unspecified",
+        }:
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} is not "
+                "a finalized knowledge unit "
+                f"(rewrite_status={rewrite_status!r}, "
+                f"measure_status={measure_status!r})"
             )
-            reason = (
-                "mixed_or_ambiguous source claim requires human review"
-                if review_required
-                else None
+        answer = unit.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): finalized "
+                f"knowledge unit {unit_id} has no answer"
             )
-        else:
-            items = [
-                {
-                    "reference_id": "R001",
-                    "text": reference["source_answer"],
-                    "scope": "unscoped_source_answer",
-                    "flags": [],
-                    "scope_authority": (
-                        "source_answer_without_claim_partition"
-                    ),
-                    "source_sentence_index": None,
-                    "source_claim_index": None,
-                }
-            ]
-            source = "unscoped_source_answer"
-            review_required = True
-            reason = (
-                "inventory schema does not provide exact claim-scope atoms"
+        raw_measure_ranges = unit.get("measure_ranges") or []
+        if not isinstance(raw_measure_ranges, list):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} has "
+                "invalid canonical measure ranges"
             )
-    else:
-        for unit in applicable:
-            answer = unit.get("answer")
-            if isinstance(answer, str) and answer.strip():
-                items.append(
-                    {
-                        "reference_id": f"R{len(items) + 1:03d}",
-                        "text": answer.strip(),
-                        "scope": "optional_background",
-                        "flags": [],
-                        "scope_authority": "range_applicable_support_only",
-                        "source_sentence_index": None,
-                        "source_claim_index": None,
-                        "knowledge_unit_id": unit["knowledge_unit_id"],
-                    }
-                )
-        source = "range_applicable_linked_knowledge_units"
-        review_required = True
-        reason = (
-            "original source answer is outside the selected range"
-            if source_outside_range
-            else "original source answer contains non-applicable split claims"
+        canonical_measure_ranges = [
+            validate_measure_range(
+                value,
+                label=f"{unit_id}.measure_ranges",
+            )
+            for value in raw_measure_ranges
+        ]
+        if (
+            measure_status == "specific"
+            and not canonical_measure_ranges
+        ) or (
+            measure_status != "specific"
+            and canonical_measure_ranges
+        ):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} has "
+                "canonical measure ranges inconsistent with measure_status "
+                f"{measure_status!r}"
+            )
+        reference_role = (
+            "required_any"
+            if not required_ids or unit_id in required_set
+            else "supporting"
+        )
+        items.append(
+            {
+                "reference_id": f"R{len(items) + 1:03d}",
+                "text": answer.strip(),
+                "scope": "curated_knowledge_unit_answer",
+                "flags": [],
+                "scope_authority": "finalized_knowledge_unit",
+                "reference_role": reference_role,
+                "measure_status": measure_status,
+                "measure_ranges": canonical_measure_ranges,
+                "source_sentence_index": None,
+                "source_claim_index": None,
+                "knowledge_unit_id": unit_id,
+            }
+        )
+    if not items:
+        raise EvaluationInputError(
+            f"{result['source_id']} ({range_label}): no finalized "
+            "knowledge-unit answer is available as case authority"
         )
     return {
-        "source": source,
+        "source": "applicable_finalized_knowledge_units",
         "items": items,
-        "manual_review_required": review_required,
-        "manual_review_reason": reason,
+        "manual_review_required": False,
+        "manual_review_reason": None,
     }
 
 
@@ -648,19 +1165,206 @@ def _range_contrast_claims(
     return validated
 
 
+def _build_derived_question_result(
+    *,
+    piece_id: str,
+    item: Mapping[str, Any],
+    unit: Mapping[str, Any],
+    sources: Mapping[str, Mapping[str, Any]],
+    seen_case_ids: set[str],
+    canonical_case_ids: set[str],
+) -> dict[str, Any]:
+    unit_id = str(unit["knowledge_unit_id"])
+    derived_question_id = f"{unit_id}-derived-q01"
+    question = str(item["question"])
+    range_policy = str(item["range_policy"])
+    confirmed_ranges = _confirmed_inference_ranges([unit])
+    evaluation_context_ranges = _derived_evaluation_context_ranges(
+        unit,
+        sources=sources,
+    )
+    uses_reviewed_hint_context = (
+        unit_id in DERIVED_REVIEWED_HINT_CONTEXT_RANGES
+    )
+    representative_range = (
+        select_representative_range(
+            derived_question_id,
+            evaluation_context_ranges,
+        )
+        if "representative_range" in range_policy
+        else None
+    )
+    if "representative_range" in range_policy and representative_range is None:
+        raise EvaluationInputError(
+            f"{derived_question_id}: range policy requires a representative range"
+        )
+    if range_policy == "no_range_only":
+        case_ranges: list[list[int] | None] = [None]
+    elif range_policy == "representative_range_only":
+        case_ranges = [representative_range]
+    else:
+        case_ranges = [None, representative_range]
+
+    reference_unit = _knowledge_unit_reference(unit, sources=sources)
+    result: dict[str, Any] = {
+        "source_id": derived_question_id,
+        "question_group_id": derived_question_id,
+        "question_provenance": DERIVED_QUESTION_PROVENANCE,
+        "synthesized_question_kind": DERIVED_QUESTION_PROVENANCE,
+        "source_annotation_ids": list(item["source_ids"]),
+        "piece_id": piece_id,
+        "annotator": None,
+        "inventory_schema_version": None,
+        "original_question": None,
+        "paraphrased_question": question,
+        "review_status": item["review_status"],
+        "knowledge_unit_ids": [unit_id],
+        "expected_retrieval_eligible_knowledge_unit_ids": [unit_id],
+        "measure_range_hints": deepcopy(
+            unit.get("measure_range_hints") or []
+        ),
+        "inference_measure_ranges": deepcopy(confirmed_ranges),
+        "evaluation_context_measure_ranges": deepcopy(
+            evaluation_context_ranges
+        ),
+        "representative_inference_measure_range": deepcopy(
+            representative_range
+        ),
+        "excluded_inference_measure_ranges": [],
+        "inference_scope": range_policy,
+        "evaluation_context_scope": (
+            "measure_range" if evaluation_context_ranges else "no_range"
+        ),
+        "range_contrast_claims": [],
+        "reference_claim_scope": None,
+        "authoritative_reference": {
+            "source_answer": unit["answer"],
+            "source_text": "",
+            "source_legacy_measure_range_hints": [],
+            "curation_status": "evaluation_only_approved",
+            "curation_notes": (
+                "Question derived from the exact reviewed knowledge unit; "
+                "not indexed as a retrieval alias."
+            ),
+            "reference_claim_scope": None,
+            "range_contrast_claims": [],
+            "linked_knowledge_units": [reference_unit],
+        },
+        "synthesized_question_variants": [],
+        "derived_knowledge_unit_question": deepcopy(dict(item)),
+        "inference_runs": [],
+    }
+    for measure_range in case_ranges:
+        suffix = _case_suffix(measure_range)
+        case_id = f"{derived_question_id}__{suffix}"
+        if case_id in seen_case_ids:
+            raise EvaluationInputError(f"Duplicate case ID {case_id}")
+        seen_case_ids.add(case_id)
+        formulation_id = f"{derived_question_id}__{suffix}"
+        if formulation_id in canonical_case_ids:
+            raise EvaluationInputError(
+                f"Duplicate formulation context {formulation_id}"
+            )
+        canonical_case_ids.add(formulation_id)
+        applicable_ids = _range_applicable_unit_ids([unit], measure_range)
+        if applicable_ids != [unit_id]:
+            raise EvaluationInputError(
+                f"{case_id}: derived authority must be exactly {unit_id}"
+            )
+        range_source_ids = _range_source_unit_ids([unit], measure_range)
+        inference_input: dict[str, Any] = {
+            "piece_id": piece_id,
+            "source_id": derived_question_id,
+            "lineage_source_ids": list(item["source_ids"]),
+            "evaluation_question_id": derived_question_id,
+            "question": question,
+            "synthesized_variant_id": None,
+            "variant_index": None,
+            "transformations": [],
+            "synthesized_question_kind": DERIVED_QUESTION_PROVENANCE,
+            "measure_range": deepcopy(measure_range),
+            "measure_range_applied": measure_range is not None,
+            "measure_range_provenance": (
+                (
+                    REVIEWED_HINT_CONTEXT_RANGE_PROVENANCE
+                    if uses_reviewed_hint_context
+                    else REPRESENTATIVE_RANGE_PROVENANCE
+                )
+                if measure_range is not None
+                else None
+            ),
+            "measure_range_selection_policy": (
+                (
+                    REVIEWED_HINT_CONTEXT_RANGE_POLICY
+                    if uses_reviewed_hint_context
+                    else REPRESENTATIVE_RANGE_POLICY
+                )
+                if measure_range is not None
+                else None
+            ),
+            "case_kind": (
+                REVIEWED_HINT_CONTEXT_CASE_KIND
+                if uses_reviewed_hint_context and measure_range is not None
+                else (
+                    "knowledge_unit_derived_representative_range"
+                    if measure_range is not None
+                    else "knowledge_unit_derived_no_range"
+                )
+            ),
+            "question_provenance": DERIVED_QUESTION_PROVENANCE,
+            "evaluation_cohort": DERIVED_EVALUATION_COHORT,
+            "semantic_required_any_knowledge_unit_ids": [unit_id],
+            "semantic_supporting_knowledge_unit_ids": [],
+            "range_source_knowledge_unit_ids": range_source_ids,
+            "range_applicable_knowledge_unit_ids": applicable_ids,
+            "expected_knowledge_unit_ids": [unit_id],
+            "expected_retrieval_eligible_knowledge_unit_ids": [unit_id],
+            "allowed_range_contrast_claims": [],
+            "excluded_range_contrast_claims": [],
+        }
+        inference_input["case_reference_authority"] = (
+            _case_reference_authority(
+                result,
+                measure_range=measure_range,
+                applicable_ids=[unit_id],
+                semantic_required_any_ids=[unit_id],
+                semantic_supporting_ids=[],
+            )
+        )
+        result["inference_runs"].append(
+            {
+                "case_id": case_id,
+                "status": "pending",
+                "attempt_count": 0,
+                "last_attempt_at": None,
+                "completed_at": None,
+                "inference_input": inference_input,
+                "retrieval_probe": None,
+                "generated_answer": None,
+                "error": None,
+            }
+        )
+    return result
+
+
 def load_benchmark(
     dataset_root: Path,
     *,
     piece_ids: Sequence[str] = TARGET_PIECES,
     enforce_expected_counts: bool = True,
 ) -> Benchmark:
-    """Bind all variant shards to answerable schema-1.3 source questions."""
+    """Bind source variants and evaluation-only KU-derived questions."""
 
     dataset_root = dataset_root.resolve()
     inventory_root = dataset_root / "expert_curation" / "evaluation_questions"
     review_root = dataset_root / "expert_curation" / "review"
     variant_root = (
         dataset_root / "expert_curation" / "evaluation_question_variants"
+    )
+    derived_root = (
+        dataset_root
+        / "expert_curation"
+        / "derived_knowledge_unit_questions"
     )
     expected_variant_files = {f"{piece_id}.json" for piece_id in piece_ids}
     actual_variant_files = {path.name for path in variant_root.glob("*.json")}
@@ -669,6 +1373,42 @@ def load_benchmark(
             f"{variant_root}: expected exactly {sorted(expected_variant_files)}, "
             f"found {sorted(actual_variant_files)}"
         )
+    expected_derived_files = {f"{piece_id}.json" for piece_id in piece_ids}
+    actual_derived_files = {path.name for path in derived_root.glob("*.json")}
+    if actual_derived_files != expected_derived_files:
+        raise EvaluationInputError(
+            f"{derived_root}: expected exactly {sorted(expected_derived_files)}, "
+            f"found {sorted(actual_derived_files)}"
+        )
+
+    retrieval_aliases: set[str] = set()
+    for piece_id in piece_ids:
+        review_path = review_root / f"{piece_id}.json"
+        review_value = load_json(review_path)
+        if not isinstance(review_value, Mapping):
+            raise EvaluationInputError(f"{review_path}: expected object")
+        raw_sources = review_value.get("source_annotations")
+        if not isinstance(raw_sources, list):
+            raise EvaluationInputError(
+                f"{review_path}.source_annotations: expected list"
+            )
+        for source in raw_sources:
+            if not isinstance(source, Mapping):
+                raise EvaluationInputError(
+                    f"{review_path}.source_annotations: expected objects"
+                )
+            question = source.get("question")
+            if not isinstance(question, str):
+                raise EvaluationInputError(
+                    f"{source.get('source_id')}.question: expected a string"
+                )
+            if (
+                source.get("curation_status") == "included"
+                and question.strip()
+            ):
+                retrieval_aliases.add(
+                    _normalized_derived_question(question)
+                )
 
     results: list[dict[str, Any]] = []
     input_paths: list[Path] = []
@@ -676,20 +1416,29 @@ def load_benchmark(
     seen_case_ids: set[str] = set()
     seen_variant_ids: set[str] = set()
     seen_variant_texts: set[str] = set()
+    seen_derived_question_texts: set[str] = set()
     base_question_count = 0
     active_question_count = 0
     variant_formulation_count = 0
+    derived_question_count = 0
+    derived_case_count = 0
+    derived_case_counts: Counter[str] = Counter()
     canonical_case_ids: set[str] = set()
     seen_excluded_question_ids: set[str] = set()
+    seen_no_range_policy_sources: set[str] = set()
+    seen_no_range_exclusions: set[str] = set()
 
     for piece_id in piece_ids:
         inventory_path = inventory_root / f"{piece_id}.json"
         review_path = review_root / f"{piece_id}.json"
         variant_path = variant_root / f"{piece_id}.json"
+        derived_path = derived_root / f"{piece_id}.json"
         inventory = load_json(inventory_path)
         review = load_json(review_path)
         shard = load_json(variant_path)
-        input_paths.extend((inventory_path, review_path, variant_path))
+        input_paths.extend(
+            (inventory_path, review_path, variant_path, derived_path)
+        )
 
         if not isinstance(inventory, Mapping) or inventory.get(
             "schema_version"
@@ -753,6 +1502,16 @@ def load_benchmark(
             review.get("knowledge_units"),
             key="knowledge_unit_id",
             label=f"{review_path}.knowledge_units",
+        )
+        derived_questions = _load_derived_catalog_shard(
+            derived_path,
+            piece_id=piece_id,
+            review=review,
+            sources=sources,
+            units_by_id=units_by_id,
+            retrieval_aliases=retrieval_aliases,
+            seen_question_texts=seen_derived_question_texts,
+            enforce_expected_counts=enforce_expected_counts,
         )
         active_base_questions: list[tuple[int, Mapping[str, Any]]] = []
         for base_index, base in enumerate(base_questions):
@@ -984,12 +1743,68 @@ def load_benchmark(
                     f"{source_id}: inference ranges are stale; expected "
                     f"{expected_ranges}, found {ranges}"
                 )
+            evaluation_ranges = _evaluation_inference_ranges(
+                source_id=source_id,
+                piece_id=piece_id,
+                source=source,
+                units=linked_units,
+            )
+            no_range_policy = NO_RANGE_SEMANTIC_CASES.get(source_id)
+            no_range_exclusion = NO_RANGE_SEMANTIC_EXCLUSIONS.get(source_id)
+            if not enforce_expected_counts:
+                no_range_policy = None
+                no_range_exclusion = None
+            if evaluation_ranges:
+                if (
+                    enforce_expected_counts
+                    and (no_range_policy is None)
+                    == (no_range_exclusion is None)
+                ):
+                    raise EvaluationInputError(
+                        f"{source_id}: every measure-scoped question must "
+                        "have exactly one no-range semantic policy decision"
+                    )
+                decision = no_range_policy or no_range_exclusion
+                if decision is not None and decision["piece_id"] != piece_id:
+                    raise EvaluationInputError(
+                        f"{source_id}: no-range policy piece mismatch"
+                    )
+                if no_range_policy is not None:
+                    required_ids = list(
+                        no_range_policy[
+                            "required_any_knowledge_unit_ids"
+                        ]
+                    )
+                    supporting_ids = list(
+                        no_range_policy["supporting_knowledge_unit_ids"]
+                    )
+                    if (
+                        not required_ids
+                        or set(required_ids) & set(supporting_ids)
+                        or not set(required_ids + supporting_ids).issubset(
+                            expected_ids
+                        )
+                        or not set(required_ids + supporting_ids).issubset(
+                            eligible_ids
+                        )
+                    ):
+                        raise EvaluationInputError(
+                            f"{source_id}: invalid no-range semantic KU policy"
+                        )
+                    seen_no_range_policy_sources.add(source_id)
+                elif no_range_exclusion is not None:
+                    seen_no_range_exclusions.add(source_id)
+            elif no_range_policy is not None or no_range_exclusion is not None:
+                raise EvaluationInputError(
+                    f"{source_id}: no-range semantic policy requires "
+                    "measure-scoped finalized KUs"
+                )
             contrast_claims = _range_contrast_claims(
                 base.get("range_contrast_claims"),
                 source_id=source_id,
             )
             active_ranges: list[list[int]] = []
-            for measure_range in ranges:
+            for measure_range in evaluation_ranges:
                 excluded_reason = EXCLUDED_INFERENCE_CASES.get(
                     (source_id, tuple(measure_range))
                 )
@@ -1005,8 +1820,25 @@ def load_benchmark(
                     )
                 else:
                     active_ranges.append(measure_range)
+            representative_range = select_representative_range(
+                source_id,
+                active_ranges,
+            )
+            representative_uses_reviewed_hint = (
+                source_id in REVIEWED_HINT_CONTEXT_RANGE_SOURCES
+                and representative_range is not None
+            )
+            if evaluation_ranges and representative_range is None:
+                raise EvaluationInputError(
+                    f"{source_id}: every confirmed inference range is "
+                    "excluded; no representative ranged case can be built"
+                )
             case_ranges: list[list[int] | None] = (
-                active_ranges if ranges else [None]
+                ([None, representative_range]
+                 if no_range_policy is not None
+                 else [representative_range])
+                if evaluation_ranges
+                else [None]
             )
             raw_claim_scope = base.get("reference_claim_scope")
             if inventory["schema_version"] == "1.3":
@@ -1050,6 +1882,10 @@ def load_benchmark(
             }
             result: dict[str, Any] = {
                 "source_id": source_id,
+                "question_group_id": source_id,
+                "question_provenance": SOURCE_VARIANT_PROVENANCE,
+                "synthesized_question_kind": "source_question_paraphrase",
+                "source_annotation_ids": [source_id],
                 "piece_id": piece_id,
                 "annotator": base.get("annotator"),
                 "inventory_schema_version": inventory["schema_version"],
@@ -1062,6 +1898,12 @@ def load_benchmark(
                     base.get("measure_range_hints") or []
                 ),
                 "inference_measure_ranges": deepcopy(ranges),
+                "evaluation_context_measure_ranges": deepcopy(
+                    evaluation_ranges
+                ),
+                "representative_inference_measure_range": deepcopy(
+                    representative_range
+                ),
                 "excluded_inference_measure_ranges": [
                     deepcopy(item)
                     for item in exclusions
@@ -1069,6 +1911,9 @@ def load_benchmark(
                     and item["kind"] == "inference_range"
                 ],
                 "inference_scope": base.get("inference_scope"),
+                "evaluation_context_scope": (
+                    "measure_range" if evaluation_ranges else "no_range"
+                ),
                 "range_contrast_claims": deepcopy(contrast_claims),
                 "reference_claim_scope": deepcopy(claim_scope),
                 "authoritative_reference": authoritative_reference,
@@ -1110,19 +1955,79 @@ def load_benchmark(
                         if scoped["measure_range"] != measure_range
                         for claim in scoped["claims"]
                     ]
+                    is_semantic_shadow = (
+                        no_range_policy is not None
+                        and measure_range is None
+                    )
                     inference_input = {
                         "piece_id": piece_id,
                         "source_id": source_id,
+                        "lineage_source_ids": [source_id],
+                        "evaluation_question_id": expected_variant_id,
                         "question": question,
                         "synthesized_variant_id": expected_variant_id,
                         "variant_index": variant_index,
                         "transformations": list(variant["transformations"]),
+                        "synthesized_question_kind": (
+                            "source_question_paraphrase"
+                        ),
                         "measure_range": deepcopy(measure_range),
                         "measure_range_applied": measure_range is not None,
                         "measure_range_provenance": (
-                            "confirmed_linked_specific_knowledge_unit_ranges"
+                            (
+                                REVIEWED_HINT_CONTEXT_RANGE_PROVENANCE
+                                if representative_uses_reviewed_hint
+                                else REPRESENTATIVE_RANGE_PROVENANCE
+                            )
                             if measure_range is not None
                             else None
+                        ),
+                        "measure_range_selection_policy": (
+                            (
+                                REVIEWED_HINT_CONTEXT_RANGE_POLICY
+                                if representative_uses_reviewed_hint
+                                else REPRESENTATIVE_RANGE_POLICY
+                            )
+                            if measure_range is not None
+                            else None
+                        ),
+                        "case_kind": (
+                            SHADOW_CASE_KIND
+                            if is_semantic_shadow
+                            else (
+                                REVIEWED_HINT_CONTEXT_CASE_KIND
+                                if representative_uses_reviewed_hint
+                                and measure_range is not None
+                                else (
+                                    "confirmed_measure_range"
+                                    if measure_range is not None
+                                    else "native_no_range"
+                                )
+                            )
+                        ),
+                        "question_provenance": SOURCE_VARIANT_PROVENANCE,
+                        "evaluation_cohort": (
+                            NO_RANGE_COHORT_NAME
+                            if is_semantic_shadow
+                            else None
+                        ),
+                        "semantic_required_any_knowledge_unit_ids": (
+                            list(
+                                no_range_policy[
+                                    "required_any_knowledge_unit_ids"
+                                ]
+                            )
+                            if is_semantic_shadow
+                            else []
+                        ),
+                        "semantic_supporting_knowledge_unit_ids": (
+                            list(
+                                no_range_policy[
+                                    "supporting_knowledge_unit_ids"
+                                ]
+                            )
+                            if is_semantic_shadow
+                            else []
                         ),
                         "range_source_knowledge_unit_ids": range_source_ids,
                         "range_applicable_knowledge_unit_ids": applicable_ids,
@@ -1138,6 +2043,12 @@ def load_benchmark(
                             result,
                             measure_range=measure_range,
                             applicable_ids=applicable_ids,
+                            semantic_required_any_ids=inference_input[
+                                "semantic_required_any_knowledge_unit_ids"
+                            ],
+                            semantic_supporting_ids=inference_input[
+                                "semantic_supporting_knowledge_unit_ids"
+                            ],
                         )
                     )
                     result["inference_runs"].append(
@@ -1157,6 +2068,35 @@ def load_benchmark(
             active_question_count += 1
             variant_formulation_count += len(validated_variants)
 
+        for item in derived_questions:
+            unit_id = str(item["knowledge_unit_id"])
+            unit = units_by_id[unit_id]
+            derived_result = _build_derived_question_result(
+                piece_id=piece_id,
+                item=item,
+                unit=unit,
+                sources=sources,
+                seen_case_ids=seen_case_ids,
+                canonical_case_ids=canonical_case_ids,
+            )
+            results.append(derived_result)
+            derived_question_count += 1
+            result_case_count = len(derived_result["inference_runs"])
+            derived_case_count += result_case_count
+            derived_case_counts[piece_id] += result_case_count
+
+    derived_validator_path = (
+        dataset_root
+        / "expert_curation"
+        / "derived_knowledge_unit_questions.py"
+    )
+    if not derived_validator_path.is_file():
+        raise EvaluationInputError(
+            f"Required derived-question validator is missing: "
+            f"{derived_validator_path}"
+        )
+    input_paths.append(derived_validator_path)
+
     expected_excluded_ids = {
         source_id
         for source_id, exclusion in EXCLUDED_QUESTIONS.items()
@@ -1167,6 +2107,35 @@ def load_benchmark(
             "Excluded question set drift: expected "
             f"{sorted(expected_excluded_ids)}, found "
             f"{sorted(seen_excluded_question_ids)}"
+        )
+
+    expected_policy_sources = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_CASES.items()
+        if policy["piece_id"] in piece_ids
+    }
+    expected_no_range_exclusions = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_EXCLUSIONS.items()
+        if policy["piece_id"] in piece_ids
+    }
+    if (
+        enforce_expected_counts
+        and seen_no_range_policy_sources != expected_policy_sources
+    ):
+        raise EvaluationInputError(
+            "No-range semantic inclusion policy drift: expected "
+            f"{sorted(expected_policy_sources)}, found "
+            f"{sorted(seen_no_range_policy_sources)}"
+        )
+    if (
+        enforce_expected_counts
+        and seen_no_range_exclusions != expected_no_range_exclusions
+    ):
+        raise EvaluationInputError(
+            "No-range semantic exclusion policy drift: expected "
+            f"{sorted(expected_no_range_exclusions)}, found "
+            f"{sorted(seen_no_range_exclusions)}"
         )
 
     if enforce_expected_counts:
@@ -1185,6 +2154,30 @@ def load_benchmark(
                 f"Expected {EXPECTED_VARIANT_FORMULATION_COUNT} active variants, "
                 f"found {variant_formulation_count}"
             )
+        if derived_question_count != EXPECTED_DERIVED_QUESTION_COUNT:
+            raise EvaluationInputError(
+                f"Expected {EXPECTED_DERIVED_QUESTION_COUNT} derived questions, "
+                f"found {derived_question_count}"
+            )
+        if len(results) != EXPECTED_QUESTION_GROUP_COUNT:
+            raise EvaluationInputError(
+                f"Expected {EXPECTED_QUESTION_GROUP_COUNT} question groups, "
+                f"found {len(results)}"
+            )
+        expected_derived_case_count = sum(
+            DERIVED_EXPECTED_CASE_COUNTS.values()
+        )
+        if derived_case_count != expected_derived_case_count:
+            raise EvaluationInputError(
+                f"Expected {expected_derived_case_count} derived cases, "
+                f"found {derived_case_count}"
+            )
+        if dict(derived_case_counts) != DERIVED_EXPECTED_CASE_COUNTS:
+            raise EvaluationInputError(
+                "Derived case counts by piece drifted: expected "
+                f"{DERIVED_EXPECTED_CASE_COUNTS}, found "
+                f"{dict(derived_case_counts)}"
+            )
         if len(canonical_case_ids) != EXPECTED_CANONICAL_CASE_COUNT:
             raise EvaluationInputError(
                 f"Expected {EXPECTED_CANONICAL_CASE_COUNT} canonical cases, "
@@ -1197,6 +2190,17 @@ def load_benchmark(
             raise EvaluationInputError(
                 f"Expected {EXPECTED_SYNTHESIZED_CASE_COUNT} synthesized cases, "
                 f"found {synthesized_case_count}"
+            )
+        synthesized_case_counts = Counter(
+            result["piece_id"]
+            for result in results
+            for _case in result["inference_runs"]
+        )
+        if dict(synthesized_case_counts) != EXPECTED_SYNTHESIZED_CASE_COUNTS:
+            raise EvaluationInputError(
+                "Synthesized case counts by piece drifted: expected "
+                f"{EXPECTED_SYNTHESIZED_CASE_COUNTS}, found "
+                f"{dict(synthesized_case_counts)}"
             )
     return Benchmark(
         results=results,
@@ -1319,9 +2323,9 @@ def validate_hybrid_generation_preflight(
             "Synthesized RAG+LLM evaluation requires retrieval.mode='hybrid'; "
             f"found {mode!r}"
         )
-    if bool(retrieval.get("fallback_to_lexical", False)):
+    if "fallback_to_lexical" in retrieval:
         raise ModelPreflightError(
-            "Hybrid retrieval fallback_to_lexical must be disabled"
+            "retrieval.fallback_to_lexical is obsolete and unsupported"
         )
 
     assets = system_state.get("optional_assets") or {}
@@ -1356,9 +2360,9 @@ def validate_hybrid_generation_preflight(
         raise ModelPreflightError(
             f"Required generation model checkpoint not found: {configured_model}"
         )
-    if model_status.get("llama_cpp_available") is not True:
+    if model_status.get("backend") != "llama-cpp-python":
         raise ModelPreflightError(
-            "Required llama-cpp-python generation backend is unavailable"
+            "Service generation backend is not llama-cpp-python"
         )
     if not isinstance(settings.get("llm"), Mapping):
         raise ModelPreflightError("llm settings must be configured")
@@ -1376,6 +2380,21 @@ def initialize_target_models(
 ) -> dict[str, Any]:
     """Eagerly initialize dense retrieval and generation before output."""
 
+    settings = target.pipeline_settings
+    llm_settings = settings.get("llm") or {}
+    chat_format = None
+    if "chat_format" in llm_settings:
+        chat_format = str(llm_settings["chat_format"]).strip() or None
+    try:
+        target.validate_generation_requirements(
+            str(settings["model_path"]),
+            llm_settings,
+        )
+    except Exception as error:
+        raise ModelPreflightError(
+            "Generation model initialization failed: "
+            f"{type(error).__name__}: {error}"
+        ) from error
     try:
         stats = target.corpus_stats()
     except Exception as error:
@@ -1399,10 +2418,6 @@ def initialize_target_models(
         problems.append(f"active_mode={active!r}")
     if raw_retrieval.get("dense_available") is not True:
         problems.append("dense_available is not true")
-    if raw_retrieval.get("fallback_reason"):
-        problems.append(
-            f"fallback_reason={raw_retrieval.get('fallback_reason')!r}"
-        )
     if raw_retrieval.get("last_dense_error"):
         problems.append(
             f"last_dense_error={raw_retrieval.get('last_dense_error')!r}"
@@ -1413,33 +2428,14 @@ def initialize_target_models(
             + ", ".join(problems)
         )
 
-    settings = target.pipeline_settings
-    llm_settings = settings.get("llm") or {}
-    try:
-        model = target.load_generation_model(
-            model_path=str(settings["model_path"]),
-            n_ctx=int(llm_settings.get("n_ctx", 8192)),
-            n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
-            chat_format=str(llm_settings.get("chat_format", "chatml")),
-        )
-    except Exception as error:
-        raise ModelPreflightError(
-            "Generation model initialization failed: "
-            f"{type(error).__name__}: {error}"
-        ) from error
-    if model is None:
-        raise ModelPreflightError(
-            "Generation model initialization returned no model"
-        )
     return {
         "retrieval": deepcopy(dict(raw_retrieval)),
         "generation": {
-            "status": "loaded",
-            "model_class": f"{type(model).__module__}.{type(model).__qualname__}",
+            "status": "validated",
             "model_path": str(Path(str(settings["model_path"])).resolve()),
             "n_ctx": int(llm_settings.get("n_ctx", 8192)),
             "n_gpu_layers": int(llm_settings.get("n_gpu_layers", -1)),
-            "chat_format": str(llm_settings.get("chat_format", "chatml")),
+            "chat_format": chat_format,
         },
     }
 
@@ -1473,6 +2469,11 @@ def authenticate_pipeline_corpus(
 
     fingerprint_fn = getattr(corpus_module, "corpus_input_fingerprint", None)
     input_paths_fn = getattr(corpus_module, "corpus_input_paths", None)
+    declared_schema_version = getattr(
+        corpus_module,
+        "CORPUS_SCHEMA_VERSION",
+        None,
+    )
     if not callable(fingerprint_fn) or not callable(input_paths_fn):
         raise EvaluationInputError(
             "Selected system must expose corpus_input_fingerprint and "
@@ -1497,8 +2498,11 @@ def authenticate_pipeline_corpus(
     expected_exports = settings.get("web_export_files", ["research-open.jsonl"])
     checks = {
         "stats_object": isinstance(stats, dict),
+        "schema_declaration": (
+            declared_schema_version == REQUIRED_CORPUS_SCHEMA_VERSION
+        ),
         "schema": isinstance(stats, dict)
-        and stats.get("corpus_schema_version") == 6,
+        and stats.get("corpus_schema_version") == declared_schema_version,
         "web_exports": isinstance(stats, dict)
         and stats.get("web_export_files") == expected_exports,
         "dataset_root": isinstance(stats, dict)
@@ -1553,47 +2557,27 @@ def _remove_target_modules() -> None:
 
 def validate_target_retrieval_requirements(
     settings: Mapping[str, Any],
-    dense_module: ModuleType | None,
+    dense_module: ModuleType,
 ) -> None:
-    """Preflight both current and pre-validator target worktrees."""
+    """Require the current target's strict retrieval preflight contract."""
 
     validator = getattr(
         dense_module,
         "validate_retrieval_requirements",
         None,
     )
-    if callable(validator):
-        try:
-            validator(dict(settings))
-        except Exception as error:
-            raise ModelPreflightError(
-                "Hybrid retrieval requirements failed: "
-                f"{type(error).__name__}: {error}"
-            ) from error
-        return
-
-    retrieval = settings.get("retrieval") or {}
-    mode = str(retrieval.get("mode") or "lexical").lower()
-    if mode == "lexical":
-        return
-    if mode != "hybrid":
-        raise ModelPreflightError(
-            f"Unsupported retrieval.mode for evaluation: {mode!r}"
+    if not callable(validator):
+        raise TargetImportError(
+            "Target soprano_qa.dense must expose "
+            "validate_retrieval_requirements"
         )
-    configured_path = str(
-        settings.get("embedding_model_path") or ""
-    ).strip()
-    if configured_path and Path(configured_path).expanduser().is_file():
-        return
-    display_path = configured_path or (
-        "(embedding_model_path is not configured)"
-    )
-    raise ModelPreflightError(
-        "Required hybrid-retrieval embedding checkpoint not found: "
-        f"{display_path}. Download the embedding model before running "
-        "retrieval evaluation, or explicitly configure retrieval.mode "
-        "as `lexical`."
-    )
+    try:
+        validator(dict(settings))
+    except Exception as error:
+        raise ModelPreflightError(
+            "Hybrid retrieval requirements failed: "
+            f"{type(error).__name__}: {error}"
+        ) from error
 
 
 @contextmanager
@@ -1648,14 +2632,10 @@ def target_runtime(
                 f"{specification.origin}"
             ) from error
         service = importlib.import_module("soprano_qa.service")
+        answer_module = importlib.import_module("soprano_qa.answer")
         corpus_module = importlib.import_module("soprano_qa.corpus")
         llm_module = importlib.import_module("soprano_qa.llm")
-        try:
-            dense_module = importlib.import_module("soprano_qa.dense")
-        except ModuleNotFoundError as error:
-            if error.name != "soprano_qa.dense":
-                raise
-            dense_module = None
+        dense_module = importlib.import_module("soprano_qa.dense")
         foreign_modules = {
             name: str(getattr(module, "__file__", "<unknown>"))
             for name, module in sys.modules.items()
@@ -1671,21 +2651,41 @@ def target_runtime(
         ask = getattr(service, "ask", None)
         model_status = getattr(service, "model_status", None)
         corpus_stats = getattr(service, "corpus_stats", None)
-        load_generation_model = getattr(llm_module, "load_llama", None)
+        generation_preflight = getattr(
+            llm_module,
+            "validate_generation_requirements",
+            None,
+        )
+        insufficiency_detector = getattr(
+            answer_module,
+            "is_grounded_insufficiency_answer",
+            None,
+        )
         settings = getattr(service, "SETTINGS", None)
         if (
             not callable(ask)
             or not callable(model_status)
             or not callable(corpus_stats)
-            or not callable(load_generation_model)
+            or not callable(generation_preflight)
+            or not callable(insufficiency_detector)
             or not isinstance(settings, dict)
         ):
             raise TargetImportError(
                 "Target soprano_qa.service must expose callable ask, "
                 "model_status, corpus_stats, and SETTINGS; soprano_qa.llm "
-                "must expose load_llama"
+                "must expose validate_generation_requirements"
             )
         original_settings = deepcopy(settings)
+        try:
+            generation_preflight(
+                str(original_settings["model_path"]),
+                original_settings.get("llm") or {},
+            )
+        except Exception as error:
+            raise ModelPreflightError(
+                "Generation requirements failed before corpus work: "
+                f"{type(error).__name__}: {error}"
+            ) from error
         validate_target_retrieval_requirements(
             original_settings,
             dense_module,
@@ -1731,7 +2731,10 @@ def target_runtime(
                     ask=ask,
                     model_status=model_status,
                     corpus_stats=corpus_stats,
-                    load_generation_model=load_generation_model,
+                    validate_generation_requirements=generation_preflight,
+                    is_grounded_insufficiency_answer=(
+                        insufficiency_detector
+                    ),
                     pipeline_settings=original_settings,
                     pipeline_dataset_root=actual_dataset_root,
                     module_paths=module_paths,
@@ -1776,80 +2779,51 @@ def target_runtime(
 def normalize_retrieval_diagnostics(result: Mapping[str, Any]) -> dict[str, Any]:
     raw = result.get("retrieval")
     if raw is None:
-        return {
-            "configured_mode": "lexical",
-            "active_mode": "lexical",
-            "dense_available": False,
-            "embedding_model": None,
-            "embedding_dimension": None,
-            "fallback_reason": None,
-            "last_dense_error": None,
-            "last_search_mode": "lexical",
-            "query_route": "lexical",
-            "route_reason": "implicit_legacy_lexical",
-            "dense_attempted": False,
-            "dense_contributed": False,
-            "fallback_used": False,
-            "diagnostic_source": "implicit_legacy_lexical",
-        }
+        raise EvaluationInputError(
+            "Pipeline response omitted retrieval diagnostics"
+        )
     if not isinstance(raw, Mapping):
         raise EvaluationInputError("Pipeline retrieval diagnostics must be an object")
+    removed_fields = {"fallback_reason", "fallback_used"} & set(raw)
+    if removed_fields:
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics use removed fields: "
+            + ", ".join(sorted(removed_fields))
+        )
     active = raw.get("active_mode")
-    configured = raw.get("configured_mode", active)
+    configured = raw.get("configured_mode")
     if not isinstance(active, str) or not isinstance(configured, str):
         raise EvaluationInputError(
             "Pipeline retrieval diagnostics must name configured and active modes"
         )
     last_search = raw.get("last_search_mode")
     query_route = raw.get("query_route")
-    if query_route is None:
-        if last_search in {"hybrid", "hybrid_no_dense_match"}:
-            query_route = "hybrid"
-        elif last_search in {
-            "lexical",
-            "lexical_route",
-            "lexical_fallback",
-        }:
-            query_route = "lexical"
-        else:
-            query_route = "none"
     if query_route not in {"hybrid", "lexical", "none"}:
         raise EvaluationInputError(
             "Pipeline retrieval diagnostics contain an invalid query route"
         )
-    fallback_reason = raw.get("fallback_reason")
     last_dense_error = raw.get("last_dense_error")
-    fallback_used = raw.get("fallback_used")
-    if fallback_used is None:
-        fallback_used = bool(
-            fallback_reason
-            or last_dense_error
-            or last_search == "lexical_fallback"
-        )
     dense_attempted = raw.get("dense_attempted")
-    if dense_attempted is None:
-        dense_attempted = last_search in {
-            "hybrid",
-            "hybrid_no_dense_match",
-            "lexical_fallback",
-        }
     dense_contributed = raw.get("dense_contributed")
-    if dense_contributed is not None:
-        dense_contributed = bool(dense_contributed)
+    if not isinstance(dense_attempted, bool) or not isinstance(
+        dense_contributed,
+        bool,
+    ):
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics must include boolean dense state"
+        )
     return {
         "configured_mode": configured,
         "active_mode": active,
         "dense_available": bool(raw.get("dense_available", active == "hybrid")),
         "embedding_model": raw.get("embedding_model"),
         "embedding_dimension": raw.get("embedding_dimension"),
-        "fallback_reason": fallback_reason,
         "last_dense_error": last_dense_error,
         "last_search_mode": last_search,
         "query_route": query_route,
         "route_reason": raw.get("route_reason"),
-        "dense_attempted": bool(dense_attempted),
+        "dense_attempted": dense_attempted,
         "dense_contributed": dense_contributed,
-        "fallback_used": bool(fallback_used),
         "diagnostic_source": "pipeline",
     }
 
@@ -1862,7 +2836,6 @@ def require_retrieval_mode(
         return
     active = diagnostics.get("active_mode")
     configured = diagnostics.get("configured_mode")
-    fallback = diagnostics.get("fallback_reason")
     last_error = diagnostics.get("last_dense_error")
     last_search = diagnostics.get("last_search_mode")
     problems: list[str] = []
@@ -1870,14 +2843,8 @@ def require_retrieval_mode(
         problems.append(f"active_mode={active!r}")
     if configured != required_mode:
         problems.append(f"configured_mode={configured!r}")
-    if fallback:
-        problems.append(f"fallback_reason={fallback!r}")
     if last_error:
         problems.append(f"last_dense_error={last_error!r}")
-    if diagnostics.get("fallback_used") is True:
-        problems.append("fallback_used=true")
-    if last_search == "lexical_fallback":
-        problems.append("last_search_mode='lexical_fallback'")
     if required_mode == "hybrid" and diagnostics.get("dense_available") is not True:
         problems.append("dense_available is not true")
     if required_mode == "hybrid" and last_search not in {
@@ -1961,13 +2928,26 @@ def diagnose_result(
         evidence_ids,
         top_k=top_k,
     )
-    source_id = case_input["source_id"]
+    semantic_required_any = _rank_metrics(
+        case_input.get(
+            "semantic_required_any_knowledge_unit_ids",
+            [],
+        ),
+        evidence_ids,
+        top_k=top_k,
+    )
+    source_ids = case_input.get("lineage_source_ids") or [
+        case_input["source_id"]
+    ]
     target_source_grounded = any(
         (
             item.get("kind") == "expert"
             or item.get("evidence_type") == "expert_annotation"
         )
-        and source_id in (item.get("source_ids") or [])
+        and any(
+            source_id in (item.get("source_ids") or [])
+            for source_id in source_ids
+        )
         and item.get("in_requested_scope") is True
         for item in evidence
     )
@@ -1976,6 +2956,7 @@ def diagnose_result(
         "ordered_evidence_retrieval_modes": evidence_retrieval_modes,
         "expected": expected,
         "applicable": applicable,
+        "semantic_required_any": semantic_required_any,
         "target_source_grounded": target_source_grounded,
         "retrieval_diagnostics": diagnostics,
     }
@@ -1991,6 +2972,60 @@ def _all_cases(
     for result in snapshot.get("results") or []:
         for case in result.get("inference_runs") or []:
             yield result, case
+
+
+def _semantic_no_range_cohort_rollup(
+    cases: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    statuses = Counter(case["status"] for case in cases)
+    completed = [case for case in cases if case["status"] == "completed"]
+    metrics = [
+        case["retrieval_probe"]["diagnostics"][
+            "semantic_required_any"
+        ]
+        for case in completed
+    ]
+    hit_at_1 = sum(bool(metric["hit_at_1"]) for metric in metrics)
+    hit_at_3 = sum(
+        isinstance(metric["first_rank"], int)
+        and 1 <= metric["first_rank"] <= 3
+        for metric in metrics
+    )
+    hit_at_k = sum(bool(metric["hit_at_k"]) for metric in metrics)
+    reciprocal_rank = sum(
+        float(metric["reciprocal_rank"]) for metric in metrics
+    )
+    by_piece: dict[str, dict[str, int]] = {}
+    for piece_id in TARGET_PIECES:
+        piece_cases = [
+            case
+            for case in cases
+            if case["inference_input"]["piece_id"] == piece_id
+        ]
+        if piece_cases:
+            by_piece[piece_id] = {
+                "case_count": len(piece_cases),
+                "completed_cases": sum(
+                    case["status"] == "completed" for case in piece_cases
+                ),
+            }
+    return {
+        "case_count": len(cases),
+        "case_statuses": dict(sorted(statuses.items())),
+        "completed_cases": len(completed),
+        "semantic_target_hit_at_1_cases": hit_at_1,
+        "semantic_target_hit_at_1_rate": _rate(hit_at_1, len(metrics)),
+        "semantic_target_hit_at_3_cases": hit_at_3,
+        "semantic_target_hit_at_3_rate": _rate(hit_at_3, len(metrics)),
+        "semantic_target_hit_at_k_cases": hit_at_k,
+        "semantic_target_hit_at_k_rate": _rate(hit_at_k, len(metrics)),
+        "semantic_target_mean_reciprocal_rank": (
+            round(reciprocal_rank / len(metrics), 6)
+            if metrics
+            else None
+        ),
+        "by_piece": by_piece,
+    }
 
 
 def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -2020,12 +3055,6 @@ def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                 for item in generated
             ).items())
         ),
-        "generation_fallback_reasons": dict(
-            sorted(Counter(
-                str(item.get("generation_fallback_reason") or "none")
-                for item in generated
-            ).items())
-        ),
         "retrieval_modes": dict(
             sorted(Counter(
                 item.get("last_search_mode") or "unknown"
@@ -2044,10 +3073,6 @@ def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         ),
         "dense_contributed_cases": sum(
             item.get("dense_contributed") is True
-            for item in retrieval_diagnostics
-        ),
-        "fallback_used_cases": sum(
-            item.get("fallback_used") is True
             for item in retrieval_diagnostics
         ),
     }
@@ -2096,6 +3121,8 @@ def _formulation_consistency(
     grouped: dict[str, list[Mapping[str, Any]]] = defaultdict(list)
     for case in cases:
         case_input = case["inference_input"]
+        if case_input.get("question_provenance") != SOURCE_VARIANT_PROVENANCE:
+            continue
         formulation_id = (
             f"{case_input['source_id']}__"
             f"{_case_suffix(case_input['measure_range'])}"
@@ -2159,6 +3186,18 @@ def _formulation_consistency(
 
 def refresh_summary(snapshot: dict[str, Any]) -> None:
     cases = [case for _, case in _all_cases(snapshot)]
+    derived_cases = [
+        case
+        for case in cases
+        if case["inference_input"].get("question_provenance")
+        == DERIVED_QUESTION_PROVENANCE
+    ]
+    no_range_cohort_cases = [
+        case
+        for case in cases
+        if case["inference_input"].get("evaluation_cohort")
+        == NO_RANGE_COHORT_NAME
+    ]
     integrity = snapshot["run"].setdefault(
         "integrity",
         {
@@ -2200,6 +3239,20 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         )
         for index in range(1, VARIANTS_PER_QUESTION + 1)
     }
+    by_question_provenance = {
+        provenance: _rollup(
+            [
+                case
+                for case in cases
+                if case["inference_input"].get("question_provenance")
+                == provenance
+            ]
+        )
+        for provenance in (
+            SOURCE_VARIANT_PROVENANCE,
+            DERIVED_QUESTION_PROVENANCE,
+        )
+    }
     all_cases_completed = statuses.get("completed", 0) == len(cases)
     summary_status = (
         "invalid"
@@ -2214,17 +3267,47 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         "status": summary_status,
         "integrity_status": integrity_status,
         "question_count": len(snapshot["results"]),
-        "variant_formulation_count": sum(
+        "synthesized_variant_formulation_count": sum(
             len(result["synthesized_question_variants"])
             for result in snapshot["results"]
         ),
+        "knowledge_unit_derived_formulation_count": sum(
+            result.get("question_provenance")
+            == DERIVED_QUESTION_PROVENANCE
+            for result in snapshot["results"]
+        ),
+        "formulation_count": sum(
+            len(result["synthesized_question_variants"])
+            if result.get("question_provenance")
+            == SOURCE_VARIANT_PROVENANCE
+            else 1
+            for result in snapshot["results"]
+        ),
         "inference_run_count": len(cases),
+        "representative_measure_range_case_count": sum(
+            case["inference_input"].get("measure_range_selection_policy")
+            == REPRESENTATIVE_RANGE_POLICY
+            for case in cases
+        ),
+        "reviewed_hint_context_range_case_count": sum(
+            case["inference_input"].get("measure_range_selection_policy")
+            == REVIEWED_HINT_CONTEXT_RANGE_POLICY
+            for case in cases
+        ),
+        "knowledge_unit_derived_case_count": len(derived_cases),
         "inference_runs_completed": statuses.get("completed", 0),
         "case_statuses": dict(sorted(statuses.items())),
         "overall": _rollup(cases),
         "by_piece": by_piece,
         "by_variant_index": by_variant_index,
+        "by_question_provenance": by_question_provenance,
         "formulation_consistency": _formulation_consistency(cases),
+        "evaluation_cohorts": {
+            NO_RANGE_COHORT_NAME: _semantic_no_range_cohort_rollup(
+                no_range_cohort_cases
+            ),
+            DERIVED_EVALUATION_COHORT: _rollup(derived_cases),
+        },
     }
     snapshot["run"]["status"] = snapshot["summary"]["status"]
     snapshot["run"]["updated_at"] = utc_now()
@@ -2259,7 +3342,6 @@ def new_snapshot(
         "top_k": top_k,
         "required_retrieval_mode": "hybrid",
         "generate": True,
-        "allow_internal_knowledge": False,
     }
     run_fingerprint = sha256_value(runtime_payload)
     now = utc_now()
@@ -2271,9 +3353,72 @@ def new_snapshot(
             "target_pieces": list(TARGET_PIECES),
             "requires_all_five_variant_shards": True,
             "generate": True,
-            "allow_internal_knowledge": False,
+            "strict_grounded_answer_paths": True,
             "required_retrieval_mode": "hybrid",
             "issues_automatic_quality_verdicts": False,
+            "measure_range_sampling": {
+                "policy": REPRESENTATIVE_RANGE_POLICY,
+                "provenance": REPRESENTATIVE_RANGE_PROVENANCE,
+                "cases_per_measure_scoped_question": 1,
+                "candidate_ranges": (
+                    "Sorted confirmed linked knowledge-unit ranges after "
+                    "documented exclusions. Full candidates remain in each "
+                    "question's inference_measure_ranges metadata. Exact-"
+                    "lyric allowlist exceptions use an explicit reviewed "
+                    "hint only as selector context with distinct provenance."
+                ),
+            },
+            "evaluation_question_catalogs": {
+                "source_question_paraphrases": {
+                    "provenance": SOURCE_VARIANT_PROVENANCE,
+                    "formulations_per_source_question": (
+                        VARIANTS_PER_QUESTION
+                    ),
+                },
+                "knowledge_unit_derived": {
+                    "schema_version": DERIVED_CATALOG_SCHEMA_VERSION,
+                    "provenance": DERIVED_QUESTION_PROVENANCE,
+                    "question_count": EXPECTED_DERIVED_QUESTION_COUNT,
+                    "evaluation_only": True,
+                    "indexed_as_retrieval_aliases": False,
+                    "range_policies": sorted(DERIVED_RANGE_POLICIES),
+                    "intrinsic_range_only_knowledge_unit_count": len(
+                        DERIVED_INTRINSIC_RANGE_ONLY_KNOWLEDGE_UNIT_IDS
+                    ),
+                    "reviewed_hint_context_knowledge_unit_count": len(
+                        DERIVED_REVIEWED_HINT_CONTEXT_RANGES
+                    ),
+                },
+            },
+            "no_range_semantic_evaluation": {
+                "cohort": NO_RANGE_COHORT_NAME,
+                "policy": (
+                    "Semantically self-contained questions backed by "
+                    "measure-specific finalized KUs are also evaluated with "
+                    "no selected range. Local KUs remain locally scoped. "
+                    "Questions naming a specific lyric, word, or syllable "
+                    "are representative-range-only."
+                ),
+                "included_source_count": len(NO_RANGE_SEMANTIC_CASES),
+                "intrinsic_range_only_source_count": len(
+                    INTRINSIC_RANGE_ONLY_SOURCES
+                ),
+                "reviewed_hint_context_source_count": len(
+                    REVIEWED_HINT_CONTEXT_RANGE_SOURCES
+                ),
+                "reviewed_hint_context_policy": (
+                    "An exact-lyric question whose KU has whole-piece claim "
+                    "scope uses an explicit reviewed measure hint only as "
+                    "the score-selector evaluation context."
+                ),
+                "synthesized_shadow_case_count": (
+                    len(NO_RANGE_SEMANTIC_CASES)
+                    * VARIANTS_PER_QUESTION
+                ),
+                "excluded_source_count": len(
+                    NO_RANGE_SEMANTIC_EXCLUSIONS
+                ),
+            },
         },
         "run": {
             "created_at": now,
@@ -2285,7 +3430,6 @@ def new_snapshot(
             "target_pieces": list(TARGET_PIECES),
             "top_k": top_k,
             "generate": True,
-            "allow_internal_knowledge": False,
             "required_retrieval_mode": "hybrid",
             "input_fingerprint": input_fingerprint,
             "system_fingerprint": system_state["fingerprint"],
@@ -2433,20 +3577,12 @@ def _validate_completed_resume_outputs(
             raise ResumeMismatchError(
                 f"Output {case_id}: generated_answer.{field} must be a string"
             )
-    reason = generated.get("generation_fallback_reason")
-    if reason is not None and not isinstance(reason, str):
+    try:
+        _validate_answer_path_metadata(generated)
+    except EvaluationInputError as error:
         raise ResumeMismatchError(
-            f"Output {case_id}: generation fallback reason is invalid"
-        )
-    if reason in OPERATIONAL_GENERATION_FAILURE_REASONS:
-        raise ResumeMismatchError(
-            f"Output {case_id}: operational generation failure was marked "
-            "completed"
-        )
-    if generated.get("answer_basis") == "internal_knowledge":
-        raise ResumeMismatchError(
-            f"Output {case_id}: internal-knowledge answer is not allowed"
-        )
+            f"Output {case_id}: invalid answer-path metadata: {error}"
+        ) from error
     try:
         _validate_response_model(
             generated,
@@ -2579,6 +3715,10 @@ def validate_resume_snapshot(
         Mapping,
     ):
         raise ResumeMismatchError("Output run metadata must be an object")
+    if "allow_internal_knowledge" in current_run:
+        raise ResumeMismatchError(
+            "Output uses the removed allow_internal_knowledge run field"
+        )
     integrity = current_run.get("integrity")
     if not isinstance(integrity, Mapping) or integrity.get("status") not in {
         "pending",
@@ -2604,7 +3744,6 @@ def validate_resume_snapshot(
         "target_pieces",
         "top_k",
         "generate",
-        "allow_internal_knowledge",
         "required_retrieval_mode",
         "input_files",
         "system_state",
@@ -2642,9 +3781,9 @@ def _validate_response_model(
         raise ModelPreflightError(
             "Generation model checkpoint became unavailable during evaluation"
         )
-    if status.get("llama_cpp_available") is not True:
+    if status.get("backend") != "llama-cpp-python":
         raise ModelPreflightError(
-            "llama-cpp-python generation backend became unavailable"
+            "Pipeline response used an unexpected generation backend"
         )
     if Path(str(status.get("path") or "")).resolve() != Path(
         expected_model_path
@@ -2654,11 +3793,49 @@ def _validate_response_model(
         )
 
 
+def _expert_evidence_ids(response: Mapping[str, Any]) -> list[str]:
+    return [
+        str(item.get("id"))
+        for item in response.get("evidence") or []
+        if isinstance(item, Mapping)
+        and (
+            item.get("kind") == "expert"
+            or item.get("evidence_type") == "expert_annotation"
+        )
+    ]
+
+
+def _validate_answer_path_metadata(response: Mapping[str, Any]) -> None:
+    mode = response.get("generation_mode")
+    basis = response.get("answer_basis")
+    removed_fields = REMOVED_GENERATION_RESPONSE_FIELDS & set(response)
+    if removed_fields:
+        raise EvaluationInputError(
+            "Pipeline response uses removed generation fields: "
+            + ", ".join(sorted(removed_fields))
+        )
+    if (mode, basis) != (RETRIEVED_LLM_MODE, RETRIEVED_LLM_BASIS):
+        raise EvaluationInputError(
+            "Synthesized evaluation requires an llm/retrieved_evidence "
+            "answer path; pipeline returned "
+            f"generation_mode={mode!r}, answer_basis={basis!r}"
+        )
+    unavailable_reason = response.get("unavailable_reason")
+    if unavailable_reason is not None:
+        raise EvaluationInputError(
+            "Synthesized evaluation rejects unavailable pipeline answers"
+        )
+    if not response.get("evidence"):
+        raise EvaluationInputError(
+            "retrieved-evidence LLM answers require evidence"
+        )
+
 def _pipeline_outputs(
     response: Mapping[str, Any],
     *,
     case_input: Mapping[str, Any],
     top_k: int,
+    grounded_insufficiency_detector: Callable[[str], bool],
 ) -> tuple[dict[str, Any], dict[str, Any]]:
     expected_range = case_input["measure_range"]
     expected_scope = "range" if expected_range is not None else "whole_piece"
@@ -2679,15 +3856,22 @@ def _pipeline_outputs(
             raise EvaluationInputError(
                 f"Pipeline response {field} must be a string"
             )
-    reason = response.get("generation_fallback_reason")
-    if reason is not None and not isinstance(reason, str):
+    if not response["answer"].strip():
         raise EvaluationInputError(
-            "Pipeline generation_fallback_reason must be a string or null"
+            "Pipeline response answer must be non-empty"
         )
-    if reason in OPERATIONAL_GENERATION_FAILURE_REASONS:
-        raise PipelineExecutionError(
-            f"Operational generation failure: {reason}"
+    if grounded_insufficiency_detector(response["answer"]):
+        raise EvaluationInputError(
+            "Pipeline response answer is a grounded-insufficiency refusal"
         )
+    evidence = response.get("evidence")
+    if not isinstance(evidence, list) or any(
+        not isinstance(item, Mapping) for item in evidence
+    ):
+        raise EvaluationInputError(
+            "Pipeline response evidence must be a list of objects"
+        )
+    _validate_answer_path_metadata(response)
     linked = list(case_input["expected_knowledge_unit_ids"])
     applicable_linked = list(
         case_input["range_applicable_knowledge_unit_ids"]
@@ -2700,12 +3884,21 @@ def _pipeline_outputs(
         for unit_id in applicable_linked
         if unit_id in eligible
     ]
+    semantic_required_any = list(
+        case_input.get(
+            "semantic_required_any_knowledge_unit_ids",
+            [],
+        )
+    )
     diagnostics = diagnose_result(
         response,
         {
             "source_id": case_input["source_id"],
             "expected_knowledge_unit_ids": linked,
             "applicable_knowledge_unit_ids": applicable_linked,
+            "semantic_required_any_knowledge_unit_ids": list(
+                semantic_required_any
+            ),
         },
         top_k=top_k,
         required_mode="hybrid",
@@ -2726,14 +3919,10 @@ def _pipeline_outputs(
         "applicable": bool(applicable_linked),
         "retrieval_eligible": bool(eligible),
         "applicable_retrieval_eligible": bool(applicable_eligible),
+        "semantic_required_any": bool(semantic_required_any),
     }
-    evidence = deepcopy(response.get("evidence") or [])
-    expert_ids = [
-        str(item.get("id"))
-        for item in evidence
-        if item.get("kind") == "expert"
-        or item.get("evidence_type") == "expert_annotation"
-    ]
+    evidence = deepcopy(evidence)
+    expert_ids = _expert_evidence_ids(response)
     linked_retrieved = [item for item in linked if item in expert_ids]
     eligible_retrieved = [item for item in eligible if item in expert_ids]
     retrieval_probe = {
@@ -2773,11 +3962,6 @@ def _pipeline_outputs(
             "retrieval_eligible_target_available": bool(eligible),
             "all_expected_expert_units_retrieved": bool(linked)
             and all(item in expert_ids for item in linked),
-            "rag_llm_succeeded": (
-                response.get("generation_mode") == "llm"
-                and response.get("answer_basis") == "retrieved_evidence"
-                and bool(evidence)
-            ),
             "retrieval_validation": {
                 "required_mode": "hybrid",
                 "passed": True,
@@ -2794,6 +3978,9 @@ def run_cases(
     top_k: int,
     limit: int | None,
     checkpoint: Callable[[], None],
+    grounded_insufficiency_detector: Callable[[str], bool] = (
+        local_insufficiency_detector
+    ),
 ) -> int:
     selected = [
         case
@@ -2826,7 +4013,6 @@ def run_cases(
                     tuple(measure_range) if measure_range is not None else None
                 ),
                 generate=True,
-                allow_internal_knowledge=False,
                 top_k=top_k,
             )
             if not isinstance(response, Mapping):
@@ -2839,6 +4025,9 @@ def run_cases(
                 response,
                 case_input=case_input,
                 top_k=top_k,
+                grounded_insufficiency_detector=(
+                    grounded_insufficiency_detector
+                ),
             )
             case["retrieval_probe"] = retrieval_probe
             case["generated_answer"] = generated_answer
@@ -2883,32 +4072,38 @@ def run_evaluation(
 ) -> dict[str, Any]:
     benchmark = load_benchmark(dataset_root)
     input_files = input_file_records(
-        [*benchmark.input_paths, Path(__file__).resolve()]
+        [
+            *benchmark.input_paths,
+            Path(__file__).resolve(),
+            Path(__file__).with_name(
+                "no_range_semantic_policy.py"
+            ).resolve(),
+            Path(__file__).with_name("representative_range.py").resolve(),
+        ]
     )
     system_before = collect_system_state(system_root)
 
     snapshot: dict[str, Any] | None = None
-    with exclusive_output_lock(output):
-        try:
-            with target_runtime(
-                system_root,
-                pipeline_dataset_root=pipeline_dataset_root,
-            ) as target:
-                raw_model_status = target.model_status()
-                if not isinstance(raw_model_status, Mapping):
-                    raise ModelPreflightError(
-                        "Target model_status() returned a non-object"
-                    )
-                runtime_state = collect_runtime_state()
-                model_contract = validate_hybrid_generation_preflight(
-                    target.pipeline_settings,
-                    system_state=system_before,
-                    model_status=raw_model_status,
-                    runtime_state=runtime_state,
-                )
-                model_contract["initialization"] = initialize_target_models(
-                    target
-                )
+    with target_runtime(
+        system_root,
+        pipeline_dataset_root=pipeline_dataset_root,
+    ) as target:
+        raw_model_status = target.model_status()
+        if not isinstance(raw_model_status, Mapping):
+            raise ModelPreflightError(
+                "Target model_status() returned a non-object"
+            )
+        runtime_state = collect_runtime_state()
+        model_contract = validate_hybrid_generation_preflight(
+            target.pipeline_settings,
+            system_state=system_before,
+            model_status=raw_model_status,
+            runtime_state=runtime_state,
+        )
+        model_contract["initialization"] = initialize_target_models(target)
+
+        with exclusive_output_lock(output):
+            try:
                 expected = new_snapshot(
                     benchmark=benchmark,
                     benchmark_root=dataset_root,
@@ -2944,61 +4139,64 @@ def run_evaluation(
                     top_k=top_k,
                     limit=limit,
                     checkpoint=checkpoint,
+                    grounded_insufficiency_detector=(
+                        target.is_grounded_insufficiency_answer
+                    ),
                 )
                 checkpoint()
 
-            try:
-                system_after = collect_system_state(system_root)
-            except Exception as error:
-                raise IntegrityValidationError(
-                    "Could not reauthenticate target system files after "
-                    "evaluation"
-                ) from error
-            if system_after != system_before:
-                raise IntegrityValidationError(
-                    "Target system files changed during evaluation; results "
-                    "are not reproducible"
-                )
-            try:
-                pipeline_inputs_after = refresh_pipeline_input_records(
-                    target.pipeline_corpus_state
-                )
-            except Exception as error:
-                raise IntegrityValidationError(
-                    "Could not reauthenticate pipeline corpus inputs after "
-                    "evaluation"
-                ) from error
-            if (
-                pipeline_inputs_after
-                != target.pipeline_corpus_state["input_files"]
-            ):
-                raise IntegrityValidationError(
-                    "Pipeline corpus inputs changed during evaluation; "
-                    "results are not reproducible"
-                )
-        except IntegrityValidationError as error:
-            if snapshot is not None:
-                snapshot["run"]["integrity"] = {
-                    "status": "invalid",
-                    "validated_at": None,
-                    "error": {
-                        "at": utc_now(),
-                        "type": type(error).__name__,
-                        "message": str(error),
-                    },
-                }
-                refresh_summary(snapshot)
-                atomic_write_json(output, snapshot)
-            raise
+                try:
+                    system_after = collect_system_state(system_root)
+                except Exception as error:
+                    raise IntegrityValidationError(
+                        "Could not reauthenticate target system files after "
+                        "evaluation"
+                    ) from error
+                if system_after != system_before:
+                    raise IntegrityValidationError(
+                        "Target system files changed during evaluation; "
+                        "results are not reproducible"
+                    )
+                try:
+                    pipeline_inputs_after = refresh_pipeline_input_records(
+                        target.pipeline_corpus_state
+                    )
+                except Exception as error:
+                    raise IntegrityValidationError(
+                        "Could not reauthenticate pipeline corpus inputs "
+                        "after evaluation"
+                    ) from error
+                if (
+                    pipeline_inputs_after
+                    != target.pipeline_corpus_state["input_files"]
+                ):
+                    raise IntegrityValidationError(
+                        "Pipeline corpus inputs changed during evaluation; "
+                        "results are not reproducible"
+                    )
+            except IntegrityValidationError as error:
+                if snapshot is not None:
+                    snapshot["run"]["integrity"] = {
+                        "status": "invalid",
+                        "validated_at": None,
+                        "error": {
+                            "at": utc_now(),
+                            "type": type(error).__name__,
+                            "message": str(error),
+                        },
+                    }
+                    refresh_summary(snapshot)
+                    atomic_write_json(output, snapshot)
+                raise
 
-        assert snapshot is not None
-        snapshot["run"]["integrity"] = {
-            "status": "validated",
-            "validated_at": utc_now(),
-            "error": None,
-        }
-        refresh_summary(snapshot)
-        atomic_write_json(output, snapshot)
+            assert snapshot is not None
+            snapshot["run"]["integrity"] = {
+                "status": "validated",
+                "validated_at": utc_now(),
+                "error": None,
+            }
+            refresh_summary(snapshot)
+            atomic_write_json(output, snapshot)
     return snapshot
 
 
