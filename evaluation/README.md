@@ -1,9 +1,9 @@
 # Evaluation
 
 Run every command in this document from the repository root with the
-`soprano-qa` Conda environment. The current qualitative workflow covers all
-five supported pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella
-fantasia, and Una voce poco fa.
+`soprano-qa` Conda environment. The evaluation covers all five supported
+pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
+voce poco fa.
 
 ## Setup
 
@@ -15,68 +15,110 @@ conda run -n soprano-qa python scripts/download_model.py
 conda run -n soprano-qa python scripts/download_embedding_model.py
 ```
 
-Hybrid retrieval fails at startup when the embedding checkpoint or
-`llama-cpp-python` backend is unavailable. It does not silently switch to
-lexical retrieval. The qualitative judge applies the same fail-closed policy
-to its Qwen checkpoint and backend.
+The answer checkpoint is the instruction/chat model
+`Qwen3-14B-Q6_K.gguf`. No explicit `chat_format` is configured, so
+`llama-cpp-python` uses the native chat template embedded in the GGUF. Hybrid
+retrieval uses `Qwen3-Embedding-0.6B-Q8_0.gguf` and never silently switches to
+lexical retrieval. A missing, unreadable, or incompatible required model or
+backend aborts the run before an output artifact is created or resumed.
 
-## Current qualitative evaluation
+## Evaluation protocol
 
-Generate range-aware RAG answers and save their linked expert references:
+The current benchmark contains 460 inference cases across all five pieces:
 
-```bash
-conda run -n soprano-qa python \
-  evaluation/run_qualitative.py --generate
+| Question family | Cases | Purpose |
+| --- | ---: | --- |
+| Original | 105 | Evaluate the active human questions in representative user contexts |
+| Paraphrase | 306 | Evaluate meaning-preserving alternative wording |
+| Knowledge-unit derived | 49 | Cover finalized units that had no original related question |
+| **Total** | **460** | Complete original and synthesized-family comparison |
+
+The 49 coverage cases come from 36 evaluation-only derived questions. Each is
+written so that its linked finalized knowledge unit supplies the expected
+answer. These questions are not human originals and are never added to
+`data/corpus.json`, retrieval aliases, or production prompts. Keeping them
+outside retrieval input prevents the evaluation question itself from making
+retrieval artificially easy. The linked unit provides stable reference
+authority and a retrieval target for diagnostics; it is not an ID-level pass
+condition. A response supported by different reviewed evidence can pass the
+semantic review when it correctly answers the question without meaning drift.
+
+### Representative measure ranges
+
+A measure-scoped question is evaluated at one representative confirmed range,
+not once for every annotated occurrence. Candidate ranges are sorted after
+documented exclusions, then a versioned SHA-256 hash of the source identifier
+selects one range reproducibly. The original and synthesized runners share the
+same selection policy. The artifacts retain the complete confirmed-range
+inventory as authority metadata, while each inference input records its single
+selected range.
+
+A separate no-range case is retained only when the question is semantically
+meaningful without a selected score location. This tests whether local expert
+knowledge can still be retrieved from the wording alone without multiplying
+the benchmark across redundant measure occurrences.
+
+Questions that name an exact lyric, word, or syllable are evaluated only with
+one representative score range. They do not receive an artificial whole-song
+case. For the two explicit cases whose reviewed KU intentionally retains
+whole-song claim scope, a reviewed measure hint supplies only the evaluation
+selector context; the artifact records distinct provenance and does not
+promote the hint to a confirmed KU range.
+
+Changing the representative-range policy, evaluation inventories, corpus,
+models, settings, or relevant pipeline code invalidates resume fingerprints.
+Regenerate both inference artifacts before reporting results after such a
+change.
+
+### Required answer path
+
+Every grounded case passes the complete selected reviewed knowledge-unit
+answer texts to one Qwen3-14B generation call. Multiple compatible units may
+be combined when they add useful detail. Retrieval confidence affects evidence
+selection only; it never switches the renderer.
+
+A successfully completed evaluation case must report:
+
+```text
+generation_mode: llm
+answer_basis: retrieved_evidence
 ```
 
-The default output is `evaluation/qualitative.json`. The tracked snapshot is
-complete and currently contains 79 questions and 124 inference cases across
-the five supported pieces. The runner checkpoints each case and can resume an
-interrupted run. Use `--piece PIECE_ID` or `--limit N` for a focused run.
+An expert-verbatim answer, ID-selection-only path, extractive answer,
+internal-knowledge answer, alternate model, or unavailable result is not
+accepted as a completed evaluation answer. There is no generation fallback and
+no second model call.
 
-Run conservative answer-fidelity triage with the configured local Qwen GGUF:
+The prompt labels selected records temporarily as `[E1]`, `[E2]`, and so on.
+These labels are citation anchors used to validate sentence grounding; they
+are not knowledge-unit IDs and do not form a separate selection stage. The
+application removes the labels and opaque corpus IDs before display.
+
+If deterministic validation questions the sole generated draft, the
+application returns the same draft after mandatory presentation sanitization
+and records the concern as `generation_validation_warning`. The warning feeds
+semantic review; it does not trigger answer replacement.
+
+## Original-question inference
+
+Generate the 105 original-question cases:
 
 ```bash
-conda run -n soprano-qa python \
-  evaluation/judge_qualitative.py
+conda run -n soprano-qa python evaluation/run_qualitative.py
 ```
 
-The judge supports only `llama-cpp-python` in the `soprano-qa` environment.
-Before creating or updating `evaluation/qualitative_judged.json`, it:
+The default output is `evaluation/qualitative.json`. The runner checkpoints
+after each case and resumes only when its authenticated inputs and protocol
+fingerprints match. Use `--piece PIECE_ID` or `--limit N` for a bounded run.
+Before creating or resuming the production artifact, it validates the complete
+case contract: 13 Die Forelle, 16 In Flowery Clouds, 26 La Capinera, 18 Nella
+fantasia, and 32 Una voce poco fa cases (105 total). Any total or per-piece
+drift aborts the run instead of silently publishing a partial benchmark.
 
-- validates the input artifact;
-- requires the configured model file and the `llama_cpp` package;
-- initializes the GGUF and verifies that its declared architecture is Qwen;
-- fingerprints the model, backend, interpreter, generation settings, input,
-  and judge implementation.
+## Synthesized-family inference
 
-The judge calls the low-level LLM interface directly, so it cannot enter the
-service's extractive fallback path. A backend or programming failure is
-checkpointed once and aborts the run. Only a malformed judge response uses
-the bounded per-case retry loop. Retrieval ranks remain diagnostics and do
-not determine the pass, review, or fail verdict.
-
-The answer artifact records the generator's model path but not its checkpoint
-hash. The judgment artifact therefore records whether the configured paths
-match, while explicitly leaving same-checkpoint identity unverified. A Qwen
-judgment is automated triage, not independent human evidence.
-
-Useful judge controls include `--piece PIECE_ID`, `--case-id CASE_ID`,
-`--limit N`, `--max-attempts N`, and `--minimum-pass-rate RATE`. Resume is
-allowed only when the source cases and all fingerprinted judge inputs match.
-
-## Synthesized-question hybrid RAG+LLM benchmark
-
-`run_synthesized_questions.py` evaluates three Korean reformulations of every
-active expert question across all five pieces: 79 source questions, 237
-variant formulations, and 372 range-expanded inference cases. The excluded
-unanswerable Nella Fantasia source remains in the dataset for provenance but
-is never expanded or sent to the pipeline.
-
-The runner requires clean hybrid retrieval and grounded local generation. It
-loads both GGUF checkpoints before creating the result artifact, refuses
-lexical fallback or missing/incompatible models, and always calls the service
-with generation enabled and internal model knowledge disabled:
+Generate all 355 synthesized-family cases, including the 306 paraphrase cases
+and 49 knowledge-unit-derived coverage cases:
 
 ```bash
 SQA_VARIANT_DATASET=/home/minhee/soprano-qa-dataset
@@ -88,58 +130,84 @@ conda run -n soprano-qa python \
   --top-k 6
 ```
 
-The single JSON artifact contains the human source answer, linked knowledge
-units, exact case authority where schema 1.3 provides it, generated answers,
-evidence, retrieval diagnostics, generation modes and reasons, model hashes,
-and runtime fingerprints. It checkpoints atomically after every case and can
-resume only when the authenticated benchmark, corpus, code, models, runtime,
-and settings still match. `--limit N` is useful for a bounded invocation.
+The artifact stores source and derived-question provenance, reference
+authority, generated answers, evidence, retrieval diagnostics, selected and
+complete range metadata, model hashes, and runtime fingerprints. It
+checkpoints atomically after every case and supports compatible resume.
 
-The current completed artifact has validated integrity and contains 372/372
-successful inference cases. It records 240 grounded LLM answers, 126
-retrieval-extractive safeguards, and six unavailable answers where the
-retriever admitted no corpus evidence and internal model knowledge remained
-disabled. Expected knowledge-unit Hit@6 is 359/372 (96.51%), and all three
-variants achieve
-Hit@6 in 119/124 canonical source/range groups (95.97%). See
-[`synthesized_question_comparison.md`](synthesized_question_comparison.md) for
-the complete retrieval and generation-path report. No output uses an internal
-knowledge answer basis or contains the removed `제공된 검색 근거` footer.
+Hit@1, Hit@3, Hit@6, and MRR are retrieval diagnostics, not answer acceptance
+criteria. Hit@3 is the primary early-recall signal and Hit@6 shows broader
+recall, but an answer may be semantically correct using a different reviewed
+unit. Conversely, retrieving the linked reference unit never makes an
+incorrect generated answer pass semantic review.
 
-No semantic LLM judge was run for this synthesized result. Retrieval and
-generation-path metrics are diagnostics, not answer-accuracy verdicts. Use
-the viewer below to compare each human expected/reference answer with the
-generated answer manually.
+Fresh inference and answer-quality metrics are pending until both artifacts
+have been rerun with the final pipeline code. Do not reuse metrics from the
+deprecated all-ranges or direct-expert-answer artifacts.
 
-## Current result artifacts
+## Direct semantic review
 
-- `qualitative.json` preserves the current five-piece evaluation questions,
-  generated answers, expert references, and retrieval diagnostics.
-- `synthesized_question_results.json` preserves the completed five-piece
-  synthesized-question hybrid RAG+LLM run and its human references.
+Semantic review is stored in `evaluation/semantic_quality_review.json`,
+separate from both inference artifacts. Review is performed directly rather
+than through a Python judgment runner. It covers every original and
+synthesized-family case rather than a selected cohort.
 
-`qualitative_judged.json` is created only when the optional qualitative judge
-is run. It is separate from both inference artifacts; the synthesized runner
-does not create judge verdicts.
+The review artifact uses:
+
+- `artifact_type: soprano_qa_semantic_quality_review`;
+- `schema_version: 1.0`;
+- `review_status: complete`;
+- `review_method: direct_codex_review`; and
+- one assessment for every current case.
+
+Each assessment contains `case_id`, `semantic_hash`, and `red_flag`. The hash
+binds the assessment to the exact question, range, reference authority,
+generated answer, ordered evidence bundle, generation-validation warning,
+generation mode, and answer basis. A flagged assessment also requires
+`severity`, non-empty `reason_codes`, and a `rationale`. Consequently, a review
+cannot silently carry over after an answer, its evidence, or its authority
+changes.
+
+A red flag is a review signal, not an abstention and not an alternate answer.
+The generated response remains visible so developers can inspect and reduce
+semantic failures without hiding them behind a fallback. If the review file is
+missing, incomplete, or stale, the viewer reports review as unavailable rather
+than interpreting missing assessments as passes.
+
+## Result artifacts
+
+- `qualitative.json` contains all 105 original-question inference results.
+- `synthesized_question_results.json` contains all 355 synthesized-family
+  results: 306 paraphrase and 49 knowledge-unit-derived cases.
+- `semantic_quality_review.json` contains the complete, hash-bound direct
+  semantic review for all 460 answers.
 
 Runtime `*.log` and `*.json.lock` files are ignored and should not be
 committed.
 
 ## Read-only result viewer
 
-The local viewer can inspect a compatible detailed result snapshot without
-modifying it. For example:
+Start the local comparison server:
 
 ```bash
-conda run -n soprano-qa python evaluation/server.py \
-  --results-file evaluation/synthesized_question_results.json
+conda run -n soprano-qa python evaluation/server.py
 ```
 
-Open <http://127.0.0.1:8766/>. The synthesized-result view shows the human
-expected/reference answer beside the generated answer and supports piece,
-generation-mode, status, and variant filters. Manual review state is stored
-in the browser's `localStorage`; export it from the viewer if it must be
-retained or shared.
+Open <http://127.0.0.1:8766/> to compare every original and synthesized-family
+result. The viewer keeps the question families visibly separate and makes all
+460 generated answers individually selectable.
+
+Open <http://127.0.0.1:8766/red-flags> for the dedicated semantic-red-flag
+queue. It shows only cases marked by the current hash-bound review and includes
+their severity, reason codes, and rationale.
+
+The defaults are `evaluation/qualitative.json`,
+`evaluation/synthesized_question_results.json`, and
+`evaluation/semantic_quality_review.json`. Alternate compatible paths can be
+provided with `--original-results-file`, `--synthesized-results-file`, and
+`--quality-review-file`. The server does not modify these artifacts. Browser
+manual-review state is stored separately in `localStorage` and must not be
+confused with the tracked semantic-quality review.
 
 ## Tests
 
@@ -148,7 +216,6 @@ Run the focused evaluation tests:
 ```bash
 conda run -n soprano-qa python -m unittest -v \
   tests.test_qualitative_runner \
-  tests.test_qualitative_judge \
   tests.test_annotator_retrieval_coverage \
   tests.test_synthesized_questions_runner \
   tests.test_evaluation_server
