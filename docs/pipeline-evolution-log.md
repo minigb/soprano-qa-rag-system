@@ -12,8 +12,9 @@ chronological engineering record, including unsuccessful approaches.
 
 ## Current status (2026-08-04)
 
-- Active repository work is based on `5eed0fc`, with pipeline, evaluation,
-  viewer, corpus, documentation, and test changes in progress.
+- Active `main` work remains the answer-required one-pass baseline, with
+  pipeline, evaluation, viewer, corpus, documentation, and test changes in
+  progress.
 - Generation model: `Qwen3-14B-Q6_K.gguf` through `llama-cpp-python` in the
   `soprano-qa` Conda environment. The 14B size is the project ceiling.
 - Retrieval model: `Qwen3-Embedding-0.6B-Q8_0.gguf` in required hybrid mode.
@@ -49,6 +50,7 @@ historical cleanup work here.
 | Strict grounding experiment | `codex/strict-grounded-pipeline-snapshot` | `/home/minhee/codex/strict-grounded-pipeline-snapshot` | `e3816ad` | Clean committed snapshot of the strict one-pass design that could reject/abstain. It is intentionally unmerged and retained only as a reproducible comparison/rollback point. |
 | Pre-fidelity-editor baseline | `codex/pre-fidelity-editor-snapshot` | `/home/minhee/codex/pre-fidelity-editor-snapshot` | `7e364b6` | Clean committed snapshot of the answer-required one-pass code immediately before the proposed fidelity-editor change. It is intentionally unmerged and is the primary rollback point for the next experiment. |
 | Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
+| Source-locked KU rendering experiment | `codex/source-locked-ku-rendering` | `/home/minhee/codex/source-locked-ku-rendering` | `90fbddb` | Clean committed experiment that retains every selected primary KU, renders each KU in an isolated structured call, and composes multiple units deterministically. Targeted real-model checks pass; it remains unmerged pending a full 460-case run and direct review. |
 
 Every snapshot listed above is committed and clean. These experimental branches
 are local and have not been pushed.
@@ -361,6 +363,88 @@ unnatural. In other words, exact full-KU rendering greatly reduces dangerous
 meaning changes but sacrifices stable completeness and natural multi-unit
 cohesion. It was therefore committed as a comparison snapshot without a full
 460-case rerun or a merge into `main`.
+
+## Approach 6: source-locked full-KU rendering
+
+Status: **implemented, committed, and not yet promoted** on branch
+`codex/source-locked-ku-rendering`, worktree
+`/home/minhee/codex/source-locked-ku-rendering`, commit `90fbddb`.
+
+### Reason for a new version
+
+The atomic planner reduced semantic drift but sometimes omitted useful units,
+while one-pass and editor designs still let Qwen join valid relations into a
+new unsupported causal claim. The next experiment therefore removes model-
+driven selection and cross-unit synthesis from the answer path.
+
+### Candidate design
+
+1. Retain every finalized primary retrieval result; a measure-local unit has
+   the same semantic authority as a whole-piece unit when it answers a no-range
+   question, without turning its local example into a universal claim.
+2. Give Qwen exactly one full KU per schema-constrained call. The call contains
+   no user question, peer KU, stable KU ID, provenance ID, URL, score, range
+   notice, or license metadata.
+3. Require one ordered output sentence for every source sentence. The model may
+   change only the outer sentence ending to formal-polite Korean and make
+   minimal spacing or punctuation corrections; quoted text remains unchanged.
+4. Keep KU/result mapping in application code. Temporary labels exist only for
+   internal validation, are attached at the validator's own claim boundaries,
+   and never enter display prose.
+5. Present two or more retained KUs as bullets under a generic lead-in. Exact
+   repeated piece-title prefixes may be removed as a presentation transform;
+   no model performs a cross-unit rewrite.
+6. A nonempty semantic or fidelity mutation remains visible with structured
+   validation warnings for red-flag review. Invalid JSON, missing sentence
+   coverage, a refusal, or a missing finalized primary unit is a hard protocol
+   error; there is no extractive, alternate-model, or internal-knowledge
+   fallback.
+7. A narrow scope-aware retrieval rule may add one strong whole-piece change
+   trajectory after a local leader when the no-range question explicitly asks
+   why a musical property changes repeatedly across the work. It does not fill
+   to K and does not affect ordinary local, yes/no, practice, or ranged queries.
+
+### Targeted result
+
+- All nine real Qwen3-14B targeted cases returned structured, nonempty,
+  formal-polite answers with no renderer warning or internal label. These
+  include the Flowery opening fermata and Una interlude questions asked without
+  a range, the repeated-meter trajectory, the earlier harmful composer-intent
+  case, the Die Forelle broad-guidance case, crescendo, fermata-duration, and
+  ornament controls.
+- Eight of the nine are semantically answer-complete under direct review. The
+  Una accent answer is faithful to `una-voce-poco-fa-ku-020`, but that finalized
+  dataset KU omitted two explanatory sentences still present in its source
+  annotation. This is dataset curation debt, not renderer or retrieval loss;
+  production code must not fall back to raw `source_annotations`.
+- Real-model regressions for the quoted Una stage direction and the attached
+  score abbreviation `dim.은` now preserve the quote, punctuation, Korean
+  particle, and outer polite ending with no warning.
+- Exact-copy orchestration covers all 223 corpus records and 425 protected
+  sentence units with zero protocol errors and zero false fidelity warnings.
+  The relevant test inventory passes 410/410 when the sibling dataset and main
+  model assets are supplied to the worktree; the real five-piece repeated-
+  change retrieval integration also passes.
+
+### Remaining risks and decision
+
+- This is a promising candidate, not a promoted pipeline. The required 105
+  original plus 355 synthesized-family inference run and direct Codex semantic
+  review have not yet been completed.
+- Latency grows with the number and length of retained KUs because isolation
+  requires one model call per KU. Observed targeted calls ranged from several
+  seconds for short units to roughly 25 seconds for the longest unit; caching
+  or pre-rendering may be needed for an interactive demo.
+- Fidelity checks detect rather than overwrite a nonempty semantic mutation,
+  consistent with the answer-required/no-fallback contract. Such warnings must
+  be treated as red flags, not clean answers.
+- Faithful rendering inherits source-level defects. In addition to the
+  truncated Una accent KU, `nella-fantasia-ku-004` contains repetitive and
+  awkward reviewed prose. Those records need curation rather than a more
+  creative answer model.
+- Whitespace is ignored by lexical fidelity comparison. This avoids false
+  flags for benign Korean spacing fixes, but direct semantic review must still
+  catch the rare spacing change that affects meaning.
 
 ## Evaluation and promotion checklist
 
