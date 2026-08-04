@@ -22,8 +22,6 @@ chronological engineering record, including unsuccessful approaches.
   across all five pieces. The latter consists of 306 paraphrase cases and 49
   questions derived from finalized knowledge units that lacked a related
   original question.
-- Active baseline run directory:
-  `/home/minhee/soprano-qa-evaluation-final-20260804-q6-v7-7DgWml`.
 - The detached baseline run has finished. All 460 cases returned non-empty
   `llm/retrieved_evidence` answers and had no refusal, footer, record-ID leak,
   or prompt-field leak.
@@ -42,13 +40,12 @@ chronological engineering record, including unsuccessful approaches.
 
 This registry is intentionally limited to committed snapshots of distinct,
 new RAG+LLM pipeline approaches. Do not list routine development branches,
-dataset-repository branches, demo worktrees, evaluation-output directories, or
-historical cleanup work here.
+baseline-only rollback points, dataset-repository branches, demo worktrees,
+evaluation-output directories, or historical cleanup work here.
 
 | Experimental snapshot | Branch | Worktree | Commit | State and purpose |
 | --- | --- | --- | --- | --- |
 | Strict grounding experiment | `codex/strict-grounded-pipeline-snapshot` | `/home/minhee/codex/strict-grounded-pipeline-snapshot` | `e3816ad` | Clean committed snapshot of the strict one-pass design that could reject/abstain. It is intentionally unmerged and retained only as a reproducible comparison/rollback point. |
-| Pre-fidelity-editor baseline | `codex/pre-fidelity-editor-snapshot` | `/home/minhee/codex/pre-fidelity-editor-snapshot` | `7e364b6` | Clean committed snapshot of the answer-required one-pass code immediately before the proposed fidelity-editor change. It is intentionally unmerged and is the primary rollback point for the next experiment. |
 | Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
 | Source-locked KU rendering experiment | `codex/source-locked-ku-rendering` | `/home/minhee/codex/source-locked-ku-rendering` | `90fbddb` | Clean committed experiment that retains every selected primary KU, renders each KU in an isolated structured call, and composes multiple units deterministically. Targeted real-model checks pass; it remains unmerged pending a full 460-case run and direct review. |
 
@@ -156,9 +153,10 @@ separate direct semantic review records concerns.
 
 ## Approach 3: five-piece answer-required one-pass baseline
 
-Rollback point before the next architecture experiment: worktree
-`/home/minhee/codex/pre-fidelity-editor-snapshot`, branch
-`codex/pre-fidelity-editor-snapshot`, commit `7e364b6`.
+This was the active baseline immediately before the fidelity-editor and
+knowledge-unit rendering experiments. It remains documented for comparison,
+but is not listed in the branch/worktree registry because it is a baseline
+checkpoint rather than a distinct experimental RAG+LLM approach.
 
 ### What it tries
 
