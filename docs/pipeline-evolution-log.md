@@ -12,7 +12,7 @@ chronological engineering record, including unsuccessful approaches.
 
 ## Current status (2026-08-04)
 
-- Active repository work is based on `2bc1280`, with pipeline, evaluation,
+- Active repository work is based on `5eed0fc`, with pipeline, evaluation,
   viewer, corpus, documentation, and test changes in progress.
 - Generation model: `Qwen3-14B-Q6_K.gguf` through `llama-cpp-python` in the
   `soprano-qa` Conda environment. The 14B size is the project ceiling.
@@ -23,16 +23,17 @@ chronological engineering record, including unsuccessful approaches.
   original question.
 - Active baseline run directory:
   `/home/minhee/soprano-qa-evaluation-final-20260804-q6-v7-7DgWml`.
-- Detached session: `soprano-qa-final-q6-v7-20260804`.
-- The 105 original cases are complete. All returned non-empty
+- The detached baseline run has finished. All 460 cases returned non-empty
   `llm/retrieved_evidence` answers and had no refusal, footer, record-ID leak,
   or prompt-field leak.
-- Direct Codex review nevertheless flagged 28 of 105 original answers:
-  13 in Una voce poco fa, 10 across La Capinera/Nella fantasia, and 5 in In
-  Flowery Clouds. Die Forelle had no original-case flags.
-- Direct review of the first 195 completed synthesized-family cases found 34
-  flags: 18 across Die Forelle/In Flowery Clouds and 16 in La Capinera.
-  Nella fantasia and Una voce poco fa synthesized review is still pending.
+- Direct Codex review covers exactly 105 original and 355 synthesized-family
+  cases, without a missing, extra, duplicate, or piece-mismatched assessment.
+  It flagged 28 original answers and 65 synthesized-family answers: 93 of 460
+  overall (28 high, 43 medium, and 22 low severity).
+- The largest recurring classes are lost qualifiers and unsupported causal or
+  meaning changes. Combined flags by piece are Die Forelle 6/58, In Flowery
+  Clouds 17/74, La Capinera 22/118, Nella fantasia 13/75, and Una voce poco fa
+  35/135.
 - Therefore this one-pass run is a **baseline, not a promotable final result**.
   The generated answers remain available for comparison and red-flag review.
 
@@ -46,8 +47,9 @@ evaluation-output directories are deliberately excluded.
 | --- | --- | --- | --- | --- |
 | Strict grounding experiment | `codex/strict-grounded-pipeline-snapshot` | `/home/minhee/codex/strict-grounded-pipeline-snapshot` | `e3816ad` | Clean committed snapshot of the strict one-pass design that could reject/abstain. It is intentionally unmerged and retained only as a reproducible comparison/rollback point. |
 | Pre-fidelity-editor baseline | `codex/pre-fidelity-editor-snapshot` | `/home/minhee/codex/pre-fidelity-editor-snapshot` | `7e364b6` | Clean committed snapshot of the answer-required one-pass code immediately before the proposed fidelity-editor change. It is intentionally unmerged and is the primary rollback point for the next experiment. |
+| Atomic knowledge-unit experiment | `codex/atomic-claim-generation` | `/home/minhee/codex/atomic-claim-generation` | `3864df0` | Clean committed two-stage Qwen experiment with exhaustive full-KU planning and conservative rendering. It fixes the targeted meaning-drift cases but remains unmerged because broad-answer completeness and natural cohesion regress. |
 
-Both snapshot worktrees are committed and clean. Their experimental branches
+All three snapshot worktrees are committed and clean. Their experimental branches
 are local and have not been pushed.
 
 For every future material RAG+LLM approach:
@@ -256,10 +258,10 @@ only evidence.
 7. Korean synonyms or conjugations become less accurate than the reviewed
    sentence they replace.
 
-## Approach 4 candidate: conservative fidelity editor
+## Approach 4: conservative fidelity-editor experiments
 
-Status: **planned and not yet accepted**. The one-pass baseline must finish
-and remain available for A/B comparison before this code is implemented.
+Status: **tested on a targeted A/B set and rejected**. Neither experimental
+prompt was merged into the production pipeline.
 
 ### Reason for a new version
 
@@ -269,32 +271,95 @@ instruction-following model: edit an already useful draft against the exact
 reviewed evidence rather than solve retrieval, synthesis, style, scope, and
 faithfulness simultaneously.
 
-### Proposed design
+### Tested design
 
-1. Keep the current retrieval bundle and first-pass natural draft.
-2. Make a second call to the **same** Qwen3-14B-Q6 model with a short fidelity
-   editing contract.
-3. Show the exact question, selected range state, finalized claim text, and
-   first draft. Ask the editor to remove unsupported material, restore every
-   condition/modality/agent/scope qualifier, and correct Korean while retaining
-   distinct useful details from multiple compatible units.
-4. Treat the editor output as the sole final draft. Do not fall back to the
-   first draft, extraction, another model, or model-internal knowledge.
-5. Continue returning an answer for every validated case and continue direct
-   Codex red-flag review; the editor is generation, not an automatic judge.
+1. The first arm kept the current retrieval bundle and gave the same
+   Qwen3-14B-Q6 model the exact question, finalized evidence, and first-pass
+   draft. It asked the model to act only as a conservative fidelity editor.
+2. The second arm removed the first draft to avoid anchoring. It asked the
+   model to produce a short answer directly from the same evidence while
+   preserving scope, modality, conditions, causal direction, and multiple
+   useful units.
+3. Both arms used flagged examples plus clean multi-unit controls. Neither arm
+   had an extractive, alternate-model, or internal-knowledge fallback.
 
-### Required A/B test before implementation
+### Result and decision
 
-- Use representative high-risk failures: composer intent, local-scope loss,
-  condition-boundary error, qualifier reversal, unrelated-unit contamination,
-  and malformed Korean.
-- Include clean multi-unit controls so the editor cannot pass merely by
-  deleting useful content.
-- Judge the editor directly against finalized evidence.
-- Accept the approach only if it reduces material flags without increasing
-  refusal/empty output, internal leakage, or loss of multi-unit completeness.
-- If accepted, rerun all 460 cases. A targeted patched artifact is not a final
-  evaluation, because code/model/prompt fingerprints must remain coherent.
+- The draft-editing arm repaired the unsupported generic advice in the
+  opening-fermata example, but copied most causal, condition, and qualifier
+  errors from the first draft. It also introduced plain-register endings in
+  two cases.
+- Removing the draft improved several cases: it preserved the permissive
+  crescendo wording, retained the two ornament conditions, and combined the
+  three Die Forelle guidance units without the earlier repetitive framing.
+- It still fused atmosphere imagery into a new purpose for changing meter,
+  changed `2~3배로 부르는` into `2~3배로 끌어내리는`, lost the opening-only
+  scope, omitted a material doubled-consonant qualifier, and produced malformed
+  Korean in the Nella fantasia control.
+- A second general-purpose prompt therefore does not supply an independent
+  enough semantic safeguard when it uses the same 14B model. The approach is
+  rejected rather than expanded into a 460-case rerun.
+- Enabling Qwen's native thinking mode did not rescue the short direct arm. It
+  added unsupported darker/tension imagery and emotional flow, strengthened a
+  common interpretation into composer intention, repeated the doubled-
+  consonant reversal, and invented extra performance instructions. Reasoning
+  mode is therefore rejected for this answer path as well.
+
+## Approach 5: atomic knowledge-unit planning and rendering
+
+Status: **targeted experiment implemented, committed, and not accepted** on
+branch `codex/atomic-claim-generation`, worktree
+`/home/minhee/codex/atomic-claim-generation`, commit `3864df0`. It is not
+merged and has not replaced the one-pass baseline.
+
+### Reason for a new version
+
+The failed editor and thinking experiments show that more prose instructions
+do not lock meaning. The directly retrieved expert unit is usually correct,
+but a multi-relation paragraph lets the model join two valid relations into a
+new invalid one. Key predicates and qualifiers also remain free to drift.
+
+### Candidate design
+
+1. Treat every selected finalized knowledge unit as one indivisible U block.
+   This avoids splitting `D.S.`, `Op.`, names, or anaphoric sequences such as
+   `이는` and `따라서`, and guarantees that rendering cannot silently delete a
+   sentence inside a selected unit.
+2. The first call makes an exhaustive plan. It classifies every U block once
+   and must return at least one ordered `selected_unit_id`; temporary labels
+   are never real KU IDs and never reach the user.
+3. The second call receives only the selected full texts. It returns one C
+   block per selected unit, preserving all sentences and changing only formal
+   speech level, spacing, or minimal grammar.
+4. Schema checks enforce complete ordered accounting and one-to-one hidden
+   mappings. A 0.99 lexical-fidelity threshold plus protected semantic markers
+   catches changes such as `부르는` to `끌어내리는`; protocol labels, schema
+   keys, JSON, and opaque IDs are rejected at the display boundary.
+5. A nonempty answer that fails a semantic/fidelity check is still displayed
+   with `generation_validation_warning` for red-flag review. There is no
+   extractive, internal-knowledge, alternate-model, or first-draft fallback.
+
+### First targeted result
+
+The integrated targeted run preserved the opening-only fermata scope, kept
+the Flowery meter-change and imagery relations separate, retained the
+permissive crescendo wording, kept `2~3배로 부르는`, preserved the doubled-
+consonant qualifier and popular-song condition, retained the common-
+interpretation wording for Rossini's dotted rhythm, and kept the
+slashed/unslashed ornament contrast. The Una accent case initially produced
+an empty plan; requiring at least one model-selected unit repaired that
+answer without choosing a retrieval result in application code. The affected
+unit/service suites pass 137 tests, and the snapshot is clean and committed.
+
+The experiment is not accepted. The planner still omits directly useful
+support in broad questions: the whole-piece word-boundary breathing rule in
+Nella fantasia, and—depending on the run—La Capinera opening diction or entry
+timing. The Die Forelle control retains all three expert units but reproduces
+the same adjacent `매우 중요합니다` framing that the user identified as
+unnatural. In other words, exact full-KU rendering greatly reduces dangerous
+meaning changes but sacrifices stable completeness and natural multi-unit
+cohesion. It was therefore committed as a comparison snapshot without a full
+460-case rerun or a merge into `main`.
 
 ## Evaluation and promotion checklist
 
