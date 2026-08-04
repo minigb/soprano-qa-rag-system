@@ -5,7 +5,7 @@ The benchmark manifest lives in the dataset repository, while the evaluated
 implementation is imported exclusively from ``--system-root``. Corpus,
 statistics, and embedding-cache writes are redirected to a temporary runtime
 directory so evaluating a worktree does not modify it. Every inference call
-uses grounded generation with internal model knowledge disabled.
+uses one of the production grounded answer paths or explicitly abstains.
 """
 
 from __future__ import annotations
@@ -34,12 +34,23 @@ from typing import Any, Callable, Iterable, Iterator, Mapping, Sequence
 
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from evaluation.no_range_semantic_policy import (  # noqa: E402
+    COHORT_NAME as NO_RANGE_COHORT_NAME,
+    NO_RANGE_SEMANTIC_CASES,
+    NO_RANGE_SEMANTIC_EXCLUSIONS,
+    SHADOW_CASE_KIND,
+)
+
 DEFAULT_DATASET_ROOT = (
     PROJECT_ROOT.parent / "soprano-qa-dataset"
 )
 DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "synthesized_question_results.json"
 ARTIFACT_TYPE = "soprano_qa_synthesized_hybrid_rag_llm_evaluation"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.1"
+REQUIRED_CORPUS_SCHEMA_VERSION = 8
 VARIANT_SCHEMA_VERSION = "1.0"
 BASE_SCHEMA_VERSION = "1.3"
 SUPPORTED_BASE_SCHEMA_VERSIONS = {"1.1", "1.3"}
@@ -60,9 +71,9 @@ EXPECTED_QUESTION_COUNTS = {
 EXPECTED_BASE_QUESTION_COUNT = 80
 EXPECTED_ACTIVE_QUESTION_COUNT = 79
 EXPECTED_VARIANT_FORMULATION_COUNT = 237
-EXPECTED_CANONICAL_CASE_COUNT = 124
+EXPECTED_CANONICAL_CASE_COUNT = 161
 VARIANTS_PER_QUESTION = 3
-EXPECTED_SYNTHESIZED_CASE_COUNT = 372
+EXPECTED_SYNTHESIZED_CASE_COUNT = 483
 TRANSFORMATIONS = {
     "colloquial_reframing",
     "information_structure",
@@ -70,10 +81,20 @@ TRANSFORMATIONS = {
     "syntactic_reframing",
     "word_order",
 }
-OPERATIONAL_GENERATION_FAILURE_REASONS = {
-    "local generation failed",
-    "model checkpoint not found",
-    "llama-cpp-python is unavailable",
+AUTHORITATIVE_EXPERT_MODE = "expert_verbatim"
+AUTHORITATIVE_EXPERT_BASIS = "authoritative_expert"
+RETRIEVED_LLM_MODE = "llm"
+RETRIEVED_LLM_BASIS = "retrieved_evidence"
+UNAVAILABLE_MODE = "unavailable"
+UNAVAILABLE_BASIS = "no_corpus_evidence"
+GENERATED_ANSWER_PATHS = {
+    (AUTHORITATIVE_EXPERT_MODE, AUTHORITATIVE_EXPERT_BASIS),
+    (RETRIEVED_LLM_MODE, RETRIEVED_LLM_BASIS),
+    (UNAVAILABLE_MODE, UNAVAILABLE_BASIS),
+}
+REMOVED_GENERATION_RESPONSE_FIELDS = {
+    "generation_fallback_reason",
+    "context_limited",
 }
 VARIANT_TOP_LEVEL_FIELDS = (
     "schema_version",
@@ -128,7 +149,7 @@ class ResumeMismatchError(SynthesizedEvaluationError, ValueError):
 
 
 class RetrievalModeMismatchError(SynthesizedEvaluationError):
-    """Raised when a requested retrieval mode is unavailable or fell back."""
+    """Raised when a requested retrieval mode is unavailable or inconsistent."""
 
 
 class ModelPreflightError(SynthesizedEvaluationError):
@@ -159,7 +180,7 @@ class TargetRuntime:
     ask: Callable[..., Mapping[str, Any]]
     model_status: Callable[[], Mapping[str, Any]]
     corpus_stats: Callable[[], Mapping[str, Any]]
-    load_generation_model: Callable[..., Any]
+    validate_generation_requirements: Callable[..., None]
     pipeline_settings: dict[str, Any]
     pipeline_dataset_root: Path
     module_paths: dict[str, str]
@@ -520,98 +541,127 @@ def _case_reference_authority(
     *,
     measure_range: list[int] | None,
     applicable_ids: Sequence[str],
+    semantic_required_any_ids: Sequence[str],
+    semantic_supporting_ids: Sequence[str],
 ) -> dict[str, Any]:
-    """Expose exact source claims only when they apply to this case."""
+    """Use finalized, range-applicable knowledge units as case authority."""
 
+    range_label = (
+        "whole-piece case"
+        if measure_range is None
+        else f"measure range {measure_range[0]}-{measure_range[1]}"
+    )
     reference = result["authoritative_reference"]
     linked_units = reference["linked_knowledge_units"]
-    applicable = [
-        unit
-        for unit in linked_units
-        if unit["knowledge_unit_id"] in set(applicable_ids)
+    linked_by_id = {
+        str(unit["knowledge_unit_id"]): unit for unit in linked_units
+    }
+    missing_ids = [
+        unit_id for unit_id in applicable_ids if unit_id not in linked_by_id
     ]
-    source_id = result["source_id"]
-    non_applicable_source_split = any(
-        source_id in unit.get("source_ids", [])
-        and unit["knowledge_unit_id"] not in set(applicable_ids)
-        for unit in linked_units
-    )
-    source_hints = reference.get("source_legacy_measure_range_hints") or []
-    source_outside_range = bool(
-        measure_range is not None
-        and source_hints
-        and not any(ranges_overlap(hint, measure_range) for hint in source_hints)
-    )
-    exact_scope_applies = not source_outside_range and not non_applicable_source_split
+    if missing_ids:
+        raise EvaluationInputError(
+            f"{result['source_id']} ({range_label}): case authority refers "
+            f"to unlinked knowledge units {missing_ids}"
+        )
+
+    required_ids = list(semantic_required_any_ids)
+    supporting_ids = list(semantic_supporting_ids)
+    required_set = set(required_ids)
+    supporting_set = set(supporting_ids)
+    applicable_set = set(applicable_ids)
+    if required_ids or supporting_ids:
+        if (
+            not required_ids
+            or len(required_set) != len(required_ids)
+            or len(supporting_set) != len(supporting_ids)
+            or required_set & supporting_set
+            or required_set | supporting_set != applicable_set
+        ):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): semantic "
+                "reference roles must partition the applicable knowledge "
+                "units into a nonempty required-any set and a disjoint "
+                "supporting set"
+            )
+
     items: list[dict[str, Any]] = []
-    if exact_scope_applies:
-        claim_scope = reference.get("reference_claim_scope")
-        if isinstance(claim_scope, Mapping):
-            claim_items = _reference_claim_items(claim_scope)
-            items = [
-                {
-                    "reference_id": f"R{index:03d}",
-                    **deepcopy(item),
-                    "scope_authority": "question_level_curator",
-                }
-                for index, item in enumerate(claim_items, start=1)
-            ]
-            source = "reference_claim_scope"
-            review_required = any(
-                item["scope"] == "mixed_or_ambiguous" for item in items
+    for unit_id in applicable_ids:
+        unit = linked_by_id[unit_id]
+        rewrite_status = unit.get("rewrite_status")
+        measure_status = unit.get("measure_status")
+        if rewrite_status != "ready" or measure_status not in {
+            "specific",
+            "whole_piece",
+            "unspecified",
+        }:
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} is not "
+                "a finalized knowledge unit "
+                f"(rewrite_status={rewrite_status!r}, "
+                f"measure_status={measure_status!r})"
             )
-            reason = (
-                "mixed_or_ambiguous source claim requires human review"
-                if review_required
-                else None
+        answer = unit.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): finalized "
+                f"knowledge unit {unit_id} has no answer"
             )
-        else:
-            items = [
-                {
-                    "reference_id": "R001",
-                    "text": reference["source_answer"],
-                    "scope": "unscoped_source_answer",
-                    "flags": [],
-                    "scope_authority": (
-                        "source_answer_without_claim_partition"
-                    ),
-                    "source_sentence_index": None,
-                    "source_claim_index": None,
-                }
-            ]
-            source = "unscoped_source_answer"
-            review_required = True
-            reason = (
-                "inventory schema does not provide exact claim-scope atoms"
+        raw_measure_ranges = unit.get("measure_ranges") or []
+        if not isinstance(raw_measure_ranges, list):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} has "
+                "invalid canonical measure ranges"
             )
-    else:
-        for unit in applicable:
-            answer = unit.get("answer")
-            if isinstance(answer, str) and answer.strip():
-                items.append(
-                    {
-                        "reference_id": f"R{len(items) + 1:03d}",
-                        "text": answer.strip(),
-                        "scope": "optional_background",
-                        "flags": [],
-                        "scope_authority": "range_applicable_support_only",
-                        "source_sentence_index": None,
-                        "source_claim_index": None,
-                        "knowledge_unit_id": unit["knowledge_unit_id"],
-                    }
-                )
-        source = "range_applicable_linked_knowledge_units"
-        review_required = True
-        reason = (
-            "original source answer is outside the selected range"
-            if source_outside_range
-            else "original source answer contains non-applicable split claims"
+        canonical_measure_ranges = [
+            validate_measure_range(
+                value,
+                label=f"{unit_id}.measure_ranges",
+            )
+            for value in raw_measure_ranges
+        ]
+        if (
+            measure_status == "specific"
+            and not canonical_measure_ranges
+        ) or (
+            measure_status != "specific"
+            and canonical_measure_ranges
+        ):
+            raise EvaluationInputError(
+                f"{result['source_id']} ({range_label}): {unit_id} has "
+                "canonical measure ranges inconsistent with measure_status "
+                f"{measure_status!r}"
+            )
+        reference_role = (
+            "required_any"
+            if not required_ids or unit_id in required_set
+            else "supporting"
+        )
+        items.append(
+            {
+                "reference_id": f"R{len(items) + 1:03d}",
+                "text": answer.strip(),
+                "scope": "curated_knowledge_unit_answer",
+                "flags": [],
+                "scope_authority": "finalized_knowledge_unit",
+                "reference_role": reference_role,
+                "measure_status": measure_status,
+                "measure_ranges": canonical_measure_ranges,
+                "source_sentence_index": None,
+                "source_claim_index": None,
+                "knowledge_unit_id": unit_id,
+            }
+        )
+    if not items:
+        raise EvaluationInputError(
+            f"{result['source_id']} ({range_label}): no finalized "
+            "knowledge-unit answer is available as case authority"
         )
     return {
-        "source": source,
+        "source": "applicable_finalized_knowledge_units",
         "items": items,
-        "manual_review_required": review_required,
-        "manual_review_reason": reason,
+        "manual_review_required": False,
+        "manual_review_reason": None,
     }
 
 
@@ -681,6 +731,8 @@ def load_benchmark(
     variant_formulation_count = 0
     canonical_case_ids: set[str] = set()
     seen_excluded_question_ids: set[str] = set()
+    seen_no_range_policy_sources: set[str] = set()
+    seen_no_range_exclusions: set[str] = set()
 
     for piece_id in piece_ids:
         inventory_path = inventory_root / f"{piece_id}.json"
@@ -984,6 +1036,56 @@ def load_benchmark(
                     f"{source_id}: inference ranges are stale; expected "
                     f"{expected_ranges}, found {ranges}"
                 )
+            no_range_policy = NO_RANGE_SEMANTIC_CASES.get(source_id)
+            no_range_exclusion = NO_RANGE_SEMANTIC_EXCLUSIONS.get(source_id)
+            if not enforce_expected_counts:
+                no_range_policy = None
+                no_range_exclusion = None
+            if ranges:
+                if (
+                    enforce_expected_counts
+                    and (no_range_policy is None)
+                    == (no_range_exclusion is None)
+                ):
+                    raise EvaluationInputError(
+                        f"{source_id}: every measure-scoped question must "
+                        "have exactly one no-range semantic policy decision"
+                    )
+                decision = no_range_policy or no_range_exclusion
+                if decision is not None and decision["piece_id"] != piece_id:
+                    raise EvaluationInputError(
+                        f"{source_id}: no-range policy piece mismatch"
+                    )
+                if no_range_policy is not None:
+                    required_ids = list(
+                        no_range_policy[
+                            "required_any_knowledge_unit_ids"
+                        ]
+                    )
+                    supporting_ids = list(
+                        no_range_policy["supporting_knowledge_unit_ids"]
+                    )
+                    if (
+                        not required_ids
+                        or set(required_ids) & set(supporting_ids)
+                        or not set(required_ids + supporting_ids).issubset(
+                            expected_ids
+                        )
+                        or not set(required_ids + supporting_ids).issubset(
+                            eligible_ids
+                        )
+                    ):
+                        raise EvaluationInputError(
+                            f"{source_id}: invalid no-range semantic KU policy"
+                        )
+                    seen_no_range_policy_sources.add(source_id)
+                elif no_range_exclusion is not None:
+                    seen_no_range_exclusions.add(source_id)
+            elif no_range_policy is not None or no_range_exclusion is not None:
+                raise EvaluationInputError(
+                    f"{source_id}: no-range semantic policy requires "
+                    "measure-scoped finalized KUs"
+                )
             contrast_claims = _range_contrast_claims(
                 base.get("range_contrast_claims"),
                 source_id=source_id,
@@ -1006,7 +1108,11 @@ def load_benchmark(
                 else:
                     active_ranges.append(measure_range)
             case_ranges: list[list[int] | None] = (
-                active_ranges if ranges else [None]
+                ([None, *active_ranges]
+                 if no_range_policy is not None
+                 else active_ranges)
+                if ranges
+                else [None]
             )
             raw_claim_scope = base.get("reference_claim_scope")
             if inventory["schema_version"] == "1.3":
@@ -1110,6 +1216,10 @@ def load_benchmark(
                         if scoped["measure_range"] != measure_range
                         for claim in scoped["claims"]
                     ]
+                    is_semantic_shadow = (
+                        no_range_policy is not None
+                        and measure_range is None
+                    )
                     inference_input = {
                         "piece_id": piece_id,
                         "source_id": source_id,
@@ -1123,6 +1233,39 @@ def load_benchmark(
                             "confirmed_linked_specific_knowledge_unit_ranges"
                             if measure_range is not None
                             else None
+                        ),
+                        "case_kind": (
+                            SHADOW_CASE_KIND
+                            if is_semantic_shadow
+                            else (
+                                "confirmed_measure_range"
+                                if measure_range is not None
+                                else "native_no_range"
+                            )
+                        ),
+                        "question_provenance": "synthesized_variant",
+                        "evaluation_cohort": (
+                            NO_RANGE_COHORT_NAME
+                            if is_semantic_shadow
+                            else None
+                        ),
+                        "semantic_required_any_knowledge_unit_ids": (
+                            list(
+                                no_range_policy[
+                                    "required_any_knowledge_unit_ids"
+                                ]
+                            )
+                            if is_semantic_shadow
+                            else []
+                        ),
+                        "semantic_supporting_knowledge_unit_ids": (
+                            list(
+                                no_range_policy[
+                                    "supporting_knowledge_unit_ids"
+                                ]
+                            )
+                            if is_semantic_shadow
+                            else []
                         ),
                         "range_source_knowledge_unit_ids": range_source_ids,
                         "range_applicable_knowledge_unit_ids": applicable_ids,
@@ -1138,6 +1281,12 @@ def load_benchmark(
                             result,
                             measure_range=measure_range,
                             applicable_ids=applicable_ids,
+                            semantic_required_any_ids=inference_input[
+                                "semantic_required_any_knowledge_unit_ids"
+                            ],
+                            semantic_supporting_ids=inference_input[
+                                "semantic_supporting_knowledge_unit_ids"
+                            ],
                         )
                     )
                     result["inference_runs"].append(
@@ -1167,6 +1316,35 @@ def load_benchmark(
             "Excluded question set drift: expected "
             f"{sorted(expected_excluded_ids)}, found "
             f"{sorted(seen_excluded_question_ids)}"
+        )
+
+    expected_policy_sources = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_CASES.items()
+        if policy["piece_id"] in piece_ids
+    }
+    expected_no_range_exclusions = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_EXCLUSIONS.items()
+        if policy["piece_id"] in piece_ids
+    }
+    if (
+        enforce_expected_counts
+        and seen_no_range_policy_sources != expected_policy_sources
+    ):
+        raise EvaluationInputError(
+            "No-range semantic inclusion policy drift: expected "
+            f"{sorted(expected_policy_sources)}, found "
+            f"{sorted(seen_no_range_policy_sources)}"
+        )
+    if (
+        enforce_expected_counts
+        and seen_no_range_exclusions != expected_no_range_exclusions
+    ):
+        raise EvaluationInputError(
+            "No-range semantic exclusion policy drift: expected "
+            f"{sorted(expected_no_range_exclusions)}, found "
+            f"{sorted(seen_no_range_exclusions)}"
         )
 
     if enforce_expected_counts:
@@ -1319,9 +1497,9 @@ def validate_hybrid_generation_preflight(
             "Synthesized RAG+LLM evaluation requires retrieval.mode='hybrid'; "
             f"found {mode!r}"
         )
-    if bool(retrieval.get("fallback_to_lexical", False)):
+    if "fallback_to_lexical" in retrieval:
         raise ModelPreflightError(
-            "Hybrid retrieval fallback_to_lexical must be disabled"
+            "retrieval.fallback_to_lexical is obsolete and unsupported"
         )
 
     assets = system_state.get("optional_assets") or {}
@@ -1356,9 +1534,9 @@ def validate_hybrid_generation_preflight(
         raise ModelPreflightError(
             f"Required generation model checkpoint not found: {configured_model}"
         )
-    if model_status.get("llama_cpp_available") is not True:
+    if model_status.get("backend") != "llama-cpp-python":
         raise ModelPreflightError(
-            "Required llama-cpp-python generation backend is unavailable"
+            "Service generation backend is not llama-cpp-python"
         )
     if not isinstance(settings.get("llm"), Mapping):
         raise ModelPreflightError("llm settings must be configured")
@@ -1376,6 +1554,18 @@ def initialize_target_models(
 ) -> dict[str, Any]:
     """Eagerly initialize dense retrieval and generation before output."""
 
+    settings = target.pipeline_settings
+    llm_settings = settings.get("llm") or {}
+    try:
+        target.validate_generation_requirements(
+            str(settings["model_path"]),
+            llm_settings,
+        )
+    except Exception as error:
+        raise ModelPreflightError(
+            "Generation model initialization failed: "
+            f"{type(error).__name__}: {error}"
+        ) from error
     try:
         stats = target.corpus_stats()
     except Exception as error:
@@ -1399,10 +1589,6 @@ def initialize_target_models(
         problems.append(f"active_mode={active!r}")
     if raw_retrieval.get("dense_available") is not True:
         problems.append("dense_available is not true")
-    if raw_retrieval.get("fallback_reason"):
-        problems.append(
-            f"fallback_reason={raw_retrieval.get('fallback_reason')!r}"
-        )
     if raw_retrieval.get("last_dense_error"):
         problems.append(
             f"last_dense_error={raw_retrieval.get('last_dense_error')!r}"
@@ -1413,29 +1599,10 @@ def initialize_target_models(
             + ", ".join(problems)
         )
 
-    settings = target.pipeline_settings
-    llm_settings = settings.get("llm") or {}
-    try:
-        model = target.load_generation_model(
-            model_path=str(settings["model_path"]),
-            n_ctx=int(llm_settings.get("n_ctx", 8192)),
-            n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
-            chat_format=str(llm_settings.get("chat_format", "chatml")),
-        )
-    except Exception as error:
-        raise ModelPreflightError(
-            "Generation model initialization failed: "
-            f"{type(error).__name__}: {error}"
-        ) from error
-    if model is None:
-        raise ModelPreflightError(
-            "Generation model initialization returned no model"
-        )
     return {
         "retrieval": deepcopy(dict(raw_retrieval)),
         "generation": {
-            "status": "loaded",
-            "model_class": f"{type(model).__module__}.{type(model).__qualname__}",
+            "status": "validated",
             "model_path": str(Path(str(settings["model_path"])).resolve()),
             "n_ctx": int(llm_settings.get("n_ctx", 8192)),
             "n_gpu_layers": int(llm_settings.get("n_gpu_layers", -1)),
@@ -1473,6 +1640,11 @@ def authenticate_pipeline_corpus(
 
     fingerprint_fn = getattr(corpus_module, "corpus_input_fingerprint", None)
     input_paths_fn = getattr(corpus_module, "corpus_input_paths", None)
+    declared_schema_version = getattr(
+        corpus_module,
+        "CORPUS_SCHEMA_VERSION",
+        None,
+    )
     if not callable(fingerprint_fn) or not callable(input_paths_fn):
         raise EvaluationInputError(
             "Selected system must expose corpus_input_fingerprint and "
@@ -1497,8 +1669,11 @@ def authenticate_pipeline_corpus(
     expected_exports = settings.get("web_export_files", ["research-open.jsonl"])
     checks = {
         "stats_object": isinstance(stats, dict),
+        "schema_declaration": (
+            declared_schema_version == REQUIRED_CORPUS_SCHEMA_VERSION
+        ),
         "schema": isinstance(stats, dict)
-        and stats.get("corpus_schema_version") == 6,
+        and stats.get("corpus_schema_version") == declared_schema_version,
         "web_exports": isinstance(stats, dict)
         and stats.get("web_export_files") == expected_exports,
         "dataset_root": isinstance(stats, dict)
@@ -1553,47 +1728,27 @@ def _remove_target_modules() -> None:
 
 def validate_target_retrieval_requirements(
     settings: Mapping[str, Any],
-    dense_module: ModuleType | None,
+    dense_module: ModuleType,
 ) -> None:
-    """Preflight both current and pre-validator target worktrees."""
+    """Require the current target's strict retrieval preflight contract."""
 
     validator = getattr(
         dense_module,
         "validate_retrieval_requirements",
         None,
     )
-    if callable(validator):
-        try:
-            validator(dict(settings))
-        except Exception as error:
-            raise ModelPreflightError(
-                "Hybrid retrieval requirements failed: "
-                f"{type(error).__name__}: {error}"
-            ) from error
-        return
-
-    retrieval = settings.get("retrieval") or {}
-    mode = str(retrieval.get("mode") or "lexical").lower()
-    if mode == "lexical":
-        return
-    if mode != "hybrid":
-        raise ModelPreflightError(
-            f"Unsupported retrieval.mode for evaluation: {mode!r}"
+    if not callable(validator):
+        raise TargetImportError(
+            "Target soprano_qa.dense must expose "
+            "validate_retrieval_requirements"
         )
-    configured_path = str(
-        settings.get("embedding_model_path") or ""
-    ).strip()
-    if configured_path and Path(configured_path).expanduser().is_file():
-        return
-    display_path = configured_path or (
-        "(embedding_model_path is not configured)"
-    )
-    raise ModelPreflightError(
-        "Required hybrid-retrieval embedding checkpoint not found: "
-        f"{display_path}. Download the embedding model before running "
-        "retrieval evaluation, or explicitly configure retrieval.mode "
-        "as `lexical`."
-    )
+    try:
+        validator(dict(settings))
+    except Exception as error:
+        raise ModelPreflightError(
+            "Hybrid retrieval requirements failed: "
+            f"{type(error).__name__}: {error}"
+        ) from error
 
 
 @contextmanager
@@ -1650,12 +1805,7 @@ def target_runtime(
         service = importlib.import_module("soprano_qa.service")
         corpus_module = importlib.import_module("soprano_qa.corpus")
         llm_module = importlib.import_module("soprano_qa.llm")
-        try:
-            dense_module = importlib.import_module("soprano_qa.dense")
-        except ModuleNotFoundError as error:
-            if error.name != "soprano_qa.dense":
-                raise
-            dense_module = None
+        dense_module = importlib.import_module("soprano_qa.dense")
         foreign_modules = {
             name: str(getattr(module, "__file__", "<unknown>"))
             for name, module in sys.modules.items()
@@ -1671,21 +1821,35 @@ def target_runtime(
         ask = getattr(service, "ask", None)
         model_status = getattr(service, "model_status", None)
         corpus_stats = getattr(service, "corpus_stats", None)
-        load_generation_model = getattr(llm_module, "load_llama", None)
+        generation_preflight = getattr(
+            llm_module,
+            "validate_generation_requirements",
+            None,
+        )
         settings = getattr(service, "SETTINGS", None)
         if (
             not callable(ask)
             or not callable(model_status)
             or not callable(corpus_stats)
-            or not callable(load_generation_model)
+            or not callable(generation_preflight)
             or not isinstance(settings, dict)
         ):
             raise TargetImportError(
                 "Target soprano_qa.service must expose callable ask, "
                 "model_status, corpus_stats, and SETTINGS; soprano_qa.llm "
-                "must expose load_llama"
+                "must expose validate_generation_requirements"
             )
         original_settings = deepcopy(settings)
+        try:
+            generation_preflight(
+                str(original_settings["model_path"]),
+                original_settings.get("llm") or {},
+            )
+        except Exception as error:
+            raise ModelPreflightError(
+                "Generation requirements failed before corpus work: "
+                f"{type(error).__name__}: {error}"
+            ) from error
         validate_target_retrieval_requirements(
             original_settings,
             dense_module,
@@ -1731,7 +1895,7 @@ def target_runtime(
                     ask=ask,
                     model_status=model_status,
                     corpus_stats=corpus_stats,
-                    load_generation_model=load_generation_model,
+                    validate_generation_requirements=generation_preflight,
                     pipeline_settings=original_settings,
                     pipeline_dataset_root=actual_dataset_root,
                     module_paths=module_paths,
@@ -1776,80 +1940,51 @@ def target_runtime(
 def normalize_retrieval_diagnostics(result: Mapping[str, Any]) -> dict[str, Any]:
     raw = result.get("retrieval")
     if raw is None:
-        return {
-            "configured_mode": "lexical",
-            "active_mode": "lexical",
-            "dense_available": False,
-            "embedding_model": None,
-            "embedding_dimension": None,
-            "fallback_reason": None,
-            "last_dense_error": None,
-            "last_search_mode": "lexical",
-            "query_route": "lexical",
-            "route_reason": "implicit_legacy_lexical",
-            "dense_attempted": False,
-            "dense_contributed": False,
-            "fallback_used": False,
-            "diagnostic_source": "implicit_legacy_lexical",
-        }
+        raise EvaluationInputError(
+            "Pipeline response omitted retrieval diagnostics"
+        )
     if not isinstance(raw, Mapping):
         raise EvaluationInputError("Pipeline retrieval diagnostics must be an object")
+    removed_fields = {"fallback_reason", "fallback_used"} & set(raw)
+    if removed_fields:
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics use removed fields: "
+            + ", ".join(sorted(removed_fields))
+        )
     active = raw.get("active_mode")
-    configured = raw.get("configured_mode", active)
+    configured = raw.get("configured_mode")
     if not isinstance(active, str) or not isinstance(configured, str):
         raise EvaluationInputError(
             "Pipeline retrieval diagnostics must name configured and active modes"
         )
     last_search = raw.get("last_search_mode")
     query_route = raw.get("query_route")
-    if query_route is None:
-        if last_search in {"hybrid", "hybrid_no_dense_match"}:
-            query_route = "hybrid"
-        elif last_search in {
-            "lexical",
-            "lexical_route",
-            "lexical_fallback",
-        }:
-            query_route = "lexical"
-        else:
-            query_route = "none"
     if query_route not in {"hybrid", "lexical", "none"}:
         raise EvaluationInputError(
             "Pipeline retrieval diagnostics contain an invalid query route"
         )
-    fallback_reason = raw.get("fallback_reason")
     last_dense_error = raw.get("last_dense_error")
-    fallback_used = raw.get("fallback_used")
-    if fallback_used is None:
-        fallback_used = bool(
-            fallback_reason
-            or last_dense_error
-            or last_search == "lexical_fallback"
-        )
     dense_attempted = raw.get("dense_attempted")
-    if dense_attempted is None:
-        dense_attempted = last_search in {
-            "hybrid",
-            "hybrid_no_dense_match",
-            "lexical_fallback",
-        }
     dense_contributed = raw.get("dense_contributed")
-    if dense_contributed is not None:
-        dense_contributed = bool(dense_contributed)
+    if not isinstance(dense_attempted, bool) or not isinstance(
+        dense_contributed,
+        bool,
+    ):
+        raise EvaluationInputError(
+            "Pipeline retrieval diagnostics must include boolean dense state"
+        )
     return {
         "configured_mode": configured,
         "active_mode": active,
         "dense_available": bool(raw.get("dense_available", active == "hybrid")),
         "embedding_model": raw.get("embedding_model"),
         "embedding_dimension": raw.get("embedding_dimension"),
-        "fallback_reason": fallback_reason,
         "last_dense_error": last_dense_error,
         "last_search_mode": last_search,
         "query_route": query_route,
         "route_reason": raw.get("route_reason"),
-        "dense_attempted": bool(dense_attempted),
+        "dense_attempted": dense_attempted,
         "dense_contributed": dense_contributed,
-        "fallback_used": bool(fallback_used),
         "diagnostic_source": "pipeline",
     }
 
@@ -1862,7 +1997,6 @@ def require_retrieval_mode(
         return
     active = diagnostics.get("active_mode")
     configured = diagnostics.get("configured_mode")
-    fallback = diagnostics.get("fallback_reason")
     last_error = diagnostics.get("last_dense_error")
     last_search = diagnostics.get("last_search_mode")
     problems: list[str] = []
@@ -1870,14 +2004,8 @@ def require_retrieval_mode(
         problems.append(f"active_mode={active!r}")
     if configured != required_mode:
         problems.append(f"configured_mode={configured!r}")
-    if fallback:
-        problems.append(f"fallback_reason={fallback!r}")
     if last_error:
         problems.append(f"last_dense_error={last_error!r}")
-    if diagnostics.get("fallback_used") is True:
-        problems.append("fallback_used=true")
-    if last_search == "lexical_fallback":
-        problems.append("last_search_mode='lexical_fallback'")
     if required_mode == "hybrid" and diagnostics.get("dense_available") is not True:
         problems.append("dense_available is not true")
     if required_mode == "hybrid" and last_search not in {
@@ -1961,6 +2089,14 @@ def diagnose_result(
         evidence_ids,
         top_k=top_k,
     )
+    semantic_required_any = _rank_metrics(
+        case_input.get(
+            "semantic_required_any_knowledge_unit_ids",
+            [],
+        ),
+        evidence_ids,
+        top_k=top_k,
+    )
     source_id = case_input["source_id"]
     target_source_grounded = any(
         (
@@ -1976,6 +2112,7 @@ def diagnose_result(
         "ordered_evidence_retrieval_modes": evidence_retrieval_modes,
         "expected": expected,
         "applicable": applicable,
+        "semantic_required_any": semantic_required_any,
         "target_source_grounded": target_source_grounded,
         "retrieval_diagnostics": diagnostics,
     }
@@ -1991,6 +2128,60 @@ def _all_cases(
     for result in snapshot.get("results") or []:
         for case in result.get("inference_runs") or []:
             yield result, case
+
+
+def _semantic_no_range_cohort_rollup(
+    cases: Sequence[Mapping[str, Any]],
+) -> dict[str, Any]:
+    statuses = Counter(case["status"] for case in cases)
+    completed = [case for case in cases if case["status"] == "completed"]
+    metrics = [
+        case["retrieval_probe"]["diagnostics"][
+            "semantic_required_any"
+        ]
+        for case in completed
+    ]
+    hit_at_1 = sum(bool(metric["hit_at_1"]) for metric in metrics)
+    hit_at_3 = sum(
+        isinstance(metric["first_rank"], int)
+        and 1 <= metric["first_rank"] <= 3
+        for metric in metrics
+    )
+    hit_at_k = sum(bool(metric["hit_at_k"]) for metric in metrics)
+    reciprocal_rank = sum(
+        float(metric["reciprocal_rank"]) for metric in metrics
+    )
+    by_piece: dict[str, dict[str, int]] = {}
+    for piece_id in TARGET_PIECES:
+        piece_cases = [
+            case
+            for case in cases
+            if case["inference_input"]["piece_id"] == piece_id
+        ]
+        if piece_cases:
+            by_piece[piece_id] = {
+                "case_count": len(piece_cases),
+                "completed_cases": sum(
+                    case["status"] == "completed" for case in piece_cases
+                ),
+            }
+    return {
+        "case_count": len(cases),
+        "case_statuses": dict(sorted(statuses.items())),
+        "completed_cases": len(completed),
+        "semantic_target_hit_at_1_cases": hit_at_1,
+        "semantic_target_hit_at_1_rate": _rate(hit_at_1, len(metrics)),
+        "semantic_target_hit_at_3_cases": hit_at_3,
+        "semantic_target_hit_at_3_rate": _rate(hit_at_3, len(metrics)),
+        "semantic_target_hit_at_k_cases": hit_at_k,
+        "semantic_target_hit_at_k_rate": _rate(hit_at_k, len(metrics)),
+        "semantic_target_mean_reciprocal_rank": (
+            round(reciprocal_rank / len(metrics), 6)
+            if metrics
+            else None
+        ),
+        "by_piece": by_piece,
+    }
 
 
 def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
@@ -2020,11 +2211,23 @@ def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
                 for item in generated
             ).items())
         ),
-        "generation_fallback_reasons": dict(
+        "unavailable_reasons": dict(
             sorted(Counter(
-                str(item.get("generation_fallback_reason") or "none")
+                str(item.get("unavailable_reason") or "missing")
                 for item in generated
+                if item.get("generation_mode") == UNAVAILABLE_MODE
             ).items())
+        ),
+        "rag_llm_succeeded_cases": sum(
+            item.get("rag_llm_succeeded") is True for item in generated
+        ),
+        "authoritative_expert_succeeded_cases": sum(
+            item.get("authoritative_expert_succeeded") is True
+            for item in generated
+        ),
+        "grounded_answer_succeeded_cases": sum(
+            item.get("grounded_answer_succeeded") is True
+            for item in generated
         ),
         "retrieval_modes": dict(
             sorted(Counter(
@@ -2044,10 +2247,6 @@ def _rollup(cases: Sequence[Mapping[str, Any]]) -> dict[str, Any]:
         ),
         "dense_contributed_cases": sum(
             item.get("dense_contributed") is True
-            for item in retrieval_diagnostics
-        ),
-        "fallback_used_cases": sum(
-            item.get("fallback_used") is True
             for item in retrieval_diagnostics
         ),
     }
@@ -2159,6 +2358,12 @@ def _formulation_consistency(
 
 def refresh_summary(snapshot: dict[str, Any]) -> None:
     cases = [case for _, case in _all_cases(snapshot)]
+    no_range_cohort_cases = [
+        case
+        for case in cases
+        if case["inference_input"].get("evaluation_cohort")
+        == NO_RANGE_COHORT_NAME
+    ]
     integrity = snapshot["run"].setdefault(
         "integrity",
         {
@@ -2225,6 +2430,11 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         "by_piece": by_piece,
         "by_variant_index": by_variant_index,
         "formulation_consistency": _formulation_consistency(cases),
+        "evaluation_cohorts": {
+            NO_RANGE_COHORT_NAME: _semantic_no_range_cohort_rollup(
+                no_range_cohort_cases
+            )
+        },
     }
     snapshot["run"]["status"] = snapshot["summary"]["status"]
     snapshot["run"]["updated_at"] = utc_now()
@@ -2259,7 +2469,6 @@ def new_snapshot(
         "top_k": top_k,
         "required_retrieval_mode": "hybrid",
         "generate": True,
-        "allow_internal_knowledge": False,
     }
     run_fingerprint = sha256_value(runtime_payload)
     now = utc_now()
@@ -2271,9 +2480,25 @@ def new_snapshot(
             "target_pieces": list(TARGET_PIECES),
             "requires_all_five_variant_shards": True,
             "generate": True,
-            "allow_internal_knowledge": False,
+            "strict_grounded_answer_paths": True,
             "required_retrieval_mode": "hybrid",
             "issues_automatic_quality_verdicts": False,
+            "no_range_semantic_evaluation": {
+                "cohort": NO_RANGE_COHORT_NAME,
+                "policy": (
+                    "Semantically self-contained questions backed by "
+                    "measure-specific finalized KUs are also evaluated with "
+                    "no selected range. Local KUs remain locally scoped."
+                ),
+                "included_source_count": len(NO_RANGE_SEMANTIC_CASES),
+                "synthesized_shadow_case_count": (
+                    len(NO_RANGE_SEMANTIC_CASES)
+                    * VARIANTS_PER_QUESTION
+                ),
+                "excluded_source_count": len(
+                    NO_RANGE_SEMANTIC_EXCLUSIONS
+                ),
+            },
         },
         "run": {
             "created_at": now,
@@ -2285,7 +2510,6 @@ def new_snapshot(
             "target_pieces": list(TARGET_PIECES),
             "top_k": top_k,
             "generate": True,
-            "allow_internal_knowledge": False,
             "required_retrieval_mode": "hybrid",
             "input_fingerprint": input_fingerprint,
             "system_fingerprint": system_state["fingerprint"],
@@ -2433,20 +2657,12 @@ def _validate_completed_resume_outputs(
             raise ResumeMismatchError(
                 f"Output {case_id}: generated_answer.{field} must be a string"
             )
-    reason = generated.get("generation_fallback_reason")
-    if reason is not None and not isinstance(reason, str):
+    try:
+        _validate_answer_path_metadata(generated)
+    except EvaluationInputError as error:
         raise ResumeMismatchError(
-            f"Output {case_id}: generation fallback reason is invalid"
-        )
-    if reason in OPERATIONAL_GENERATION_FAILURE_REASONS:
-        raise ResumeMismatchError(
-            f"Output {case_id}: operational generation failure was marked "
-            "completed"
-        )
-    if generated.get("answer_basis") == "internal_knowledge":
-        raise ResumeMismatchError(
-            f"Output {case_id}: internal-knowledge answer is not allowed"
-        )
+            f"Output {case_id}: invalid answer-path metadata: {error}"
+        ) from error
     try:
         _validate_response_model(
             generated,
@@ -2579,6 +2795,10 @@ def validate_resume_snapshot(
         Mapping,
     ):
         raise ResumeMismatchError("Output run metadata must be an object")
+    if "allow_internal_knowledge" in current_run:
+        raise ResumeMismatchError(
+            "Output uses the removed allow_internal_knowledge run field"
+        )
     integrity = current_run.get("integrity")
     if not isinstance(integrity, Mapping) or integrity.get("status") not in {
         "pending",
@@ -2604,7 +2824,6 @@ def validate_resume_snapshot(
         "target_pieces",
         "top_k",
         "generate",
-        "allow_internal_knowledge",
         "required_retrieval_mode",
         "input_files",
         "system_state",
@@ -2642,9 +2861,9 @@ def _validate_response_model(
         raise ModelPreflightError(
             "Generation model checkpoint became unavailable during evaluation"
         )
-    if status.get("llama_cpp_available") is not True:
+    if status.get("backend") != "llama-cpp-python":
         raise ModelPreflightError(
-            "llama-cpp-python generation backend became unavailable"
+            "Pipeline response used an unexpected generation backend"
         )
     if Path(str(status.get("path") or "")).resolve() != Path(
         expected_model_path
@@ -2652,6 +2871,94 @@ def _validate_response_model(
         raise ModelPreflightError(
             "Pipeline response used a different generation model path"
         )
+
+
+def _expert_evidence_ids(response: Mapping[str, Any]) -> list[str]:
+    return [
+        str(item.get("id"))
+        for item in response.get("evidence") or []
+        if isinstance(item, Mapping)
+        and (
+            item.get("kind") == "expert"
+            or item.get("evidence_type") == "expert_annotation"
+        )
+    ]
+
+
+def _answer_path_success_metadata(
+    response: Mapping[str, Any],
+) -> dict[str, bool]:
+    evidence = [
+        item
+        for item in response.get("evidence") or []
+        if isinstance(item, Mapping)
+    ]
+    mode = response.get("generation_mode")
+    basis = response.get("answer_basis")
+    rag_llm_succeeded = (
+        mode == RETRIEVED_LLM_MODE
+        and basis == RETRIEVED_LLM_BASIS
+        and bool(evidence)
+    )
+    authoritative_expert_succeeded = (
+        mode == AUTHORITATIVE_EXPERT_MODE
+        and basis == AUTHORITATIVE_EXPERT_BASIS
+        and bool(_expert_evidence_ids(response))
+    )
+    return {
+        "rag_llm_succeeded": rag_llm_succeeded,
+        "authoritative_expert_succeeded": (
+            authoritative_expert_succeeded
+        ),
+        "grounded_answer_succeeded": (
+            rag_llm_succeeded or authoritative_expert_succeeded
+        ),
+    }
+
+
+def _validate_answer_path_metadata(response: Mapping[str, Any]) -> None:
+    mode = response.get("generation_mode")
+    basis = response.get("answer_basis")
+    removed_fields = REMOVED_GENERATION_RESPONSE_FIELDS & set(response)
+    if removed_fields:
+        raise EvaluationInputError(
+            "Pipeline response uses removed generation fields: "
+            + ", ".join(sorted(removed_fields))
+        )
+    if (mode, basis) not in GENERATED_ANSWER_PATHS:
+        raise EvaluationInputError(
+            "Pipeline response used an unsupported answer path: "
+            f"generation_mode={mode!r}, answer_basis={basis!r}"
+        )
+    unavailable_reason = response.get("unavailable_reason")
+    if mode == UNAVAILABLE_MODE:
+        if (
+            not isinstance(unavailable_reason, str)
+            or not unavailable_reason.strip()
+        ):
+            raise EvaluationInputError(
+                "Unavailable pipeline answers require unavailable_reason"
+            )
+    elif unavailable_reason is not None:
+        raise EvaluationInputError(
+            "Successful grounded answers cannot have unavailable_reason"
+        )
+    if mode == AUTHORITATIVE_EXPERT_MODE:
+        if not _expert_evidence_ids(response):
+            raise EvaluationInputError(
+                "authoritative expert rendering requires expert evidence"
+            )
+    if mode == RETRIEVED_LLM_MODE and not response.get("evidence"):
+        raise EvaluationInputError(
+            "retrieved-evidence LLM answers require evidence"
+        )
+
+    expected = _answer_path_success_metadata(response)
+    for field, value in expected.items():
+        if field in response and response.get(field) is not value:
+            raise EvaluationInputError(
+                f"{field} does not match the answer-path metadata"
+            )
 
 
 def _pipeline_outputs(
@@ -2679,15 +2986,18 @@ def _pipeline_outputs(
             raise EvaluationInputError(
                 f"Pipeline response {field} must be a string"
             )
-    reason = response.get("generation_fallback_reason")
-    if reason is not None and not isinstance(reason, str):
+    if not response["answer"].strip():
         raise EvaluationInputError(
-            "Pipeline generation_fallback_reason must be a string or null"
+            "Pipeline response answer must be non-empty"
         )
-    if reason in OPERATIONAL_GENERATION_FAILURE_REASONS:
-        raise PipelineExecutionError(
-            f"Operational generation failure: {reason}"
+    evidence = response.get("evidence")
+    if not isinstance(evidence, list) or any(
+        not isinstance(item, Mapping) for item in evidence
+    ):
+        raise EvaluationInputError(
+            "Pipeline response evidence must be a list of objects"
         )
+    _validate_answer_path_metadata(response)
     linked = list(case_input["expected_knowledge_unit_ids"])
     applicable_linked = list(
         case_input["range_applicable_knowledge_unit_ids"]
@@ -2700,12 +3010,21 @@ def _pipeline_outputs(
         for unit_id in applicable_linked
         if unit_id in eligible
     ]
+    semantic_required_any = list(
+        case_input.get(
+            "semantic_required_any_knowledge_unit_ids",
+            [],
+        )
+    )
     diagnostics = diagnose_result(
         response,
         {
             "source_id": case_input["source_id"],
             "expected_knowledge_unit_ids": linked,
             "applicable_knowledge_unit_ids": applicable_linked,
+            "semantic_required_any_knowledge_unit_ids": list(
+                semantic_required_any
+            ),
         },
         top_k=top_k,
         required_mode="hybrid",
@@ -2726,14 +3045,10 @@ def _pipeline_outputs(
         "applicable": bool(applicable_linked),
         "retrieval_eligible": bool(eligible),
         "applicable_retrieval_eligible": bool(applicable_eligible),
+        "semantic_required_any": bool(semantic_required_any),
     }
-    evidence = deepcopy(response.get("evidence") or [])
-    expert_ids = [
-        str(item.get("id"))
-        for item in evidence
-        if item.get("kind") == "expert"
-        or item.get("evidence_type") == "expert_annotation"
-    ]
+    evidence = deepcopy(evidence)
+    expert_ids = _expert_evidence_ids(response)
     linked_retrieved = [item for item in linked if item in expert_ids]
     eligible_retrieved = [item for item in eligible if item in expert_ids]
     retrieval_probe = {
@@ -2773,11 +3088,7 @@ def _pipeline_outputs(
             "retrieval_eligible_target_available": bool(eligible),
             "all_expected_expert_units_retrieved": bool(linked)
             and all(item in expert_ids for item in linked),
-            "rag_llm_succeeded": (
-                response.get("generation_mode") == "llm"
-                and response.get("answer_basis") == "retrieved_evidence"
-                and bool(evidence)
-            ),
+            **_answer_path_success_metadata(response),
             "retrieval_validation": {
                 "required_mode": "hybrid",
                 "passed": True,
@@ -2826,7 +3137,6 @@ def run_cases(
                     tuple(measure_range) if measure_range is not None else None
                 ),
                 generate=True,
-                allow_internal_knowledge=False,
                 top_k=top_k,
             )
             if not isinstance(response, Mapping):
@@ -2883,32 +3193,37 @@ def run_evaluation(
 ) -> dict[str, Any]:
     benchmark = load_benchmark(dataset_root)
     input_files = input_file_records(
-        [*benchmark.input_paths, Path(__file__).resolve()]
+        [
+            *benchmark.input_paths,
+            Path(__file__).resolve(),
+            Path(__file__).with_name(
+                "no_range_semantic_policy.py"
+            ).resolve(),
+        ]
     )
     system_before = collect_system_state(system_root)
 
     snapshot: dict[str, Any] | None = None
-    with exclusive_output_lock(output):
-        try:
-            with target_runtime(
-                system_root,
-                pipeline_dataset_root=pipeline_dataset_root,
-            ) as target:
-                raw_model_status = target.model_status()
-                if not isinstance(raw_model_status, Mapping):
-                    raise ModelPreflightError(
-                        "Target model_status() returned a non-object"
-                    )
-                runtime_state = collect_runtime_state()
-                model_contract = validate_hybrid_generation_preflight(
-                    target.pipeline_settings,
-                    system_state=system_before,
-                    model_status=raw_model_status,
-                    runtime_state=runtime_state,
-                )
-                model_contract["initialization"] = initialize_target_models(
-                    target
-                )
+    with target_runtime(
+        system_root,
+        pipeline_dataset_root=pipeline_dataset_root,
+    ) as target:
+        raw_model_status = target.model_status()
+        if not isinstance(raw_model_status, Mapping):
+            raise ModelPreflightError(
+                "Target model_status() returned a non-object"
+            )
+        runtime_state = collect_runtime_state()
+        model_contract = validate_hybrid_generation_preflight(
+            target.pipeline_settings,
+            system_state=system_before,
+            model_status=raw_model_status,
+            runtime_state=runtime_state,
+        )
+        model_contract["initialization"] = initialize_target_models(target)
+
+        with exclusive_output_lock(output):
+            try:
                 expected = new_snapshot(
                     benchmark=benchmark,
                     benchmark_root=dataset_root,
@@ -2947,58 +3262,58 @@ def run_evaluation(
                 )
                 checkpoint()
 
-            try:
-                system_after = collect_system_state(system_root)
-            except Exception as error:
-                raise IntegrityValidationError(
-                    "Could not reauthenticate target system files after "
-                    "evaluation"
-                ) from error
-            if system_after != system_before:
-                raise IntegrityValidationError(
-                    "Target system files changed during evaluation; results "
-                    "are not reproducible"
-                )
-            try:
-                pipeline_inputs_after = refresh_pipeline_input_records(
-                    target.pipeline_corpus_state
-                )
-            except Exception as error:
-                raise IntegrityValidationError(
-                    "Could not reauthenticate pipeline corpus inputs after "
-                    "evaluation"
-                ) from error
-            if (
-                pipeline_inputs_after
-                != target.pipeline_corpus_state["input_files"]
-            ):
-                raise IntegrityValidationError(
-                    "Pipeline corpus inputs changed during evaluation; "
-                    "results are not reproducible"
-                )
-        except IntegrityValidationError as error:
-            if snapshot is not None:
-                snapshot["run"]["integrity"] = {
-                    "status": "invalid",
-                    "validated_at": None,
-                    "error": {
-                        "at": utc_now(),
-                        "type": type(error).__name__,
-                        "message": str(error),
-                    },
-                }
-                refresh_summary(snapshot)
-                atomic_write_json(output, snapshot)
-            raise
+                try:
+                    system_after = collect_system_state(system_root)
+                except Exception as error:
+                    raise IntegrityValidationError(
+                        "Could not reauthenticate target system files after "
+                        "evaluation"
+                    ) from error
+                if system_after != system_before:
+                    raise IntegrityValidationError(
+                        "Target system files changed during evaluation; "
+                        "results are not reproducible"
+                    )
+                try:
+                    pipeline_inputs_after = refresh_pipeline_input_records(
+                        target.pipeline_corpus_state
+                    )
+                except Exception as error:
+                    raise IntegrityValidationError(
+                        "Could not reauthenticate pipeline corpus inputs "
+                        "after evaluation"
+                    ) from error
+                if (
+                    pipeline_inputs_after
+                    != target.pipeline_corpus_state["input_files"]
+                ):
+                    raise IntegrityValidationError(
+                        "Pipeline corpus inputs changed during evaluation; "
+                        "results are not reproducible"
+                    )
+            except IntegrityValidationError as error:
+                if snapshot is not None:
+                    snapshot["run"]["integrity"] = {
+                        "status": "invalid",
+                        "validated_at": None,
+                        "error": {
+                            "at": utc_now(),
+                            "type": type(error).__name__,
+                            "message": str(error),
+                        },
+                    }
+                    refresh_summary(snapshot)
+                    atomic_write_json(output, snapshot)
+                raise
 
-        assert snapshot is not None
-        snapshot["run"]["integrity"] = {
-            "status": "validated",
-            "validated_at": utc_now(),
-            "error": None,
-        }
-        refresh_summary(snapshot)
-        atomic_write_json(output, snapshot)
+            assert snapshot is not None
+            snapshot["run"]["integrity"] = {
+                "status": "validated",
+                "validated_at": utc_now(),
+                "error": None,
+            }
+            refresh_summary(snapshot)
+            atomic_write_json(output, snapshot)
     return snapshot
 
 

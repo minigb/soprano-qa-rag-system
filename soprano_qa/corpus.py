@@ -231,6 +231,45 @@ EXPERT_MEASURE_STATUSES = {
     "whole_piece",
     "unspecified",
 }
+EXPERT_FINAL_MEASURE_STATUSES = {
+    "specific",
+    "whole_piece",
+    "unspecified",
+}
+CORPUS_SCHEMA_VERSION = 8
+CORPUS_RELEASE_FORBIDDEN_FIELDS = frozenset(
+    {
+        "annotators",
+        "measure_notes",
+        "measure_range_hints",
+        "question_source",
+        "retrieval_eligible",
+        "retrieval_exclusion_reason",
+        "retrieval_review_warning",
+        "rewrite_notes",
+        "rewrite_status",
+        "source_answer_context",
+        "unit_index",
+    }
+)
+EXPERT_RELEASE_RECORD_KEYS = (
+    "id",
+    "evidence_type",
+    "piece",
+    "piece_title",
+    "work",
+    "composer",
+    "genre",
+    "language",
+    "measure_range",
+    "measure_scope",
+    "measure_status",
+    "retrieval_aliases",
+    "answer",
+    "source_ids",
+    "relevance_text",
+    "retrieval_text",
+)
 ABSOLUTE_MEASURE_LOCATOR_RE = re.compile(
     r"(?:"
     r"\d+(?:\s*(?:[-~–—,/·]|및|과|와)\s*\d+)*"
@@ -371,17 +410,6 @@ def default_measure_scope(measure_range: List[List[int]]) -> str:
     return "local"
 
 
-def annotators_from_sources(source_ids: List[str], source_index: Dict[str, Dict[str, Any]]) -> List[str]:
-    annotators = set()
-    for source_id in source_ids:
-        source_record = source_index.get(source_id)
-        if source_record:
-            annotators.add(source_record.get("annotator", source_id.split("-", 1)[0]))
-        else:
-            annotators.add(source_id.split("-", 1)[0])
-    return sorted(annotators)
-
-
 def semantic_relevance_text(record: Dict[str, Any]) -> str:
     """Text allowed to establish answer relevance, excluding provenance labels."""
 
@@ -449,6 +477,13 @@ def validate_measure_scope(ranges: List[List[int]], scope: str) -> None:
 def apply_overrides(records: List[Dict[str, Any]], overrides: List[Dict[str, Any]]) -> int:
     applied = 0
     by_id = {record["id"]: record for record in records}
+    retrieval_augmentations = {
+        record["id"]: {
+            "features": list(record.get("features", [])),
+            "applicability_note": record.get("applicability_note") or "",
+        }
+        for record in records
+    }
     selector_fields = {"id", "match_source_ids"}
     mutation_fields = {"measure_range", "measure_scope", "features", "applicability_note"}
     for override in overrides:
@@ -499,13 +534,25 @@ def apply_overrides(records: List[Dict[str, Any]], overrides: List[Dict[str, Any
             if "features" in override:
                 if not isinstance(override["features"], list):
                     raise ValueError("Override features must be a list")
-                record["features"] = override["features"]
+                retrieval_augmentations[record["id"]]["features"] = list(
+                    override["features"]
+                )
+                if "features" in record:
+                    record["features"] = list(override["features"])
             if "applicability_note" in override:
                 if not isinstance(override["applicability_note"], str):
                     raise ValueError("Override applicability_note must be a string")
-                record["applicability_note"] = override["applicability_note"]
-            record["relevance_text"] = semantic_relevance_text(record)
-            record["retrieval_text"] = retrieval_text(record)
+                retrieval_augmentations[record["id"]]["applicability_note"] = (
+                    override["applicability_note"]
+                )
+                if "applicability_note" in record:
+                    record["applicability_note"] = override["applicability_note"]
+            materialization_record = dict(record)
+            materialization_record.update(retrieval_augmentations[record["id"]])
+            record["relevance_text"] = semantic_relevance_text(
+                materialization_record
+            )
+            record["retrieval_text"] = retrieval_text(materialization_record)
             applied += 1
     return applied
 
@@ -521,6 +568,72 @@ def expect_exact_keys(
             "%s keys must be exactly %r in that order"
             % (label, list(expected_keys))
         )
+
+
+def validate_no_editorial_release_fields(
+    record: Dict[str, Any],
+    *,
+    label: str,
+) -> None:
+    forbidden_paths = []
+
+    def visit(value: Any, path: str) -> None:
+        if isinstance(value, dict):
+            for key, nested_value in value.items():
+                nested_path = "%s.%s" % (path, key) if path else str(key)
+                if key in CORPUS_RELEASE_FORBIDDEN_FIELDS:
+                    forbidden_paths.append(nested_path)
+                visit(nested_value, nested_path)
+        elif isinstance(value, list):
+            for index, nested_value in enumerate(value):
+                visit(nested_value, "%s[%d]" % (path, index))
+
+    visit(record, "")
+    if forbidden_paths:
+        raise ValueError(
+            "%s contains forbidden editorial or intermediate fields: %r"
+            % (label, sorted(forbidden_paths))
+        )
+
+
+def validate_expert_release_record(
+    record: Dict[str, Any],
+    *,
+    label: str,
+) -> None:
+    validate_no_editorial_release_fields(record, label=label)
+    expect_exact_keys(record, EXPERT_RELEASE_RECORD_KEYS, label=label)
+    if record["evidence_type"] != "expert_annotation":
+        raise ValueError("%s must have evidence_type='expert_annotation'" % label)
+
+
+def validate_release_corpus(records: Any) -> List[Dict[str, Any]]:
+    """Validate a serialized corpus before it is accepted at runtime."""
+
+    if not isinstance(records, list):
+        raise ValueError("Release corpus must be a JSON list")
+    record_ids = []
+    for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            raise ValueError("Release corpus record %d must be an object" % index)
+        record_id = record.get("id")
+        evidence_type = record.get("evidence_type")
+        if not isinstance(record_id, str) or not record_id:
+            raise ValueError("Release corpus record %d has no valid id" % index)
+        label = "release corpus record %s" % record_id
+        if evidence_type == "expert_annotation":
+            validate_expert_release_record(record, label=label)
+        elif evidence_type == "web_database":
+            validate_no_editorial_release_fields(record, label=label)
+        else:
+            raise ValueError(
+                "%s has unsupported evidence_type %r"
+                % (label, evidence_type)
+            )
+        record_ids.append(record_id)
+    if len(record_ids) != len(set(record_ids)):
+        raise ValueError("Duplicate IDs in release corpus")
+    return records
 
 
 def validate_review_ranges(
@@ -775,16 +888,45 @@ def build_source_index(dataset_root: str) -> Dict[str, Dict[str, Any]]:
     return source_index
 
 
-def expert_review_warning(rewrite_status: str, measure_status: str) -> str:
-    rewrite_pending = rewrite_status != "ready"
-    measure_pending = measure_status == "waiting_for_review"
-    if rewrite_pending and measure_pending:
-        return "rewrite_and_measure_review_pending"
-    if rewrite_pending:
-        return "rewrite_review_pending"
-    if measure_pending:
-        return "measure_review_pending"
-    return ""
+def expert_unit_is_release_ready(
+    rewrite_status: str,
+    measure_status: str,
+) -> bool:
+    return (
+        rewrite_status == "ready"
+        and measure_status in EXPERT_FINAL_MEASURE_STATUSES
+    )
+
+
+def validate_expert_release_readiness(
+    documents: Dict[str, Dict[str, Any]],
+) -> None:
+    invalid_units = []
+    for document in documents.values():
+        for unit in document["knowledge_units"]:
+            if expert_unit_is_release_ready(
+                unit["rewrite_status"],
+                unit["measure_status"],
+            ):
+                continue
+            invalid_units.append(
+                "%s (rewrite_status=%r, measure_status=%r)"
+                % (
+                    unit["knowledge_unit_id"],
+                    unit["rewrite_status"],
+                    unit["measure_status"],
+                )
+            )
+    if invalid_units:
+        raise ValueError(
+            "Expert review corpus is not release-ready: every knowledge unit "
+            "must have rewrite_status='ready' and measure_status in %r. "
+            "Invalid knowledge units: %s"
+            % (
+                sorted(EXPERT_FINAL_MEASURE_STATUSES),
+                "; ".join(invalid_units),
+            )
+        )
 
 
 def build_expert_records(
@@ -793,6 +935,7 @@ def build_expert_records(
 ) -> List[Dict[str, Any]]:
     records: List[Dict[str, Any]] = []
     documents = load_expert_review_documents(dataset_root)
+    validate_expert_release_readiness(documents)
     expected_source_ids = {
         source["source_id"]
         for document in documents.values()
@@ -812,13 +955,6 @@ def build_expert_records(
 
     for song in SONG_ORDER:
         document = documents[song]
-        source_knowledge_unit_ids: Dict[str, List[str]] = {}
-        for document_unit in document["knowledge_units"]:
-            for document_source_id in document_unit["source_ids"]:
-                source_knowledge_unit_ids.setdefault(
-                    document_source_id,
-                    [],
-                ).append(document_unit["knowledge_unit_id"])
         path = os.path.join(
             dataset_root,
             "expert_curation",
@@ -826,10 +962,9 @@ def build_expert_records(
             song + ".json",
         )
         piece = PIECES[song]
-        for unit_index, unit in enumerate(document["knowledge_units"], start=1):
+        for unit in document["knowledge_units"]:
             source_ids = list(unit["source_ids"])
             retrieval_aliases = []
-            source_answer_context = []
             for source_id in source_ids:
                 source_record = source_index[source_id]
                 if source_record["_piece"] != song:
@@ -842,30 +977,12 @@ def build_expert_records(
                 source_question = source_record["question"].strip()
                 if source_question and source_question not in retrieval_aliases:
                     retrieval_aliases.append(source_question)
-                source_answer_context.append(
-                    {
-                        "source_id": source_id,
-                        "question": source_record["question"],
-                        "answer": source_record["answer"],
-                        "legacy_measure_range_hints": normalize_ranges(
-                            source_record["legacy_measure_ranges"]
-                        ),
-                        "linked_knowledge_unit_ids": list(
-                            source_knowledge_unit_ids[source_id]
-                        ),
-                    }
-                )
 
             measure_status = unit["measure_status"]
             measure_range = (
                 normalize_ranges(unit["measure_ranges"])
                 if measure_status == "specific"
                 else []
-            )
-            rewrite_status = unit["rewrite_status"]
-            review_warning = expert_review_warning(
-                rewrite_status,
-                measure_status,
             )
             record = {
                 "id": unit["knowledge_unit_id"],
@@ -876,30 +993,19 @@ def build_expert_records(
                 "composer": piece["composer"],
                 "genre": piece["genre"],
                 "language": piece["language"],
-                "unit_index": unit_index,
-                "topic": "",
                 "measure_range": measure_range,
                 "measure_scope": default_measure_scope(measure_range),
-                "measure_range_hints": normalize_ranges(unit["measure_range_hints"]),
                 "measure_status": measure_status,
-                "measure_notes": unit["measure_notes"],
-                "features": [],
-                "applicability_note": "",
-                "question": "",
-                "question_source": "none",
                 "retrieval_aliases": retrieval_aliases,
-                "source_answer_context": source_answer_context,
                 "answer": unit["answer"],
-                "rewrite_status": rewrite_status,
-                "rewrite_notes": unit["rewrite_notes"],
                 "source_ids": source_ids,
-                "annotators": annotators_from_sources(source_ids, source_index),
-                "retrieval_eligible": True,
-                "retrieval_exclusion_reason": "",
-                "retrieval_review_warning": review_warning,
             }
             record["relevance_text"] = semantic_relevance_text(record)
             record["retrieval_text"] = retrieval_text(record)
+            validate_expert_release_record(
+                record,
+                label="expert release record %s" % record["id"],
+            )
             records.append(record)
     return records
 
@@ -1848,7 +1954,6 @@ def build_web_records(
                 "edition_id": chunk.get("edition_id"),
                 "edition_context": chunk.get("edition_context"),
                 "question": chunk.get("question", ""),
-                "question_source": chunk.get("question_source", "generated"),
                 "answer": chunk["text_ko"],
                 "claim_ids": list(chunk["claim_ids"]),
                 "web_source_ids": web_source_ids,
@@ -1862,11 +1967,13 @@ def build_web_records(
                     chunk.get("inherited_licenses", []),
                     source_index,
                 ),
-                "retrieval_eligible": True,
-                "retrieval_exclusion_reason": "",
             }
             record["relevance_text"] = semantic_relevance_text(record)
             record["retrieval_text"] = retrieval_text(record)
+            validate_no_editorial_release_fields(
+                record,
+                label="web release record %s" % chunk_id,
+            )
             records.append(record)
     selected_usage_classes = {
         WEB_EXPORT_USAGE_CLASSES[export_file] for export_file in export_files
@@ -1893,25 +2000,15 @@ def build_stats(
     input_fingerprint: str,
     corpus_sha256: str,
 ) -> Dict[str, Any]:
-    excluded = [record for record in records if not record.get("retrieval_eligible", True)]
     expert_records = [
         record for record in records if record["evidence_type"] == "expert_annotation"
     ]
-    excluded_expert_records = [
-        record for record in expert_records if not record["retrieval_eligible"]
-    ]
-    warned_expert_records = [
-        record
-        for record in expert_records
-        if record.get("retrieval_review_warning")
-    ]
     return {
-        "corpus_schema_version": 6,
+        "corpus_schema_version": CORPUS_SCHEMA_VERSION,
         "dataset_root": os.path.realpath(dataset_root),
         "input_fingerprint": input_fingerprint,
         "corpus_sha256": corpus_sha256,
         "total_records": len(records),
-        "retrievable_records": len(records) - len(excluded),
         "records_by_evidence_type": dict(
             sorted(Counter(record["evidence_type"] for record in records).items())
         ),
@@ -1919,35 +2016,8 @@ def build_stats(
         "records_by_measure_scope": dict(
             sorted(Counter(record["measure_scope"] for record in records).items())
         ),
-        "expert_records_by_question_source": dict(
-            sorted(
-                Counter(
-                    record["question_source"]
-                    for record in expert_records
-                ).items()
-            )
-        ),
-        "expert_records_by_rewrite_status": dict(
-            sorted(Counter(record["rewrite_status"] for record in expert_records).items())
-        ),
         "expert_records_by_measure_status": dict(
             sorted(Counter(record["measure_status"] for record in expert_records).items())
-        ),
-        "expert_records_by_retrieval_exclusion_reason": dict(
-            sorted(
-                Counter(
-                    record["retrieval_exclusion_reason"]
-                    for record in excluded_expert_records
-                ).items()
-            )
-        ),
-        "expert_records_by_retrieval_review_warning": dict(
-            sorted(
-                Counter(
-                    record["retrieval_review_warning"]
-                    for record in warned_expert_records
-                ).items()
-            )
         ),
         "web_records_by_usage_class": dict(
             sorted(
@@ -1958,22 +2028,6 @@ def build_stats(
                 ).items()
             )
         ),
-        "excluded_from_retrieval": [
-            {
-                "id": record["id"],
-                "reason": record["retrieval_exclusion_reason"],
-                "source_ids": record.get("source_ids", []),
-            }
-            for record in excluded
-        ],
-        "expert_retrieval_review_warnings": [
-            {
-                "id": record["id"],
-                "warning": record["retrieval_review_warning"],
-                "source_ids": record.get("source_ids", []),
-            }
-            for record in warned_expert_records
-        ],
         "web_export_files": list(web_export_files),
         "overrides_applied": overrides_applied,
     }
@@ -2005,9 +2059,7 @@ def build_corpus(settings: Dict[str, Any]) -> Dict[str, Any]:
         canonical_chunk_index,
     )
     records = expert_records + web_records
-    record_ids = [record["id"] for record in records]
-    if len(record_ids) != len(set(record_ids)):
-        raise ValueError("Duplicate IDs in combined corpus")
+    validate_release_corpus(records)
 
     if corpus_input_fingerprint(settings) != input_fingerprint:
         raise RuntimeError("Corpus inputs changed while the corpus was being built")

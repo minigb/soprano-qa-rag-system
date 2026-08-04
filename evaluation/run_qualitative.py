@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the lightweight five-piece qualitative RAG+LLM evaluation.
+"""Run the five-piece qualitative RAG answer evaluation.
 
 It checkpoints the real service response plus deterministic retrieval
 diagnostics and authoritative reference material for later human inspection
@@ -28,12 +28,21 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from evaluation.no_range_semantic_policy import (  # noqa: E402
+    COHORT_NAME as NO_RANGE_COHORT_NAME,
+    NO_RANGE_SEMANTIC_CASES,
+    NO_RANGE_SEMANTIC_EXCLUSIONS,
+    REPORTED_CASE_KIND,
+    REPORTED_REGRESSION_FORMULATIONS,
+    SHADOW_CASE_KIND,
+)
 from soprano_qa.dense import validate_retrieval_requirements  # noqa: E402
+from soprano_qa.llm import validate_generation_requirements  # noqa: E402
 from soprano_qa.settings import load_settings  # noqa: E402
 
 
 ARTIFACT_TYPE = "five_piece_qualitative_rag_llm_evaluation"
-SCHEMA_VERSION = "1.0"
+SCHEMA_VERSION = "1.2"
 PIECE_IDS = (
     "die-forelle",
     "in-flowery-clouds",
@@ -42,6 +51,20 @@ PIECE_IDS = (
     "una-voce-poco-fa",
 )
 ELIGIBLE_MEASURE_STATUSES = {"specific", "whole_piece", "unspecified"}
+GENERATED_ANSWER_PATHS = {
+    ("expert_verbatim", "authoritative_expert"),
+    ("llm", "retrieved_evidence"),
+    ("unavailable", "no_corpus_evidence"),
+}
+REMOVED_GENERATION_RESPONSE_FIELDS = {
+    "generation_fallback_reason",
+    "context_limited",
+}
+REMOVED_RETRIEVAL_RESPONSE_FIELDS = {
+    "fallback_reason",
+    "fallback_used",
+}
+REMOVED_MODEL_STATUS_FIELDS = {"llama_cpp_available"}
 DEFAULT_OUTPUT = PROJECT_ROOT / "evaluation" / "qualitative.json"
 EXCLUDED_INFERENCE_CASES = {
     ("kim-la-capinera-01", (78, 81)): (
@@ -87,8 +110,8 @@ def input_file_records(paths: Iterable[Path]) -> list[dict[str, str]]:
     return records
 
 
-def embedding_model_record(path: Path) -> dict[str, Any]:
-    """Describe an optional GGUF checkpoint without requiring its presence."""
+def model_checkpoint_record(path: Path, *, backend: str) -> dict[str, Any]:
+    """Fingerprint one configured GGUF checkpoint for the run contract."""
 
     resolved = path.resolve()
     if resolved.is_file():
@@ -96,16 +119,24 @@ def embedding_model_record(path: Path) -> dict[str, Any]:
             "path": str(resolved),
             "checkpoint_exists": True,
             "kind": "file",
-            "backend": "llama-cpp-embedding",
+            "backend": backend,
             "sha256": file_sha256(resolved),
         }
     return {
         "path": str(resolved),
         "checkpoint_exists": resolved.exists(),
         "kind": "directory" if resolved.is_dir() else "missing",
-        "backend": "llama-cpp-embedding",
+        "backend": backend,
         "sha256": None,
     }
+
+
+def embedding_model_record(path: Path) -> dict[str, Any]:
+    return model_checkpoint_record(path, backend="llama-cpp-embedding")
+
+
+def generation_model_record(path: Path) -> dict[str, Any]:
+    return model_checkpoint_record(path, backend="llama-cpp-python")
 
 
 def ranges_overlap(left: Sequence[int], right: Sequence[int]) -> bool:
@@ -190,6 +221,132 @@ def _range_applicable_unit_ids(
     return applicable
 
 
+def _case_reference_authority(
+    *,
+    source_id: str,
+    units: Sequence[Mapping[str, Any]],
+    measure_range: list[int] | None,
+    applicable_ids: Sequence[str],
+    semantic_required_any_ids: Sequence[str],
+    semantic_supporting_ids: Sequence[str],
+) -> dict[str, Any]:
+    """Use only finalized, range-applicable KU answers as case authority."""
+
+    range_label = (
+        "whole-piece case"
+        if measure_range is None
+        else f"measure range {measure_range[0]}-{measure_range[1]}"
+    )
+    units_by_id = {
+        str(unit["knowledge_unit_id"]): unit for unit in units
+    }
+    missing_ids = [
+        unit_id for unit_id in applicable_ids if unit_id not in units_by_id
+    ]
+    if missing_ids:
+        raise QualitativeEvaluationInputError(
+            f"{source_id} ({range_label}): case authority refers to "
+            f"unlinked knowledge units {missing_ids}"
+        )
+
+    required_ids = list(semantic_required_any_ids)
+    supporting_ids = list(semantic_supporting_ids)
+    required_set = set(required_ids)
+    supporting_set = set(supporting_ids)
+    applicable_set = set(applicable_ids)
+    if required_ids or supporting_ids:
+        if (
+            not required_ids
+            or len(required_set) != len(required_ids)
+            or len(supporting_set) != len(supporting_ids)
+            or required_set & supporting_set
+            or required_set | supporting_set != applicable_set
+        ):
+            raise QualitativeEvaluationInputError(
+                f"{source_id} ({range_label}): semantic reference roles "
+                "must partition the applicable knowledge units into a "
+                "nonempty required-any set and a disjoint supporting set"
+            )
+
+    items: list[dict[str, Any]] = []
+    for unit_id in applicable_ids:
+        unit = units_by_id[unit_id]
+        rewrite_status = unit.get("rewrite_status")
+        measure_status = unit.get("measure_status")
+        if (
+            rewrite_status != "ready"
+            or measure_status not in ELIGIBLE_MEASURE_STATUSES
+        ):
+            raise QualitativeEvaluationInputError(
+                f"{source_id} ({range_label}): {unit_id} is not a "
+                "finalized knowledge unit "
+                f"(rewrite_status={rewrite_status!r}, "
+                f"measure_status={measure_status!r})"
+            )
+        answer = unit.get("answer")
+        if not isinstance(answer, str) or not answer.strip():
+            raise QualitativeEvaluationInputError(
+                f"{source_id} ({range_label}): finalized knowledge unit "
+                f"{unit_id} has no answer"
+            )
+        raw_measure_ranges = unit.get("measure_ranges") or []
+        if not isinstance(raw_measure_ranges, list):
+            raise QualitativeEvaluationInputError(
+                f"{source_id} ({range_label}): {unit_id} has invalid "
+                "canonical measure ranges"
+            )
+        canonical_measure_ranges = [
+            validate_measure_range(
+                value,
+                label=f"{unit_id}.measure_ranges",
+            )
+            for value in raw_measure_ranges
+        ]
+        if (
+            measure_status == "specific"
+            and not canonical_measure_ranges
+        ) or (
+            measure_status != "specific"
+            and canonical_measure_ranges
+        ):
+            raise QualitativeEvaluationInputError(
+                f"{source_id} ({range_label}): {unit_id} has canonical "
+                f"measure ranges inconsistent with measure_status "
+                f"{measure_status!r}"
+            )
+        reference_role = (
+            "required_any"
+            if not required_ids or unit_id in required_set
+            else "supporting"
+        )
+        items.append(
+            {
+                "reference_id": f"R{len(items) + 1:03d}",
+                "text": answer.strip(),
+                "scope": "curated_knowledge_unit_answer",
+                "flags": [],
+                "scope_authority": "finalized_knowledge_unit",
+                "reference_role": reference_role,
+                "measure_status": measure_status,
+                "measure_ranges": canonical_measure_ranges,
+                "source_sentence_index": None,
+                "source_claim_index": None,
+                "knowledge_unit_id": unit_id,
+            }
+        )
+    if not items:
+        raise QualitativeEvaluationInputError(
+            f"{source_id} ({range_label}): no finalized knowledge-unit "
+            "answer is available as case authority"
+        )
+    return {
+        "source": "applicable_finalized_knowledge_units",
+        "items": items,
+        "manual_review_required": False,
+        "manual_review_reason": None,
+    }
+
+
 def _case_id(source_id: str, measure_range: list[int] | None) -> str:
     if measure_range is None:
         return f"{source_id}__no-range"
@@ -200,11 +357,14 @@ def load_qualitative_questions(
     dataset_root: Path,
     *,
     piece_ids: Sequence[str] = PIECE_IDS,
+    enforce_no_range_semantic_policy: bool = True,
 ) -> tuple[list[dict[str, Any]], list[Path]]:
     """Load every answerable annotator paraphrase and expand its cases."""
 
     questions: list[dict[str, Any]] = []
     input_paths: list[Path] = []
+    seen_no_range_policy_sources: set[str] = set()
+    seen_no_range_exclusions: set[str] = set()
     inventory_root = dataset_root / "expert_curation" / "evaluation_questions"
     review_root = dataset_root / "expert_curation" / "review"
 
@@ -295,6 +455,57 @@ def load_qualitative_questions(
                     f"expected {expected_ranges}, found {inference_ranges}"
                 )
 
+            no_range_policy = NO_RANGE_SEMANTIC_CASES.get(source_id)
+            no_range_exclusion = NO_RANGE_SEMANTIC_EXCLUSIONS.get(source_id)
+            if not enforce_no_range_semantic_policy:
+                no_range_policy = None
+                no_range_exclusion = None
+            if inference_ranges:
+                if (
+                    enforce_no_range_semantic_policy
+                    and (no_range_policy is None)
+                    == (no_range_exclusion is None)
+                ):
+                    raise QualitativeEvaluationInputError(
+                        f"{source_id}: every measure-scoped question must "
+                        "have exactly one no-range semantic policy decision"
+                    )
+                decision = no_range_policy or no_range_exclusion
+                if decision is not None and decision["piece_id"] != piece_id:
+                    raise QualitativeEvaluationInputError(
+                        f"{source_id}: no-range policy piece mismatch"
+                    )
+                if no_range_policy is not None:
+                    required_ids = list(
+                        no_range_policy[
+                            "required_any_knowledge_unit_ids"
+                        ]
+                    )
+                    supporting_ids = list(
+                        no_range_policy["supporting_knowledge_unit_ids"]
+                    )
+                    linked_ids = [
+                        unit["knowledge_unit_id"] for unit in linked_units
+                    ]
+                    if (
+                        not required_ids
+                        or set(required_ids) & set(supporting_ids)
+                        or not set(required_ids + supporting_ids).issubset(
+                            linked_ids
+                        )
+                    ):
+                        raise QualitativeEvaluationInputError(
+                            f"{source_id}: invalid no-range semantic KU policy"
+                        )
+                    seen_no_range_policy_sources.add(source_id)
+                elif no_range_exclusion is not None:
+                    seen_no_range_exclusions.add(source_id)
+            elif no_range_policy is not None or no_range_exclusion is not None:
+                raise QualitativeEvaluationInputError(
+                    f"{source_id}: no-range semantic policy requires "
+                    "measure-scoped finalized KUs"
+                )
+
             eligible_ids = [
                 unit["knowledge_unit_id"]
                 for unit in linked_units
@@ -307,6 +518,15 @@ def load_qualitative_questions(
                 raise QualitativeEvaluationInputError(
                     f"{source_id}: retrieval eligibility is stale"
                 )
+            if no_range_policy is not None:
+                policy_ids = set(
+                    no_range_policy["required_any_knowledge_unit_ids"]
+                ) | set(no_range_policy["supporting_knowledge_unit_ids"])
+                if not policy_ids.issubset(eligible_ids):
+                    raise QualitativeEvaluationInputError(
+                        f"{source_id}: no-range semantic targets must all be "
+                        "finalized and retrieval-eligible"
+                    )
 
             excluded_inference_ranges = [
                 {
@@ -325,11 +545,59 @@ def load_qualitative_questions(
                 if (source_id, tuple(measure_range))
                 not in EXCLUDED_INFERENCE_CASES
             ]
-            case_ranges: list[list[int] | None] = (
-                active_ranges if inference_ranges else [None]
+            case_specs: list[dict[str, Any]] = []
+            if no_range_policy is not None:
+                case_specs.append(
+                    {
+                        "case_id": _case_id(source_id, None),
+                        "question": question_text,
+                        "measure_range": None,
+                        "case_kind": SHADOW_CASE_KIND,
+                        "question_provenance": "inventory_paraphrase",
+                        "evaluation_cohort": NO_RANGE_COHORT_NAME,
+                    }
+                )
+            case_specs.extend(
+                {
+                    "case_id": _case_id(source_id, measure_range),
+                    "question": question_text,
+                    "measure_range": measure_range,
+                    "case_kind": (
+                        "confirmed_measure_range"
+                        if measure_range is not None
+                        else "native_no_range"
+                    ),
+                    "question_provenance": "inventory_paraphrase",
+                    "evaluation_cohort": None,
+                }
+                for measure_range in (
+                    active_ranges if inference_ranges else [None]
+                )
             )
+            for reported in REPORTED_REGRESSION_FORMULATIONS.get(
+                source_id,
+                (),
+            ):
+                if no_range_policy is None:
+                    raise QualitativeEvaluationInputError(
+                        f"{source_id}: reported regression is not in the "
+                        "no-range semantic cohort"
+                    )
+                case_specs.append(
+                    {
+                        "case_id": (
+                            f"{source_id}__{reported['case_suffix']}"
+                        ),
+                        "question": reported["question"],
+                        "measure_range": None,
+                        "case_kind": REPORTED_CASE_KIND,
+                        "question_provenance": "reported_regression",
+                        "evaluation_cohort": NO_RANGE_COHORT_NAME,
+                    }
+                )
             cases = []
-            for measure_range in case_ranges:
+            for case_spec in case_specs:
+                measure_range = case_spec["measure_range"]
                 applicable_ids = _range_applicable_unit_ids(
                     linked_units,
                     measure_range,
@@ -339,21 +607,61 @@ def load_qualitative_questions(
                     for unit_id in eligible_ids
                     if unit_id in applicable_ids
                 ]
+                semantic_required_ids = (
+                    list(
+                        no_range_policy[
+                            "required_any_knowledge_unit_ids"
+                        ]
+                    )
+                    if case_spec["evaluation_cohort"]
+                    else []
+                )
+                semantic_supporting_ids = (
+                    list(
+                        no_range_policy["supporting_knowledge_unit_ids"]
+                    )
+                    if case_spec["evaluation_cohort"]
+                    else []
+                )
+                case_reference_authority = _case_reference_authority(
+                    source_id=source_id,
+                    units=linked_units,
+                    measure_range=measure_range,
+                    applicable_ids=applicable_ids,
+                    semantic_required_any_ids=semantic_required_ids,
+                    semantic_supporting_ids=semantic_supporting_ids,
+                )
                 cases.append(
                     {
-                        "case_id": _case_id(source_id, measure_range),
+                        "case_id": case_spec["case_id"],
                         "status": "pending",
                         "attempt_count": 0,
                         "last_attempt_at": None,
                         "inference_input": {
                             "piece_id": piece_id,
-                            "question": question_text,
+                            "question": case_spec["question"],
                             "measure_range": deepcopy(measure_range),
                             "measure_range_applied": measure_range is not None,
                             "measure_range_provenance": (
                                 "confirmed_linked_specific_knowledge_unit_ranges"
                                 if measure_range is not None
                                 else None
+                            ),
+                            "case_kind": case_spec["case_kind"],
+                            "question_provenance": case_spec[
+                                "question_provenance"
+                            ],
+                            "evaluation_cohort": case_spec[
+                                "evaluation_cohort"
+                            ],
+                            "semantic_required_any_knowledge_unit_ids": (
+                                semantic_required_ids
+                            ),
+                            "semantic_supporting_knowledge_unit_ids": (
+                                semantic_supporting_ids
+                            ),
+                            "case_reference_authority": (
+                                case_reference_authority
                             ),
                         },
                         "expected_retrieval": {
@@ -366,6 +674,12 @@ def load_qualitative_questions(
                             "range_applicable_knowledge_unit_ids": applicable_ids,
                             "range_applicable_retrieval_eligible_knowledge_unit_ids": (
                                 applicable_eligible_ids
+                            ),
+                            "semantic_required_any_knowledge_unit_ids": (
+                                semantic_required_ids
+                            ),
+                            "semantic_supporting_knowledge_unit_ids": (
+                                semantic_supporting_ids
                             ),
                         },
                         "pipeline_result": None,
@@ -412,6 +726,35 @@ def load_qualitative_questions(
                 }
             )
 
+    expected_policy_sources = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_CASES.items()
+        if policy["piece_id"] in piece_ids
+    }
+    expected_exclusions = {
+        source_id
+        for source_id, policy in NO_RANGE_SEMANTIC_EXCLUSIONS.items()
+        if policy["piece_id"] in piece_ids
+    }
+    if (
+        enforce_no_range_semantic_policy
+        and seen_no_range_policy_sources != expected_policy_sources
+    ):
+        raise QualitativeEvaluationInputError(
+            "No-range semantic inclusion policy drift: expected "
+            f"{sorted(expected_policy_sources)}, found "
+            f"{sorted(seen_no_range_policy_sources)}"
+        )
+    if (
+        enforce_no_range_semantic_policy
+        and seen_no_range_exclusions != expected_exclusions
+    ):
+        raise QualitativeEvaluationInputError(
+            "No-range semantic exclusion policy drift: expected "
+            f"{sorted(expected_exclusions)}, found "
+            f"{sorted(seen_no_range_exclusions)}"
+        )
+
     return questions, input_paths
 
 
@@ -449,6 +792,12 @@ def build_retrieval_diagnostics(
     )
     retrieved_targets = [unit_id for unit_id in target_ids if unit_id in ranks]
     missing_targets = [unit_id for unit_id in target_ids if unit_id not in ranks]
+    semantic_target_ids = list(
+        expected.get("semantic_required_any_knowledge_unit_ids") or []
+    )
+    retrieved_semantic_targets = [
+        unit_id for unit_id in semantic_target_ids if unit_id in ranks
+    ]
     source_id = expected["source_id"]
     source_ranks = [
         index
@@ -479,6 +828,24 @@ def build_retrieval_diagnostics(
         ),
         "source_retrieved": source_id in expert_source_ids,
         "source_first_rank": min(source_ranks) if source_ranks else None,
+        "semantic_target_available": bool(semantic_target_ids),
+        "semantic_required_any_knowledge_unit_ids": semantic_target_ids,
+        "retrieved_semantic_target_knowledge_unit_ids": (
+            retrieved_semantic_targets
+        ),
+        "semantic_target_ranks": {
+            unit_id: ranks.get(unit_id) for unit_id in semantic_target_ids
+        },
+        "any_semantic_target_retrieved": (
+            bool(retrieved_semantic_targets)
+            if semantic_target_ids
+            else None
+        ),
+        "semantic_target_first_rank": (
+            min(ranks[unit_id] for unit_id in retrieved_semantic_targets)
+            if retrieved_semantic_targets
+            else None
+        ),
     }
 
 
@@ -492,6 +859,7 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
     statuses: Counter[str] = Counter()
     generation_modes: Counter[str] = Counter()
     answer_bases: Counter[str] = Counter()
+    unavailable_reasons: Counter[str] = Counter()
     per_piece: dict[str, Counter[str]] = {
         piece_id: Counter() for piece_id in PIECE_IDS
     }
@@ -499,6 +867,15 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
     target_cases = 0
     target_hits = 0
     target_all_hits = 0
+    cohort_statuses: Counter[str] = Counter()
+    cohort_per_piece: dict[str, Counter[str]] = {
+        piece_id: Counter() for piece_id in PIECE_IDS
+    }
+    semantic_target_cases = 0
+    semantic_target_hits = 0
+    semantic_target_hit_at_1 = 0
+    semantic_target_hit_at_3 = 0
+    semantic_reciprocal_rank_sum = 0.0
     excluded_cases = [
         {
             "source_id": question["source_id"],
@@ -512,12 +889,23 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         status = case["status"]
         statuses[status] += 1
         per_piece[question["piece_id"]][status] += 1
+        in_cohort = (
+            case["inference_input"].get("evaluation_cohort")
+            == NO_RANGE_COHORT_NAME
+        )
+        if in_cohort:
+            cohort_statuses[status] += 1
+            cohort_per_piece[question["piece_id"]][status] += 1
         if status != "completed":
             continue
         result = case["pipeline_result"] or {}
         diagnostics = case["retrieval_diagnostics"] or {}
         generation_modes[str(result.get("generation_mode", "unknown"))] += 1
         answer_bases[str(result.get("answer_basis", "unknown"))] += 1
+        if result.get("generation_mode") == "unavailable":
+            unavailable_reasons[
+                str(result.get("unavailable_reason") or "missing")
+            ] += 1
         source_hits += int(bool(diagnostics.get("source_retrieved")))
         if diagnostics.get("retrieval_target_available"):
             target_cases += 1
@@ -527,6 +915,14 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
             target_all_hits += int(bool(
                 diagnostics.get("all_expected_knowledge_units_retrieved")
             ))
+        if in_cohort and diagnostics.get("semantic_target_available"):
+            semantic_target_cases += 1
+            first_rank = diagnostics.get("semantic_target_first_rank")
+            if isinstance(first_rank, int) and first_rank > 0:
+                semantic_target_hits += 1
+                semantic_target_hit_at_1 += int(first_rank == 1)
+                semantic_target_hit_at_3 += int(first_rank <= 3)
+                semantic_reciprocal_rank_sum += 1 / first_rank
 
     total = sum(statuses.values())
     finished = statuses["completed"] + statuses["error"]
@@ -558,12 +954,47 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
         },
         "completed_generation_modes": dict(sorted(generation_modes.items())),
         "completed_answer_bases": dict(sorted(answer_bases.items())),
+        "completed_unavailable_reasons": dict(
+            sorted(unavailable_reasons.items())
+        ),
         "retrieval_diagnostics": {
             "completed_cases": statuses["completed"],
             "source_retrieved_cases": source_hits,
             "cases_with_expected_eligible_target": target_cases,
             "cases_retrieving_any_expected_target": target_hits,
             "cases_retrieving_all_expected_targets": target_all_hits,
+        },
+        "evaluation_cohorts": {
+            NO_RANGE_COHORT_NAME: {
+                "case_count": sum(cohort_statuses.values()),
+                "case_statuses": dict(sorted(cohort_statuses.items())),
+                "per_piece_case_statuses": {
+                    piece_id: dict(sorted(counts.items()))
+                    for piece_id, counts in cohort_per_piece.items()
+                },
+                "semantic_target_cases_completed": semantic_target_cases,
+                "semantic_target_hit_at_1_cases": semantic_target_hit_at_1,
+                "semantic_target_hit_at_3_cases": semantic_target_hit_at_3,
+                "semantic_target_hit_at_3_rate": (
+                    round(
+                        semantic_target_hit_at_3
+                        / semantic_target_cases,
+                        6,
+                    )
+                    if semantic_target_cases
+                    else None
+                ),
+                "semantic_target_hit_at_k_cases": semantic_target_hits,
+                "semantic_target_mean_reciprocal_rank": (
+                    round(
+                        semantic_reciprocal_rank_sum
+                        / semantic_target_cases,
+                        6,
+                    )
+                    if semantic_target_cases
+                    else None
+                ),
+            }
         },
         "automatic_quality_verdict": None,
         "automatic_quality_verdict_note": (
@@ -576,20 +1007,25 @@ def refresh_summary(snapshot: dict[str, Any]) -> None:
 def build_input_fingerprint(
     *,
     input_files: Sequence[Mapping[str, str]],
-    generate: bool,
     top_k: int,
     retrieval_embedding_model: Mapping[str, Any] | None = None,
+    generation_model: Mapping[str, Any] | None = None,
 ) -> str:
     payload = {
         "artifact_type": ARTIFACT_TYPE,
         "schema_version": SCHEMA_VERSION,
         "piece_ids": PIECE_IDS,
-        "generate": generate,
+        "generate": True,
         "top_k": top_k,
         "input_files": list(input_files),
         "retrieval_embedding_model": (
             dict(retrieval_embedding_model)
             if retrieval_embedding_model is not None
+            else None
+        ),
+        "generation_model": (
+            dict(generation_model)
+            if generation_model is not None
             else None
         ),
     }
@@ -602,9 +1038,9 @@ def new_snapshot(
     dataset_root: Path,
     input_files: list[dict[str, str]],
     input_fingerprint: str,
-    generate: bool,
     top_k: int,
     retrieval_embedding_model: Mapping[str, Any] | None = None,
+    generation_model: Mapping[str, Any] | None = None,
 ) -> dict[str, Any]:
     now = utc_now()
     snapshot = {
@@ -619,7 +1055,7 @@ def new_snapshot(
             ),
             "strict_schema_1_3_automatic_pass_protocol": False,
             "issues_automatic_quality_verdicts": False,
-            "internal_model_knowledge_fallback": False,
+            "strict_grounded_answer_paths": True,
             "documented_inference_case_exclusions": [
                 {
                     "source_id": source_id,
@@ -630,6 +1066,30 @@ def new_snapshot(
                     EXCLUDED_INFERENCE_CASES.items()
                 )
             ],
+            "no_range_semantic_evaluation": {
+                "cohort": NO_RANGE_COHORT_NAME,
+                "policy": (
+                    "Only semantically self-contained questions whose "
+                    "finalized expert KUs are measure-specific receive a "
+                    "no-selected-range shadow case. The KU remains locally "
+                    "scoped and does not become whole-piece authority."
+                ),
+                "included_source_count": len(NO_RANGE_SEMANTIC_CASES),
+                "reported_regression_case_count": sum(
+                    len(items)
+                    for items in REPORTED_REGRESSION_FORMULATIONS.values()
+                ),
+                "excluded_sources": [
+                    {
+                        "source_id": source_id,
+                        "piece_id": decision["piece_id"],
+                        "reason": decision["reason"],
+                    }
+                    for source_id, decision in sorted(
+                        NO_RANGE_SEMANTIC_EXCLUSIONS.items()
+                    )
+                ],
+            },
         },
         "run": {
             "status": "not_started",
@@ -638,13 +1098,18 @@ def new_snapshot(
             "finished_at": None,
             "dataset_root": str(dataset_root.resolve()),
             "target_pieces": list(PIECE_IDS),
-            "generate": generate,
+            "generate": True,
             "top_k": top_k,
             "input_fingerprint": input_fingerprint,
             "input_files": input_files,
             "retrieval_embedding_model": (
                 dict(retrieval_embedding_model)
                 if retrieval_embedding_model is not None
+                else None
+            ),
+            "generation_model": (
+                dict(generation_model)
+                if generation_model is not None
                 else None
             ),
         },
@@ -659,6 +1124,9 @@ def validate_resume_snapshot(
     snapshot: Mapping[str, Any],
     *,
     input_fingerprint: str,
+    top_k: int,
+    retrieval_embedding_model: Mapping[str, Any],
+    generation_model: Mapping[str, Any],
 ) -> None:
     if snapshot.get("artifact_type") != ARTIFACT_TYPE:
         raise QualitativeEvaluationInputError(
@@ -668,11 +1136,45 @@ def validate_resume_snapshot(
         raise QualitativeEvaluationInputError(
             "Output schema version is not resumable by this runner"
         )
-    if snapshot.get("run", {}).get("input_fingerprint") != input_fingerprint:
+    run = snapshot.get("run")
+    if not isinstance(run, Mapping):
+        raise QualitativeEvaluationInputError(
+            "Output run metadata must be an object"
+        )
+    if run.get("input_fingerprint") != input_fingerprint:
         raise QualitativeEvaluationInputError(
             "Output inputs or run configuration changed; choose a new "
             "--output path rather than mixing incomparable results"
         )
+    removed_run_fields = {"allow_internal_knowledge"} & set(run)
+    if removed_run_fields:
+        raise QualitativeEvaluationInputError(
+            "Output uses removed run fields: "
+            + ", ".join(sorted(removed_run_fields))
+        )
+    if run.get("generate") is not True:
+        raise QualitativeEvaluationInputError(
+            "Output run must record generation as mandatory"
+        )
+    if run.get("top_k") != top_k:
+        raise QualitativeEvaluationInputError(
+            "Output top_k does not match this run"
+        )
+    if run.get("retrieval_embedding_model") != dict(
+        retrieval_embedding_model
+    ):
+        raise QualitativeEvaluationInputError(
+            "Output retrieval embedding model does not match this run"
+        )
+    if run.get("generation_model") != dict(generation_model):
+        raise QualitativeEvaluationInputError(
+            "Output generation model does not match this run"
+        )
+    validate_resume_case_states(
+        snapshot,
+        retrieval_embedding_model=retrieval_embedding_model,
+        generation_model=generation_model,
+    )
 
 
 def atomic_write_json(path: Path, value: Any) -> None:
@@ -725,14 +1227,387 @@ def selected_incomplete_cases(
     return pending[:limit] if limit is not None else pending
 
 
+def validate_generated_response(result: Any) -> dict[str, Any]:
+    """Accept only the production grounded or explicit-unavailable paths."""
+
+    if not isinstance(result, Mapping):
+        raise QualitativeEvaluationInputError(
+            "Pipeline ask() returned a non-object"
+        )
+    removed_fields = REMOVED_GENERATION_RESPONSE_FIELDS & set(result)
+    if removed_fields:
+        raise QualitativeEvaluationInputError(
+            "Pipeline response uses removed generation fields: "
+            + ", ".join(sorted(removed_fields))
+        )
+    mode = result.get("generation_mode")
+    basis = result.get("answer_basis")
+    if (mode, basis) not in GENERATED_ANSWER_PATHS:
+        raise QualitativeEvaluationInputError(
+            "Pipeline response used an unsupported answer path: "
+            f"generation_mode={mode!r}, answer_basis={basis!r}"
+        )
+    answer = result.get("answer")
+    if not isinstance(answer, str) or not answer.strip():
+        raise QualitativeEvaluationInputError(
+            "Pipeline response answer must be a non-empty string"
+        )
+    evidence = result.get("evidence")
+    if not isinstance(evidence, list) or any(
+        not isinstance(item, Mapping) for item in evidence
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline response evidence must be a list of objects"
+        )
+    reason = result.get("unavailable_reason")
+    if mode == "unavailable":
+        if not isinstance(reason, str) or not reason.strip():
+            raise QualitativeEvaluationInputError(
+                "Unavailable pipeline answers require unavailable_reason"
+            )
+    elif reason is not None:
+        raise QualitativeEvaluationInputError(
+            "Successful grounded answers cannot have unavailable_reason"
+        )
+    if mode == "expert_verbatim" and not any(
+        item.get("kind") == "expert"
+        or item.get("evidence_type") == "expert_annotation"
+        for item in evidence
+    ):
+        raise QualitativeEvaluationInputError(
+            "Authoritative expert answers require expert evidence"
+        )
+    if mode == "llm" and not evidence:
+        raise QualitativeEvaluationInputError(
+            "Retrieved-evidence LLM answers require evidence"
+        )
+    return dict(result)
+
+
+def _expected_checkpoint_path(
+    record: Mapping[str, Any],
+    *,
+    label: str,
+    backend: str,
+) -> Path:
+    if (
+        record.get("checkpoint_exists") is not True
+        or record.get("kind") != "file"
+        or record.get("backend") != backend
+        or not isinstance(record.get("sha256"), str)
+        or not record.get("sha256")
+    ):
+        raise QualitativeEvaluationInputError(
+            f"{label} checkpoint contract is invalid"
+        )
+    path = record.get("path")
+    if not isinstance(path, str) or not path:
+        raise QualitativeEvaluationInputError(
+            f"{label} checkpoint path is invalid"
+        )
+    return Path(path).resolve()
+
+
+def validate_model_contract(
+    result: Mapping[str, Any],
+    *,
+    generation_model: Mapping[str, Any],
+) -> None:
+    expected_path = _expected_checkpoint_path(
+        generation_model,
+        label="Generation model",
+        backend="llama-cpp-python",
+    )
+    status = result.get("model")
+    if not isinstance(status, Mapping):
+        raise QualitativeEvaluationInputError(
+            "Pipeline response omitted model status"
+        )
+    removed_fields = REMOVED_MODEL_STATUS_FIELDS & set(status)
+    if removed_fields:
+        raise QualitativeEvaluationInputError(
+            "Pipeline model status uses removed fields: "
+            + ", ".join(sorted(removed_fields))
+        )
+    if status.get("checkpoint_exists") is not True:
+        raise QualitativeEvaluationInputError(
+            "Pipeline generation checkpoint is not available"
+        )
+    if status.get("backend") != "llama-cpp-python":
+        raise QualitativeEvaluationInputError(
+            "Pipeline generation backend does not match the run contract"
+        )
+    status_path = status.get("path")
+    if (
+        not isinstance(status_path, str)
+        or Path(status_path).resolve() != expected_path
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline generation model path does not match the run contract"
+        )
+
+
+def validate_retrieval_contract(
+    result: Mapping[str, Any],
+    *,
+    retrieval_embedding_model: Mapping[str, Any],
+) -> None:
+    expected_path = _expected_checkpoint_path(
+        retrieval_embedding_model,
+        label="Retrieval embedding model",
+        backend="llama-cpp-embedding",
+    )
+    diagnostics = result.get("retrieval")
+    if not isinstance(diagnostics, Mapping):
+        raise QualitativeEvaluationInputError(
+            "Pipeline response omitted retrieval diagnostics"
+        )
+    removed_fields = REMOVED_RETRIEVAL_RESPONSE_FIELDS & set(diagnostics)
+    if removed_fields:
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval diagnostics use removed fields: "
+            + ", ".join(sorted(removed_fields))
+        )
+    if diagnostics.get("configured_mode") != "hybrid":
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval configured_mode must be hybrid"
+        )
+    if diagnostics.get("active_mode") != "hybrid":
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval active_mode must be hybrid"
+        )
+    if diagnostics.get("dense_available") is not True:
+        raise QualitativeEvaluationInputError(
+            "Pipeline dense retrieval must be available"
+        )
+    embedding_path = diagnostics.get("embedding_model")
+    if (
+        not isinstance(embedding_path, str)
+        or Path(embedding_path).resolve() != expected_path
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline embedding model path does not match the run contract"
+        )
+    dimension = diagnostics.get("embedding_dimension")
+    if (
+        isinstance(dimension, bool)
+        or not isinstance(dimension, int)
+        or dimension < 1
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline embedding dimension must be a positive integer"
+        )
+    if diagnostics.get("last_dense_error") is not None:
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval reported a dense error"
+        )
+    last_search = diagnostics.get("last_search_mode")
+    query_route = diagnostics.get("query_route")
+    allowed_route_states = {
+        ("hybrid", "hybrid"),
+        ("hybrid_no_dense_match", "hybrid"),
+        ("lexical_route", "lexical"),
+    }
+    if (last_search, query_route) not in allowed_route_states:
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval route is inconsistent with hybrid routing"
+        )
+    dense_attempted = diagnostics.get("dense_attempted")
+    dense_contributed = diagnostics.get("dense_contributed")
+    if not isinstance(dense_attempted, bool) or not isinstance(
+        dense_contributed,
+        bool,
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval diagnostics must include boolean dense state"
+        )
+    if query_route == "hybrid" and dense_attempted is not True:
+        raise QualitativeEvaluationInputError(
+            "Hybrid query route must attempt dense retrieval"
+        )
+    if last_search == "hybrid" and dense_contributed is not True:
+        raise QualitativeEvaluationInputError(
+            "Hybrid retrieval result must report dense contribution"
+        )
+    if query_route == "lexical" and (
+        dense_attempted is not False or dense_contributed is not False
+    ):
+        raise QualitativeEvaluationInputError(
+            "Lexical query route cannot report dense work"
+        )
+    if last_search == "hybrid_no_dense_match" and dense_contributed is not False:
+        raise QualitativeEvaluationInputError(
+            "No-dense-match route cannot report dense contribution"
+        )
+    if not isinstance(diagnostics.get("route_reason"), str) or not diagnostics.get(
+        "route_reason"
+    ):
+        raise QualitativeEvaluationInputError(
+            "Pipeline retrieval route_reason must be a non-empty string"
+        )
+    ambiguous = diagnostics.get("ambiguous_candidates")
+    if not isinstance(ambiguous, list):
+        raise QualitativeEvaluationInputError(
+            "Pipeline ambiguous_candidates must be a list"
+        )
+
+
+def validate_case_response(
+    case: Mapping[str, Any],
+    result: Any,
+    *,
+    retrieval_embedding_model: Mapping[str, Any],
+    generation_model: Mapping[str, Any],
+) -> dict[str, Any]:
+    validated = validate_generated_response(result)
+    inference_input = case.get("inference_input")
+    if not isinstance(inference_input, Mapping):
+        raise QualitativeEvaluationInputError(
+            "Evaluation case inference_input must be an object"
+        )
+    expected_range = inference_input.get("measure_range")
+    expected_scope = "range" if expected_range is not None else "whole_piece"
+    if validated.get("piece_id") != inference_input.get("piece_id"):
+        raise QualitativeEvaluationInputError(
+            "Pipeline response piece_id does not match the case"
+        )
+    if validated.get("measure_range") != expected_range:
+        raise QualitativeEvaluationInputError(
+            "Pipeline response measure_range does not match the case"
+        )
+    if validated.get("scope") != expected_scope:
+        raise QualitativeEvaluationInputError(
+            "Pipeline response scope does not match the case"
+        )
+    if validated.get("pipeline") != "soprano_qa":
+        raise QualitativeEvaluationInputError(
+            "Pipeline response does not identify soprano_qa"
+        )
+    for field in ("has_primary_grounding", "has_confirmed_local_examples"):
+        if not isinstance(validated.get(field), bool):
+            raise QualitativeEvaluationInputError(
+                f"Pipeline response {field} must be boolean"
+            )
+    if (
+        validated.get("generation_mode") != "unavailable"
+        and validated.get("has_primary_grounding") is not True
+    ):
+        raise QualitativeEvaluationInputError(
+            "Grounded answer path must report primary grounding"
+        )
+    selected_grounding = validated.get("has_selected_range_grounding")
+    if expected_range is None:
+        if selected_grounding is not None:
+            raise QualitativeEvaluationInputError(
+                "Whole-piece response cannot report selected-range grounding"
+            )
+    elif not isinstance(selected_grounding, bool):
+        raise QualitativeEvaluationInputError(
+            "Range response must report selected-range grounding"
+        )
+    validate_model_contract(validated, generation_model=generation_model)
+    validate_retrieval_contract(
+        validated,
+        retrieval_embedding_model=retrieval_embedding_model,
+    )
+    return validated
+
+
+def validate_resume_case_states(
+    snapshot: Mapping[str, Any],
+    *,
+    retrieval_embedding_model: Mapping[str, Any],
+    generation_model: Mapping[str, Any],
+) -> None:
+    questions = snapshot.get("questions")
+    if not isinstance(questions, list):
+        raise QualitativeEvaluationInputError(
+            "Output questions must be a list"
+        )
+    case_ids: set[str] = set()
+    for question in questions:
+        if not isinstance(question, Mapping):
+            raise QualitativeEvaluationInputError(
+                "Output question entries must be objects"
+            )
+        cases = question.get("inference_runs")
+        if not isinstance(cases, list):
+            raise QualitativeEvaluationInputError(
+                "Output inference_runs must be a list"
+            )
+        for case in cases:
+            if not isinstance(case, Mapping):
+                raise QualitativeEvaluationInputError(
+                    "Output inference cases must be objects"
+                )
+            case_id = case.get("case_id")
+            if not isinstance(case_id, str) or not case_id or case_id in case_ids:
+                raise QualitativeEvaluationInputError(
+                    "Output case IDs must be unique non-empty strings"
+                )
+            case_ids.add(case_id)
+            status = case.get("status")
+            if status not in {"pending", "completed", "error"}:
+                raise QualitativeEvaluationInputError(
+                    f"Output {case_id}: invalid case status"
+                )
+            attempts = case.get("attempt_count")
+            if (
+                isinstance(attempts, bool)
+                or not isinstance(attempts, int)
+                or attempts < 0
+            ):
+                raise QualitativeEvaluationInputError(
+                    f"Output {case_id}: invalid attempt_count"
+                )
+            if status == "completed":
+                if attempts < 1 or case.get("error") is not None:
+                    raise QualitativeEvaluationInputError(
+                        f"Output {case_id}: invalid completed case state"
+                    )
+                result = validate_case_response(
+                    case,
+                    case.get("pipeline_result"),
+                    retrieval_embedding_model=retrieval_embedding_model,
+                    generation_model=generation_model,
+                )
+                expected_diagnostics = build_retrieval_diagnostics(case, result)
+                if case.get("retrieval_diagnostics") != expected_diagnostics:
+                    raise QualitativeEvaluationInputError(
+                        f"Output {case_id}: retrieval diagnostics are stale"
+                    )
+            elif status == "error":
+                error = case.get("error")
+                if (
+                    attempts < 1
+                    or case.get("pipeline_result") is not None
+                    or case.get("retrieval_diagnostics") is not None
+                    or not isinstance(error, Mapping)
+                    or not isinstance(error.get("type"), str)
+                    or not isinstance(error.get("message"), str)
+                ):
+                    raise QualitativeEvaluationInputError(
+                        f"Output {case_id}: invalid error case state"
+                    )
+            elif (
+                case.get("pipeline_result") is not None
+                or case.get("retrieval_diagnostics") is not None
+                or case.get("error") is not None
+            ):
+                raise QualitativeEvaluationInputError(
+                    f"Output {case_id}: pending case contains output state"
+                )
+
+
 def run_selected_cases(
     snapshot: dict[str, Any],
     *,
     ask_fn: Callable[..., dict[str, Any]],
     piece_ids: Sequence[str],
     limit: int | None,
-    generate: bool,
     top_k: int,
+    retrieval_embedding_model: Mapping[str, Any],
+    generation_model: Mapping[str, Any],
     checkpoint: Callable[[], None],
 ) -> int:
     """Run and checkpoint selected incomplete cases; return attempt count."""
@@ -745,6 +1620,7 @@ def run_selected_cases(
     for case in cases:
         inference_input = case["inference_input"]
         case["attempt_count"] += 1
+        case["status"] = "pending"
         case["last_attempt_at"] = utc_now()
         case["error"] = None
         try:
@@ -755,9 +1631,14 @@ def run_selected_cases(
                 measure_range=(
                     tuple(measure_range) if measure_range is not None else None
                 ),
-                generate=generate,
+                generate=True,
                 top_k=top_k,
-                allow_internal_knowledge=False,
+            )
+            result = validate_case_response(
+                case,
+                result,
+                retrieval_embedding_model=retrieval_embedding_model,
+                generation_model=generation_model,
             )
             case["pipeline_result"] = result
             case["retrieval_diagnostics"] = build_retrieval_diagnostics(
@@ -765,7 +1646,10 @@ def run_selected_cases(
                 result,
             )
             case["status"] = "completed"
-        except Exception as error:  # preserve the failure and continue safely
+        except KeyboardInterrupt:
+            checkpoint()
+            raise
+        except Exception as error:
             case["pipeline_result"] = None
             case["retrieval_diagnostics"] = None
             case["status"] = "error"
@@ -773,6 +1657,8 @@ def run_selected_cases(
                 "type": type(error).__name__,
                 "message": str(error),
             }
+            checkpoint()
+            raise
         checkpoint()
     return len(cases)
 
@@ -797,11 +1683,6 @@ def parse_arguments(argv: Sequence[str] | None = None) -> argparse.Namespace:
         type=int,
         help="Run at most N incomplete selected cases in this invocation.",
     )
-    parser.add_argument(
-        "--generate",
-        action="store_true",
-        help="Ask the configured local LLM to generate grounded answers.",
-    )
     parser.add_argument("--top-k", type=int, default=6)
     arguments = parser.parse_args(argv)
     if arguments.limit is not None and arguments.limit < 1:
@@ -818,7 +1699,19 @@ def main(argv: Sequence[str] | None = None) -> int:
     settings = load_settings(use_legacy_dataset_env=False)
     settings["dataset_root"] = str(dataset_root)
     os.environ["SOPRANO_QA_RAG_DATASET_ROOT"] = str(dataset_root)
+    retrieval = settings.get("retrieval")
+    if (
+        not isinstance(retrieval, Mapping)
+        or str(retrieval.get("mode") or "").lower() != "hybrid"
+    ):
+        raise QualitativeEvaluationInputError(
+            "Qualitative evaluation requires retrieval.mode='hybrid'"
+        )
     validate_retrieval_requirements(settings)
+    validate_generation_requirements(
+        str(settings.get("model_path") or ""),
+        settings.get("llm") or {},
+    )
     # Make the service corpus current before hashing it.  Otherwise a first
     # service call could rebuild the corpus after the resume fingerprint was
     # captured and make the next invocation incomparable to its own output.
@@ -828,9 +1721,11 @@ def main(argv: Sequence[str] | None = None) -> int:
     questions, dataset_paths = load_qualitative_questions(dataset_root)
     implementation_paths = [
         Path(__file__).resolve(),
+        Path(__file__).with_name("no_range_semantic_policy.py").resolve(),
         PROJECT_ROOT / "soprano_qa" / "answer.py",
         PROJECT_ROOT / "soprano_qa" / "corpus.py",
         PROJECT_ROOT / "soprano_qa" / "dense.py",
+        PROJECT_ROOT / "soprano_qa" / "llm.py",
         PROJECT_ROOT / "soprano_qa" / "retrieval.py",
         PROJECT_ROOT / "soprano_qa" / "service.py",
         PROJECT_ROOT / "soprano_qa" / "settings.py",
@@ -842,11 +1737,24 @@ def main(argv: Sequence[str] | None = None) -> int:
     retrieval_embedding_model = embedding_model_record(
         Path(settings["embedding_model_path"])
     )
+    generation_model = generation_model_record(
+        Path(settings["model_path"])
+    )
+    _expected_checkpoint_path(
+        retrieval_embedding_model,
+        label="Retrieval embedding model",
+        backend="llama-cpp-embedding",
+    )
+    _expected_checkpoint_path(
+        generation_model,
+        label="Generation model",
+        backend="llama-cpp-python",
+    )
     input_fingerprint = build_input_fingerprint(
         input_files=input_files,
-        generate=arguments.generate,
         top_k=arguments.top_k,
         retrieval_embedding_model=retrieval_embedding_model,
+        generation_model=generation_model,
     )
 
     with exclusive_output_lock(output):
@@ -855,6 +1763,9 @@ def main(argv: Sequence[str] | None = None) -> int:
             validate_resume_snapshot(
                 snapshot,
                 input_fingerprint=input_fingerprint,
+                top_k=arguments.top_k,
+                retrieval_embedding_model=retrieval_embedding_model,
+                generation_model=generation_model,
             )
         else:
             snapshot = new_snapshot(
@@ -862,9 +1773,9 @@ def main(argv: Sequence[str] | None = None) -> int:
                 dataset_root=dataset_root,
                 input_files=input_files,
                 input_fingerprint=input_fingerprint,
-                generate=arguments.generate,
                 top_k=arguments.top_k,
                 retrieval_embedding_model=retrieval_embedding_model,
+                generation_model=generation_model,
             )
             atomic_write_json(output, snapshot)
 
@@ -881,11 +1792,11 @@ def main(argv: Sequence[str] | None = None) -> int:
             ask_fn=ask,
             piece_ids=selected_pieces,
             limit=arguments.limit,
-            generate=arguments.generate,
             top_k=arguments.top_k,
+            retrieval_embedding_model=retrieval_embedding_model,
+            generation_model=generation_model,
             checkpoint=checkpoint,
         )
-        checkpoint()
 
     print(
         json.dumps(

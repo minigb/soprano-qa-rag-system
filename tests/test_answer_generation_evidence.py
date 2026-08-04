@@ -1,26 +1,26 @@
-"""Focused tests for grounded-answer evidence selection and review cautions."""
+"""Focused tests for grounded-answer evidence selection and safeguards."""
 
 from __future__ import annotations
 
+from types import SimpleNamespace
 import unittest
 from typing import Any, Dict
+from unittest import mock
 
+from soprano_qa import answer as answer_cli
 from soprano_qa.answer import (
     answer_overgeneralizes_local_examples,
     answer_references_secondary_evidence,
+    answer_uses_formal_polite_korean,
     build_extractive_answer,
     build_messages,
-    build_review_constraints,
-    build_review_disclosure,
-    build_review_disclosure_from_records,
-    ensure_review_disclosure,
     expert_prompt_factuality_material,
+    GeneratedAnswerRejected,
     finalize_answer_citations,
-    finalize_internal_knowledge_answer,
-    generate_with_context_retry,
+    finalize_user_visible_answer,
     has_primary_grounding,
     is_grounded_insufficiency_answer,
-    select_extractive_fallback_evidence,
+    is_underspecified_ranged_query,
     select_generation_evidence,
     suspicious_generation_tokens,
 )
@@ -32,11 +32,7 @@ def make_result(
     *,
     evidence_type: str = "expert_annotation",
     alias_score: float = 0.0,
-    rewrite_status: str = "ready",
-    rewrite_notes: str = "",
     measure_status: str = "specific",
-    measure_notes: str = "",
-    review_warning: str = "",
     scope_match: str = "overlaps_query_range",
     source_ids: list[str] | None = None,
     score: float = 1.0,
@@ -53,11 +49,7 @@ def make_result(
         "measure_scope": "local",
         "source_ids": source_ids or ["kim-die-forelle-01"],
         "annotators": ["kim"],
-        "rewrite_status": rewrite_status,
-        "rewrite_notes": rewrite_notes,
         "measure_status": measure_status,
-        "measure_notes": measure_notes,
-        "retrieval_review_warning": review_warning,
         "source_answer_context": [],
         "question": "",
         "answer": "전문가 답변",
@@ -134,322 +126,14 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self.assertEqual(selected, [overlap, stronger_other_range])
         self.assertTrue(has_primary_grounding(selected))
 
-    def test_extractive_fallback_prefers_expert_anchor_over_web_evidence(
-        self,
-    ) -> None:
-        web = make_result(
-            "web",
-            evidence_type="web_database",
-            scope_match="general_evidence",
-        )
-        expert = make_result(
-            "expert",
-            scope_match="general_evidence",
-            source_ids=["source-direct"],
-        )
 
-        self.assertEqual(
-            select_extractive_fallback_evidence([web, expert]),
-            [expert],
-        )
 
-    def test_extractive_fallback_preserves_ranked_local_example(
-        self,
-    ) -> None:
-        local = make_result(
-            "local",
-            scope_match="local_example",
-            source_ids=["source-local"],
-        )
-        general = make_result(
-            "general",
-            scope_match="general_evidence",
-            source_ids=["source-general"],
-        )
 
-        self.assertEqual(
-            select_extractive_fallback_evidence([local, general]),
-            [local],
-        )
 
-    def test_local_rejection_keeps_a_near_tied_dense_contender(
-        self,
-    ) -> None:
-        generic = make_result(
-            "generic",
-            scope_match="general_evidence",
-            source_ids=["generic-source"],
-            score=0.62,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        direct = make_result(
-            "direct",
-            scope_match="general_evidence",
-            source_ids=["direct-source"],
-            score=0.54,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        sibling = make_result(
-            "generic-sibling",
-            scope_match="general_evidence",
-            source_ids=["generic-source"],
-            score=0.51,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
 
-        selected = select_extractive_fallback_evidence(
-            [generic, direct, sibling],
-            exclude_local_examples=True,
-        )
 
-        self.assertEqual(selected, [generic, direct, sibling])
 
-    def test_dense_fallback_can_reanchor_on_directness_signal(self) -> None:
-        generic = [
-            make_result(
-                f"generic-{index}",
-                scope_match="general_evidence",
-                source_ids=[f"generic-source-{index}"],
-                score=0.60 - index * 0.02,
-                semantic_match_type="dense",
-            )
-            for index in range(5)
-        ]
-        direct = make_result(
-            "direct-concept-match",
-            scope_match="unspecified_scope",
-            source_ids=["direct-source"],
-            score=0.44,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        direct.concept_coverage = 0.25
 
-        selected = select_extractive_fallback_evidence(
-            [*generic, direct]
-        )
-
-        self.assertEqual(selected[0], direct)
-        self.assertEqual(selected, [direct, generic[0]])
-
-    def test_artifact_shaped_old_omissions_keep_direct_expected_units(
-        self,
-    ) -> None:
-        web = make_result(
-            "web-distractor",
-            evidence_type="web_database",
-            scope_match="general_evidence",
-            source_ids=[],
-            score=0.548,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        generic = make_result(
-            "generic-difficulty",
-            scope_match="general_evidence",
-            source_ids=["generic"],
-            score=0.544,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        interrupted_phrase = make_result(
-            "die-forelle-ku-006",
-            scope_match="unspecified_scope",
-            source_ids=["kim-die-forelle-04"],
-            score=0.444,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        interrupted_phrase.concept_coverage = 0.142857
-        interrupted_phrase.content_concept_coverage = 0.142857
-
-        self.assertEqual(
-            select_extractive_fallback_evidence(
-                [web, generic, interrupted_phrase]
-            ),
-            [interrupted_phrase, generic],
-        )
-
-        difficult_generic = make_result(
-            "die-forelle-ku-009",
-            scope_match="general_evidence",
-            source_ids=["generic-difficulty"],
-            score=0.625,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        difficult_generic.concept_coverage = 0.5
-        difficult_generic.content_concept_coverage = 0.5
-        difficult_direct = make_result(
-            "die-forelle-ku-011",
-            scope_match="general_evidence",
-            source_ids=["kim-die-forelle-08"],
-            score=0.544,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        unrelated_local = make_result(
-            "die-forelle-ku-010",
-            scope_match="local_example",
-            source_ids=["kim-die-forelle-07"],
-            score=0.513,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        unrelated_local.concept_coverage = 0.5
-        unrelated_local.content_concept_coverage = 0.5
-
-        selected = select_extractive_fallback_evidence(
-            [difficult_generic, difficult_direct, unrelated_local],
-            exclude_local_examples=True,
-        )
-        self.assertEqual(selected, [difficult_generic, difficult_direct])
-
-    def test_meter_return_fallback_anchors_whole_piece_unit_only(self) -> None:
-        m39_local = make_result(
-            "in-flowery-clouds-ku-008",
-            scope_match="local_example",
-            source_ids=["meter-change"],
-            score=0.597,
-            text_score=0.0,
-            semantic_match_type="dense",
-            review_warning="rewrite_review_pending",
-        )
-        m39_local.concept_coverage = 0.25
-        m39_local.content_concept_coverage = 0.25
-        meter_return = make_result(
-            "in-flowery-clouds-ku-011",
-            scope_match="general_evidence",
-            source_ids=["meter-return"],
-            score=0.517,
-            text_score=0.0,
-            semantic_match_type="dense",
-            review_warning="rewrite_review_pending",
-        )
-        meter_return.concept_coverage = 0.75
-        meter_return.content_concept_coverage = 0.75
-        m19_local = make_result(
-            "in-flowery-clouds-ku-006",
-            scope_match="local_example",
-            source_ids=["breath-example"],
-            score=0.455,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-
-        self.assertEqual(
-            select_extractive_fallback_evidence(
-                [m39_local, meter_return, m19_local]
-            ),
-            [meter_return],
-        )
-
-    def test_transposition_fallback_omits_fermata_warning(self) -> None:
-        transposition = make_result(
-            "in-flowery-clouds-ku-007",
-            scope_match="general_evidence",
-            source_ids=["transposition"],
-            score=0.702,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        transposition.concept_coverage = 0.428571
-        transposition.content_concept_coverage = 0.142857
-        optional_note = make_result(
-            "in-flowery-clouds-ku-013",
-            scope_match="general_evidence",
-            source_ids=["optional-note"],
-            score=0.599,
-            text_score=0.0,
-            semantic_match_type="dense",
-        )
-        fermata = make_result(
-            "in-flowery-clouds-ku-001",
-            scope_match="local_example",
-            source_ids=["fermata"],
-            score=0.560,
-            text_score=0.0,
-            semantic_match_type="dense",
-            review_warning="rewrite_review_pending",
-        )
-
-        selected = select_extractive_fallback_evidence(
-            [transposition, optional_note, fermata]
-        )
-
-        self.assertEqual(selected, [transposition, optional_note])
-        self.assertFalse(
-            any(
-                result.record.get("retrieval_review_warning")
-                for result in selected
-            )
-        )
-
-    def test_broad_fallback_reanchors_and_keeps_same_source_bundle(
-        self,
-    ) -> None:
-        distractor = make_result(
-            "distractor",
-            scope_match="general_evidence",
-            source_ids=["source-other"],
-            score=21.5,
-            semantic_match_type="broad_guidance",
-        )
-        local = make_result(
-            "local",
-            scope_match="local_example",
-            source_ids=["source-local"],
-            score=23.0,
-            semantic_match_type="broad_guidance",
-        )
-        sibling_one = make_result(
-            "sibling-one",
-            scope_match="general_evidence",
-            source_ids=["source-bundle"],
-            score=18.5,
-            semantic_match_type="broad_guidance",
-        )
-        sibling_two = make_result(
-            "sibling-two",
-            scope_match="general_evidence",
-            source_ids=["source-bundle"],
-            score=16.5,
-            semantic_match_type="broad_guidance",
-        )
-        anchor = make_result(
-            "anchor",
-            scope_match="general_evidence",
-            source_ids=["source-bundle", "source-secondary"],
-            score=22.5,
-            semantic_match_type="broad_guidance",
-        )
-
-        self.assertEqual(
-            select_extractive_fallback_evidence(
-                [distractor, local, sibling_one, sibling_two, anchor]
-            ),
-            [anchor, sibling_one, sibling_two],
-        )
-
-    def test_extractive_fallback_keeps_unscoped_direct_anchor(self) -> None:
-        direct = make_result(
-            "direct",
-            scope_match="unspecified_scope",
-            source_ids=["source-direct"],
-        )
-        general = make_result(
-            "general",
-            scope_match="general_evidence",
-            source_ids=["source-other"],
-        )
-
-        self.assertEqual(
-            select_extractive_fallback_evidence([direct, general]),
-            [direct],
-        )
 
     def test_other_range_context_is_capped_at_two_records(self) -> None:
         overlap = make_result("overlap", alias_score=0.0)
@@ -465,24 +149,6 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         selected = select_generation_evidence([overlap, *contexts])
 
         self.assertEqual(selected, [overlap, *contexts[:2]])
-
-    def test_unconfirmed_range_context_cannot_become_primary(self) -> None:
-        pending = make_result(
-            "pending",
-            alias_score=1.0,
-            scope_match="unscoped_pending_context",
-        )
-        unspecified = make_result(
-            "unspecified",
-            alias_score=0.0,
-            scope_match="unspecified_context",
-        )
-
-        self.assertFalse(has_primary_grounding([pending, unspecified]))
-        self.assertEqual(
-            select_generation_evidence([pending, unspecified]),
-            [],
-        )
 
     def test_prompt_marks_other_range_evidence_as_context_only(self) -> None:
         overlap = make_result("overlap")
@@ -510,7 +176,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             prompt,
         )
 
-    def test_local_example_uses_only_canonical_ranges_and_stays_local(
+    def test_local_example_keeps_canonical_ranges_out_of_no_range_prose(
         self,
     ) -> None:
         local = make_result(
@@ -549,34 +215,43 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
 
         self.assertIn("Evidence_role=local_example", system_prompt)
         self.assertIn("evidence_role: local_example", context)
-        self.assertIn("measure_range: 63, 82-83", context)
-        self.assertIn("citable confirmed local example", context)
+        self.assertNotIn("measure_range: 63, 82-83", context)
+        self.assertIn("citable passage-specific advice", context)
+        self.assertIn("hidden presentation metadata", context)
         self.assertIn("does not establish", context)
         self.assertNotIn("82마디에서는", context)
         self.assertNotIn("첫 마디", context)
         self.assertNotIn("m. 51", context)
         self.assertNotIn("measures 52–53", context)
         self.assertNotIn("68, 134마디", context)
-        self.assertIn("해당 대목에서는", context)
+        self.assertNotIn("해당 대목에서는", context)
+        self.assertNotIn("expert_source_answer", context)
+        self.assertIn(local.record["answer"], context)
         authority = expert_prompt_factuality_material(local.record, [])
         self.assertFalse(authority["range_partitioned"])
-        self.assertFalse(
-            any(
-                locator in text
-                for text in authority["answer_texts"]
-                for locator in (
-                    "첫 마디",
-                    "82마디",
-                    "m. 51",
-                    "measures 52–53",
-                    "68, 134마디",
-                )
-            )
+        self.assertEqual(
+            authority,
+            {
+                "range_partitioned": False,
+                "answer_texts": [local.record["answer"]],
+                "question_contexts": [],
+                "source_ids": [],
+            },
         )
+        self.assertEqual(local.record["measure_range"], [[63, 63], [82, 83]])
         extractive = build_extractive_answer([local])
-        self.assertIn("확인된 국소 예시(마디 63, 82-83)", extractive)
-        self.assertIn(local.record["answer"], extractive)
-        self.assertIn("[una-voce-poco-fa-ku-028]", extractive)
+        self.assertIn(
+            (
+                "고음이 강박에 놓이지 않은 경우에는 단어와 음악의 "
+                "강세 관계에 유의해 유연하게 노래해야 합니다."
+            ),
+            extractive,
+        )
+        self.assertNotIn("범위 안내", extractive)
+        self.assertNotIn("확인된 국소 예시", extractive)
+        self.assertNotRegex(extractive, r"(?:63|82\s*[-–—~]\s*83)\s*마디")
+        self.assertNotIn("[E1]", extractive)
+        self.assertNotIn("una-voce-poco-fa-ku-028", extractive)
 
     def test_local_only_answer_cannot_claim_piece_wide_frequency(
         self,
@@ -596,6 +271,15 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [local],
             )
         )
+        self.assertFalse(
+            answer_overgeneralizes_local_examples(
+                (
+                    "질문하신 도약음에서는 지나치게 강조되지 않도록 "
+                    "유의한다. [E1]"
+                ),
+                [local],
+            )
+        )
         for unsupported_claim in (
             "이 노래에는 도약음이 자주 나오므로 조심한다. [E1]",
             "고음이 강박에 있지 않은 경우가 많으므로 조심한다. [E1]",
@@ -610,7 +294,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                         [local],
                     )
                 )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 (
                     "30마디와 33마디에서는 도약하는 고음이 "
@@ -619,7 +303,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [local],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 (
                     "30마디에서는 도약음이 자주 나오지는 않는다고 "
@@ -628,7 +312,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [local],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 (
                     "30마디의 근거만으로 곡 전반에 적용된다고 "
@@ -644,7 +328,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             measure_status="whole_piece",
         )
         whole.record["measure_range"] = []
-        self.assertTrue(
+        self.assertFalse(
             answer_overgeneralizes_local_examples(
                 "이 곡 전반의 가창에 유의해야 한다. [E1] [E2]",
                 [whole, local],
@@ -656,7 +340,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [whole, local],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 (
                     "이 곡 전반의 가창에 유의하되, 30마디의 "
@@ -666,7 +350,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             )
         )
 
-    def test_each_cited_local_example_requires_its_own_canonical_range(
+    def test_no_range_rejects_every_numeric_local_measure_locator(
         self,
     ) -> None:
         first = make_result(
@@ -686,7 +370,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [first, second],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 (
                     "63마디에서 고음을 유연하게 부른다. [E1]\n"
@@ -696,7 +380,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [first, second],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 "82마디부터 83마디에서 고음을 유연하게 부른다. [E1]",
                 [first, second],
@@ -705,6 +389,15 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self.assertTrue(
             answer_overgeneralizes_local_examples(
                 "64마디에서 고음을 유연하게 부른다. [E1]",
+                [first, second],
+            )
+        )
+        self.assertFalse(
+            answer_overgeneralizes_local_examples(
+                (
+                    "질문하신 고음에서는 유연하게 노래한다. [E1]\n"
+                    "이어지는 악센트는 가볍게 표현한다. [E2]"
+                ),
                 [first, second],
             )
         )
@@ -772,7 +465,7 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                 [whole, local],
             )
         )
-        self.assertFalse(
+        self.assertTrue(
             answer_overgeneralizes_local_examples(
                 "41–43마디에서 레가토를 유지한다. [E2]",
                 [whole, local],
@@ -822,12 +515,12 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self,
     ) -> None:
         overlap = make_result("overlap")
-        overlap.record["answer"] = "선택 범위 답변"
+        overlap.record["answer"] = "선택 범위 답변입니다."
         other_range = make_result(
             "other-range",
             scope_match="other_range_context",
         )
-        other_range.record["answer"] = "다른 구간 답변"
+        other_range.record["answer"] = "다른 구간 답변입니다."
 
         mixed = build_extractive_answer([overlap, other_range])
         secondary_only = build_extractive_answer([other_range])
@@ -835,13 +528,14 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         self.assertIn("선택 범위 답변", mixed)
         self.assertNotIn("다른 구간 답변", mixed)
         self.assertIn(
-            "선택한 마디 범위를 직접 뒷받침하는 근거는 없습니다.",
+            "선택하신 마디에는 이 내용을 직접 적용하기 어렵습니다.",
             secondary_only,
         )
-        self.assertIn("다른 구간의 관련 주석", secondary_only)
+        self.assertIn("곡의 다른 부분에 해당합니다", secondary_only)
+        self.assertNotIn("다른 구간의 관련 주석", secondary_only)
         self.assertIn("다른 구간 답변", secondary_only)
 
-    def test_secondary_citations_are_removed_and_no_footer_is_added(
+    def test_secondary_and_uncited_drafts_are_rejected(
         self,
     ) -> None:
         overlap = make_result("die-forelle-ku-001")
@@ -852,89 +546,251 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         )
         other_range.record["answer"] = "다른 구간의 강약 교대"
 
-        explicit = finalize_answer_citations(
-            (
-                "다른 구간의 강약 교대 [E2] "
-                "[die-forelle-ku-002]"
-            ),
-            [overlap, other_range],
-        )
-        uncited_answer = finalize_answer_citations(
-            "인용을 생략한 답변",
-            [overlap, other_range],
-        )
+        with self.assertRaises(GeneratedAnswerRejected):
+            finalize_answer_citations(
+                (
+                    "다른 구간의 강약 교대 [E2] "
+                    "[die-forelle-ku-002]"
+                ),
+                [overlap, other_range],
+            )
+        with self.assertRaises(GeneratedAnswerRejected):
+            finalize_answer_citations(
+                "인용을 생략한 답변",
+                [overlap, other_range],
+            )
 
-        self.assertIn("[die-forelle-ku-001]", explicit)
-        self.assertNotIn("[die-forelle-ku-002]", explicit)
-        self.assertIn("선택 범위의 근거", explicit)
-        self.assertNotIn("다른 구간의 강약 교대", explicit)
-        self.assertEqual(uncited_answer, "인용을 생략한 답변")
-        self.assertNotIn("제공된 검색 근거", uncited_answer)
-        self.assertNotIn("[die-forelle-ku-001]", uncited_answer)
-        self.assertNotIn("[die-forelle-ku-002]", uncited_answer)
 
-    def test_generated_evidence_footer_variants_are_removed(self) -> None:
-        primary = make_result("die-forelle-ku-001")
-        secondary = make_result(
-            "die-forelle-ku-002",
-            scope_match="other_range_context",
+    def test_pipeline_scope_scaffolding_is_removed_but_answer_is_kept(
+        self,
+    ) -> None:
+        legacy = (
+            "범위 안내: 아래 내용은 표시된 마디에서 확인된 국소 "
+            "예시입니다.\n\n"
+            "확인된 국소 예시(마디 44-55): 아리아의 긴 간주에서는 "
+            "표정과 움직임으로 극의 흐름에 반응해야 합니다."
         )
-        cases = (
-            "답변입니다. 제공된 검색 근거: [E1]",
-            "답변입니다. **제공된 검색 근거：** [E1]",
-            "답변입니다.\n- 제공된   검색   근거: [E1]",
-            "답변입니다.\n### 제공된 검색 근거:\n[E1] [E2]",
-            "답변입니다.\n**제공된 검색 근거:**\n[Evidence 1]",
-            "답변입니다.\n1. 제공된 검색 근거:\n[E1]",
-            "답변입니다.\n• 제공된 검색 근거:\n[E1]",
-            "답변입니다.\n제공된 검색 근거:\n[Evidence no. 1] [근거 2]",
-            "답변입니다.\n“제공된 검색 근거”: [E1]",
-            "답변입니다.\n제공된 **검색 근거**: [E1]",
-            "답변입니다.\n**제공된** 검색 근거: [E1]",
-            "답변입니다.\n제공된 *검색* 근거: [E1]",
+        markdown = (
+            "**범위 안내:** 내부 범위입니다.\n\n"
+            "### **확인된 국소 예시(마디 44–55):** 긴 간주에서는 "
+            "다음 장면을 준비해야 합니다."
         )
-
-        for answer in cases:
-            with self.subTest(answer=answer):
-                self.assertEqual(
-                    finalize_answer_citations(
-                        answer,
-                        [primary, secondary],
-                    ),
-                    "답변입니다.",
-                )
-                self.assertFalse(
-                    answer_references_secondary_evidence(
-                        answer,
-                        [primary, secondary],
-                    )
-                )
-
-        formatted_cases = {
-            "**답변입니다.** 제공된 검색 근거: [E1]": "**답변입니다.**",
-            "_답변입니다._ 제공된 검색 근거: [E1]": "_답변입니다._",
-            "`답변입니다.` 제공된 검색 근거: [E1]": "`답변입니다.`",
-        }
-        for answer, expected in formatted_cases.items():
-            with self.subTest(answer=answer):
-                self.assertEqual(
-                    finalize_answer_citations(answer, [primary]),
-                    expected,
-                )
+        copied_prompt_fields = (
+            "measure_range: 44-55\n"
+            "evidence_role: local_example\n"
+            "긴 간주에서는 앞뒤 감정의 변화를 이어야 합니다. [E1]"
+        )
 
         self.assertEqual(
-            finalize_internal_knowledge_answer(
-                "일반 답변입니다. **제공된 검색 근거：** [E1]"
+            finalize_user_visible_answer(legacy),
+            (
+                "아리아의 긴 간주에서는 표정과 움직임으로 극의 "
+                "흐름에 반응해야 합니다."
             ),
-            "일반 답변입니다.",
         )
+        self.assertEqual(
+            finalize_user_visible_answer(markdown),
+            "긴 간주에서는 다음 장면을 준비해야 합니다.",
+        )
+        self.assertEqual(
+            finalize_user_visible_answer(copied_prompt_fields),
+            "긴 간주에서는 앞뒤 감정의 변화를 이어야 합니다.",
+        )
+
+    def test_inline_pipeline_fields_and_parenthesized_citations_never_leak(
+        self,
+    ) -> None:
+        self.assertEqual(
+            finalize_user_visible_answer(
+                "정상 답변입니다. citation_label: E1 "
+                "evidence_role: local_example"
+            ),
+            "정상 답변입니다.",
+        )
+        self.assertEqual(
+            finalize_user_visible_answer(
+                "정상 답변입니다. 범위 안내: 내부 범위입니다."
+            ),
+            "정상 답변입니다.",
+        )
+        self.assertEqual(
+            finalize_user_visible_answer("정상 답변입니다. (E1)"),
+            "정상 답변입니다.",
+        )
+        self.assertEqual(
+            finalize_user_visible_answer("citation_label E1"),
+            "현재 확인된 정보만으로는 이 질문에 정확히 "
+            "답변하기 어렵습니다.",
+        )
+
+        for answer in (
+            "die_forelle_ku_010에 따르면 이렇게 부릅니다.",
+            "[die forelle ku 010]에 따르면 이렇게 부릅니다.",
+            "die–forelle–ku–010에 따르면 이렇게 부릅니다.",
+        ):
+            with self.subTest(answer=answer):
+                finalized = finalize_user_visible_answer(answer)
+                self.assertNotRegex(
+                    finalized,
+                    r"(?i)die[\s_–—-]+forelle[\s_–—-]+ku",
+                )
+
+        opaque_id_variants = (
+            "webchunk test 01",
+            "web_chunk_test_01",
+            "web–chunk–test–01",
+            "web source 01",
+            "web-claim-test",
+            "sqa 123",
+            "sqa_123",
+            "sqa–123",
+        )
+        unavailable = (
+            "현재 확인된 정보만으로는 이 질문에 정확히 "
+            "답변하기 어렵습니다."
+        )
+        for opaque_id in opaque_id_variants:
+            with self.subTest(opaque_id=opaque_id, form="bare"):
+                self.assertEqual(
+                    finalize_user_visible_answer(
+                        f"정상 답변입니다. {opaque_id}"
+                    ),
+                    unavailable,
+                )
+            with self.subTest(opaque_id=opaque_id, form="bracketed"):
+                self.assertEqual(
+                    finalize_user_visible_answer(
+                        f"[{opaque_id}]에 따르면 이렇게 부릅니다."
+                    ),
+                    "이렇게 부릅니다.",
+                )
+
+        for answer in (
+            "measure_range: 44-55",
+            "범위 안내: 내부 범위입니다.",
+            "제공된 검색 근거:",
+        ):
+            with self.subTest(answer=answer):
+                self.assertEqual(
+                    finalize_user_visible_answer(answer),
+                    "현재 확인된 정보만으로는 이 질문에 정확히 "
+                    "답변하기 어렵습니다.",
+                )
+
+    def test_every_pipeline_field_blocks_separator_variants(self) -> None:
+        unavailable = (
+            "현재 확인된 정보만으로는 이 질문에 정확히 "
+            "답변하기 어렵습니다."
+        )
+        separators = (" ", "-", "_", "**", "`", "–", "—")
+        for field_name in answer_cli.PIPELINE_FIELD_NAMES:
+            words = field_name.split("_")
+            for separator in separators:
+                variant = separator.join(words)
+                with self.subTest(
+                    field_name=field_name,
+                    separator=separator,
+                ):
+                    self.assertEqual(
+                        finalize_user_visible_answer(
+                            f"정상 답변입니다. {variant} 값을 사용합니다."
+                        ),
+                        unavailable,
+                    )
+
+    def test_pipeline_guards_preserve_ordinary_korean_music_prose(self) -> None:
+        answers = (
+            "선택한 마디 범위에서는 호흡을 조절합니다.",
+            "이 근거의 역할은 프레이즈의 방향을 설명하는 것입니다.",
+            "국소적인 예를 들어 음색 변화를 설명합니다.",
+            "웹 자료를 읽더라도 악보를 먼저 확인합니다.",
+        )
+        for answer in answers:
+            with self.subTest(answer=answer):
+                self.assertEqual(finalize_user_visible_answer(answer), answer)
+
+
+    def test_cli_generation_error_propagates_without_retry(self) -> None:
+        web = make_result(
+            "web-only",
+            evidence_type="web_database",
+            scope_match="general_evidence",
+        )
+        web.record["answer"] = "렌더링하면 안 되는 웹 원문"
+        web.content_concept_coverage = 1.0
+
+        class WebIndex:
+            configured_retrieval_mode = "hybrid"
+            retrieval_mode = "hybrid"
+            last_search_mode = "hybrid"
+            last_route_reason = "dense_result_returned"
+
+            @staticmethod
+            def search(**_kwargs):
+                return [web]
+
+        args = SimpleNamespace(
+            settings=None,
+            piece="die-forelle",
+            measures="",
+            measure_ranges=[],
+            topic=None,
+            question="이 자료는 무엇을 설명하나요?",
+            top_k=6,
+            no_generate=False,
+            rebuild_corpus=False,
+            json=True,
+        )
+        settings = {
+            "corpus_path": "/tmp/corpus.json",
+            "model_path": "/tmp/model.gguf",
+            "llm": {},
+        }
+        with (
+            mock.patch.object(answer_cli, "parse_args", return_value=args),
+            mock.patch.object(
+                answer_cli,
+                "load_settings",
+                return_value=settings,
+            ),
+            mock.patch.object(answer_cli, "validate_retrieval_requirements"),
+            mock.patch.object(answer_cli, "validate_generation_requirements"),
+            mock.patch.object(answer_cli, "ensure_corpus"),
+            mock.patch.object(answer_cli, "load_corpus", return_value=[]),
+            mock.patch.object(
+                answer_cli,
+                "build_retrieval_index",
+                return_value=WebIndex(),
+            ),
+            mock.patch.object(
+                answer_cli,
+                "generate",
+                side_effect=ValueError(
+                    "requested tokens exceed the context window"
+                ),
+            ) as generate,
+        ):
+            with self.assertRaises(ValueError):
+                answer_cli.main()
+        generate.assert_called_once()
+
+    def test_deictic_generic_range_question_is_underspecified(self) -> None:
         self.assertTrue(
-            is_grounded_insufficiency_answer(
-                "\"제공된 검색 근거\":\n[Evidence no. 1] [근거 2]"
+            is_underspecified_ranged_query(
+                "이 부분은 어떻게 노래해야 할까?",
+                "nella-fantasia",
+                [[11, 17]],
+            )
+        )
+        self.assertFalse(
+            is_underspecified_ranged_query(
+                "이 부분에서 호흡은 어디에서 해야 할까?",
+                "nella-fantasia",
+                [[11, 17]],
             )
         )
 
-    def test_secondary_citation_variants_trigger_safe_fallback(self) -> None:
+    def test_secondary_citation_variants_are_rejected(self) -> None:
         overlap = make_result("die-forelle-ku-001")
         overlap.record["answer"] = "선택 범위의 근거"
         other_range = make_result(
@@ -954,19 +810,13 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         ]
         for reference in secondary_references:
             with self.subTest(reference=reference):
-                finalized = finalize_answer_citations(
-                    f"다른 구간 위험 주장 {reference}",
-                    [overlap, other_range],
-                )
-                self.assertIn("선택 범위의 근거", finalized)
-                self.assertIn("[die-forelle-ku-001]", finalized)
-                self.assertNotIn("다른 구간 위험 주장", finalized)
-                self.assertNotIn(
-                    "die-forelle-ku-002",
-                    finalized.lower(),
-                )
+                with self.assertRaises(GeneratedAnswerRejected):
+                    finalize_answer_citations(
+                        f"다른 구간 위험 주장 {reference}",
+                        [overlap, other_range],
+                    )
 
-    def test_secondary_citation_fallback_uses_compact_selection(self) -> None:
+    def test_secondary_citation_never_substitutes_primary_text(self) -> None:
         primary = [
             make_result(
                 f"primary-{index}",
@@ -975,27 +825,19 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             )
             for index in range(4)
         ]
+        for index, result in enumerate(primary):
+            result.record["answer"] = f"선택 근거 {index}입니다."
         other_range = make_result(
             "other-range",
             scope_match="other_range_context",
             source_ids=["other-source"],
         )
 
-        finalized = finalize_answer_citations(
-            "다른 구간의 위험 주장 [E5]",
-            [*primary, other_range],
-        )
-
-        cited_primary = [
-            result.record["id"]
-            for result in primary
-            if f'[{result.record["id"]}]' in finalized
-        ]
-        self.assertEqual(
-            cited_primary,
-            [primary[0].record["id"], primary[1].record["id"]],
-        )
-        self.assertNotIn("다른 구간의 위험 주장", finalized)
+        with self.assertRaises(GeneratedAnswerRejected):
+            finalize_answer_citations(
+                "다른 구간의 위험 주장 [E5]",
+                [*primary, other_range],
+            )
 
     def test_music_and_korean_counts_are_not_secondary_citations(self) -> None:
         overlap = make_result("die-forelle-ku-001")
@@ -1004,23 +846,182 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
             scope_match="other_range_context",
         )
 
-        ordinary_uses = [
-            "최저음은 E2이다. [E1]",
-            "최저음은 E2. [E1]",
-            "음역 하한은 E2! [E1]",
-            "근거 2가지를 설명한다. [E1]",
-            "출처 2곳을 비교한다. [E1]",
-        ]
-        for answer in ordinary_uses:
+        ordinary_uses = {
+            "최저음은 E2이다. [E1]": "최저음은 E2입니다.",
+            "최저음은 E2. [E1]": "최저음은 E2.",
+            "음역 하한은 E2! [E1]": "음역 하한은 E2!",
+            "근거 2가지를 설명한다. [E1]": "근거 2가지를 설명합니다.",
+            "출처 2곳을 비교한다. [E1]": "출처 2곳을 비교합니다.",
+        }
+        for answer, expected in ordinary_uses.items():
             with self.subTest(answer=answer):
                 finalized = finalize_answer_citations(
                     answer,
                     [overlap, other_range],
                 )
-                self.assertIn(answer.rsplit(" ", 1)[0], finalized)
-                self.assertIn("[die-forelle-ku-001]", finalized)
+                self.assertEqual(finalized, expected)
+                self.assertNotIn("[E1]", finalized)
+                self.assertNotIn("die-forelle-ku-001", finalized)
+                if "E2" in answer:
+                    self.assertIn("E2", finalized)
 
-    def test_prompt_forbids_claims_split_into_an_inapplicable_unit(
+    def test_user_visible_answer_strips_internal_ids_and_formalizes_style(
+        self,
+    ) -> None:
+        primary = make_result("die-forelle-ku-001")
+        secondary = make_result(
+            "die-forelle-ku-002",
+            scope_match="other_range_context",
+        )
+
+        finalized = finalize_user_visible_answer(
+            (
+                "첫 문장은 근거를 설명한다. [E1, E2]\n"
+                "둘째 문장은 이어진다. die-forelle-ku-001"
+            ),
+            [primary, secondary],
+        )
+
+        self.assertEqual(
+            finalized,
+            "첫 문장은 근거를 설명합니다.\n둘째 문장은 이어집니다.",
+        )
+        self.assertNotIn("[E1", finalized)
+        self.assertNotIn("die-forelle-ku-001", finalized)
+        self.assertNotIn("die-forelle-ku-002", finalized)
+
+        citation_suffix_cases = {
+            (
+                "설명입니다. [E1]에 따르면, 전주가 있을 수 있습니다."
+            ): "설명입니다. 전주가 있을 수 있습니다.",
+            (
+                "설명입니다. [die-forelle-ku-001]에서는 12마디를 "
+                "확인합니다."
+            ): "설명입니다. 12마디를 확인합니다.",
+            (
+                "설명입니다. [die-forelle-ku-001]에서 보듯이, 24마디를 "
+                "확인합니다."
+            ): "설명입니다. 24마디를 확인합니다.",
+            (
+                "설명입니다. die-forelle-ku-001에 의하면, 원본을 "
+                "확인합니다."
+            ): "설명입니다. 원본을 확인합니다.",
+        }
+        for answer, expected in citation_suffix_cases.items():
+            with self.subTest(answer=answer):
+                self.assertEqual(
+                    finalize_user_visible_answer(answer, [primary]),
+                    expected,
+                )
+
+        already_orphaned_cases = {
+            "설명입니다. 에 따르면, 전주가 있습니다.": (
+                "설명입니다. 전주가 있습니다."
+            ),
+            "설명입니다. 에서는 12마디를 확인합니다.": (
+                "설명입니다. 12마디를 확인합니다."
+            ),
+            "설명입니다. 에서 보듯이, 24마디를 확인합니다.": (
+                "설명입니다. 24마디를 확인합니다."
+            ),
+        }
+        for answer, expected in already_orphaned_cases.items():
+            with self.subTest(answer=answer):
+                self.assertEqual(
+                    finalize_user_visible_answer(answer, [primary]),
+                    expected,
+                )
+
+        no_space_boundary = finalize_user_visible_answer(
+            "악보대로 부르지 않는다.성악 성부를 확인한다."
+        )
+        self.assertEqual(
+            no_space_boundary,
+            "악보대로 부르지 않습니다. 성악 성부를 확인합니다.",
+        )
+
+        duplicated_source_spacing = finalize_user_visible_answer(
+            "이 곡은 일관적으로  서정적이다.\t\t표현을 유지한다."
+        )
+        self.assertEqual(
+            duplicated_source_spacing,
+            "이 곡은 일관적으로 서정적입니다. 표현을 유지합니다.",
+        )
+
+        lexical_nida_cases = {
+            "결코 쉬운 곡은 아니다.": "결코 쉬운 곡은 아닙니다.",
+            "선율이 여러 성부를 다니다.": "선율이 여러 성부를 다닙니다.",
+            "중요한 의미를 지니다.": "중요한 의미를 지닙니다.",
+        }
+        for answer, expected in lexical_nida_cases.items():
+            with self.subTest(answer=answer):
+                self.assertFalse(answer_uses_formal_polite_korean(answer))
+                finalized = finalize_user_visible_answer(answer)
+                self.assertEqual(finalized, expected)
+                self.assertTrue(
+                    answer_uses_formal_polite_korean(finalized)
+                )
+
+        for answer in (
+            "결코 쉬운 곡은 아닙니다.",
+            "선율이 여러 성부를 다닙니다.",
+            "중요한 의미를 지닙니다.",
+        ):
+            with self.subTest(answer=answer):
+                self.assertEqual(finalize_user_visible_answer(answer), answer)
+                self.assertTrue(answer_uses_formal_polite_korean(answer))
+
+    def test_nonpolite_sentence_endings_fail_closed(self) -> None:
+        for answer in (
+            "이렇게 해 보자.",
+            "어떻게 할까?",
+            "숨을 쉬어라.",
+            "이 부분을 조심해.",
+            "Please sing softly.",
+            "Use a lighter tone.",
+            "OK",
+        ):
+            with self.subTest(answer=answer):
+                self.assertFalse(answer_uses_formal_polite_korean(answer))
+                self.assertEqual(
+                    finalize_user_visible_answer(answer),
+                    "현재 확인된 정보만으로는 이 질문에 정확히 "
+                    "답변하기 어렵습니다.",
+                )
+
+        for answer in (
+            "이렇게 해 봅시다.",
+            "어떻게 해야 합니까?",
+            "숨을 쉬십시오.",
+            "이 부분을 조심하세요.",
+        ):
+            with self.subTest(answer=answer):
+                self.assertTrue(answer_uses_formal_polite_korean(answer))
+                self.assertEqual(finalize_user_visible_answer(answer), answer)
+
+    def test_pipeline_vocabulary_fails_closed_at_display_boundary(self) -> None:
+        for term in (
+            "knowledge unit",
+            "expert annotation",
+            "retrieved evidence",
+            "retrieval",
+            "corpus",
+            "지식 단위",
+            "전문가 주석",
+            "검색 파이프라인",
+            "검색 결과",
+            "코퍼스",
+        ):
+            with self.subTest(term=term):
+                self.assertEqual(
+                    finalize_user_visible_answer(
+                        f"{term}에 따르면 이렇게 부릅니다."
+                    ),
+                    "현재 확인된 정보만으로는 이 질문에 정확히 "
+                    "답변하기 어렵습니다.",
+                )
+
+    def test_prompt_uses_curated_answer_instead_of_split_raw_source(
         self,
     ) -> None:
         result = make_result("la-capinera-ku-001")
@@ -1048,15 +1049,12 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
         system_prompt = messages[0]["content"]
         user_prompt = messages[1]["content"]
 
+        self.assertIn("authoritative claim text", system_prompt)
         self.assertIn(
-            "do not use a source-answer claim absent from this record's",
+            "Raw source annotations, legacy range hints, superseded wording",
             system_prompt,
         )
-        self.assertIn(
-            "another retrieved, range-applicable record",
-            system_prompt,
-        )
-        self.assertIn("split_source_context_withheld", user_prompt)
+        self.assertNotIn("split_source_context_withheld", user_prompt)
         self.assertIn("pianissimo로 시작하는 것이 좋다.", user_prompt)
         self.assertNotIn("l과 r을 정확히 발음한다", user_prompt)
 
@@ -1080,478 +1078,13 @@ class GenerationArtifactRepairTests(unittest.TestCase):
             [],
         )
 
-    def test_generation_retries_and_repairs_corrupted_token(self) -> None:
-        evidence = make_result("la-capinera-ku-009")
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [evidence]
-
-        calls = []
-
-        def generator(messages):
-            calls.append(messages)
-            if len(calls) == 1:
-                return "꾸SizePolicy는 새소리를 표현한다. [E1]"
-            self.assertIn("SizePolicy", messages[-1]["content"])
-            return "꾸밈음은 새소리를 표현한다. [E1]"
-
-        answer, results, _messages, context_limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="꾸밈음은 어떻게 표현할까?",
-                piece="la-capinera",
-                measure_ranges=[[28, 35]],
-                measures="28-35",
-                topic=None,
-                top_k=6,
-                generator=generator,
-            )
-        )
-
-        self.assertEqual(len(calls), 2)
-        self.assertEqual(answer, "꾸밈음은 새소리를 표현한다. [E1]")
-        self.assertEqual(results, [evidence])
-        self.assertFalse(context_limited)
-
-    def test_generation_repairs_unbound_local_with_whole_evidence_present(
-        self,
-    ) -> None:
-        whole = make_result(
-            "una-voce-poco-fa-ku-whole",
-            scope_match="general_evidence",
-            measure_status="whole_piece",
-        )
-        whole.record["measure_range"] = []
-        local = make_result(
-            "una-voce-poco-fa-ku-028",
-            scope_match="local_example",
-        )
-        local.record["measure_range"] = [[63, 63], [82, 83]]
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [whole, local]
-
-        calls = []
-
-        def generator(messages):
-            calls.append(messages)
-            if len(calls) == 1:
-                return (
-                    "고음이 강박에 놓이지 않으면 유연하게 "
-                    "노래한다. [E2]"
-                )
-            self.assertIn(
-                "must cite that item's [E#] label",
-                messages[-1]["content"],
-            )
-            self.assertIn(
-                "canonical measure_range",
-                messages[-1]["content"],
-            )
-            return (
-                "63마디에서는 고음이 강박에 놓이지 않으므로 "
-                "유연하게 노래한다. [E2]"
-            )
-
-        answer, results, _messages, context_limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="이 곡을 부를 때 무엇에 유의할까?",
-                piece="una-voce-poco-fa",
-                measure_ranges=[],
-                measures="",
-                topic=None,
-                top_k=6,
-                generator=generator,
-            )
-        )
-
-        self.assertEqual(len(calls), 2)
-        self.assertEqual(results, [whole, local])
-        self.assertIn("63마디", answer)
-        self.assertIn("[E2]", answer)
-        self.assertFalse(context_limited)
-
-    def test_generation_removes_source_only_measure_from_whole_record(
-        self,
-    ) -> None:
-        whole = make_result(
-            "la-capinera-ku-028",
-            scope_match="general_evidence",
-            measure_status="whole_piece",
-        )
-        whole.record["measure_range"] = []
-        whole.record["source_answer_context"] = [
-            {
-                "source_id": "yeon-la-capinera-10",
-                "question": "",
-                "answer": "135마디에서 모음으로 선율을 이어 부른다.",
-                "legacy_measure_range_hints": [[135, 135]],
-            }
-        ]
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [whole]
-
-        calls = []
-
-        def generator(messages):
-            calls.append(messages)
-            if len(calls) == 1:
-                return "135마디에서 모음으로 선율을 이어 부른다. [E1]"
-            self.assertIn(
-                "general_support item never authorizes a measure number",
-                messages[-1]["content"],
-            )
-            return "기교를 더할 때는 모음으로 선율을 이어 부른다. [E1]"
-
-        answer, results, _messages, context_limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="이 곡을 부를 때 무엇에 유의할까?",
-                piece="la-capinera",
-                measure_ranges=[],
-                measures="",
-                topic=None,
-                top_k=6,
-                generator=generator,
-            )
-        )
-
-        self.assertEqual(len(calls), 2)
-        self.assertEqual(results, [whole])
-        self.assertNotIn("135마디", answer)
-        self.assertIn("[E1]", answer)
-        self.assertFalse(context_limited)
 
 
-class ReviewConstraintPromptTests(unittest.TestCase):
-    def test_unrelated_warning_is_not_added_to_cited_safe_evidence(
-        self,
-    ) -> None:
-        safe = make_result(
-            "safe",
-            scope_match="general_evidence",
-        )
-        warning = make_result(
-            "unrelated-warning",
-            rewrite_status="needs_review",
-            rewrite_notes="다른 음정 표기를 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-            scope_match="local_example",
-        )
 
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [safe, warning]
-
-        unrelated_disclosure = build_review_disclosure([warning])
-        answer, _results, _messages, _limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="전주는 어떻게 선택할까?",
-                piece="die-forelle",
-                measure_ranges=[],
-                measures="",
-                topic=None,
-                top_k=6,
-                generator=lambda _messages: (
-                    unrelated_disclosure
-                    + "\n\n안전한 근거의 답변이다. [E1]"
-                ),
-            )
-        )
-
-        self.assertEqual(answer, "안전한 근거의 답변이다. [E1]")
-        self.assertNotIn("검토 주의:", answer)
-        self.assertNotIn("다른 음정", answer)
-
-    def test_unusable_citation_with_warning_candidate_fails_closed(
-        self,
-    ) -> None:
-        safe = make_result(
-            "safe",
-            scope_match="general_evidence",
-        )
-        warning = make_result(
-            "warning",
-            rewrite_status="needs_review",
-            rewrite_notes="표기를 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-            scope_match="local_example",
-        )
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [safe, warning]
-
-        answer, _results, _messages, _limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="조성을 바꿔도 될까?",
-                piece="in-flowery-clouds",
-                measure_ranges=[],
-                measures="",
-                topic=None,
-                top_k=6,
-                generator=lambda _messages: "조성을 바꿀 수 있다. [E99]",
-            )
-        )
-
-        self.assertIn("<NO_GROUNDED_ANSWER>", answer)
-
-    def test_warning_candidates_make_uncited_draft_fail_closed(self) -> None:
-        warning = make_result(
-            "warning",
-            rewrite_status="needs_review",
-            rewrite_notes="표기를 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-        )
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [warning]
-
-        answer, _results, _messages, _limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="표현은 어떻게 할까?",
-                piece="die-forelle",
-                measure_ranges=[[2, 5]],
-                measures="2-5",
-                topic=None,
-                top_k=6,
-                generator=lambda _messages: "인용 없는 답변이다.",
-            )
-        )
-
-        self.assertIn("<NO_GROUNDED_ANSWER>", answer)
-
-    def test_needs_review_draft_gets_compliance_repair_pass(self) -> None:
-        warning = make_result(
-            "in-flowery-clouds-ku-warning",
-            rewrite_status="needs_review",
-            rewrite_notes=(
-                "한 원문은 47마디와 동시에라고 하고 다른 원문은 "
-                "45마디부터라고 하므로 확인해야 한다."
-            ),
-            review_warning="rewrite_review_pending",
-        )
-
-        class FixedIndex:
-            @staticmethod
-            def search(**_kwargs):
-                return [warning]
-
-        calls = []
-
-        def generator(messages):
-            calls.append(messages)
-            if len(calls) == 1:
-                return "박자와 조성이 동시에 바뀐다. [E1]"
-            self.assertIn(
-                "warning prefix alone is not enough",
-                messages[-1]["content"],
-            )
-            return (
-                "자료마다 조성 변화 시점은 다르게 기록되어 있지만, "
-                "공통적으로 분위기 전환을 만든다. [E1]"
-            )
-
-        answer, _results, _messages, _limited = (
-            generate_with_context_retry(
-                FixedIndex(),
-                query="분위기는 왜 바뀔까?",
-                piece="in-flowery-clouds",
-                measure_ranges=[[39, 49]],
-                measures="39-49",
-                topic=None,
-                top_k=6,
-                generator=generator,
-            )
-        )
-
-        self.assertEqual(len(calls), 2)
-        self.assertTrue(answer.startswith("검토 주의:"))
-        self.assertNotIn("동시에 바뀐다", answer)
-        self.assertIn("시점은 다르게 기록", answer)
-
-    def test_warning_metadata_becomes_a_mandatory_prompt_constraint(self) -> None:
-        warning = make_result(
-            "die-forelle-ku-warning",
-            rewrite_status="needs_review",
-            rewrite_notes="원문 주장 사이의 정확성 충돌을 확인해야 함",
-            measure_status="waiting_for_review",
-            measure_notes="정확한 적용 위치가 아직 확인되지 않음",
-            review_warning="rewrite_and_measure_review_pending",
-        )
-
-        constraints = build_review_constraints([warning])
-        user_prompt = build_messages(
-            "die-forelle",
-            "2-5",
-            "어떻게 표현할까?",
-            [warning],
-        )[1]["content"]
-
-        self.assertIn("MANDATORY REVIEW CONSTRAINTS", constraints)
-        self.assertIn("actually\nuses and cites", constraints)
-        self.assertIn("answer omits", constraints)
-        self.assertIn("rewrite_status: needs_review", constraints)
-        self.assertIn("원문 주장 사이의 정확성 충돌을 확인해야 함", constraints)
-        self.assertIn("measure_status: waiting_for_review", constraints)
-        self.assertIn("정확한 적용 위치가 아직 확인되지 않음", constraints)
-        self.assertIn(
-            build_review_disclosure([warning]),
-            constraints,
-        )
-        self.assertIn(constraints, user_prompt)
-
-    def test_local_example_disclosure_hides_disputed_measure_numbers(
-        self,
-    ) -> None:
-        warning = make_result(
-            "in-flowery-clouds-ku-008",
-            rewrite_status="needs_review",
-            rewrite_notes=(
-                "한 원문은 47마디와 동시에 바뀐다고 하고, 다른 "
-                "원문은 45마디부터 바뀐다고 하므로 확인해야 한다."
-            ),
-            review_warning="rewrite_review_pending",
-            scope_match="local_example",
-        )
-        warning.record["measure_range"] = [[39, 49]]
-
-        disclosure = build_review_disclosure([warning])
-        context = build_messages(
-            "in-flowery-clouds",
-            "",
-            "이 곡을 부를 때 표현에 유의해야 할 점은?",
-            [warning],
-        )[1]["content"]
-
-        self.assertIn("미확인 위치 A", disclosure)
-        self.assertIn("미확인 위치 B", disclosure)
-        self.assertNotIn("47마디", disclosure)
-        self.assertNotIn("45마디", disclosure)
-        self.assertIn("measure_range: 39-49", context)
-        self.assertNotIn("47마디", context)
-        self.assertNotIn("45마디", context)
-
-    def test_warning_disclosure_is_natural_visible_and_idempotent(self) -> None:
-        warning = make_result(
-            "in-flowery-clouds-ku-warning",
-            rewrite_status="needs_review",
-            rewrite_notes="박자 표기의 정확성을 확인해야 한다.",
-            measure_status="waiting_for_review",
-            measure_notes="다른 악보나 곡이었나 확인 필요",
-            review_warning="rewrite_and_measure_review_pending",
-        )
-
-        disclosure = build_review_disclosure([warning])
-        answer = ensure_review_disclosure("전문가 설명이다.", [warning])
-
-        self.assertTrue(disclosure.startswith("검토 주의:"))
-        self.assertIn("박자 표기의 정확성을 확인해야 한다.", disclosure)
-        self.assertIn("정확한 적용 위치", disclosure)
-        self.assertIn("현재 선택한 곡에 해당하는지", disclosure)
-        self.assertEqual(
-            answer,
-            disclosure + "\n\n전문가 설명이다.",
-        )
-        self.assertEqual(
-            ensure_review_disclosure(answer, [warning]),
-            answer,
-        )
-
-    def test_record_helper_matches_result_helper(self) -> None:
-        warning = make_result(
-            "in-flowery-clouds-ku-warning",
-            rewrite_status="needs_review",
-            rewrite_notes="박자 표기의 정확성을 확인해야 한다.",
-            measure_status="waiting_for_review",
-            measure_notes="다른 악보나 곡이었나 확인 필요",
-            review_warning="rewrite_and_measure_review_pending",
-        )
-
-        self.assertEqual(
-            build_review_disclosure_from_records([warning.record]),
-            build_review_disclosure([warning]),
-        )
-
-    def test_exact_leading_disclosure_is_idempotent(self) -> None:
-        warning = make_result(
-            "die-forelle-ku-warning",
-            rewrite_notes="원문 주장을 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-        )
-        disclosure = build_review_disclosure([warning])
-        answer = disclosure + "\n\n전문가 설명이다."
-
-        self.assertEqual(
-            ensure_review_disclosure(answer, [warning]),
-            answer,
-        )
-
-    def test_leading_disclosure_requires_a_whitespace_boundary(self) -> None:
-        warning = make_result(
-            "die-forelle-ku-warning",
-            rewrite_notes="원문 주장을 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-        )
-        disclosure = build_review_disclosure([warning])
-        malformed = disclosure + "전문가 설명이다."
-
-        self.assertEqual(
-            ensure_review_disclosure(malformed, [warning]),
-            disclosure + "\n\n" + malformed,
-        )
-
-    def test_non_leading_disclosure_is_repaired(self) -> None:
-        warning = make_result(
-            "die-forelle-ku-warning",
-            rewrite_notes="원문 주장을 확인해야 한다.",
-            review_warning="rewrite_review_pending",
-        )
-        disclosure = build_review_disclosure([warning])
-        misplaced = "전문가 설명이다.\n\n" + disclosure
-
-        self.assertEqual(
-            ensure_review_disclosure(misplaced, [warning]),
-            disclosure + "\n\n" + misplaced,
-        )
-
-    def test_ready_reviewed_evidence_does_not_get_a_false_warning(self) -> None:
-        ready = make_result("die-forelle-ku-ready")
-
-        constraints = build_review_constraints([ready])
-        user_prompt = build_messages(
-            "die-forelle",
-            "2-5",
-            "어떻게 표현할까?",
-            [ready],
-        )[1]["content"]
-
-        self.assertEqual(constraints, "")
-        self.assertEqual(build_review_disclosure([ready]), "")
-        self.assertEqual(
-            ensure_review_disclosure("확정 답변", [ready]),
-            "확정 답변",
-        )
-        self.assertNotIn("MANDATORY REVIEW CONSTRAINTS", user_prompt)
 
 
 class RangeScopedSourceContextTests(unittest.TestCase):
-    def test_no_range_neutralizes_source_locators_for_nonlocal_units(
+    def test_no_range_uses_only_curated_answer_for_nonlocal_units(
         self,
     ) -> None:
         for scope_match, measure_status in (
@@ -1565,6 +1098,7 @@ class RangeScopedSourceContextTests(unittest.TestCase):
                     measure_status=measure_status,
                 )
                 result.record["measure_range"] = []
+                result.record["answer"] = "검토가 완료된 지식 단위 답변이다."
                 result.record["source_answer_context"] = [
                     {
                         "source_id": "source-a",
@@ -1586,21 +1120,20 @@ class RangeScopedSourceContextTests(unittest.TestCase):
                 )
 
                 self.assertNotIn("135마디", prompt)
-                self.assertIn("해당 대목에서", prompt)
-                self.assertIn(
-                    "no_range_expert_source_answer_"
-                    "with_source_locators_neutralized",
-                    prompt,
-                )
-                self.assertFalse(
-                    any(
-                        "135마디" in text
-                        for text in authority["answer_texts"]
-                        + authority["question_contexts"]
-                    )
+                self.assertNotIn("해당 대목에서", prompt)
+                self.assertNotIn("expert_source_answer", prompt)
+                self.assertIn(result.record["answer"], prompt)
+                self.assertEqual(
+                    authority,
+                    {
+                        "range_partitioned": False,
+                        "answer_texts": [result.record["answer"]],
+                        "question_contexts": [],
+                        "source_ids": [],
+                    },
                 )
 
-    def test_selected_range_omits_other_range_source_and_combined_rewrite(
+    def test_selected_range_uses_curated_answer_and_withholds_raw_sources(
         self,
     ) -> None:
         merged = make_result("la-capinera-ku-018")
@@ -1636,48 +1169,67 @@ class RangeScopedSourceContextTests(unittest.TestCase):
             [merged],
         )[1]["content"]
 
-        self.assertIn("range_partitioned_source_context: true", prompt)
-        self.assertIn(
-            "Do not repeat any measure number from the source text",
-            prompt,
-        )
-        self.assertIn(
-            "range_scoped_expert_source_answer_"
-            "with_source_locators_neutralized",
-            prompt,
-        )
-        self.assertIn(
-            "해당 대목의 ff와 pp는 두 부분의 대비가 드러나도록 "
-            "표현한다.",
-            prompt,
-        )
+        self.assertNotIn("range_partitioned_source_context", prompt)
+        self.assertNotIn("expert_source_answer", prompt)
+        self.assertNotIn("51-59마디의 ff와 pp", prompt)
         self.assertNotIn("빠른 교대는 메아리 효과로 볼 수 있다.", prompt)
-        self.assertNotIn("117마디", prompt)
-        self.assertNotIn("121마디", prompt)
-        self.assertNotIn("51-59마디", prompt)
-        self.assertNotIn(
-            "앞 구간의 두 블록 대비와 뒤 구간의 빠른 교대를 함께 설명한다.",
-            prompt,
-        )
+        self.assertIn(merged.record["answer"], prompt)
         authority = expert_prompt_factuality_material(
             merged.record,
             [[51, 58]],
         )
-        self.assertTrue(authority["range_partitioned"])
         self.assertEqual(
-            authority["answer_texts"],
-            [
-                "해당 대목의 ff와 pp는 두 부분의 대비가 드러나도록 "
-                "표현한다."
-            ],
-        )
-        self.assertNotIn("빠른 교대", " ".join(authority["answer_texts"]))
-        self.assertNotIn(
-            merged.record["answer"],
-            authority["answer_texts"],
+            authority,
+            {
+                "range_partitioned": False,
+                "answer_texts": [merged.record["answer"]],
+                "question_contexts": [],
+                "source_ids": [],
+            },
         )
 
-    def test_no_range_keeps_all_source_context_and_combined_rewrite(
+    def test_narrow_range_cannot_restore_conflicting_raw_timing(self) -> None:
+        merged = make_result("in-flowery-clouds-ku-008")
+        merged.record["measure_range"] = [[45, 47]]
+        merged.record["answer"] = (
+            "박자와 조성의 변화가 곡의 분위기를 전환한다."
+        )
+        merged.record["source_answer_context"] = [
+            {
+                "source_id": "kim-in-flowery-clouds-07",
+                "question": "박자가 바뀌는 이유는 무엇일까?",
+                "answer": "47마디에서 박자와 조성이 동시에 바뀐다.",
+                "legacy_measure_range_hints": [[47, 47]],
+            },
+            {
+                "source_id": "yeon-in-flowery-clouds-08",
+                "question": "분위기는 언제 달라질까?",
+                "answer": "45마디부터 장조에서 단조로 바뀐다.",
+                "legacy_measure_range_hints": [[45, 45]],
+            },
+        ]
+
+        prompt = build_messages(
+            "in-flowery-clouds",
+            "45",
+            "선택한 부분에서 분위기가 달라지는 이유는 무엇일까?",
+            [merged],
+        )[1]["content"]
+        authority = expert_prompt_factuality_material(
+            merged.record,
+            [[45, 45]],
+        )
+
+        self.assertIn(merged.record["answer"], prompt)
+        self.assertNotIn("47마디에서 박자와 조성이 동시에", prompt)
+        self.assertNotIn("45마디부터 장조에서 단조로", prompt)
+        self.assertNotIn("expert_source_answer", prompt)
+        self.assertEqual(authority["answer_texts"], [merged.record["answer"]])
+        self.assertFalse(authority["range_partitioned"])
+        self.assertEqual(authority["question_contexts"], [])
+        self.assertEqual(authority["source_ids"], [])
+
+    def test_no_range_withholds_raw_sources_and_uses_curated_rewrite(
         self,
     ) -> None:
         merged = make_result("la-capinera-ku-018")
@@ -1705,22 +1257,18 @@ class RangeScopedSourceContextTests(unittest.TestCase):
         )[1]["content"]
 
         self.assertNotIn("range_partitioned_source_context: true", prompt)
-        self.assertIn("앞 범위 설명", prompt)
-        self.assertIn("뒤 범위 설명", prompt)
+        self.assertNotIn("앞 범위 설명", prompt)
+        self.assertNotIn("뒤 범위 설명", prompt)
+        self.assertNotIn("expert_source_answer", prompt)
         self.assertIn("두 범위를 함께 설명한다.", prompt)
         authority = expert_prompt_factuality_material(
             merged.record,
             [],
         )
         self.assertFalse(authority["range_partitioned"])
-        self.assertEqual(
-            authority["answer_texts"],
-            [
-                "앞 범위 설명",
-                "뒤 범위 설명",
-                "두 범위를 함께 설명한다.",
-            ],
-        )
+        self.assertEqual(authority["answer_texts"], [merged.record["answer"]])
+        self.assertEqual(authority["question_contexts"], [])
+        self.assertEqual(authority["source_ids"], [])
 
 
 if __name__ == "__main__":

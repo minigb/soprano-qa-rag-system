@@ -19,10 +19,12 @@ from soprano_qa.retrieval import (
     SearchResult,
     concept_matches,
     concept_coverage,
+    expert_record_is_runtime_final,
     is_broad_performance_guidance_query,
     measure_boost,
     measure_scope_match,
     query_components,
+    ranges_overlap,
     scope_priority,
     semantic_concepts,
     strip_question_measure_mentions,
@@ -56,6 +58,649 @@ DENSE_COORDINATED_RELATION_RE = re.compile(
 )
 
 
+SOURCE_QUESTION_LED_MATCH_TYPE = "dense_source_question_led"
+SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE = 0.64
+SOURCE_QUESTION_LED_MIN_CONTENT_SCORE = 0.40
+SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN = 0.10
+# A source-question embedding identifies an immutable annotation family, but
+# it does not by itself identify which split knowledge unit answers the user's
+# exact intent.  Let an independently strict sibling displace that rescue
+# anchor only when its finalized answer covers materially more of the query
+# and its lexical evidence is also stronger.  This keeps the dense rescue for
+# paraphrases that have no direct answer-side sibling while preventing a
+# procedural split unit from outranking the causal/direct split unit merely
+# because both inherited the same source question.
+SOURCE_FAMILY_DIRECT_CONTENT_MIN = 0.75
+SOURCE_FAMILY_DIRECT_CONTENT_MARGIN = 0.25
+SOURCE_FAMILY_DIRECT_CONCEPT_MIN = 0.80
+SOURCE_FAMILY_CAUSAL_CONTENT_MARGIN = 0.20
+CAUSAL_ANSWER_REQUEST_RE = re.compile(
+    r"(?:"
+    # Standalone interrogatives only. In particular, do not interpret the
+    # first syllable of words such as \"왜곡\" as a why-question.
+    r"(?<![가-힣])(?:왜|어째서)(?![가-힣])|"
+    r"(?:무슨|어떤|어느)(?:\s+[가-힣A-Za-z]+){0,2}\s*"
+    r"(?:이유|원인|까닭|의도|목적|효과|의미|배경|계기|역할|기능)|"
+    r"(?:이유|원인|까닭|의도|목적|효과|의미|배경|계기|역할|기능)"
+    r"\s*(?:은|는|이|가|을|를|인지|인가|일까|입니까)?\s*"
+    r"(?:무엇|뭐|뭔(?:가|지)?|어떤|어느|궁금|"
+    r"있(?:나|어|습니까|을까|는가)|알고\s*싶|알려|"
+    r"말해|설명|[?？]|$)|"
+    r"(?:무엇|뭐|뭘)\s*때문(?:에|인지|일까|입니까)?|"
+    r"(?:(?:무엇|뭐)(?:을|를)|뭘)\s*"
+    r"(?:노(?:리|린|렸|리는)|의도)|"
+    r"(?:(?:무엇|뭐)(?:을|를)|뭘)\s*위해|"
+    r"(?:이유|원인|까닭|의도|목적|효과|의미|배경|계기|역할|기능)"
+    r"\s*(?:와|과|및)(?!\s*(?:상관|무관|관계|관련))|"
+    r"(?:(?:무엇|뭐)(?:을|를)|뭘|"
+    r"(?:무슨(?:\s+\S+){1,3}|어떤(?:\s+\S+){1,3})(?:을|를))\s*"
+    r"(?:나타내|표현(?!력)|상징|묘사|암시|그리)|"
+    r"\bwhy\b|"
+    r"\b(?:what|which)\b.{0,24}"
+    r"\b(?:reason|cause|purpose|intent|effect|meaning)\b|"
+    r"\b(?:reason|cause|purpose|intent|effect|meaning)\b.{0,24}"
+    r"\b(?:what|which|why)\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+CAUSAL_REQUEST_IRRELEVANCE_RE = re.compile(
+    r"(?:(?:무슨|어떤)\s*)?"
+    r"(?:이유|원인|까닭|의도|목적|효과|의미|배경|계기|역할|기능)"
+    r"(?:은|는|이|가|을|를|인지|인지는)?\s*"
+    r"(?:몰라도|모른\s*채|상관없이|무관하게|관계없이|관련\s*없이)",
+    flags=re.IGNORECASE,
+)
+CAUSAL_ANSWER_SUPPORT_RE = re.compile(
+    r"(?:"
+    # Grammatical causal relations, rather than bare substrings such as
+    # \"이유\" or \"의도\" that may be incidental or negated.
+    r"(?:때문에|때문이다|때문입니다|덕분에)|"
+    r"[가-힣]+(?:으므로|이므로|므로)|"
+    r"[가-힣]{2,}(?:기|도록)\s*(?:위해|위하여|위한|때문)|"
+    r"(?:이유|원인|까닭|목적|의도)\s*"
+    r"(?:은|는|이|가)\s*.{1,140}"
+    r"(?:때문|위해|위한|나타내|표현|만들|살리|부각|고조|"
+    r"중요(?:하게)?\s*여(?:기|겼|기는|긴)|중요시|이다|입니다)|"
+    r"모습(?:을)?\s*그려.{0,100}"
+    r"(?:전환|긴장감|분위기).{0,40}"
+    r"(?:만드|만든|만들|나타내)|"
+    r"(?:박자|조성|리듬|음형|선율|화성).{0,100}"
+    r"(?:바꾸|변화|전환).{0,100}"
+    r"(?:나타내|표현|전환|만드|만든|만들|살리|부각|고조)|"
+    r"(?:이는|이것은|그것은).{0,120}"
+    r"(?:표현|의미|효과).{0,40}"
+    r"(?:극대화|나타내|만드|만든|만들|드러내|살리|부각|고조)|"
+    r"(?:리듬|박자|조성|음형|선율|화성|악센트|트레몰로|지시|표시)"
+    r"(?:은|는|이|가|을|를)?.{0,120}"
+    r"(?:효과|의미|모습|성격|분위기|이미지).{0,80}"
+    r"(?:만들|나타내|표현|연상|드러내|살리|부각|고조)|"
+    r"(?:리듬|박자|조성|음형|선율|화성|악센트|트레몰로|지시|표시)"
+    r"(?:은|는|이|가|을|를)?.{0,120}"
+    r"(?:나타낸다|나타냅니다|표현한다|표현합니다|상징한다|상징합니다|"
+    r"묘사한다|묘사합니다|암시한다|암시합니다)|"
+    r"(?:나타낸|표현한|묘사한|상징한)\s*"
+    r"(?:것|장치)(?:으로)?\s*(?:볼|해석|이해)|"
+    r"(?:의도한|의도된)\s*것(?:으로)?\s*(?:볼|해석|이해)|"
+    r"(?:의미로\s*해석|의도일\s*수)|"
+    r"(?:것은|것이).{0,120}(?:바꾸|차용|가능성)|"
+    r"(?:꾸밈음|기교|테크닉|음형|선율|리듬|박자|조성).{0,100}"
+    r"(?:더\s*잘\s*)?(?:표현|드러내|부각)하는\s*(?:테크닉|장치)|"
+    r"\b(?:because|so\s+that|in\s+order\s+to)\b"
+    r")",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+PROCEDURAL_ANSWER_REQUEST_RE = re.compile(
+    r"(?:어떻게|방법|해야|처리|바로잡|고쳐|고치|어디서|언제|"
+    r"[가-힣]+(?:어야|아야|여야)|"
+    r"\bhow\b|\bwhat\s+should\b)",
+    flags=re.IGNORECASE,
+)
+PROCEDURAL_ANSWER_SUPPORT_RE = re.compile(
+    r"(?:해야|하는\s*것이\s*(?:좋|중요)|부르는\s*것이\s*(?:좋|중요)|"
+    r"놓아\s*부르|유의|확인해|연주하|노래하|연습하|추천)",
+    flags=re.IGNORECASE,
+)
+DESCRIPTIVE_HOW_REQUEST_RE = re.compile(
+    r"어떻게\s*(?:달라|다르|변|바뀌|변경|나타|들리|보이|표현되)",
+    flags=re.IGNORECASE,
+)
+# Keep this aligned with the calibrated semantic-dominance margin used by
+# no-range authoritative selection.  A smaller lead is a near-tie, not
+# evidence that one unrelated source is safer than the other.
+DENSE_ONLY_AMBIGUITY_MARGIN = 0.025
+AMBIGUOUS_DENSE_ONLY_RANGE_REASON = "ambiguous_dense_only_range"
+SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON = (
+    "source_family_missing_causal_authority"
+)
+CAUSAL_ANSWER_NEGATION_RE = re.compile(
+    r"(?:"
+    r"(?:이유|원인|까닭|의도|목적|효과|의미).{0,24}"
+    r"(?:없|모르|알\s*수\s*없|확인되지\s*않|불분명)|"
+    r"(?:이유|의미)\s*없이|의도치\s*않"
+    r")",
+    flags=re.IGNORECASE,
+)
+COMPOSITIONAL_CHOICE_REQUEST_RE = re.compile(
+    r"(?:쓴|썼|쓰인|쓰였|사용|넣|선택|배치|표시|바꾸|바뀌|차용|"
+    r"놓인|놓였|놓은|작곡)",
+    flags=re.IGNORECASE,
+)
+COMPOSITIONAL_CAUSAL_SUPPORT_RE = re.compile(
+    r"(?:"
+    r"(?:작곡가|로시니|슈베르트|composer).{0,160}"
+    r"(?:의도|목적|나타내|표현|상징|묘사|암시|전환|효과)|"
+    r"(?:의도|목적|이유|까닭)(?:은|는|이|가|을|를)?.{0,160}"
+    r"(?:나타내|표현|상징|묘사|암시|전환|효과|중요(?:하게)?\s*여|중요시)|"
+    r"(?:리듬|박자|조성|음형|선율|화성|악센트|트레몰로|지시|표시|"
+    r"꾸밈음|부점).{0,160}"
+    r"(?:나타내|표현|상징|묘사|암시|분위기.{0,24}전환|"
+    r"(?:긴장감|극적).{0,24}(?:만들|높이|고조)|효과.{0,32}(?:만들|내))|"
+    r"(?:나타내|표현|상징|묘사|암시).{0,24}기\s*위(?:해|한).{0,80}"
+    r"(?:리듬|박자|조성|음형|선율|화성|악센트|트레몰로|지시|표시|"
+    r"꾸밈음|부점).{0,40}(?:사용|쓰|넣|배치|표시)|"
+    r"(?:표현|효과|분위기|이미지).{0,32}"
+    r"(?:만들|살리|부각|고조)기\s*위(?:해|한).{0,100}"
+    r"(?:사용|쓰|넣|배치|표시)|"
+    r"(?:시대|당시).{0,160}"
+    r"(?:중요(?:하게)?\s*여|중요시|유행|관습)|"
+    r"(?:이는|이것은|그것은).{0,120}(?:표현|의미|효과).{0,40}"
+    r"(?:극대화|나타내|만드|드러내|살리|부각|고조)"
+    r")",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+COMPOSER_AGENT_REQUEST_RE = re.compile(
+    r"(?:작곡가|작곡자|composer|로시니|rossini|슈베르트|schubert|"
+    r"모리코네|morricone|윤학준|benedict|베네딕트)",
+    flags=re.IGNORECASE,
+)
+COMPOSER_AGENT_SUPPORT_RE = re.compile(
+    r"(?:"
+    r"(?:작곡가|작곡자|composer|로시니|rossini|슈베르트|schubert|"
+    r"모리코네|morricone|윤학준|benedict|베네딕트)(?:은|는|이|가)"
+    r".{0,100}(?:사용|쓰|넣|선택|배치|표시|바꾸|차용|놓)"
+    r".{0,140}(?:의도|목적|위해|나타내|표현|상징|묘사|암시|전환|효과)|"
+    r"(?:작곡가|작곡자|composer|로시니|rossini|슈베르트|schubert|"
+    r"모리코네|morricone|윤학준|benedict|베네딕트)의\s*.{0,120}"
+    r"(?:사용한\s*것|쓴\s*것|선택한\s*것|배치한\s*것|표시한\s*것)"
+    r".{0,140}(?:의도|목적|위해|나타내|표현|상징|묘사|암시|전환|효과)"
+    r")",
+    flags=re.IGNORECASE,
+)
+COMPOSER_AGENT_NONAUTHORITY_RE = re.compile(
+    r"(?:의도대로.{0,20}(?:않|아니)|않았다면|아니라면|"
+    r"의도가.{0,30}(?:있다고\s*생각|있다고\s*가정))",
+    flags=re.IGNORECASE,
+)
+DEFINITIONAL_MEANING_REQUEST_RE = re.compile(
+    r"(?:의미|뜻)",
+    flags=re.IGNORECASE,
+)
+DEFINITIONAL_MEANING_SUPPORT_RE = re.compile(
+    r"(?:뜻(?:이며|이다|입니다|으로)|의미(?:이며|이다|입니다|로|는|가)|"
+    r"(?:사선|표시|기호).{0,100}(?:있으면|없으면)|"
+    r"(?:라고|으로)\s*(?:해석|이해))",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+CAUSAL_ANSWER_ADJACENT_EXPLANATION_RE = re.compile(
+    r"(?:쉽지\s*않|쉬운\s*곡.{0,20}아니|어렵|난도).{0,220}"
+    r"(?:템포가?\s*빠르|빠르게\s*발음|발음해야\s*하는\s*단어가\s*많|"
+    r"음역이?\s*높|기교가?\s*많)",
+    flags=re.IGNORECASE | re.DOTALL,
+)
+
+
+def _is_finalized_expert_record(record: Dict[str, Any]) -> bool:
+    """Return whether a record can answer authoritatively from expert review."""
+
+    return expert_record_is_runtime_final(record)
+
+
+def _is_finalized_expert_answer(result: SearchResult) -> bool:
+    return _is_finalized_expert_record(result.record)
+
+
+def _source_family_key(record: Dict[str, Any]) -> tuple[str, ...]:
+    return tuple(sorted(set(record.get("source_ids") or [])))
+
+
+def is_causal_answer_request(query: str) -> bool:
+    """Return whether the question explicitly asks for explanation/meaning."""
+
+    relevant_query = CAUSAL_REQUEST_IRRELEVANCE_RE.sub(" ", query)
+    return bool(CAUSAL_ANSWER_REQUEST_RE.search(relevant_query))
+
+
+def _record_has_causal_answer_authority(record: Dict[str, Any]) -> bool:
+    if not _is_finalized_expert_record(record):
+        return False
+    answer = str(record.get("answer") or "")
+    if CAUSAL_ANSWER_NEGATION_RE.search(answer):
+        return False
+    if CAUSAL_ANSWER_ADJACENT_EXPLANATION_RE.search(answer):
+        return True
+    sentences = re.split(r"(?<=[.!?。！？])\s+|[\r\n]+", answer)
+    return any(
+        CAUSAL_ANSWER_SUPPORT_RE.search(sentence)
+        for sentence in sentences
+        if sentence.strip()
+    )
+
+
+def _record_has_composer_agent_authority(record: Dict[str, Any]) -> bool:
+    if not _is_finalized_expert_record(record):
+        return False
+    answer = str(record.get("answer") or "")
+    for sentence in re.split(r"(?<=[.!?。！？])\s+|[\r\n]+", answer):
+        if (
+            sentence.strip()
+            and not COMPOSER_AGENT_NONAUTHORITY_RE.search(sentence)
+            and COMPOSER_AGENT_SUPPORT_RE.search(sentence)
+        ):
+            return True
+    return False
+
+
+def _meaning_answer_authority(
+    result: SearchResult,
+    query: str,
+) -> bool:
+    answer = str(result.record.get("answer") or "")
+    if not DEFINITIONAL_MEANING_SUPPORT_RE.search(answer):
+        return False
+    piece = str(result.record.get("piece") or "") or None
+    query_concepts = [
+        concept
+        for concept in semantic_concepts(query, piece, query=True)
+        if concept not in {
+            "의미",
+            "뜻",
+            "어떻게",
+            "방법",
+            "노래",
+            "성악",
+            "표현하",
+        }
+    ]
+    if not query_concepts:
+        return True
+    answer_concepts = set(semantic_concepts(answer, piece, query=False))
+    return concept_coverage(query_concepts, answer_concepts) >= 0.5
+
+
+def _procedural_request_match(query: str) -> re.Match[str] | None:
+    """Find an instructional request, excluding descriptive ``how`` uses."""
+
+    instructional_view = DESCRIPTIVE_HOW_REQUEST_RE.sub(
+        lambda match: " " * len(match.group(0)),
+        query,
+    )
+    return PROCEDURAL_ANSWER_REQUEST_RE.search(instructional_view)
+
+
+def _procedural_request_clause(query: str) -> str:
+    marker = _procedural_request_match(query)
+    if marker is None:
+        return ""
+    clause_start = 0
+    for connector in re.finditer(
+        r"(?:(?:무엇|뭐)(?:이고|이며)|와|과|및|그리고|,|，)\s*",
+        query,
+    ):
+        if connector.end() <= marker.start():
+            clause_start = connector.end()
+    return query[clause_start:]
+
+
+def _procedural_answer_authority(
+    result: SearchResult,
+    query: str,
+) -> bool:
+    answer = str(result.record.get("answer") or "")
+    if not PROCEDURAL_ANSWER_SUPPORT_RE.search(answer):
+        return False
+    clause = _procedural_request_clause(query)
+    if not clause:
+        return False
+    clause = re.sub(r"숨(?:을|이|은|에서)?", "호흡", clause)
+    piece = str(result.record.get("piece") or "") or None
+    generic_concepts = {
+        "어떻게",
+        "방법",
+        "해야",
+        "처리",
+        "적용",
+        "바로잡",
+        "고치",
+        "어디서",
+        "언제",
+        "쉬어야",
+        "성악",
+        "노래",
+        "부르",
+        "이를",
+        "이것",
+        "한다",
+        "좋다",
+        "표현하",
+    }
+    requested_concepts = [
+        concept
+        for concept in semantic_concepts(clause, piece, query=True)
+        if concept not in generic_concepts
+    ]
+    if not requested_concepts:
+        return True
+    answer_concepts = set(semantic_concepts(answer, piece, query=False))
+    # A mixed question asks for every named procedural facet.  Partial
+    # overlap (for example, an answer mentioning the lyrics but saying
+    # nothing about pronunciation) cannot authorize the missing instruction.
+    return concept_coverage(requested_concepts, answer_concepts) >= 1.0
+
+
+def has_causal_answer_authority(
+    result: SearchResult,
+    query: str = "",
+) -> bool:
+    """Return whether a finalized expert answer states a causal relation."""
+
+    if (
+        query
+        and is_causal_answer_request(query)
+    ):
+        record = result.record
+        if not _is_finalized_expert_record(record):
+            return False
+        answer = str(record.get("answer") or "")
+        if CAUSAL_ANSWER_NEGATION_RE.search(answer):
+            return False
+        if COMPOSER_AGENT_REQUEST_RE.search(query):
+            return _record_has_composer_agent_authority(record)
+        if (
+            DEFINITIONAL_MEANING_REQUEST_RE.search(query)
+            and _meaning_answer_authority(result, query)
+        ):
+            return True
+        if COMPOSITIONAL_CHOICE_REQUEST_RE.search(query):
+            return bool(COMPOSITIONAL_CAUSAL_SUPPORT_RE.search(answer))
+    return _record_has_causal_answer_authority(result.record)
+
+
+def _authorities_cover_measure_ranges(
+    authorities: Sequence[SearchResult],
+    measure_ranges: Sequence[Sequence[int]],
+) -> bool:
+    return all(
+        any(
+            not (authority.record.get("measure_range") or [])
+            or ranges_overlap(
+                authority.record.get("measure_range") or [],
+                [requested_range],
+            )
+            for authority in authorities
+        )
+        for requested_range in measure_ranges
+    )
+
+
+def _filter_causal_answer_authority(
+    query: str,
+    candidates: Sequence[SearchResult],
+    *,
+    measure_ranges: Sequence[Sequence[int]] = (),
+) -> tuple[List[SearchResult], bool]:
+    """Remove intent-incompatible expert answers from every retrieval route.
+
+    A lexical or ordinary dense hit is relevance evidence, not permission to
+    reinterpret procedural advice as a composer's reason or an effect.  When
+    the only retrieved evidence is finalized expert text that does not state
+    the requested causal relation, signal a fail-closed abstention.
+    """
+
+    results = list(candidates)
+    if not is_causal_answer_request(query):
+        return results, False
+    procedural_request = _procedural_request_match(query) is not None
+    finalized_experts = [
+        result for result in results if _is_finalized_expert_answer(result)
+    ]
+    if not finalized_experts:
+        return results, False
+    ranged = bool(measure_ranges)
+    scoped_experts = (
+        [
+            result
+            for result in finalized_experts
+            if result.scope_match == "overlaps_query_range"
+        ]
+        if ranged
+        else finalized_experts
+    )
+    if not scoped_experts:
+        return results, False
+    anchor = scoped_experts[0]
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+
+    def belongs_to_anchor_family(result: SearchResult) -> bool:
+        result_sources = set(result.record.get("source_ids") or [])
+        return result is anchor or bool(anchor_sources.intersection(result_sources))
+
+    causal_authorities = [
+        result
+        for result in scoped_experts
+        if belongs_to_anchor_family(result)
+        and has_causal_answer_authority(result, query)
+    ]
+    if not causal_authorities:
+        # Never replace the leading answer family with an unrelated lower
+        # causal-looking hit. An implicit or technique-only answer cannot
+        # authorize a causal claim; abstention is safer than reinterpretation.
+        return [], True
+    if ranged and not _authorities_cover_measure_ranges(
+        causal_authorities,
+        measure_ranges,
+    ):
+        # ``overlaps_query_range`` means "overlaps at least one range".  It
+        # cannot authorize an answer about multiple named score locations
+        # when one or more of those locations have no causal evidence.
+        return [], True
+    if procedural_request:
+        # A mixed why-and-how question may retain both reviewed facets, but
+        # only after proving causal authority in the same effective scope and
+        # source family. Preserve the compatible procedural siblings too.
+        family_experts = [
+            result
+            for result in scoped_experts
+            if belongs_to_anchor_family(result)
+        ]
+        procedural_authorities = [
+            result
+            for result in family_experts
+            if _procedural_answer_authority(result, query)
+        ]
+        if not procedural_authorities or (
+            ranged
+            and not _authorities_cover_measure_ranges(
+                procedural_authorities,
+                measure_ranges,
+            )
+        ):
+            return [], True
+        ordered_experts = [
+            *causal_authorities,
+            *(
+                result for result in procedural_authorities
+                if result not in causal_authorities
+            ),
+        ]
+    else:
+        ordered_experts = causal_authorities
+    non_experts = [
+        result
+        for result in results
+        if not _is_finalized_expert_answer(result)
+    ]
+    return [*ordered_experts, *non_experts], False
+
+
+def _source_family_has_same_scope_causal_authority(
+    anchor: SearchResult,
+    candidates: Sequence[SearchResult],
+    query: str,
+) -> bool:
+    """Require causal support from the exact finalized family and scope."""
+
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    return bool(anchor_sources) and any(
+        result.scope_match == anchor.scope_match
+        and set(result.record.get("source_ids") or []) == anchor_sources
+        and _is_finalized_expert_answer(result)
+        and has_causal_answer_authority(result, query)
+        for result in candidates
+    )
+
+
+def source_family_answer_authority(
+    anchor: SearchResult,
+    candidates: Sequence[SearchResult],
+    *,
+    query: str = "",
+    known_causal_family: bool = False,
+) -> SearchResult | None:
+    """Choose a materially stronger direct answer within one source family.
+
+    ``dense_source_question_led`` is deliberately a recall/rescue signal.  A
+    strict sibling from the exact same immutable source set and scope has
+    stronger answer authority when both its answer-side concept coverage and
+    lexical score materially beat the rescue anchor.  Unrelated records,
+    partial source overlaps, and near ties cannot take over. Dense-only
+    promotion is limited to an unambiguous causal-purpose sibling for an
+    explicitly causal request.
+    """
+
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    if not anchor_sources:
+        return anchor
+    causal_request = is_causal_answer_request(query)
+    family_has_causal_answer = known_causal_family or any(
+        set(result.record.get("source_ids") or []) == anchor_sources
+        and has_causal_answer_authority(result, query)
+        for result in candidates
+    )
+    if (
+        causal_request
+        and family_has_causal_answer
+        and not _source_family_has_same_scope_causal_authority(
+            anchor,
+            candidates,
+            query,
+        )
+    ):
+        # A source-question alias establishes annotation-family recall, not
+        # answer intent.  If the selected scope contains only procedural or
+        # otherwise non-causal split units, emitting one of them as the reason
+        # would change the curated meaning.  Abstain instead of borrowing a
+        # causal sibling whose finalized measure scope does not apply.
+        return None
+    if causal_request and not family_has_causal_answer:
+        # Do not reject a finalized review merely because its explanation is
+        # implicit. The strict relation guard is activated only when this
+        # immutable family contains a contrasting unit with explicit causal
+        # authority.
+        return anchor
+    if (
+        query
+        and not causal_request
+        and _procedural_request_match(query)
+        and PROCEDURAL_ANSWER_SUPPORT_RE.search(
+            str(anchor.record.get("answer") or "")
+        )
+    ):
+        return anchor
+    strict_eligible = [
+        result
+        for result in candidates
+        if (
+            result is not anchor
+            and result.semantic_match_type == "strict"
+            and result.scope_match == anchor.scope_match
+            and set(result.record.get("source_ids") or [])
+            == anchor_sources
+            and result.concept_coverage
+            >= SOURCE_FAMILY_DIRECT_CONCEPT_MIN
+            and result.content_concept_coverage
+            >= SOURCE_FAMILY_DIRECT_CONTENT_MIN
+            and result.content_concept_coverage
+            >= (
+                anchor.content_concept_coverage
+                + SOURCE_FAMILY_DIRECT_CONTENT_MARGIN
+            )
+            and result.text_score > anchor.text_score
+            and (
+                not causal_request
+                or has_causal_answer_authority(result, query)
+            )
+        )
+    ]
+    if strict_eligible:
+        return max(
+            strict_eligible,
+            key=lambda result: (
+                result.content_concept_coverage,
+                result.concept_coverage,
+                result.text_score,
+                result.dense_content_score,
+                result.dense_score,
+                result.record["id"],
+            ),
+        )
+
+    # Dense paraphrases may leave every split unit below the lexical strict
+    # gate.  For an explicit causal/purpose request, the same immutable family
+    # can still resolve answer intent safely when exactly one sibling contains
+    # a direct causal-purpose statement and the rescue anchor does not.  This
+    # is not a general dense rerank: answer-side coverage must improve by the
+    # same material margin and curated-answer similarity must remain adequate.
+    if (
+        not query
+        or not causal_request
+        or has_causal_answer_authority(anchor, query)
+    ):
+        return anchor
+    causal_eligible = [
+        result
+        for result in candidates
+        if (
+            result is not anchor
+            and result.scope_match == anchor.scope_match
+            and set(result.record.get("source_ids") or [])
+            == anchor_sources
+            and has_causal_answer_authority(result, query)
+            and result.content_concept_coverage
+            >= (
+                anchor.content_concept_coverage
+                + SOURCE_FAMILY_CAUSAL_CONTENT_MARGIN
+            )
+            and result.dense_content_score
+            >= SOURCE_QUESTION_LED_MIN_CONTENT_SCORE
+        )
+    ]
+    if len(causal_eligible) != 1:
+        # The anchor has already been shown not to answer the causal intent.
+        # A weak or ambiguous causal sibling cannot safely authorize it.
+        return None
+    return max(
+        causal_eligible,
+        key=lambda result: (
+            result.content_concept_coverage,
+            result.concept_coverage,
+            result.text_score,
+            result.dense_content_score,
+            result.dense_score,
+            result.record["id"],
+        ),
+    )
+
+
 def _constraint(
     name: str,
     request: str,
@@ -69,6 +714,16 @@ def _constraint(
 
 
 DENSE_REQUESTED_CONSTRAINTS = (
+    _constraint(
+        "accent_placement",
+        r"(?:악센트|강세).{0,30}"
+        r"(?:첫\s*(?:번째\s*)?박|다른\s*박|박자|위치|곳|놓|표시)|"
+        r"(?:첫\s*(?:번째\s*)?박|다른\s*박|박자|위치|곳)"
+        r".{0,30}(?:악센트|강세)",
+        r"(?:악센트|강세|강박|약박)|"
+        r"(?:첫|두|세|네|다섯|[1-9])\s*"
+        r"(?:번|번째)?\s*박(?:자)?",
+    ),
     _constraint(
         "fingering",
         r"(?:손가락\s*(?:번호|순서)|운지(?:법|번호)?|핑거링).{0,30}"
@@ -232,9 +887,37 @@ class SearchIndex(Protocol):
     ) -> List[SearchResult]:
         ...
 
+    def semantic_candidates(
+        self,
+        query: str,
+        piece: str | None = None,
+        measure_ranges: List[List[int]] | None = None,
+        topic: str | None = None,
+        top_k: int = 12,
+    ) -> List[SearchResult]:
+        ...
+
 
 class DenseRetrievalUnavailable(RuntimeError):
     """Raised when the configured local embedding backend cannot start."""
+
+
+def _configured_retrieval_mode(settings: Dict[str, Any]) -> str:
+    retrieval = settings.get("retrieval")
+    if not isinstance(retrieval, dict):
+        raise ValueError("settings.retrieval must be an object")
+    raw_mode = retrieval.get("mode")
+    if not isinstance(raw_mode, str) or not raw_mode.strip():
+        raise ValueError("settings.retrieval.mode must be explicitly configured")
+    mode = raw_mode.strip().lower()
+    if mode not in {"lexical", "hybrid"}:
+        raise ValueError("Unsupported retrieval mode: %s" % mode)
+    if "fallback_to_lexical" in retrieval:
+        raise ValueError(
+            "retrieval.fallback_to_lexical is obsolete and unsupported; "
+            "configure the single intended retrieval.mode"
+        )
+    return mode
 
 
 def _require_llama_cpp_embedding_backend() -> Any:
@@ -262,13 +945,10 @@ def _require_llama_cpp_embedding_backend() -> Any:
 def validate_retrieval_requirements(settings: Dict[str, Any]) -> None:
     """Fail before corpus work when configured hybrid assets are unavailable."""
 
-    retrieval = settings.get("retrieval") or {}
-    mode = str(retrieval.get("mode") or "lexical").lower()
+    retrieval = settings["retrieval"]
+    mode = _configured_retrieval_mode(settings)
     if mode == "lexical":
         return
-    if mode != "hybrid":
-        raise ValueError("Unsupported retrieval mode: %s" % mode)
-
     model_path = str(settings.get("embedding_model_path") or "").strip()
     if not model_path or not os.path.isfile(model_path):
         display_path = model_path or "(embedding_model_path is not configured)"
@@ -278,12 +958,6 @@ def validate_retrieval_requirements(settings: Dict[str, Any]) -> None:
             "Soprano QA. To run without embeddings intentionally, configure "
             "retrieval.mode as `lexical`; hybrid mode never falls back silently."
             % display_path
-        )
-    if bool(retrieval.get("fallback_to_lexical", False)):
-        raise DenseRetrievalUnavailable(
-            "retrieval.fallback_to_lexical is not supported in hybrid mode. "
-            "Set retrieval.mode to `lexical` for an intentionally model-free "
-            "run; hybrid retrieval must fail when its dense backend fails."
         )
     _require_llama_cpp_embedding_backend()
 
@@ -538,7 +1212,6 @@ class HybridIndex:
 
     retrieval_mode = "hybrid"
     configured_retrieval_mode = "hybrid"
-    retrieval_fallback_reason: str | None = None
 
     def __init__(
         self,
@@ -548,12 +1221,12 @@ class HybridIndex:
         dense_min_score: float = 0.44,
         dense_min_content_score: float = 0.43,
         dense_max_alias_gap: float = 0.20,
+        dense_only_ambiguity_margin: float = DENSE_ONLY_AMBIGUITY_MARGIN,
         dense_candidate_k: int = 24,
         lexical_weight: float = 0.35,
         dense_weight: float = 0.65,
         rrf_k: int = 60,
         query_cache_size: int = 128,
-        fallback_to_lexical: bool = False,
         cache_path: str | None = None,
     ) -> None:
         if not -1.0 <= dense_min_score <= 1.0:
@@ -562,6 +1235,10 @@ class HybridIndex:
             raise ValueError("dense_min_content_score must be between -1 and 1")
         if not 0.0 <= dense_max_alias_gap <= 2.0:
             raise ValueError("dense_max_alias_gap must be between 0 and 2")
+        if not 0.0 <= dense_only_ambiguity_margin <= 2.0:
+            raise ValueError(
+                "dense_only_ambiguity_margin must be between 0 and 2"
+            )
         if dense_candidate_k < 1:
             raise ValueError("dense_candidate_k must be positive")
         if lexical_weight <= 0 or dense_weight <= 0:
@@ -570,18 +1247,21 @@ class HybridIndex:
             raise ValueError("rrf_k must be positive")
         if query_cache_size < 1:
             raise ValueError("query_cache_size must be positive")
-        if fallback_to_lexical:
-            raise ValueError(
-                "fallback_to_lexical is not supported by HybridIndex; "
-                "configure explicit lexical retrieval instead"
-            )
-
         self.records = records
+        self._causal_answer_families = {
+            family
+            for record in records
+            if _record_has_causal_answer_authority(record)
+            and (family := _source_family_key(record))
+        }
         self.lexical = BM25Index(records)
         self.embedder = embedder
         self.dense_min_score = float(dense_min_score)
         self.dense_min_content_score = float(dense_min_content_score)
         self.dense_max_alias_gap = float(dense_max_alias_gap)
+        self.dense_only_ambiguity_margin = float(
+            dense_only_ambiguity_margin
+        )
         self.dense_candidate_k = int(dense_candidate_k)
         self.lexical_weight = float(lexical_weight)
         self.dense_weight = float(dense_weight)
@@ -708,12 +1388,26 @@ class HybridIndex:
         self._search_state.dense_contributed = bool(value)
 
     @property
-    def fallback_used(self) -> bool:
-        return bool(getattr(self._search_state, "fallback_used", False))
+    def last_ambiguous_candidates(self) -> List[Dict[str, Any]]:
+        return list(
+            getattr(
+                self._search_state,
+                "last_ambiguous_candidates",
+                [],
+            )
+        )
 
-    @fallback_used.setter
-    def fallback_used(self, value: bool) -> None:
-        self._search_state.fallback_used = bool(value)
+    @property
+    def last_answer_candidates(self) -> List[SearchResult]:
+        """Return candidates retained before conservative hard rejection."""
+
+        return list(
+            getattr(
+                self._search_state,
+                "last_answer_candidates",
+                [],
+            )
+        )
 
     def _set_search_state(
         self,
@@ -722,8 +1416,9 @@ class HybridIndex:
         reason: str,
         dense_attempted: bool = False,
         dense_contributed: bool = False,
-        fallback_used: bool = False,
         dense_error: str | None = None,
+        ambiguous_candidates: List[Dict[str, Any]] | None = None,
+        answer_candidates: Sequence[SearchResult] | None = None,
     ) -> None:
         """Record one query's route without conflating routing and failure."""
 
@@ -731,8 +1426,13 @@ class HybridIndex:
         self.last_route_reason = reason
         self.dense_attempted = dense_attempted
         self.dense_contributed = dense_contributed
-        self.fallback_used = fallback_used
         self.last_dense_error = dense_error
+        self._search_state.last_ambiguous_candidates = list(
+            ambiguous_candidates or []
+        )
+        self._search_state.last_answer_candidates = list(
+            answer_candidates or []
+        )
 
     def _query_embedding(self, query: str, piece: str | None) -> tuple[float, ...]:
         prepared_query = dense_query_text(query, piece)
@@ -770,10 +1470,10 @@ class HybridIndex:
         piece: str | None,
         measure_ranges: List[List[int]],
         topic: str | None,
-    ) -> List[tuple[int, float, float, str]]:
+    ) -> List[tuple[int, float, float, str, bool]]:
         query_vector = self._query_embedding(query, piece)
 
-        candidates: List[tuple[int, float, float, str]] = []
+        scored_records: List[tuple[int, float, float, str]] = []
         for index, record in enumerate(self.records):
             if not record.get("retrieval_eligible", True):
                 continue
@@ -782,10 +1482,7 @@ class HybridIndex:
             if topic and topic not in record.get("topic", ""):
                 continue
             scope_match = measure_scope_match(record, measure_ranges)
-            if scope_match in {
-                "unscoped_pending_context",
-                "unspecified_context",
-            }:
+            if scope_match == "unspecified_context":
                 continue
             similarity = sum(
                 query_value * document_value
@@ -801,13 +1498,95 @@ class HybridIndex:
                     self.content_embeddings[index],
                 )
             )
+            scored_records.append(
+                (index, similarity, content_similarity, scope_match)
+            )
+
+        source_question_led_index: int | None = None
+        direct_scope = (
+            "overlaps_query_range" if measure_ranges else "local_example"
+        )
+        local_expert_candidates = [
+            item
+            for item in scored_records
             if (
-                similarity < self.dense_min_score
-                or content_similarity < self.dense_min_content_score
+                    item[3] == direct_scope
+                    and expert_record_is_runtime_final(
+                        self.records[item[0]]
+                    )
+                    and self.records[item[0]].get("measure_status")
+                    == "specific"
+                    and bool(
+                        self.records[item[0]].get("measure_range") or []
+                    )
+                    and bool(
+                        self.records[item[0]].get("retrieval_aliases")
+                        or []
+                    )
+                    and bool(
+                        self.records[item[0]].get("source_ids") or []
+                    )
+                )
+        ]
+        if local_expert_candidates:
+            local_winner = max(
+                local_expert_candidates,
+                key=lambda item: (
+                    item[1],
+                    item[2],
+                    self.records[item[0]]["id"],
+                ),
+            )
+            winner_record = self.records[local_winner[0]]
+            winner_source_ids = set(
+                winner_record.get("source_ids") or []
+            )
+            other_source_scores = [
+                item[1]
+                for item in scored_records
+                if not winner_source_ids.intersection(
+                    self.records[item[0]].get("source_ids") or []
+                )
+            ]
+            other_source_margin = local_winner[1] - max(
+                other_source_scores,
+                default=-1.0,
+            )
+            if (
+                local_winner[1]
+                >= SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE
+                and local_winner[2]
+                >= SOURCE_QUESTION_LED_MIN_CONTENT_SCORE
+                and other_source_margin
+                >= SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN
+                and not missing_dense_answer_constraints(
+                    query,
+                    str(winner_record.get("answer") or ""),
+                )
+            ):
+                source_question_led_index = local_winner[0]
+
+        candidates: List[tuple[int, float, float, str, bool]] = []
+        for index, similarity, content_similarity, scope_match in (
+            scored_records
+        ):
+            source_question_led = index == source_question_led_index
+            if (
+                not source_question_led
+                and (
+                    similarity < self.dense_min_score
+                    or content_similarity < self.dense_min_content_score
+                )
             ):
                 continue
             candidates.append(
-                (index, similarity, content_similarity, scope_match)
+                (
+                    index,
+                    similarity,
+                    content_similarity,
+                    scope_match,
+                    source_question_led,
+                )
             )
 
         candidates.sort(
@@ -820,6 +1599,128 @@ class HybridIndex:
             reverse=True,
         )
         return candidates[: self.dense_candidate_k]
+
+    def semantic_candidates(
+        self,
+        query: str,
+        piece: str | None = None,
+        measure_ranges: List[List[int]] | None = None,
+        topic: str | None = None,
+        top_k: int = 12,
+    ) -> List[SearchResult]:
+        """Return a broad, scope-applicable expert pool for semantic choice.
+
+        Normal retrieval thresholds are precision gates, not a reason to hide
+        finalized expert candidates from the constrained selector.  This
+        method therefore scores every release-ready expert unit in the piece,
+        while preserving the hard piece, topic, and selected-range scope
+        boundaries.  It does not choose an answer and is never itself an
+        authority signal.
+        """
+
+        selected_ranges = measure_ranges or []
+        if top_k < 1 or not query.strip():
+            return []
+        query_vector = self._query_embedding(query, piece)
+        lexical_results = self.lexical.search(
+            query=query,
+            piece=piece,
+            measure_ranges=selected_ranges,
+            topic=topic,
+            top_k=len(self.records),
+        )
+        lexical_by_id = {
+            result.record["id"]: result for result in lexical_results
+        }
+        candidates: List[SearchResult] = []
+        for index, record in enumerate(self.records):
+            if (
+                not record.get("retrieval_eligible", True)
+                or record.get("evidence_type") != "expert_annotation"
+                or not expert_record_is_runtime_final(record)
+                or (piece and record.get("piece") != piece)
+                or (topic and topic not in record.get("topic", ""))
+            ):
+                continue
+            scope_match = measure_scope_match(record, selected_ranges)
+            if selected_ranges:
+                if scope_match not in {
+                    "overlaps_query_range",
+                    "global_context",
+                }:
+                    continue
+            elif scope_match not in {
+                "general_evidence",
+                "local_example",
+                "unspecified_scope",
+            }:
+                continue
+            dense_score = sum(
+                query_value * document_value
+                for query_value, document_value in zip(
+                    query_vector,
+                    self.document_embeddings[index],
+                )
+            )
+            dense_content_score = sum(
+                query_value * document_value
+                for query_value, document_value in zip(
+                    query_vector,
+                    self.content_embeddings[index],
+                )
+            )
+            lexical = lexical_by_id.get(record["id"])
+            if lexical is not None:
+                candidate = replace(
+                    lexical,
+                    dense_score=dense_score,
+                    dense_content_score=dense_content_score,
+                    fusion_score=0.0,
+                    retrieval_mode="hybrid",
+                    semantic_match_type="selector_candidate",
+                )
+            else:
+                candidate = SearchResult(
+                    record=record,
+                    score=dense_score,
+                    text_score=0.0,
+                    measure_score=measure_boost(
+                        record,
+                        selected_ranges,
+                    ),
+                    piece_score=(
+                        1.0
+                        if piece and record.get("piece") == piece
+                        else 0.0
+                    ),
+                    scope_match=scope_match,
+                    concept_coverage=concept_coverage(
+                        semantic_concepts(query, piece, query=True),
+                        self.lexical.document_concepts[index],
+                    ),
+                    content_concept_coverage=concept_coverage(
+                        semantic_concepts(query, piece, query=True),
+                        self.lexical.content_concepts[index],
+                    ),
+                    semantic_match_type="selector_candidate",
+                    dense_score=dense_score,
+                    dense_content_score=dense_content_score,
+                    fusion_score=0.0,
+                    retrieval_mode="dense",
+                )
+            candidates.append(candidate)
+        candidates.sort(
+            key=lambda result: (
+                scope_priority(result.scope_match, bool(selected_ranges)),
+                max(result.dense_score, result.dense_content_score),
+                (result.dense_score + result.dense_content_score) / 2,
+                result.alias_score,
+                result.text_score,
+                result.record["id"],
+            ),
+            reverse=True,
+        )
+        return candidates[:top_k]
 
     def _has_dense_domain_anchor(
         self,
@@ -890,18 +1791,40 @@ class HybridIndex:
             and piece
             and is_broad_performance_guidance_query(query, piece)
         ):
+            routed, missing_causal_authority = (
+                _filter_causal_answer_authority(
+                    query,
+                    lexical_results[:top_k],
+                    measure_ranges=measure_ranges,
+                )
+            )
             self._set_search_state(
                 "lexical_route",
-                reason="broad_performance_guidance_router",
+                reason=(
+                    SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON
+                    if missing_causal_authority
+                    else "broad_performance_guidance_router"
+                ),
             )
-            return lexical_results[:top_k]
+            return routed
         real_query, intent_anchors = query_components(query, piece)
         if not token_groups(real_query) and not intent_anchors:
+            routed, missing_causal_authority = (
+                _filter_causal_answer_authority(
+                    query,
+                    lexical_results[:top_k],
+                    measure_ranges=measure_ranges,
+                )
+            )
             self._set_search_state(
                 "lexical_route",
-                reason="no_dense_query_content",
+                reason=(
+                    SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON
+                    if missing_causal_authority
+                    else "no_dense_query_content"
+                ),
             )
-            return lexical_results[:top_k]
+            return routed
         query_concepts = semantic_concepts(query, piece, query=True)
         has_dense_domain_anchor = self._has_dense_domain_anchor(
             query,
@@ -928,7 +1851,6 @@ class HybridIndex:
                 "hybrid_error",
                 reason="dense_query_error",
                 dense_attempted=True,
-                fallback_used=False,
                 dense_error=dense_error,
             )
             raise
@@ -946,13 +1868,19 @@ class HybridIndex:
             similarity,
             content_similarity,
             scope_match,
+            source_question_led,
         ) in enumerate(dense_candidates, start=1):
             record_id = self.records[index]["id"]
+            if source_question_led and not has_dense_domain_anchor:
+                # A lexical overlap must not turn an out-of-domain query into
+                # a privileged source-question-led dense match.
+                continue
             if record_id not in lexical_by_id:
                 if not has_dense_domain_anchor:
                     continue
                 if (
-                    similarity - content_similarity
+                    not source_question_led
+                    and similarity - content_similarity
                     > self.dense_max_alias_gap
                 ):
                     continue
@@ -966,6 +1894,7 @@ class HybridIndex:
                 similarity,
                 content_similarity,
                 scope_match,
+                source_question_led,
             )
         candidate_ids = list(lexical_by_id)
         lexical_alias_is_authoritative = any(
@@ -1018,9 +1947,10 @@ class HybridIndex:
                 dense_score,
                 dense_content_score,
                 dense_scope,
+                source_question_led,
             ) = dense_by_id.get(
                 record_id,
-                (None, 0.0, 0.0, None),
+                (None, 0.0, 0.0, None, False),
             )
             lexical_rank = lexical_ranks.get(record_id)
             fusion_score = 0.0
@@ -1043,6 +1973,11 @@ class HybridIndex:
                     retrieval_mode=(
                         "hybrid" if dense_rank is not None else "lexical"
                     ),
+                    semantic_match_type=(
+                        SOURCE_QUESTION_LED_MATCH_TYPE
+                        if source_question_led
+                        else lexical_result.semantic_match_type
+                    ),
                 )
             else:
                 index = self._record_indices[record_id]
@@ -1064,7 +1999,11 @@ class HybridIndex:
                         query_concepts,
                         self.lexical.content_concepts[index],
                     ),
-                    semantic_match_type="dense",
+                    semantic_match_type=(
+                        SOURCE_QUESTION_LED_MATCH_TYPE
+                        if source_question_led
+                        else "dense"
+                    ),
                     dense_score=dense_score,
                     dense_content_score=dense_content_score,
                     fusion_score=fusion_score,
@@ -1086,6 +2025,203 @@ class HybridIndex:
             ),
             reverse=True,
         )
+        source_question_led_results = [
+            result
+            for result in merged
+            if result.semantic_match_type
+            == SOURCE_QUESTION_LED_MATCH_TYPE
+        ]
+        if source_question_led_results:
+            # The calibrated winner has a clear lead in the immutable
+            # source-question view and independently adequate curated-answer
+            # support. Do not retain unrelated overlapping dense passages
+            # merely because their canonical ranges are broad. Exact
+            # complete-source siblings may remain when curation split one
+            # directly matched annotation into complementary units.
+            anchor = source_question_led_results[0]
+            direct_authority = source_family_answer_authority(
+                anchor,
+                merged,
+                query=query,
+                known_causal_family=(
+                    _source_family_key(anchor.record)
+                    in self._causal_answer_families
+                ),
+            )
+            if direct_authority is None:
+                self._set_search_state(
+                    "hybrid_no_dense_match",
+                    reason=SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON,
+                    dense_attempted=True,
+                    answer_candidates=merged[:top_k],
+                )
+                return []
+            if direct_authority is not anchor:
+                anchor_id = anchor.record["id"]
+                authority_id = direct_authority.record["id"]
+                promoted: List[SearchResult] = []
+                for result in merged:
+                    if result.record["id"] == authority_id:
+                        result = replace(
+                            result,
+                            semantic_match_type=(
+                                SOURCE_QUESTION_LED_MATCH_TYPE
+                            ),
+                        )
+                    elif result.record["id"] == anchor_id:
+                        result = replace(
+                            result,
+                            semantic_match_type=(
+                                "strict"
+                                if result.text_score > 0
+                                else "dense"
+                            ),
+                        )
+                    promoted.append(result)
+                merged = promoted
+                anchor = next(
+                    result
+                    for result in merged
+                    if result.record["id"] == authority_id
+                )
+            anchor_sources = set(anchor.record.get("source_ids") or [])
+            mixed_causal_procedural_request = bool(
+                is_causal_answer_request(query)
+                and _procedural_request_match(query)
+            )
+            merged = [
+                result
+                for result in merged
+                if (
+                    result is anchor
+                    or (
+                        result.record.get("evidence_type")
+                        == "expert_annotation"
+                        and bool(
+                            anchor_sources.intersection(
+                                result.record.get("source_ids") or []
+                            )
+                        )
+                        and (
+                            result.semantic_match_type
+                            == SOURCE_QUESTION_LED_MATCH_TYPE
+                            or result.alias_score > 0
+                            or (
+                                mixed_causal_procedural_request
+                                and set(
+                                    result.record.get("source_ids") or []
+                                )
+                                == anchor_sources
+                                and _procedural_answer_authority(
+                                    result,
+                                    query,
+                                )
+                            )
+                        )
+                        and result.scope_match == anchor.scope_match
+                    )
+                )
+            ]
+            # The source-family authority must lead the compact family.  The
+            # remaining siblings preserve their existing diagnostic order.
+            merged = [
+                anchor,
+                *(result for result in merged if result is not anchor),
+            ]
+        pre_causal_candidates = list(merged)
+        merged, missing_causal_authority = (
+            _filter_causal_answer_authority(
+                query,
+                merged,
+                measure_ranges=measure_ranges,
+            )
+        )
+        if missing_causal_authority:
+            self._set_search_state(
+                "hybrid_no_dense_match",
+                reason=SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON,
+                dense_attempted=True,
+                answer_candidates=pre_causal_candidates[:top_k],
+            )
+            return []
+        ambiguous_dense_only_range = False
+        ambiguous_candidates: List[Dict[str, Any]] = []
+        if measure_ranges and len(merged) >= 2:
+            pre_ambiguity_candidates = list(merged)
+            first, second = merged[:2]
+            first_sources = set(first.record.get("source_ids") or [])
+            second_sources = set(second.record.get("source_ids") or [])
+
+            def is_uncorroborated_final_expert_dense(
+                result: SearchResult,
+            ) -> bool:
+                record = result.record
+                return (
+                    result.retrieval_mode == "dense"
+                    and result.semantic_match_type == "dense"
+                    and result.scope_match == "overlaps_query_range"
+                    and result.text_score <= 0
+                    and result.alias_score <= 0
+                    and result.answer_relation_score <= 0
+                    and record.get("evidence_type")
+                    == "expert_annotation"
+                    and expert_record_is_runtime_final(record)
+                    and record.get("measure_status") == "specific"
+                )
+
+            ambiguous_dense_only_range = (
+                is_uncorroborated_final_expert_dense(first)
+                and is_uncorroborated_final_expert_dense(second)
+                and bool(first_sources)
+                and bool(second_sources)
+                and not first_sources.intersection(second_sources)
+                and first.dense_score - second.dense_score
+                < self.dense_only_ambiguity_margin
+            )
+            if ambiguous_dense_only_range:
+                # Range overlap proves only that a passage can apply at the
+                # selected location.  When two unrelated, otherwise
+                # unsupported dense passages are effectively tied, neither
+                # has enough semantic authority to generate an answer.  Keep
+                # independently lexical/hybrid evidence if present; otherwise
+                # abstain instead of turning embedding noise into a claim.
+                ambiguous_candidates = [
+                    {
+                        "id": result.record["id"],
+                        "source_ids": sorted(
+                            result.record.get("source_ids") or []
+                        ),
+                        "scope_match": result.scope_match,
+                        "dense_score": round(result.dense_score, 6),
+                        "dense_content_score": round(
+                            result.dense_content_score,
+                            6,
+                        ),
+                    }
+                    for result in (first, second)
+                ]
+                merged = [
+                    result
+                    for result in merged
+                    if result.retrieval_mode != "dense"
+                ]
+        if not merged:
+            self._set_search_state(
+                "hybrid_no_dense_match",
+                reason=(
+                    AMBIGUOUS_DENSE_ONLY_RANGE_REASON
+                    if ambiguous_dense_only_range
+                    else "no_retrieval_candidates"
+                ),
+                dense_attempted=True,
+                ambiguous_candidates=ambiguous_candidates,
+                answer_candidates=(
+                    pre_ambiguity_candidates[:top_k]
+                    if ambiguous_dense_only_range
+                    else []
+                ),
+            )
+            return []
         returned = merged[:top_k]
         dense_contributed = any(
             result.retrieval_mode in {"hybrid", "dense"}
@@ -1094,37 +2230,32 @@ class HybridIndex:
         self._set_search_state(
             "hybrid" if dense_contributed else "hybrid_no_dense_match",
             reason=(
-                "dense_result_returned"
-                if dense_contributed
-                else "no_dense_result_returned"
+                "ambiguous_dense_only_range_filtered"
+                if ambiguous_dense_only_range
+                else (
+                    "dense_result_returned"
+                    if dense_contributed
+                    else "no_dense_result_returned"
+                )
             ),
             dense_attempted=True,
             dense_contributed=dense_contributed,
+            ambiguous_candidates=ambiguous_candidates,
+            answer_candidates=returned,
         )
         return returned
 
 
-def _lexical_fallback(
-    records: List[Dict[str, Any]],
-    *,
-    configured_mode: str,
-    reason: str | None,
-) -> BM25Index:
+def _build_lexical_index(records: List[Dict[str, Any]]) -> BM25Index:
+    """Build the explicitly configured model-free retrieval mode."""
+
     index = BM25Index(records)
     index.retrieval_mode = "lexical"
-    index.configured_retrieval_mode = configured_mode
-    index.retrieval_fallback_reason = reason
-    index.last_search_mode = (
-        "lexical_fallback" if reason is not None else "lexical"
-    )
-    index.last_route_reason = (
-        "dense_index_initialization_error"
-        if reason is not None
-        else "configured_lexical"
-    )
-    index.dense_attempted = configured_mode == "hybrid"
+    index.configured_retrieval_mode = "lexical"
+    index.last_search_mode = "lexical"
+    index.last_route_reason = "configured_lexical"
+    index.dense_attempted = False
     index.dense_contributed = False
-    index.fallback_used = reason is not None
     return index
 
 
@@ -1136,17 +2267,10 @@ def build_retrieval_index(
 ) -> SearchIndex:
     """Build the configured local index without downloading models at runtime."""
 
-    retrieval = settings.get("retrieval") or {}
-    mode = str(retrieval.get("mode") or "lexical").lower()
+    retrieval = settings["retrieval"]
+    mode = _configured_retrieval_mode(settings)
     if mode == "lexical":
-        return _lexical_fallback(
-            records,
-            configured_mode=mode,
-            reason=None,
-        )
-    if mode != "hybrid":
-        raise ValueError("Unsupported retrieval mode: %s" % mode)
-
+        return _build_lexical_index(records)
     if embedder is None:
         validate_retrieval_requirements(settings)
 
@@ -1172,14 +2296,17 @@ def build_retrieval_index(
             dense_max_alias_gap=float(
                 retrieval.get("dense_max_alias_gap", 0.20)
             ),
+            dense_only_ambiguity_margin=float(
+                retrieval.get(
+                    "dense_only_ambiguity_margin",
+                    DENSE_ONLY_AMBIGUITY_MARGIN,
+                )
+            ),
             dense_candidate_k=int(retrieval.get("dense_candidate_k", 24)),
             lexical_weight=float(retrieval.get("lexical_weight", 0.35)),
             dense_weight=float(retrieval.get("dense_weight", 0.65)),
             rrf_k=int(retrieval.get("rrf_k", 60)),
             query_cache_size=int(retrieval.get("query_cache_size", 128)),
-            fallback_to_lexical=bool(
-                retrieval.get("fallback_to_lexical", False)
-            ),
             cache_path=settings.get("embedding_cache_path"),
         )
         index.configured_retrieval_mode = mode
@@ -1203,11 +2330,6 @@ def retrieval_diagnostics(index: SearchIndex) -> Dict[str, Any]:
         == "hybrid",
         "embedding_model": getattr(index, "embedding_model", None),
         "embedding_dimension": getattr(index, "embedding_dimension", None),
-        "fallback_reason": getattr(
-            index,
-            "retrieval_fallback_reason",
-            None,
-        ),
         "last_dense_error": getattr(index, "last_dense_error", None),
         "last_search_mode": last_search_mode,
         "query_route": (
@@ -1216,14 +2338,38 @@ def retrieval_diagnostics(index: SearchIndex) -> Dict[str, Any]:
             else (
                 "lexical"
                 if last_search_mode
-                in {"lexical", "lexical_route", "lexical_fallback"}
+                in {"lexical", "lexical_route"}
                 else "none"
             )
         ),
         "route_reason": getattr(index, "last_route_reason", None),
+        "ambiguous_candidates": getattr(
+            index,
+            "last_ambiguous_candidates",
+            [],
+        ),
         "dense_attempted": bool(getattr(index, "dense_attempted", False)),
         "dense_contributed": bool(
             getattr(index, "dense_contributed", False)
         ),
-        "fallback_used": bool(getattr(index, "fallback_used", False)),
     }
+
+
+def retrieval_abstained_for_ambiguity(index: SearchIndex) -> bool:
+    """Return whether the latest search rejected a cross-source dense tie."""
+
+    return (
+        getattr(index, "last_route_reason", None)
+        == AMBIGUOUS_DENSE_ONLY_RANGE_REASON
+    )
+
+
+def retrieval_abstained_for_missing_causal_authority(
+    index: SearchIndex,
+) -> bool:
+    """Return whether scoped expert evidence could not answer causal intent."""
+
+    return (
+        getattr(index, "last_route_reason", None)
+        == SOURCE_FAMILY_MISSING_CAUSAL_AUTHORITY_REASON
+    )

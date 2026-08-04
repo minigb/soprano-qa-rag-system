@@ -5,15 +5,15 @@
 from __future__ import annotations
 
 import argparse
-import difflib
-from itertools import combinations
+from dataclasses import replace
 import json
 import os
 import re
 import unicodedata
-from typing import Any, Callable, Dict, List
+from typing import Any, Dict, List
 
 from soprano_qa.corpus import (
+    CORPUS_SCHEMA_VERSION,
     PIECES,
     SONG_ORDER,
     build_corpus,
@@ -23,18 +23,31 @@ from soprano_qa.corpus import (
 from soprano_qa.dense import (
     DenseRetrievalUnavailable,
     SearchIndex,
+    SOURCE_QUESTION_LED_MATCH_TYPE,
+    SOURCE_QUESTION_LED_MIN_CONTENT_SCORE,
+    SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN,
+    SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE,
     build_retrieval_index,
+    retrieval_abstained_for_ambiguity,
+    retrieval_abstained_for_missing_causal_authority,
     retrieval_diagnostics,
     validate_retrieval_requirements,
 )
-from soprano_qa.llm import generate
+from soprano_qa.llm import (
+    GenerationBackendUnavailable,
+    generate,
+    generate_json,
+    validate_generation_requirements,
+)
 from soprano_qa.retrieval import (
     format_measure_range,
     format_result,
+    expert_record_is_runtime_final,
     load_corpus,
     parse_measure_ranges,
     ranges_overlap,
     scope_evidence_role,
+    semantic_concepts,
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
@@ -42,28 +55,22 @@ from soprano_qa.settings import load_settings
 
 SYSTEM_PROMPT = """You are a measure-aware soprano performance QA assistant.
 
-Answer in Korean.
+Answer in Korean using formal-polite 합니다체 consistently. End complete explanatory
+sentences with forms such as -습니다, -ㅂ니다, or -입니다; use formal-polite question or
+request endings when needed. Never copy the retrieved evidence's plain -다/-한다 register
+into the answer, and never mix plain and polite registers.
 Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
 Use only the retrieved evidence below. It has two explicitly labeled lineages:
 - expert_annotation: human expert performance commentary.
 - web_database: externally collected background or performance evidence with source provenance.
-For expert_annotation evidence, verbatim_expert_source_answer preserves the authoritative
-human response and answer is its curated knowledge-unit rewrite. Keep the generated answer
-semantically faithful to the relevant human response. The curated answer defines the claims
-that belong to this record. A verbatim source answer may also contain a separate claim that was
-split into another knowledge unit: do not use a source-answer claim absent from this record's
-curated answer unless another retrieved, range-applicable record contains that claim. Use the
-verbatim answer only to preserve detail, examples, and hedging for claims represented by the
-curated answer. Treat the curated answer as the safe answer form: do not restore a detail
-omitted from it when rewrite_notes say that detail is unverified. If a review warning exposes
-an unresolved rewrite conflict, preserve the source's uncertainty instead of silently choosing
-a new claim.
-The legacy_measure_range_hints nested in a source answer are non-authoritative review hints.
-The knowledge unit's confirmed measure_range remains authoritative. When one unit merges
-different source claims for separate confirmed ranges, an overlapping source hint may
-disambiguate which claim applies to the selected range. Never cite a legacy hint as a confirmed
-location. If the wording of the question projects a different-range behavior onto the selected
-range, correct that premise using the applicable expert claim instead of repeating it.
+For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
+the authoritative claim text. Raw source annotations, legacy range hints, superseded wording,
+conflicts, and editorial notes are deliberately withheld from generation. The knowledge unit's
+confirmed measure_range may route the record, but it never substitutes raw source prose for the
+curated answer. When a curated answer covers several confirmed ranges, keep every claim within
+that reviewed answer and limit the response to what it supports about the selected passage. If
+the wording of the question projects unsupported behavior onto the selected range, correct the
+premise only when the curated answer supports the correction; otherwise return no grounded answer.
 Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
 If the evidence does not answer the core question at all, output exactly
 <NO_GROUNDED_ANSWER> and nothing else. If only a secondary part is unsupported, answer the
@@ -79,60 +86,39 @@ Evidence_role=general_context may add background but cannot establish a local sc
 Evidence_role=unconfirmed_scope_context_only has no confirmed location and likewise cannot establish
 what happens in the selected range. Web evidence without an edition-qualified measure system cannot
 support a claim about a specific bar.
-When no measure range is supplied, no score location has been selected. Prefer whole-piece evidence.
-Evidence_role=local_example is different: it has a confirmed local measure_range and may be
-cited as a concrete example for a broad question. Every sentence that uses a local_example must
-cite that evidence label and name at least one range from that same evidence item's canonical
-measure_range. Keep the musical claim explicitly limited to those measures (for example,
-"30마디와 33마디에서는... [E2]"). A local example cannot by itself
-establish that something happens throughout the work, frequently, or in many places. Do not write
-"곡 전반", "자주", or "많이" unless separate whole-piece evidence explicitly supports that
-claim in that same sentence. Merely retrieving an unrelated whole-piece record does not broaden a
-local claim. Never restore an old source-text measure locator in place of the canonical confirmed
-range. A whole-piece or general record has no measure authority, even when its verbatim source text
-mentions a measure; do not print that locator in a no-range answer.
-Evidence labeled unscoped_pending_review has useful expert content but no confirmed location: answer
-the question without inventing a measure or generalizing that content to the whole piece.
-If expert evidence has a rewrite or measure review warning, preserve its uncertainty and options,
-state the unresolved limitation briefly, and never silently resolve the noted conflict.
+When no measure range is supplied, no score location has been selected. Rank evidence by how
+directly it answers the question, not by whole-piece scope alone. Prefer whole-piece evidence only
+when it is at least as semantically relevant as a local example.
+Evidence_role=local_example is passage-specific evidence that may directly answer the situation
+described by a broad, no-range question. Its canonical location is hidden routing metadata, not a
+range selected by the user. Use its musical advice naturally, cite its short [E#] label while
+drafting for internal validation, and do not print any canonical measure number, range, scope label,
+annotation label, retrieval explanation, or other internal metadata. Refer to the situation itself
+when localization is needed (for example, "긴 간주에서는... [E2]"). A local example cannot by
+itself establish that something happens throughout the work, frequently, or in many places. Do not
+write "곡 전반", "자주", or "많이" unless separate whole-piece evidence explicitly supports
+that claim in that same sentence. Merely retrieving an unrelated whole-piece record does not broaden
+a local claim. A whole-piece or general record has no measure authority, even when its verbatim
+source text mentions a measure; do not print that locator in a no-range answer.
 Preserve the expert's degree of certainty exactly. In particular, wording such as "볼 수 있다",
 "가능하다", "경우가 있다", or a recommendation must not become a definite fact or a claimed
 composer intention.
 Evidence is ordered by retrieval relevance. Answer the exact question from the smallest sufficient
 set of evidence; do not add merely related advice just because another record was retrieved.
 Keep expert source_ids separate from web_source_ids and claim_ids.
-Mention the most relevant measures. Cite only the short evidence labels exactly as shown, such as [E1];
-never retype an opaque knowledge-unit/webchunk id. The application maps labels to exact record ids
-after generation.
-Do not hide or contradict source attribution and license conditions; the application prints deterministic
-evidence notices after the answer for every retrieved web record.
+Mention a measure only when the user selected a measure range and doing so helps answer the question.
+Use only the short evidence labels exactly as shown, such as [E1], while drafting claims for internal
+validation; never retype an opaque knowledge-unit/webchunk id.
+Do not add a citation list or evidence footer. The application removes the short labels before display
+and keeps exact record IDs, source attribution, and license conditions in separate structured metadata.
+Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
+measure_range, measure_scope, query_scope_relation, usage_constraint, local_example, knowledge unit,
+expert annotation, retrieval, corpus, or retrieved evidence in the answer.
 Keep the answer concise and practical for a singer.
 """
-INTERNAL_KNOWLEDGE_SYSTEM_PROMPT = """You are a soprano performance QA assistant.
-
-Answer in Korean.
-Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-No matching corpus evidence is available for this question. Answer directly from your pretrained
-general musical knowledge instead. The user's exact question is authoritative: do not replace it
-with a nearby singing topic, and ignore piece or measure metadata when it is not relevant. Never
-claim that you inspected the score, annotation database, or selected measures. If the answer
-depends on a particular edition, score marking, or exact bar, state that limitation briefly and
-provide only safe general guidance. Do not invent exact measure facts, quotations, sources, or
-bibliographic details. For a generic technique question, explain the named technique itself rather
-than redirecting to the selected piece's diction or interpretation.
-Do not emit evidence labels, corpus IDs, or citations such as [E1],
-[die-forelle-ku-001], or [webchunk-*].
-Do not respond with a corpus-insufficiency refusal; make a useful best-effort answer while clearly
-qualifying uncertainty when needed.
-Keep the answer concise and practical for a singer.
-"""
-OLD_INSUFFICIENT_EVIDENCE_MESSAGE = (
-    "현재 답변 가능 자료에서 이 질문을 뒷받침할 근거를 찾지 못했습니다."
-)
 NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
-NO_CORPUS_EVIDENCE_MESSAGE = "검색된 코퍼스 근거가 없습니다."
-INTERNAL_GENERATION_UNAVAILABLE_MESSAGE = (
-    "로컬 LLM을 사용할 수 없어 일반 지식 답변을 생성하지 못했습니다."
+NO_CORPUS_EVIDENCE_MESSAGE = (
+    "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
 )
 GENERATED_SUMMARY_ATTRIBUTION = "Soprano QA database project"
 CC_BY_4_URL = "https://creativecommons.org/licenses/by/4.0/"
@@ -144,6 +130,106 @@ OPAQUE_CITATION_ID_PATTERN = (
 )
 EVIDENCE_FOOTER_LABEL_RE = re.compile(
     r"제공된[\s*_~`]*검색[\s*_~`]*근거[\s*_~`]*[:：]?"
+)
+
+
+class GeneratedAnswerRejected(RuntimeError):
+    """Raised when the sole generated draft fails grounding/safety checks."""
+
+
+PIPELINE_TOKEN_SEPARATOR_PATTERN = r"[\s*_~`–—-]*"
+PIPELINE_FIELD_NAMES = (
+    "citation_label",
+    "evidence_role",
+    "evidence_type",
+    "measure_range",
+    "measure_scope",
+    "query_scope_relation",
+    "scope_match",
+    "usage_constraint",
+    "local_example",
+    "source_ids",
+    "expert_source_ids",
+    "web_source_ids",
+    "claim_ids",
+    "annotators",
+    "rewrite_status",
+    "measure_status",
+    "retrieval_review_warning",
+    "record_id",
+    "knowledge_unit_id",
+)
+
+
+def _separator_flexible_pipeline_field(name: str) -> str:
+    """Match one internal field despite copied Markdown/separator changes."""
+
+    return PIPELINE_TOKEN_SEPARATOR_PATTERN.join(
+        re.escape(part) for part in name.split("_")
+    )
+
+
+PIPELINE_FIELD_TOKEN_PATTERN = (
+    r"(?:"
+    + "|".join(
+        _separator_flexible_pipeline_field(name)
+        for name in PIPELINE_FIELD_NAMES
+    )
+    + r")"
+)
+PIPELINE_SCOPE_NOTICE_RE = re.compile(
+    r"(?im)^[ \t]*(?:[#>*+~-]+[ \t]*)*(?:[*_`~]+[ \t]*)?"
+    r"범위[ \t]*안내[ \t]*[:：][^\r\n]*(?:\r?\n)?"
+)
+PIPELINE_PRESENTATION_PREFIX_RE = re.compile(
+    r"(?im)^[ \t]*(?:[#>*+~-]+[ \t]*)*(?:[*_`~]+[ \t]*)?"
+    r"(?:"
+    r"확인된[ \t]*국소[ \t]*예시[ \t]*\([^\r\n)]*\)"
+    r"|일반[ \t]*참고[ \t]*근거"
+    r"|다른[ \t]*구간의[ \t]*관련[ \t]*주석"
+    r")"
+    r"[ \t]*(?:[*_`~]+[ \t]*)?[:：][ \t]*(?:[*_`~]+[ \t]*)?"
+)
+PIPELINE_METADATA_LINE_RE = re.compile(
+    r"(?im)^[ \t]*(?:[#>*+~-]+[ \t]*)*(?:[*_`~]+[ \t]*)?"
+    + PIPELINE_FIELD_TOKEN_PATTERN
+    + r"[ \t]*(?:[*_`~]+[ \t]*)?[:：][^\r\n]*(?:\r?\n)?",
+    flags=re.IGNORECASE | re.MULTILINE,
+)
+PIPELINE_INTERNAL_LABEL_ANYWHERE_RE = re.compile(
+    r"(?:"
+    r"범위[\s*_~`]*안내"
+    r"|확인된[\s*_~`]*국소[\s*_~`]*예시(?:\s*\([^\r\n)]*\))?"
+    r"|일반[\s*_~`]*참고[\s*_~`]*근거"
+    r"|다른[\s*_~`]*구간의[\s*_~`]*관련[\s*_~`]*주석"
+    r"|"
+    + PIPELINE_FIELD_TOKEN_PATTERN
+    + r")[\s*_~`]*[:：]",
+    flags=re.IGNORECASE,
+)
+PIPELINE_ANSWER_PREFIX_ANYWHERE_RE = re.compile(
+    r"(?:확인된[\s*_~`]*국소[\s*_~`]*예시"
+    r"(?:\s*\([^\r\n)]*\))?|일반[\s*_~`]*참고[\s*_~`]*근거|"
+    r"다른[\s*_~`]*구간의[\s*_~`]*관련[\s*_~`]*주석)"
+    r"[\s*_~`]*[:：]",
+    flags=re.IGNORECASE,
+)
+PIPELINE_INTERNAL_TOKEN_RE = re.compile(
+    r"(?:범위[\s*_~`]*안내|확인된[\s*_~`]*국소[\s*_~`]*예시|"
+    r"일반[\s*_~`]*참고[\s*_~`]*근거|"
+    r"다른[\s*_~`]*구간의[\s*_~`]*관련[\s*_~`]*주석|"
+    r"(?<![A-Za-z0-9_])"
+    + PIPELINE_FIELD_TOKEN_PATTERN
+    + r"(?![A-Za-z0-9_])|"
+    + r"(?<![A-Za-z0-9_])knowledge[\s*_~`-]*units?(?![A-Za-z0-9_])|"
+    r"(?<![A-Za-z0-9_])expert[\s*_~`-]*annotations?(?![A-Za-z0-9_])|"
+    r"(?<![A-Za-z0-9_])retrieved[\s*_~`-]*evidence(?![A-Za-z0-9_])|"
+    r"(?<![A-Za-z0-9_])retrieval(?![A-Za-z0-9_])|"
+    r"(?<![A-Za-z0-9_])corpus(?![A-Za-z0-9_])|"
+    r"지식[\s*_~`-]*단위|전문가[\s*_~`-]*주석|"
+    r"검색[\s*_~`-]*(?:파이프라인|결과|근거)|"
+    r"(?:말뭉치|코퍼스))",
+    flags=re.IGNORECASE,
 )
 
 
@@ -197,25 +283,453 @@ def _remove_evidence_footer(answer: str) -> str:
     return cleaned.strip()
 
 
-SOURCE_MEASURE_LOCATOR_RE = re.compile(
-    r"(?<!\d)"
-    r"\d+\s*(?:[-–—~]\s*\d+)?"
-    r"(?:\s*(?:,|와|과|/|\s)\s*"
-    r"\d+\s*(?:[-–—~]\s*\d+)?)*"
-    r"\s*마디"
-    r"(?P<particle>의|에서|부터|까지|은|는|이|가|을|를|에|와|과|로)?"
-)
-SOURCE_ORDINAL_MEASURE_LOCATOR_RE = re.compile(
-    r"(?:첫\s*(?:번째\s*)?|마지막\s*(?:번째\s*)?|끝\s*)마디"
-    r"(?P<particle>의|에서|부터|까지|은|는|이|가|을|를|에|와|과|로)?"
-)
-SOURCE_ENGLISH_MEASURE_LOCATOR_RE = re.compile(
-    r"\b(?:"
-    r"m\.\s*\d+(?:\s*[-–—~]\s*\d+)?"
-    r"|(?:measures?|bars?)\s+\d+(?:\s*[-–—~]\s*\d+)?"
-    r")(?!\d)",
+def _remove_pipeline_presentation_scaffolding(answer: str) -> str:
+    """Remove known internal renderer/prompt labels from displayed prose.
+
+    Scope, provenance, and routing data remain available in the structured
+    response.  This is a final defense for old cached answers and for a model
+    that copies a prompt field despite the generation contract.
+    """
+
+    safe_lines: List[str] = []
+    for line in answer.splitlines():
+        answer_prefix = PIPELINE_ANSWER_PREFIX_ANYWHERE_RE.search(line)
+        if answer_prefix is not None:
+            prefix = line[: answer_prefix.start()].rstrip(
+                " \t*_~`#>+-"
+            )
+            suffix = line[answer_prefix.end() :].strip(
+                " \t*_~`#>+-"
+            )
+            preserved = " ".join(
+                part for part in (prefix, suffix) if part
+            )
+            if any(character.isalnum() for character in preserved):
+                safe_lines.append(preserved)
+            continue
+        match = PIPELINE_INTERNAL_LABEL_ANYWHERE_RE.search(line)
+        if match is None:
+            safe_lines.append(line)
+            continue
+        # Internal fields are never user prose. Preserve only substantive
+        # text before the first copied field and discard the rest of that
+        # line, whose value has no reliable delimiter.
+        prefix = line[: match.start()].rstrip(" \t*_~`#>+-")
+        if any(character.isalnum() for character in prefix):
+            safe_lines.append(prefix)
+    cleaned = "\n".join(safe_lines)
+    cleaned = PIPELINE_SCOPE_NOTICE_RE.sub("", cleaned)
+    cleaned = PIPELINE_PRESENTATION_PREFIX_RE.sub("", cleaned)
+    cleaned = PIPELINE_METADATA_LINE_RE.sub("", cleaned)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
+SHORT_EVIDENCE_LABEL_RE = re.compile(
+    r"(?:"
+    r"E(?:vidence)?\s*"
+    r"(?:(?:no\.?|number|번호)\s*)?"
+    r"(?:[:：#._–—-]\s*)?[0-9]+"
+    r"|(?:근거|출처)\s*"
+    r"(?:(?:no\.?|number|번호)\s*)?"
+    r"(?:[:：#._–—-]\s*)?"
+    r"(?:E(?:vidence)?\s*)?[0-9]+"
+    r")",
     flags=re.IGNORECASE,
 )
+OPAQUE_ID_SEPARATOR_PATTERN = r"[\s*_~`–—-]+"
+MALFORMED_OPAQUE_CITATION_RE = re.compile(
+    r"(?:"
+    r"(?:[a-z0-9]+" + OPAQUE_ID_SEPARATOR_PATTERN + r")+ku"
+    r"(?:" + OPAQUE_ID_SEPARATOR_PATTERN + r"[A-Za-z0-9*]+)?"
+    r"|sqa(?:" + OPAQUE_ID_SEPARATOR_PATTERN + r"[A-Za-z0-9*]+)+"
+    r"|web[\s*_~`–—-]*(?:chunk|src|source|claim)"
+    r"(?:" + OPAQUE_ID_SEPARATOR_PATTERN + r"[A-Za-z0-9*]+)+"
+    r"|source[\s*_~`–—-]*id\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+KOREAN_CITATION_SUFFIX_PATTERN = (
+    r"(?:"
+    r"에[ \t]*(?:따르면|의하면)"
+    r"|에서(?:는)?(?:[ \t]+보(?:면|듯이))?"
+    r"|은|는|이|가|을|를|의"
+    r")"
+)
+
+
+def _known_evidence_ids(results: List[Any] | None) -> set[str]:
+    """Collect record and provenance IDs that must never enter answer prose."""
+
+    if not results:
+        return set()
+    identifiers: set[str] = set()
+    for result in results:
+        record = result.record
+        record_id = str(record.get("id") or "").strip()
+        if record_id:
+            identifiers.add(record_id)
+        for key in ("source_ids", "web_source_ids", "claim_ids"):
+            identifiers.update(
+                str(value).strip()
+                for value in record.get(key, [])
+                if str(value).strip()
+            )
+    return identifiers
+
+
+def strip_user_visible_evidence_references(
+    answer: str,
+    results: List[Any] | None = None,
+) -> str:
+    """Remove internal evidence labels and corpus IDs from displayed prose.
+
+    Citation labels remain available to the grounding and scope checks before
+    this presentation-only function runs. Bare pitch names such as ``E2`` are
+    intentionally preserved; only bracketed or explicitly citation-shaped
+    short labels are removed.
+    """
+
+    cleaned = _remove_pipeline_presentation_scaffolding(
+        _remove_evidence_footer(answer)
+    )
+    known_ids = _known_evidence_ids(results)
+    def remove_citation_bracket(match: re.Match[str]) -> str:
+        content = match.group(1).strip()
+        normalized = re.sub(r"[\s*_~`]", "", content).casefold()
+        if any(
+            identifier.casefold() in content.casefold()
+            or re.sub(r"[\s*_~`]", "", identifier).casefold()
+            in normalized
+            for identifier in known_ids
+        ):
+            return ""
+        if MALFORMED_OPAQUE_CITATION_RE.search(content):
+            return ""
+        citation_content = re.sub(
+            r"^(?:출처|근거|source|citation)\s*[:：-]?\s*",
+            "",
+            content,
+            flags=re.IGNORECASE,
+        ).strip()
+        citation_content = citation_content.rstrip(".,;:，、 ")
+        if re.fullmatch(r"[0-9]+(?:\s*[,;，、]\s*[0-9]+)*", citation_content):
+            return ""
+        if re.fullmatch(
+            SHORT_EVIDENCE_LABEL_RE.pattern
+            + r"(?:\s*[,;，、]\s*"
+            + SHORT_EVIDENCE_LABEL_RE.pattern
+            + r")*",
+            citation_content,
+            flags=re.IGNORECASE,
+        ):
+            return ""
+        return match.group(0)
+
+    def remove_citation_bracket_and_suffix(match: re.Match[str]) -> str:
+        """Drop a citation together with its now-orphaned Korean particle."""
+
+        if remove_citation_bracket(match) == "":
+            return ""
+        return match.group(0)
+
+    cleaned = re.sub(
+        r"[\[【]([^\]】]+)[\]】][ \t]*"
+        + KOREAN_CITATION_SUFFIX_PATTERN
+        + r"[ \t]*[,，:]?[ \t]*",
+        remove_citation_bracket_and_suffix,
+        cleaned,
+    )
+    cleaned = re.sub(
+        r"[\[【]([^\]】]+)[\]】]",
+        remove_citation_bracket,
+        cleaned,
+    )
+    cleaned = re.sub(
+        r"[\(（]([^\)）]+)[\)）][ \t]*"
+        + KOREAN_CITATION_SUFFIX_PATTERN
+        + r"[ \t]*[,，:]?[ \t]*",
+        remove_citation_bracket_and_suffix,
+        cleaned,
+    )
+    cleaned = re.sub(
+        r"[\(（]([^\)）]+)[\)）]",
+        remove_citation_bracket,
+        cleaned,
+    )
+
+    for identifier in sorted(known_ids, key=len, reverse=True):
+        cleaned = re.sub(
+            r"(?<![A-Za-z0-9_-])"
+            + re.escape(identifier)
+            + r"(?:[ \t]*"
+            + KOREAN_CITATION_SUFFIX_PATTERN
+            + r"[ \t]*[,，:]?[ \t]*)?"
+            + r"(?![A-Za-z0-9_-])",
+            "",
+            cleaned,
+            flags=re.IGNORECASE,
+        )
+    cleaned = re.sub(
+        r"(?<![A-Za-z0-9_-])"
+        + OPAQUE_CITATION_ID_PATTERN
+        + r"(?:[ \t]*"
+        + KOREAN_CITATION_SUFFIX_PATTERN
+        + r"[ \t]*[,，:]?[ \t]*)?"
+        + r"(?![A-Za-z0-9_-])",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"(?<![A-Za-z0-9])Evidence\s*"
+        r"(?:(?:no\.?|number)\s*)?(?:[:：#._–—-]\s*)?"
+        r"[0-9]+(?:[ \t]*"
+        + KOREAN_CITATION_SUFFIX_PATTERN
+        + r"[ \t]*[,，:]?[ \t]*)?(?![0-9])",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    cleaned = re.sub(
+        r"(?:근거|출처)\s*[:：#._–—-]\s*"
+        r"(?:E(?:vidence)?\s*)?[0-9]+(?:[ \t]*"
+        + KOREAN_CITATION_SUFFIX_PATTERN
+        + r"[ \t]*[,，:]?[ \t]*)?(?![0-9])",
+        "",
+        cleaned,
+        flags=re.IGNORECASE,
+    )
+    # ``finalize_answer_citations`` may have run before this presentation
+    # pass. Remove only unmistakable sentence-initial citation remnants so a
+    # second pass also repairs older or partially finalized answers.
+    orphaned_attribution = (
+        r"(?:에[ \t]*(?:따르면|의하면)|에서[ \t]+보(?:면|듯이)|에서는?)"
+    )
+    cleaned = re.sub(
+        r"(^|[.!?。！？])[ \t]+"
+        + orphaned_attribution
+        + r"[ \t]*[,，:]?[ \t]*",
+        r"\1 ",
+        cleaned,
+        flags=re.MULTILINE,
+    )
+    cleaned = re.sub(
+        r"(?m)^[ \t]*" + orphaned_attribution + r"[ \t]*[,，:]?[ \t]*",
+        "",
+        cleaned,
+    )
+    cleaned = re.sub(r"[ \t]+([,.;:!?，。])", r"\1", cleaned)
+    cleaned = re.sub(
+        r"(?m)^[ \t]*(?:(?:[-+*>•]\s*)|[.,;:]+)[ \t]*$\n?",
+        "",
+        cleaned,
+    )
+    cleaned = re.sub(r"[ \t]+\n", "\n", cleaned)
+    cleaned = re.sub(r"\n{3,}", "\n\n", cleaned)
+    return cleaned.strip()
+
+
+HANGUL_SYLLABLE_BASE = 0xAC00
+HANGUL_SYLLABLE_END = 0xD7A3
+HANGUL_JONGSEONG_COUNT = 28
+HANGUL_JONGSEONG_NIEUN = 4
+HANGUL_JONGSEONG_RIEUL = 8
+HANGUL_JONGSEONG_BIEUP = 17
+PLAIN_DECLARATIVE_ENDING_RE = re.compile(
+    r"(?P<word>[가-힣]+다)"
+    r"(?=(?:"
+    r"[.!?;:。！？；：][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
+    r"))"
+)
+KOREAN_SENTENCE_FINAL_WORD_RE = re.compile(
+    r"(?P<word>[가-힣]+)"
+    r"(?=(?:"
+    r"[.!?;:。！？；：][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
+    r"))"
+)
+FORMAL_POLITE_NONDECLARATIVE_SUFFIXES = (
+    "습니까",
+    "입니까",
+    "합니까",
+    "십시오",
+    "세요",
+    "예요",
+    "이에요",
+    "해요",
+    "돼요",
+)
+FORMAL_POLITE_WORD_OVERRIDES = {
+    "근거다": "근거입니다",
+    "자료다": "자료입니다",
+}
+
+
+def _has_formal_polite_declarative_ending(word: str) -> bool:
+    """Return whether ``word`` ends in the grammatical -ㅂ니다 form.
+
+    A raw ``endswith("니다")`` check is insufficient because plain lexical
+    forms such as ``아니다``, ``다니다``, and ``지니다`` have the same final
+    two syllables.  In a formal-polite declarative, the syllable immediately
+    before ``니다`` carries final bieup (for example ``합``, ``습``, or
+    ``입``).
+    """
+
+    if not word.endswith("니다") or len(word) < 3:
+        return False
+    preceding = word[-3]
+    codepoint = ord(preceding)
+    if not HANGUL_SYLLABLE_BASE <= codepoint <= HANGUL_SYLLABLE_END:
+        return False
+    jongseong = (codepoint - HANGUL_SYLLABLE_BASE) % HANGUL_JONGSEONG_COUNT
+    return jongseong == HANGUL_JONGSEONG_BIEUP
+
+
+def _has_formal_polite_propositive_ending(word: str) -> bool:
+    """Return whether ``word`` ends in the formal-polite -ㅂ시다 form."""
+
+    if not word.endswith("시다") or len(word) < 3:
+        return False
+    preceding = word[-3]
+    codepoint = ord(preceding)
+    if not HANGUL_SYLLABLE_BASE <= codepoint <= HANGUL_SYLLABLE_END:
+        return False
+    jongseong = (codepoint - HANGUL_SYLLABLE_BASE) % HANGUL_JONGSEONG_COUNT
+    return jongseong == HANGUL_JONGSEONG_BIEUP
+
+
+def _formalize_korean_declarative_word(word: str) -> str:
+    """Convert one sentence-final Korean plain declarative to 합니다체."""
+
+    if (
+        _has_formal_polite_declarative_ending(word)
+        or _has_formal_polite_propositive_ending(word)
+        or not word.endswith("다")
+    ):
+        return word
+    if word in FORMAL_POLITE_WORD_OVERRIDES:
+        return FORMAL_POLITE_WORD_OVERRIDES[word]
+    stem = word[:-1]
+    if stem.endswith("는"):
+        stem = stem[:-1]
+    if not stem:
+        return word
+    final = stem[-1]
+    codepoint = ord(final)
+    if not HANGUL_SYLLABLE_BASE <= codepoint <= HANGUL_SYLLABLE_END:
+        return word
+    jongseong = (codepoint - HANGUL_SYLLABLE_BASE) % HANGUL_JONGSEONG_COUNT
+    syllable_without_jongseong = codepoint - jongseong
+    if jongseong in {
+        0,
+        HANGUL_JONGSEONG_NIEUN,
+        HANGUL_JONGSEONG_RIEUL,
+    }:
+        formal_stem = (
+            stem[:-1]
+            + chr(syllable_without_jongseong + HANGUL_JONGSEONG_BIEUP)
+        )
+        return formal_stem + "니다"
+    return stem + "습니다"
+
+
+def formalize_korean_answer(answer: str) -> str:
+    """Deterministically normalize sentence-final plain Korean to 합니다체."""
+
+    formalized = PLAIN_DECLARATIVE_ENDING_RE.sub(
+        lambda match: _formalize_korean_declarative_word(match.group("word")),
+        answer,
+    )
+    return re.sub(
+        r"([.!?。！？][\"'”’」』】)]*)(?=[가-힣])",
+        r"\1 ",
+        formalized,
+    )
+
+
+def answer_uses_formal_polite_korean(answer: str) -> bool:
+    """Return whether every Korean sentence uses a polite final ending."""
+
+    if not re.search(r"[가-힣]", answer):
+        return False
+    for match in KOREAN_SENTENCE_FINAL_WORD_RE.finditer(answer):
+        word = match.group("word")
+        if word.endswith("다"):
+            if not (
+                _has_formal_polite_declarative_ending(word)
+                or _has_formal_polite_propositive_ending(word)
+            ):
+                return False
+        elif not word.endswith(FORMAL_POLITE_NONDECLARATIVE_SUFFIXES):
+            return False
+    return True
+
+
+def finalize_user_visible_answer(
+    answer: str,
+    results: List[Any] | None = None,
+) -> str:
+    """Apply the invariant for prose returned to a user."""
+
+    cleaned = strip_user_visible_evidence_references(answer, results)
+    # Corpus excerpts and generated prose can contain duplicated horizontal
+    # whitespace.  Keep paragraph boundaries intact, but never expose those
+    # source-formatting artifacts in the final answer.
+    cleaned = re.sub(r"[^\S\r\n]+", " ", cleaned)
+    finalized = formalize_korean_answer(cleaned).strip()
+    if (
+        not finalized
+        or not answer_uses_formal_polite_korean(finalized)
+        or _has_forbidden_user_visible_artifact(finalized, results)
+    ):
+        return NO_CORPUS_EVIDENCE_MESSAGE
+    return finalized
+
+
+def _has_forbidden_user_visible_artifact(
+    answer: str,
+    results: List[Any] | None,
+) -> bool:
+    """Enforce a final fail-closed boundary for internal presentation data."""
+
+    normalized = unicodedata.normalize("NFKC", answer)
+    if (
+        EVIDENCE_FOOTER_LABEL_RE.search(normalized)
+        or PIPELINE_INTERNAL_TOKEN_RE.search(normalized)
+        or MALFORMED_OPAQUE_CITATION_RE.search(normalized)
+        or re.search(
+            r"(?<![A-Za-z0-9_-])"
+            + OPAQUE_CITATION_ID_PATTERN
+            + r"(?![A-Za-z0-9_-])",
+            normalized,
+            flags=re.IGNORECASE,
+        )
+    ):
+        return True
+    known_ids = _known_evidence_ids(results)
+    if any(
+        identifier.casefold() in normalized.casefold()
+        for identifier in known_ids
+    ):
+        return True
+    for content in re.findall(
+        r"[\[【\(（]([^\]】\)）]+)[\]】\)）]",
+        normalized,
+    ):
+        candidate = content.strip().rstrip(".,;:，、 ")
+        if re.fullmatch(
+            SHORT_EVIDENCE_LABEL_RE.pattern,
+            candidate,
+            flags=re.IGNORECASE,
+        ):
+            return True
+    return False
+
+
 LOCAL_SCOPE_GENERALIZATION_RE = re.compile(
     r"(?:"
     r"(?:곡|노래|작품)\s*(?:전체|전반)"
@@ -269,111 +783,77 @@ RANGED_CONTEXT_ONLY_SCOPE_MATCHES = {
 }
 RANGED_NON_GROUNDING_SCOPE_MATCHES = {
     *RANGED_CONTEXT_ONLY_SCOPE_MATCHES,
-    "unscoped_pending_context",
     "unspecified_context",
 }
 NO_RANGE_SCOPE_MATCHES = {
     "general_evidence",
     "local_example",
-    "unscoped_pending_review",
     "unspecified_scope",
+}
+# Smaller cosine gaps are treated as a semantic near-tie, not evidence that
+# a measure-local source should displace the normal no-range bundle.
+NO_RANGE_LOCAL_DENSE_DOMINANCE_MARGIN = 0.025
+# Match the production hybrid candidate-admission floor. This matters after
+# generation selection has already removed competitors: absence of a runner-
+# up is not, by itself, proof that a weak local match is safe to extract.
+NO_RANGE_LOCAL_DENSE_MIN_RELEVANCE_SCORE = 0.44
+NO_RANGE_LOCAL_DENSE_MIN_CONTENT_SCORE = 0.43
+NO_RANGE_LOCAL_RELEVANCE_LED_MIN_SCORE = 0.65
+NO_RANGE_LOCAL_RELEVANCE_LED_DENSE_ONLY_MIN_SCORE = 0.70
+NO_RANGE_LOCAL_RELEVANCE_LED_MARGIN = 0.05
+NO_RANGE_LOCAL_RELEVANCE_LED_MAX_CONTENT_DEFICIT = 0.05
+NO_RANGE_STABLE_CANDIDATE_MIN = 6
+DENSE_SEMANTIC_AUTHORITY_MATCH_TYPE = "dense_semantic_authority"
+EXPERT_SELECTOR_CANDIDATE_LIMIT = 12
+EXPERT_SELECTOR_MAX_ITEMS = 3
+RANGED_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE = 0.60
+RANGED_DENSE_AUTHORITY_MIN_CONTENT_SCORE = 0.58
+RANGED_DENSE_AUTHORITY_RELEVANCE_MARGIN = 0.05
+RANGED_DENSE_AUTHORITY_CONTENT_MARGIN = 0.025
+NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE = 0.70
+NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONTENT_SCORE = 0.70
+NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE = 0.50
+NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN = 0.075
+RANGED_DEICTIC_QUERY_RE = re.compile(
+    r"(?:이|해당|선택(?:한|된)?)\s*"
+    r"(?:부분|구간|대목|마디)|(?:여기|이곳)(?:에서|은|는|을|를)?"
+)
+GENERIC_RANGED_QUERY_CONCEPTS = {
+    "가창",
+    "곡",
+    "구간",
+    "노래",
+    "대목",
+    "마디",
+    "방법",
+    "부분",
+    "부르",
+    "어떻",
+    "연주",
+    "음악",
+    "작품",
+    "표현",
 }
 
 
-def _location_neutral_source_text(value: str) -> str:
-    """Hide non-authoritative source locators from a range-scoped prompt."""
+def is_underspecified_ranged_query(
+    query: str,
+    piece: str | None,
+    measure_ranges: List[List[int]],
+) -> bool:
+    """Identify deictic range questions with no musical subject.
 
-    def replace_locator(match: re.Match[str]) -> str:
-        particle = match.group("particle")
-        if particle:
-            particle = {
-                "가": "이",
-                "는": "은",
-                "를": "을",
-                "와": "과",
-                "로": "으로",
-            }.get(particle, particle)
-            return "해당 대목" + particle
-        return "해당 대목"
+    A selected range supplies location, not semantics.  Wording such as
+    ``이 부분은 어떻게 노래해야 할까?`` therefore cannot choose among
+    unrelated annotations merely because they contain generic singing verbs.
+    """
 
-    neutral = SOURCE_MEASURE_LOCATOR_RE.sub(replace_locator, value)
-    neutral = SOURCE_ORDINAL_MEASURE_LOCATOR_RE.sub(
-        replace_locator,
-        neutral,
-    )
-    neutral = SOURCE_ENGLISH_MEASURE_LOCATOR_RE.sub(
-        "해당 대목",
-        neutral,
-    )
-    neutral = neutral.replace("해당 대목의의", "해당 대목의")
-    return re.sub(
-        r"해당 대목(?:의|과)?\s+해당 대목의",
-        "두 부분의",
-        neutral,
-    )
-
-
-def _neutralize_unconfirmed_review_locators(value: str) -> str:
-    """Preserve a review-note contrast without exposing disputed measures."""
-
-    matches: List[tuple[int, int, str, str]] = []
-    for pattern in (
-        SOURCE_MEASURE_LOCATOR_RE,
-        SOURCE_ORDINAL_MEASURE_LOCATOR_RE,
-        SOURCE_ENGLISH_MEASURE_LOCATOR_RE,
-    ):
-        for match in pattern.finditer(value):
-            particle = match.groupdict().get("particle") or ""
-            raw_locator = match.group(0)
-            locator_key = (
-                raw_locator[: -len(particle)]
-                if particle
-                else raw_locator
-            )
-            matches.append(
-                (
-                    match.start(),
-                    match.end(),
-                    locator_key,
-                    particle,
-                )
-            )
-    if not matches:
-        return value
-
-    labels: Dict[str, str] = {}
-    output: List[str] = []
-    cursor = 0
-    for start, end, locator_key, particle in sorted(matches):
-        if start < cursor:
-            continue
-        label = labels.get(locator_key)
-        if label is None:
-            index = len(labels)
-            suffix = (
-                chr(ord("A") + index)
-                if index < 26
-                else "A%d" % (index + 1)
-            )
-            label = "미확인 위치 " + suffix
-            labels[locator_key] = label
-        output.append(value[cursor:start])
-        output.append(label + particle)
-        cursor = end
-    output.append(value[cursor:])
-    return "".join(output)
-
-
-def local_examples_are_only_scope_authority(results: List[Any]) -> bool:
-    """Return whether only local examples have confirmed scope authority."""
-
-    primary = primary_grounding_results(results)
-    return any(
-        result.scope_match == "local_example"
-        for result in primary
-    ) and not any(
-        result.scope_match == "general_evidence"
-        for result in primary
+    if not measure_ranges or not RANGED_DEICTIC_QUERY_RE.search(query):
+        return False
+    concepts = semantic_concepts(query, piece, query=True)
+    return not any(
+        concept not in GENERIC_RANGED_QUERY_CONCEPTS
+        for concept in concepts
     )
 
 
@@ -384,11 +864,7 @@ def _answer_claims(answer: str) -> List[str]:
     sanitized_answer = _remove_evidence_footer(answer)
     for line in unicodedata.normalize("NFKC", sanitized_answer).splitlines():
         line = ANSWER_LIST_PREFIX_RE.sub("", line.strip())
-        if (
-            not line
-            or line.startswith("검토 주의:")
-            or line.startswith("제공된 검색 근거:")
-        ):
+        if not line or line.startswith("제공된 검색 근거:"):
             continue
         claims.extend(
             part.strip()
@@ -479,36 +955,6 @@ def cited_primary_grounding_results(
     ]
 
 
-def _claim_names_confirmed_range(
-    claim: str,
-    measure_ranges: List[List[int]],
-) -> bool:
-    """Return whether a claim names one canonical inclusive range."""
-
-    normalized = unicodedata.normalize("NFKC", claim)
-    dash = r"[-–—~〜]"
-    for start, end in measure_ranges:
-        if start == end:
-            patterns = (
-                rf"(?<!\d){start}\s*(?:번째\s*)?마디",
-                rf"(?:마디|m\.|measures?|bars?)\s*{start}(?!\d)",
-            )
-        else:
-            patterns = (
-                rf"(?<!\d){start}\s*{dash}\s*{end}\s*"
-                rf"(?:번째\s*)?마디",
-                rf"(?<!\d){start}\s*마디\s*부터\s*{end}\s*마디",
-                rf"(?:마디|measures?|bars?)\s*{start}\s*{dash}\s*"
-                rf"{end}(?!\d)",
-            )
-        if any(
-            re.search(pattern, normalized, flags=re.IGNORECASE)
-            for pattern in patterns
-        ):
-            return True
-    return False
-
-
 def _claim_measure_locators(claim: str) -> List[List[int]]:
     """Extract explicit score locations from generated answer prose."""
 
@@ -560,11 +1006,17 @@ def _claim_has_unauthorized_measure_locator(
     cited: set[int],
     selected_measure_ranges: List[List[int]],
 ) -> bool:
-    """Reject score locations not authorized by query or local evidence."""
+    """Reject score locations not authorized by the user's selected range.
+
+    A canonical local-example range is routing metadata.  It does not become
+    user-selected merely because that evidence was retrieved, so no-range
+    answers must not volunteer any score locator.
+    """
 
     locators = _claim_measure_locators(claim)
     if not locators:
         return False
+    del results, cited
     if selected_measure_ranges:
         return any(
             not any(
@@ -573,15 +1025,7 @@ def _claim_has_unauthorized_measure_locator(
             )
             for start, end in locators
         )
-    allowed_local_ranges = {
-        tuple(measure_range)
-        for index in cited
-        if results[index].scope_match == "local_example"
-        for measure_range in (
-            results[index].record.get("measure_range") or []
-        )
-    }
-    return any(tuple(locator) not in allowed_local_ranges for locator in locators)
+    return True
 
 
 def _claim_has_piece_wide_generalization(claim: str) -> bool:
@@ -606,9 +1050,10 @@ def answer_overgeneralizes_local_examples(
     """Reject unbound or overgeneralized local-example claims.
 
     Local examples are safe factual context for a broad question only when
-    the generated claim identifies both the evidence item and one of its
-    canonical confirmed ranges. A different whole-piece record can support a
-    broad claim only when that record is cited in the same claim.
+    the generated claim identifies the evidence item internally. Their exact
+    canonical ranges remain hidden routing metadata. A different whole-piece
+    record can support a broad claim only when that record is cited in the
+    same claim.
     """
 
     if not answer.strip():
@@ -651,12 +1096,6 @@ def answer_overgeneralizes_local_examples(
         cited_local = cited & local_indices
         if not cited_local:
             continue
-        for index in cited_local:
-            if not _claim_names_confirmed_range(
-                claim,
-                results[index].record.get("measure_range") or [],
-            ):
-                return True
         if (
             _claim_has_piece_wide_generalization(claim)
             and not cited & general_indices
@@ -687,85 +1126,10 @@ def suspicious_generation_tokens(
     )
 
 
-def build_generation_repair_messages(
-    messages: List[Dict[str, str]],
-    answer: str,
-    suspicious_tokens: List[str],
-) -> List[Dict[str, str]]:
-    """Ask the grounded model to repair a visibly corrupted draft."""
+def _expert_record_is_finalized(record: Dict[str, Any]) -> bool:
+    """Return whether an expert record obeys the release-only runtime schema."""
 
-    return [
-        *messages,
-        {"role": "assistant", "content": answer},
-        {
-            "role": "user",
-            "content": (
-                "The draft contains corrupted code/UI-like token(s) that do "
-                "not occur in the evidence: %s. Rewrite the complete final "
-                "answer in natural Korean, replacing the corruption with "
-                "the intended evidence-grounded musical term. Preserve all "
-                "claims, uncertainty, review disclosures, and valid evidence "
-                "labels; add no new advice. Output the corrected answer only."
-                "\n/no_think"
-            )
-            % ", ".join(suspicious_tokens),
-        },
-    ]
-
-
-def _range_scoped_source_context(
-    record: Dict[str, Any],
-    measure_ranges: List[List[int]],
-) -> tuple[List[Dict[str, Any]], bool]:
-    """Select source subclaims whose review hints overlap this query range."""
-
-    contexts = list(record.get("source_answer_context", []))
-    if not measure_ranges:
-        return contexts, False
-    overlapping = [
-        context
-        for context in contexts
-        if (
-            context.get("legacy_measure_range_hints")
-            and ranges_overlap(
-                context["legacy_measure_range_hints"],
-                measure_ranges,
-            )
-        )
-    ]
-    nonoverlapping_hinted = [
-        context
-        for context in contexts
-        if (
-            context.get("legacy_measure_range_hints")
-            and not ranges_overlap(
-                context["legacy_measure_range_hints"],
-                measure_ranges,
-            )
-        )
-    ]
-    if not overlapping or not nonoverlapping_hinted:
-        return contexts, False
-    unscoped = [
-        context
-        for context in contexts
-        if not context.get("legacy_measure_range_hints")
-    ]
-    return overlapping + unscoped, True
-
-
-def _neutralize_source_locators(
-    record: Dict[str, Any],
-    selected_ranges: List[List[int]],
-    *,
-    range_partitioned: bool,
-) -> bool:
-    """Return whether canonical range metadata must replace source locators."""
-
-    # With no selected range, source-level locators are never routing
-    # authority. This applies to specific, whole-piece, and unspecified KUs:
-    # only the KU's reviewed measure metadata may put a number in the answer.
-    return range_partitioned or not selected_ranges
+    return expert_record_is_runtime_final(record)
 
 
 def expert_prompt_factuality_material(
@@ -774,10 +1138,10 @@ def expert_prompt_factuality_material(
 ) -> Dict[str, Any]:
     """Return expert prose that is actually exposed to grounded generation.
 
-    The result intentionally mirrors ``build_context``. In particular, a
-    multi-range knowledge-unit rewrite is withheld when source-level review
-    hints can isolate the selected range; only the overlapping, locator-
-    neutral source Q&A is then returned.
+    The result intentionally mirrors ``build_context``: raw source Q&A and
+    editorial metadata never become factuality material. Confirmed range
+    metadata may exclude a non-overlapping record, but it never replaces the
+    reviewed knowledge-unit answer with source prose.
     """
 
     if record.get("evidence_type") != "expert_annotation":
@@ -798,56 +1162,16 @@ def expert_prompt_factuality_material(
             "question_contexts": [],
             "source_ids": [],
         }
-    source_answers, range_partitioned = _range_scoped_source_context(
-        record,
-        selected_ranges,
-    )
-    neutralize_source_locators = _neutralize_source_locators(
-        record,
-        selected_ranges,
-        range_partitioned=range_partitioned,
-    )
-    answer_texts: List[str] = []
-    question_contexts: List[str] = []
-    source_ids: List[str] = []
-    for source_answer in source_answers:
-        linked_unit_ids = source_answer.get(
-            "linked_knowledge_unit_ids",
-            [],
-        )
-        if len(linked_unit_ids) > 1:
-            continue
-        question = source_answer.get("question", "")
-        answer = source_answer.get("answer", "")
-        if neutralize_source_locators:
-            question = _location_neutral_source_text(question)
-            answer = _location_neutral_source_text(answer)
-        question = re.sub(r"\s+", " ", question).strip()
-        answer = re.sub(r"\s+", " ", answer).strip()
-        if question and question not in question_contexts:
-            question_contexts.append(question)
-        if answer and answer not in answer_texts:
-            answer_texts.append(answer)
-        source_id = source_answer.get("source_id")
-        if (
-            isinstance(source_id, str)
-            and source_id
-            and source_id not in source_ids
-        ):
-            source_ids.append(source_id)
-    if not range_partitioned:
-        curated_answer = re.sub(
-            r"\s+",
-            " ",
-            record.get("answer", ""),
-        ).strip()
-        if curated_answer and curated_answer not in answer_texts:
-            answer_texts.append(curated_answer)
+    curated_answer = re.sub(
+        r"\s+",
+        " ",
+        record.get("answer", ""),
+    ).strip()
     return {
-        "range_partitioned": range_partitioned,
-        "answer_texts": answer_texts,
-        "question_contexts": question_contexts,
-        "source_ids": source_ids,
+        "range_partitioned": False,
+        "answer_texts": [curated_answer] if curated_answer else [],
+        "question_contexts": [],
+        "source_ids": [],
     }
 
 
@@ -869,16 +1193,32 @@ def build_context(
                 in RANGED_CONTEXT_ONLY_SCOPE_MATCHES
                 else "citation_label: E%d" % idx
             ),
-            "id: %s" % record["id"],
             "evidence_type: %s" % record.get("evidence_type", "unknown"),
             "piece: %s" % record["piece"],
             "work: %s" % record["work"],
-            "topic: %s" % record["topic"],
-            "measure_range: %s" % format_measure_range(record.get("measure_range") or []),
-            "measure_scope: %s" % record.get("measure_scope", ""),
-            "query_scope_relation: %s" % result.scope_match,
-            "evidence_role: %s" % evidence_role,
         ]
+        if record.get("topic"):
+            lines.append("topic: %s" % record["topic"])
+        hide_unrequested_local_range = (
+            not measure_ranges and result.scope_match == "local_example"
+        )
+        if not hide_unrequested_local_range:
+            lines.extend(
+                [
+                    "measure_range: %s"
+                    % format_measure_range(
+                        record.get("measure_range") or []
+                    ),
+                    "measure_scope: %s"
+                    % record.get("measure_scope", ""),
+                ]
+            )
+        lines.extend(
+            [
+                "query_scope_relation: %s" % result.scope_match,
+                "evidence_role: %s" % evidence_role,
+            ]
+        )
         if result.scope_match == "other_range_context":
             lines.append(
                 "usage_constraint: This evidence has a confirmed location "
@@ -893,10 +1233,7 @@ def build_context(
             )
             chunks.append("\n".join(lines))
             continue
-        elif result.scope_match in {
-            "unscoped_pending_context",
-            "unspecified_context",
-        }:
+        elif result.scope_match == "unspecified_context":
             lines.append(
                 "usage_constraint: This evidence has no confirmed location "
                 "for the selected range. Preserve it as unconfirmed-scope "
@@ -910,148 +1247,17 @@ def build_context(
             )
         elif result.scope_match == "local_example":
             lines.append(
-                "usage_constraint: This is a citable confirmed local "
-                "example for a broad, no-range question. Use only the "
-                "canonical measure_range above when naming its location, "
-                "and explicitly bind the musical claim to those measures. "
-                "It does not establish that the claim applies throughout "
-                "the work, frequently, or in many places."
+                "usage_constraint: This is citable passage-specific advice "
+                "that directly matches a broad, no-range question. Its "
+                "canonical location is hidden presentation metadata. Cite "
+                "the [E#] label for internal validation, phrase the advice "
+                "naturally around the user's situation, and never print a "
+                "measure number, range, local-example label, scope notice, "
+                "or retrieval explanation. It does not establish that the "
+                "claim applies throughout the work, frequently, or in many "
+                "places."
             )
-        if record.get("evidence_type") == "expert_annotation":
-            rewrite_notes = record.get("rewrite_notes") or "(none)"
-            measure_notes = record.get("measure_notes") or "(none)"
-            retrieval_review_warning = (
-                record.get("retrieval_review_warning")
-                or "(none)"
-            )
-            if not measure_ranges:
-                rewrite_notes = _neutralize_unconfirmed_review_locators(
-                    rewrite_notes
-                )
-                measure_notes = _neutralize_unconfirmed_review_locators(
-                    measure_notes
-                )
-                retrieval_review_warning = (
-                    _neutralize_unconfirmed_review_locators(
-                        retrieval_review_warning
-                    )
-                )
-            lines.extend(
-                [
-                    "expert_source_ids: %s" % ", ".join(record["source_ids"]),
-                    "annotators: %s" % ", ".join(record.get("annotators", [])),
-                    "rewrite_status: %s" % record.get("rewrite_status", ""),
-                    "rewrite_notes: %s" % rewrite_notes,
-                    "measure_status: %s" % record.get("measure_status", ""),
-                    "measure_notes: %s" % measure_notes,
-                    "retrieval_review_warning: %s"
-                    % retrieval_review_warning,
-                ]
-            )
-            source_answers, range_partitioned = _range_scoped_source_context(
-                record,
-                measure_ranges,
-            )
-            neutralize_source_locators = _neutralize_source_locators(
-                record,
-                measure_ranges,
-                range_partitioned=range_partitioned,
-            )
-            if range_partitioned:
-                lines.extend(
-                    [
-                        "range_partitioned_source_context: true",
-                        "range_specific_instruction: The source answers "
-                        "below overlap the selected range. Use them instead "
-                        "of other-range clauses in the combined knowledge-"
-                        "unit rewrite, and correct a conflicting premise in "
-                        "the user question. Do not repeat any measure number "
-                        "from the source text in the final answer; refer to "
-                        "the selected passage or its relative parts.",
-                    ]
-                )
-            for source_answer in source_answers:
-                linked_unit_ids = source_answer.get(
-                    "linked_knowledge_unit_ids",
-                    [],
-                )
-                if len(linked_unit_ids) > 1:
-                    lines.append(
-                        "split_source_context_withheld: %s"
-                        % json.dumps(
-                            {
-                                "source_id": source_answer["source_id"],
-                                "linked_knowledge_unit_ids": linked_unit_ids,
-                                "reason": (
-                                    "full source Q&A contains claims split "
-                                    "across knowledge units; use this "
-                                    "record's curated answer only"
-                                ),
-                            },
-                            ensure_ascii=False,
-                            sort_keys=True,
-                        )
-                    )
-                    continue
-                prompt_source_answer = source_answer
-                source_answer_label = "verbatim_expert_source_answer"
-                if neutralize_source_locators:
-                    prompt_source_answer = {
-                        **source_answer,
-                        "question": _location_neutral_source_text(
-                            source_answer.get("question", "")
-                        ),
-                        "answer": _location_neutral_source_text(
-                            source_answer.get("answer", "")
-                        ),
-                        "legacy_measure_range_relation": (
-                            (
-                                "overlaps_selected_range_review_hint"
-                                if range_partitioned
-                                else (
-                                    "withheld_for_confirmed_local_example; "
-                                    "use_canonical_measure_range"
-                                    if result.scope_match == "local_example"
-                                    else (
-                                        "withheld_for_no_range_query; "
-                                        "source_locator_has_no_measure_"
-                                        "authority"
-                                    )
-                                )
-                            )
-                        ),
-                    }
-                    prompt_source_answer.pop(
-                        "legacy_measure_range_hints",
-                        None,
-                    )
-                    source_answer_label = (
-                        (
-                            "range_scoped_expert_source_answer_"
-                            "with_source_locators_neutralized"
-                        )
-                        if range_partitioned
-                        else (
-                            (
-                                "local_example_expert_source_answer_"
-                                if result.scope_match == "local_example"
-                                else "no_range_expert_source_answer_"
-                            )
-                            + "with_source_locators_neutralized"
-                        )
-                    )
-                lines.append(
-                    "%s: %s"
-                    % (
-                        source_answer_label,
-                        json.dumps(
-                            prompt_source_answer,
-                            ensure_ascii=False,
-                            sort_keys=True,
-                        ),
-                    )
-                )
-        elif record.get("evidence_type") == "web_database":
+        if record.get("evidence_type") == "web_database":
             lines.extend(
                 [
                     "knowledge_scope: %s" % record.get("knowledge_scope", ""),
@@ -1102,20 +1308,9 @@ def build_context(
                         allowed or "none recorded",
                     )
                 )
-        lines.append(
-            "question: %s"
-            % (record.get("question") or "(standalone tip)")
-        )
-        if (
-            record.get("evidence_type") == "expert_annotation"
-            and range_partitioned
-        ):
-            lines.append(
-                "answer: (combined multi-range rewrite omitted here; use "
-                "the range-specific verbatim expert source answer above)"
-            )
-        else:
-            lines.append("answer: %s" % record["answer"])
+        if record.get("question"):
+            lines.append("question: %s" % record["question"])
+        lines.append("answer: %s" % record["answer"])
         chunks.append("\n".join(lines))
     return "\n\n---\n\n".join(chunks) or "(no relevant evidence retrieved)"
 
@@ -1144,6 +1339,16 @@ def has_primary_grounding(results: List[Any]) -> bool:
     return bool(primary_grounding_results(results))
 
 
+def has_only_web_grounding(results: List[Any]) -> bool:
+    """Return whether every answer-authoritative record is web evidence."""
+
+    primary = primary_grounding_results(results)
+    return bool(primary) and all(
+        result.record.get("evidence_type") == "web_database"
+        for result in primary
+    )
+
+
 def has_selected_range_grounding(results: List[Any]) -> bool:
     """Return whether confirmed evidence overlaps the selected range."""
 
@@ -1153,7 +1358,371 @@ def has_selected_range_grounding(results: List[Any]) -> bool:
     )
 
 
-def select_generation_evidence(results: List[Any]) -> List[Any]:
+def semantically_dominant_no_range_local_expert_bundle(
+    results: List[Any],
+) -> List[Any]:
+    """Focus generation on a clearly dominant local expert source bundle.
+
+    A no-range request does not make measure-local knowledge irrelevant; it
+    means only that the generated claim must remain explicitly local. Hybrid
+    retrieval embeds both each record's relevance text (including immutable
+    source-question aliases) and its finalized curated answer. A local expert
+    source is focused when both dense views agree, or when relevance clearly
+    dominates while the curated-answer view remains within a narrow deficit
+    and lexical/fusion evidence (or an unusually high dense score) supplies
+    independent corroboration. These gates prevent measure metadata or a
+    one-view near-match from overpromoting an unrelated detail.
+
+    Knowledge units split from the winning immutable source answer remain
+    together. A dense semantic winner may sit below fusion-ranked results only
+    when all preceding results are clean, finalized siblings from that same
+    source; the semantic winner is still returned first. The complete
+    retrieval list itself is not changed, so callers retain broader
+    diagnostics even when generation receives this compact bundle.
+    """
+
+    if not results or any(
+        result.scope_match
+        in RANGED_PRIMARY_SCOPE_MATCHES
+        | RANGED_NON_GROUNDING_SCOPE_MATCHES
+        for result in results
+    ):
+        return []
+    dense_results = [
+        result
+        for result in results
+        if (
+            result.retrieval_mode in {"dense", "hybrid"}
+            and result.dense_score > 0
+            and result.dense_content_score > 0
+        )
+    ]
+    if not dense_results:
+        return []
+    source_question_led_results = [
+        result
+        for result in dense_results
+        if result.semantic_match_type
+        == SOURCE_QUESTION_LED_MATCH_TYPE
+    ]
+    if len(source_question_led_results) > 1:
+        return []
+    relevance_winner = (
+        source_question_led_results[0]
+        if source_question_led_results
+        else max(
+            dense_results,
+            key=lambda result: result.dense_score,
+        )
+    )
+    source_question_led = bool(source_question_led_results)
+
+    def clean_finalized_expert(result: Any) -> bool:
+        return _expert_record_is_finalized(result.record)
+
+    winner_source_ids = set(
+        relevance_winner.record.get("source_ids") or []
+    )
+    winner_position = next(
+        (
+            index
+            for index, result in enumerate(results)
+            if result is relevance_winner
+        ),
+        None,
+    )
+    preceding_results = (
+        results[:winner_position]
+        if winner_position is not None
+        else []
+    )
+    preceding_results_are_clean_same_source_siblings = bool(
+        winner_source_ids
+    ) and all(
+        clean_finalized_expert(result)
+        and bool(
+            winner_source_ids.intersection(
+                result.record.get("source_ids") or []
+            )
+        )
+        for result in preceding_results
+    )
+    if (
+        winner_position is None
+        or (
+            winner_position > 0
+            and not preceding_results_are_clean_same_source_siblings
+        )
+        or relevance_winner.scope_match != "local_example"
+        or not clean_finalized_expert(relevance_winner)
+        or relevance_winner.record.get("measure_status") != "specific"
+        or not (relevance_winner.record.get("measure_range") or [])
+        or (
+            source_question_led
+            and (
+                not bool(
+                    relevance_winner.record.get("retrieval_aliases") or []
+                )
+                or not winner_source_ids
+                or relevance_winner.dense_score
+                < SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE
+                or relevance_winner.dense_content_score
+                < SOURCE_QUESTION_LED_MIN_CONTENT_SCORE
+            )
+        )
+    ):
+        return []
+
+    siblings = [
+        result
+        for result in results
+        if (
+            result is not relevance_winner
+            and winner_source_ids
+            and clean_finalized_expert(result)
+            and winner_source_ids.intersection(
+                result.record.get("source_ids") or []
+            )
+        )
+    ]
+    # The semantic winner is always Evidence 1. Same-source split KUs retain
+    # retrieval order after it, so context truncation drops siblings before
+    # it can ever displace the direct answer.
+    bundle = [relevance_winner, *siblings]
+    bundle_ids = {id(result) for result in bundle}
+    dense_bundle = [
+        result for result in dense_results if id(result) in bundle_ids
+    ]
+    best_relevance_score = max(
+        result.dense_score for result in dense_bundle
+    )
+    best_content_score = max(
+        result.dense_content_score for result in dense_bundle
+    )
+    if not source_question_led and (
+        best_relevance_score
+        < NO_RANGE_LOCAL_DENSE_MIN_RELEVANCE_SCORE
+        or best_content_score
+        < NO_RANGE_LOCAL_DENSE_MIN_CONTENT_SCORE
+    ):
+        return []
+
+    competitors = [
+        result for result in dense_results if id(result) not in bundle_ids
+    ]
+    if not competitors:
+        return bundle
+    relevance_margin = best_relevance_score - max(
+        result.dense_score for result in competitors
+    )
+    content_margin = best_content_score - max(
+        result.dense_content_score for result in competitors
+    )
+    if source_question_led:
+        source_question_relevance_margin = (
+            relevance_winner.dense_score
+            - max(result.dense_score for result in competitors)
+        )
+        if (
+            source_question_relevance_margin
+            >= SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN
+        ):
+            return bundle
+        return []
+    two_view_consensus = (
+        relevance_margin >= NO_RANGE_LOCAL_DENSE_DOMINANCE_MARGIN
+        and content_margin >= NO_RANGE_LOCAL_DENSE_DOMINANCE_MARGIN
+    )
+    relevance_led = (
+        best_relevance_score >= NO_RANGE_LOCAL_RELEVANCE_LED_MIN_SCORE
+        and relevance_margin >= NO_RANGE_LOCAL_RELEVANCE_LED_MARGIN
+        and content_margin
+        >= -NO_RANGE_LOCAL_RELEVANCE_LED_MAX_CONTENT_DEFICIT
+        and (
+            (
+                relevance_winner.retrieval_mode == "hybrid"
+                and relevance_winner.text_score > 0
+            )
+            or best_relevance_score
+            >= NO_RANGE_LOCAL_RELEVANCE_LED_DENSE_ONLY_MIN_SCORE
+        )
+    )
+    if not two_view_consensus and not relevance_led:
+        return []
+    return bundle
+
+
+def semantically_dominant_ranged_expert_bundle(
+    results: List[Any],
+) -> List[Any]:
+    """Return one unambiguous, range-applicable finalized expert family.
+
+    A selected score range is useful routing evidence, but overlap alone does
+    not prove that a dense hit answers the question.  This gate admits a sole
+    strong expert hit, or a winner that independently leads every unrelated
+    overlapping expert in both retrieval and curated-answer embedding views.
+    Exact-source global siblings may accompany it when they also have direct
+    lexical or source-question support.  Ambiguous overlapping families stay
+    unavailable instead of being handed to the answer model.
+    """
+
+    if not results or not any(
+        result.scope_match
+        in RANGED_PRIMARY_SCOPE_MATCHES | RANGED_NON_GROUNDING_SCOPE_MATCHES
+        for result in results
+    ):
+        return []
+    if any(result.alias_score > 0 for result in results):
+        # Positive immutable source-question aliases already have their own
+        # stronger authority path.
+        return []
+
+    overlapping = [
+        result
+        for result in results
+        if (
+            result.scope_match == "overlaps_query_range"
+            and result.record.get("evidence_type") == "expert_annotation"
+            and _expert_record_is_finalized(result.record)
+            and result.retrieval_mode in {"dense", "hybrid"}
+            and result.dense_score
+            >= RANGED_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE
+            and result.dense_content_score
+            >= RANGED_DENSE_AUTHORITY_MIN_CONTENT_SCORE
+        )
+    ]
+    if not overlapping:
+        return []
+    anchor = overlapping[0]
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    if not anchor_sources:
+        return []
+
+    competing_families = [
+        result
+        for result in results
+        if (
+            result.scope_match == "overlaps_query_range"
+            and result.record.get("evidence_type") == "expert_annotation"
+            and _expert_record_is_finalized(result.record)
+            and not anchor_sources.intersection(
+                result.record.get("source_ids") or []
+            )
+            and result.dense_score > 0
+            and result.dense_content_score > 0
+        )
+    ]
+    if competing_families:
+        if (
+            anchor.dense_score
+            - max(result.dense_score for result in competing_families)
+            < RANGED_DENSE_AUTHORITY_RELEVANCE_MARGIN
+            or anchor.dense_content_score
+            - max(
+                result.dense_content_score
+                for result in competing_families
+            )
+            < RANGED_DENSE_AUTHORITY_CONTENT_MARGIN
+        ):
+            return []
+
+    siblings = [
+        result
+        for result in results
+        if (
+            result is not anchor
+            and result.scope_match == "global_context"
+            and result.record.get("evidence_type") == "expert_annotation"
+            and _expert_record_is_finalized(result.record)
+            and set(result.record.get("source_ids") or []) == anchor_sources
+            and (
+                result.alias_score > 0
+                or result.semantic_match_type
+                == SOURCE_QUESTION_LED_MATCH_TYPE
+                or (
+                    result.semantic_match_type == "strict"
+                    and result.text_score > 0
+                    and _has_answer_side_subject_support(result)
+                )
+            )
+        )
+    ]
+    return [anchor, *siblings]
+
+
+def semantically_dominant_no_range_general_expert_bundle(
+    results: List[Any],
+) -> List[Any]:
+    """Return one exceptionally strong whole/general expert answer.
+
+    This path is deliberately narrower than ordinary dense retrieval.  Both
+    the source-question/relevance view and the finalized-answer view must be
+    strong, explicit query concepts must occur in the answer, and the anchor
+    must lead every unrelated expert family by a material margin.  It recovers
+    self-contained definition-and-application answers without allowing a
+    small embedding lead to rewrite a nearby but different expert meaning.
+    """
+
+    if not results or any(
+        result.scope_match
+        in RANGED_PRIMARY_SCOPE_MATCHES | RANGED_NON_GROUNDING_SCOPE_MATCHES
+        for result in results
+    ):
+        return []
+    anchor = results[0]
+    if (
+        anchor.scope_match not in {
+            "general_evidence",
+            "unspecified_scope",
+        }
+        or anchor.record.get("evidence_type") != "expert_annotation"
+        or not _expert_record_is_finalized(anchor.record)
+        or anchor.retrieval_mode not in {"dense", "hybrid"}
+        or anchor.dense_score
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE
+        or anchor.dense_content_score
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONTENT_SCORE
+        or anchor.concept_coverage
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE
+        or anchor.content_concept_coverage
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE
+    ):
+        return []
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    if not anchor_sources:
+        return []
+    competitors = [
+        result
+        for result in results[1:]
+        if (
+            result.record.get("evidence_type") == "expert_annotation"
+            and _expert_record_is_finalized(result.record)
+            and not anchor_sources.intersection(
+                result.record.get("source_ids") or []
+            )
+            and result.dense_score > 0
+            and result.dense_content_score > 0
+        )
+    ]
+    if competitors and (
+        anchor.dense_score
+        - max(result.dense_score for result in competitors)
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN
+        or anchor.dense_content_score
+        - max(result.dense_content_score for result in competitors)
+        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN
+    ):
+        return []
+    return [anchor]
+
+
+def select_generation_evidence(
+    results: List[Any],
+    *,
+    query: str | None = None,
+    piece: str | None = None,
+    measure_ranges: List[List[int]] | None = None,
+) -> List[Any]:
     """Prefer human source-question matches over merely related context.
 
     Retrieval aliases are immutable original annotator questions.  A positive
@@ -1165,6 +1734,39 @@ def select_generation_evidence(results: List[Any]) -> List[Any]:
     semantically gated other-range results may follow as explicitly
     non-citable context.
     """
+
+    selected_ranges = measure_ranges or []
+    if (
+        query is not None
+        and is_underspecified_ranged_query(query, piece, selected_ranges)
+    ):
+        # A deictic range plus a generic verb does not identify any global
+        # topic.  The range itself may qualify a finalized annotation only
+        # when the surviving local evidence is independently answer-supported
+        # and belongs to one immutable source bundle.  Otherwise abstain.
+        overlapping = [
+            result
+            for result in results
+            if (
+                result.scope_match == "overlaps_query_range"
+                and result.record.get("evidence_type")
+                == "expert_annotation"
+                and _expert_record_is_finalized(result.record)
+                and _has_direct_query_signal(result)
+                and _has_answer_side_subject_support(result)
+            )
+        ]
+        source_sets = {
+            tuple(sorted(result.record.get("source_ids") or []))
+            for result in overlapping
+            if result.record.get("source_ids")
+        }
+        if len(source_sets) != 1 or any(
+            not result.record.get("source_ids")
+            for result in overlapping
+        ):
+            return []
+        return overlapping
 
     authoritative_alias_matches = [
         result
@@ -1182,6 +1784,29 @@ def select_generation_evidence(results: List[Any]) -> List[Any]:
     )
     if not authoritative_alias_matches:
         if not ranged_results:
+            semantic_focus = (
+                semantically_dominant_no_range_local_expert_bundle(
+                    results
+                )
+            )
+            if semantic_focus:
+                return semantic_focus
+            if (
+                results
+                and results[0].record.get("evidence_type")
+                == "web_database"
+                and _has_direct_query_signal(results[0])
+            ):
+                # A direct web result must not carry lower, merely related
+                # expert records into generation. Otherwise the model could
+                # ignore ranking and turn optional biography/background into
+                # the answer to a date, rights, or catalog question.
+                return [
+                    result
+                    for result in results
+                    if result.record.get("evidence_type")
+                    == "web_database"
+                ]
             return results
         return [
             *[
@@ -1263,288 +1888,8 @@ def select_generation_evidence(results: List[Any]) -> List[Any]:
     ]
 
 
-def build_review_disclosure_from_records(
-    records: List[Dict[str, Any]],
-    *,
-    neutralize_specific_measure_locators: bool = False,
-) -> str:
-    """Build a concise Korean disclosure from provisional expert records."""
-
-    rewrite_notes = []
-    measure_review_pending = False
-    piece_identity_uncertain = False
-    for record in records:
-        warning = record.get("retrieval_review_warning") or ""
-        if not warning:
-            continue
-        rewrite_note = (record.get("rewrite_notes") or "").strip()
-        if (
-            rewrite_note
-            and neutralize_specific_measure_locators
-            and record.get("measure_status") == "specific"
-        ):
-            rewrite_note = _neutralize_unconfirmed_review_locators(
-                rewrite_note
-            )
-        if rewrite_note and rewrite_note not in rewrite_notes:
-            rewrite_notes.append(rewrite_note)
-        if record.get("measure_status") == "waiting_for_review":
-            measure_review_pending = True
-            measure_note = (record.get("measure_notes") or "").lower()
-            piece_identity_uncertain = piece_identity_uncertain or any(
-                marker in measure_note
-                for marker in (
-                    "다른 악보",
-                    "다른 곡",
-                    "la capinera",
-                    "una voce",
-                    "였나",
-                )
-            )
-
-    parts = list(rewrite_notes)
-    if measure_review_pending:
-        parts.append(
-            "이 근거의 정확한 적용 위치와 국소·곡 전체 적용 범위는 "
-            "아직 확인되지 않았다."
-        )
-    if piece_identity_uncertain:
-        parts.append(
-            "검토 메모가 다른 악보나 곡일 가능성도 제기하므로, 현재 "
-            "선택한 곡에 해당하는지 확인이 필요하다."
-        )
-    if not parts:
-        return ""
-    parts.append(
-        "따라서 아래 내용은 확정된 악보 사실이 아니라 검토 중인 "
-        "전문가 주석에 따른 설명이다."
-    )
-    return "검토 주의: " + " ".join(parts)
-
-
-def build_review_disclosure(results: List[Any]) -> str:
-    """Build a concise Korean disclosure for provisional expert evidence."""
-
-    primary = primary_grounding_results(results)
-    return build_review_disclosure_from_records(
-        [
-            result.record
-            for result in primary
-        ],
-        neutralize_specific_measure_locators=any(
-            result.scope_match == "local_example"
-            for result in primary
-        ),
-    )
-
-
-def _has_exact_leading_prefix_with_boundary(
-    value: str,
-    prefix: str,
-) -> bool:
-    """Return whether value begins with prefix followed by whitespace or EOF."""
-
-    if not prefix or not value.startswith(prefix):
-        return False
-    return len(value) == len(prefix) or value[len(prefix)].isspace()
-
-
-def ensure_review_disclosure(answer: str, results: List[Any]) -> str:
-    """Guarantee that unresolved review state is visible in the answer."""
-
-    disclosure = build_review_disclosure(results)
-    if not disclosure or _has_exact_leading_prefix_with_boundary(
-        answer,
-        disclosure,
-    ):
-        return answer
-    return disclosure + "\n\n" + answer.lstrip()
-
-
-def reconcile_review_disclosure(
-    answer: str,
-    supplied_results: List[Any],
-    cited_results: List[Any],
-) -> str:
-    """Keep only the deterministic warning disclosure for cited evidence.
-
-    A model can copy the conditional disclosure for a retrieved record that it
-    ultimately does not use.  Remove only disclosures that this application
-    itself can reproduce exactly; arbitrary model prose is never deleted.
-    """
-
-    required = build_review_disclosure(cited_results)
-    warned = [
-        result
-        for result in primary_grounding_results(supplied_results)
-        if result.record.get("retrieval_review_warning")
-    ]
-    known_disclosures = set()
-    for subset_size in range(1, len(warned) + 1):
-        for subset in combinations(warned, subset_size):
-            disclosure = build_review_disclosure(list(subset))
-            if disclosure:
-                known_disclosures.add(disclosure)
-    for disclosure in sorted(known_disclosures, key=len, reverse=True):
-        if disclosure == required:
-            continue
-        if _has_exact_leading_prefix_with_boundary(answer, disclosure):
-            answer = answer[len(disclosure) :].lstrip()
-            break
-    return ensure_review_disclosure(answer, cited_results)
-
-
-def build_review_constraints(results: List[Any]) -> str:
-    """Render unresolved human-review notes as hard generation constraints."""
-
-    warnings = []
-    primary_result_ids = {
-        result.record["id"]
-        for result in primary_grounding_results(results)
-    }
-    for idx, result in enumerate(results, start=1):
-        record = result.record
-        if record["id"] not in primary_result_ids:
-            continue
-        warning = record.get("retrieval_review_warning") or ""
-        if not warning:
-            continue
-        rewrite_notes = record.get("rewrite_notes") or "(none recorded)"
-        measure_notes = record.get("measure_notes") or "(none recorded)"
-        if result.scope_match == "local_example":
-            warning = _neutralize_unconfirmed_review_locators(warning)
-            rewrite_notes = _neutralize_unconfirmed_review_locators(
-                rewrite_notes
-            )
-            measure_notes = _neutralize_unconfirmed_review_locators(
-                measure_notes
-            )
-        required_disclosure_if_used = build_review_disclosure([result])
-        warnings.append(
-            "\n".join(
-                [
-                    "Evidence E%d (%s)" % (idx, record["id"]),
-                    "review_warning: %s" % warning,
-                    "rewrite_status: %s"
-                    % (record.get("rewrite_status") or "(unknown)"),
-                    "rewrite_notes: %s" % rewrite_notes,
-                    "measure_status: %s"
-                    % (record.get("measure_status") or "(unknown)"),
-                    "measure_notes: %s" % measure_notes,
-                    "required_disclosure_if_used: %s"
-                    % required_disclosure_if_used,
-                ]
-            )
-        )
-    if not warnings:
-        return ""
-    return """MANDATORY REVIEW CONSTRAINTS
-The following evidence is provisional. For each evidence item that the answer actually
-uses and cites, its notes are hard safety constraints, not background metadata. Do not
-mention a warning or disclosure for an evidence item that the answer omits:
-{warnings}
-
-If the answer cites flagged evidence, it must begin with the corresponding exact Korean
-required_disclosure_if_used. When several flagged items are cited, combine only their
-warnings into one leading disclosure. The application enforces the final combined wording.
-
-Attribute provisional content to the annotation instead of stating it as settled score
-fact. A rewrite note about accuracy or source basis means that the flagged detail must be
-omitted or explicitly described as unverified. A pending measure review means that its
-exact location and local-versus-whole-piece scope are unconfirmed; do not generalize it to
-the whole piece. If a note questions whether the material belongs to this piece, explicitly
-say that applicability to the selected piece has not been confirmed. Never lead with one
-side of a documented conflict as though it were settled. This applies to every sentence,
-including the explanatory body after the disclosure: do not repeat a disputed timing,
-simultaneity, location, notation, or causal relationship without qualification. State both
-recorded alternatives, or state only their shared undisputed conclusion.
-""".format(
-        warnings="\n\n".join(warnings),
-    )
-
-
-def requires_review_compliance_repair(results: List[Any]) -> bool:
-    """Return whether a draft needs a second pass over disputed evidence."""
-
-    return any(
-        result.record.get("retrieval_review_warning")
-        and result.record.get("rewrite_status") == "needs_review"
-        for result in primary_grounding_results(results)
-    )
-
-
-def build_review_compliance_repair_messages(
-    messages: List[Dict[str, str]],
-    answer: str,
-    cited_results: List[Any],
-) -> List[Dict[str, str]]:
-    """Ask the grounded model to audit a draft against review constraints."""
-
-    required_disclosure = build_review_disclosure(cited_results)
-
-    return [
-        *messages,
-        {"role": "assistant", "content": answer},
-        {
-            "role": "user",
-            "content": (
-                "Audit the complete draft against MANDATORY REVIEW "
-                "CONSTRAINTS and rewrite it in natural Korean. A warning "
-                "prefix alone is not enough: no later sentence may assert "
-                "one disputed timing, simultaneity, location, notation, or "
-                "causal relationship as settled. Preserve both recorded "
-                "alternatives, or keep only their shared undisputed "
-                "conclusion. Preserve this exact required disclosure for the "
-                "flagged evidence actually cited in the draft:\n"
-                + required_disclosure
-                + "\nPreserve all "
-                "grounded practical advice, uncertainty, and valid evidence "
-                "labels. Add no new claim. Output the corrected answer only."
-                "\n/no_think"
-            ),
-        },
-    ]
-
-
-def build_local_scope_repair_messages(
-    messages: List[Dict[str, str]],
-    answer: str,
-) -> List[Dict[str, str]]:
-    """Ask the model to bind local-example claims to confirmed measures."""
-
-    return [
-        *messages,
-        {"role": "assistant", "content": answer},
-        {
-            "role": "user",
-            "content": (
-                "The draft has an unbound local-example claim or an "
-                "unsupported whole-piece or frequency claim. Rewrite the "
-                "complete answer in "
-                "natural Korean. Every sentence that uses a local_example "
-                "must cite that item's [E#] label and name at least one exact "
-                "range from that same item's canonical measure_range in the "
-                "same sentence. If a local example is not used, omit its "
-                "label. Remove claims such as 곡 전반, 전체적으로, 자주, "
-                "많이 나온다, or 항상 unless a general_support item that "
-                "supports that same sentence is cited there. The mere "
-                "presence of unrelated whole-piece evidence is not enough. "
-                "Every score measure locator must be authorized by the "
-                "selected query range or exactly match a canonical range of "
-                "a local_example cited in that sentence. A general_support "
-                "item never authorizes a measure number restored from its "
-                "source text. "
-                "Preserve valid practical advice, uncertainty, review "
-                "disclosures, and evidence labels. Add no new claim. Output "
-                "the corrected answer only.\n/no_think"
-            ),
-        },
-    ]
-
-
 def build_messages(piece: str | None, measures: str, question: str, results: List[Any]) -> List[Dict[str, str]]:
     measure_ranges = parse_measure_ranges(measures) if measures else []
-    review_constraints = build_review_constraints(results)
     user_prompt = """User query
 piece: {piece}
 measure_range: {measures}
@@ -1553,14 +1898,11 @@ question: {question}
 
 Retrieved evidence
 {context}
-
-{review_constraints}
 """.format(
         piece=piece or "(not specified)",
         measures=measures or "(none selected)",
         question=question,
         context=build_context(results, measure_ranges),
-        review_constraints=review_constraints,
     )
     return [
         {"role": "system", "content": SYSTEM_PROMPT},
@@ -1568,247 +1910,181 @@ Retrieved evidence
     ]
 
 
-def build_internal_knowledge_messages(
-    piece: str | None,
-    measures: str,
-    question: str,
-) -> List[Dict[str, str]]:
-    """Build a separate, explicitly ungrounded prompt for no-hit questions."""
-
-    piece_metadata = PIECES.get(piece or "", {})
-    user_prompt = """User context
-piece_id: {piece_id}
-title: {title}
-work: {work}
-composer: {composer}
-selected_measure_range: {measures}
-question: {question}
-/no_think
-
-Answer from internal general musical knowledge. The selected range is user context only, not
-evidence that you have inspected those measures. Answer the exact question rather than substituting
-a related corpus topic.
-""".format(
-        piece_id=piece or "(not specified)",
-        title=piece_metadata.get("title") or "(unknown)",
-        work=piece_metadata.get("work") or "(unknown)",
-        composer=piece_metadata.get("composer") or "(unknown)",
-        measures=measures or "(none selected)",
-        question=question,
-    )
-    return [
-        {"role": "system", "content": INTERNAL_KNOWLEDGE_SYSTEM_PROMPT},
-        {"role": "user", "content": user_prompt},
-    ]
-
-
-def finalize_internal_knowledge_answer(answer: str) -> str:
-    """Remove corpus-style provenance claims from an ungrounded model answer."""
-
-    finalized = answer.replace(OLD_INSUFFICIENT_EVIDENCE_MESSAGE, "")
-    finalized = finalized.replace(NO_GROUNDED_ANSWER_SENTINEL, "")
-    finalized = _remove_evidence_footer(finalized)
-    citation_label = (
-        r"(?:E(?:vidence)?\s*[0-9]+|" + OPAQUE_CITATION_ID_PATTERN + r")"
-    )
-    finalized = re.sub(
-        r"[\[【]\s*"
-        r"(?:(?:출처|근거|source|citation)\s*[:：-]?\s*)?"
-        + citation_label
-        + r"(?:\s*[,;，、]\s*"
-        + citation_label
-        + r")*\s*[\]】]",
-        "",
-        finalized,
-        flags=re.IGNORECASE,
-    )
-    finalized = re.sub(
-        r"\b" + OPAQUE_CITATION_ID_PATTERN + r"\b",
-        "",
-        finalized,
-        flags=re.IGNORECASE,
-    )
-    finalized = re.sub(r"[ \t]+\n", "\n", finalized)
-    finalized = re.sub(r"\n{3,}", "\n\n", finalized).strip()
-    return finalized
-
-
 def is_grounded_insufficiency_answer(answer: str) -> bool:
-    """Recognize the grounded model's no-answer signal and legacy refusal."""
+    """Recognize the grounded model's exact no-answer signal."""
 
     if answer.strip() and not _remove_evidence_footer(answer):
         return True
     normalized = re.sub(r"\s+", "", answer)
-    if NO_GROUNDED_ANSWER_SENTINEL.lower() in normalized.lower():
-        return True
-    legacy_refusal = re.sub(r"\s+", "", OLD_INSUFFICIENT_EVIDENCE_MESSAGE)
-    return legacy_refusal in normalized
+    return NO_GROUNDED_ANSWER_SENTINEL.lower() in normalized.lower()
 
 
-def select_extractive_fallback_evidence(
+def _has_direct_query_signal(result: Any) -> bool:
+    """Return whether one ranked record independently grounds the query."""
+
+    answer_side_support = _has_answer_side_subject_support(result)
+    return bool(
+        (result.alias_score > 0 and answer_side_support)
+        or result.semantic_match_type
+        in {
+            SOURCE_QUESTION_LED_MATCH_TYPE,
+            DENSE_SEMANTIC_AUTHORITY_MATCH_TYPE,
+        }
+        or (
+            result.semantic_match_type == "strict"
+            and result.text_score > 0
+            and answer_side_support
+        )
+    )
+
+
+def _has_answer_side_subject_support(result: Any) -> bool:
+    """Require evidence content, not just its question/metadata, to match."""
+
+    return bool(
+        result.answer_relation_score > 0
+        or result.content_concept_coverage >= 0.5
+        or result.dense_content_score
+        >= NO_RANGE_LOCAL_DENSE_MIN_CONTENT_SCORE
+    )
+
+
+def has_grounded_generation_authority(results: List[Any]) -> bool:
+    """Allow model synthesis only for a directly supported leading web hit.
+
+    Finalized expert evidence is rendered only through
+    ``select_authoritative_expert_bundle``. Ordinary dense similarity cannot
+    authorize an expert claim or send it through the LLM, because a nearby
+    passage can preserve nearly all wording while changing the intended
+    musical meaning.
+    """
+
+    primary = primary_grounding_results(results)
+    return bool(
+        primary
+        and primary[0].record.get("evidence_type") == "web_database"
+        and _has_direct_query_signal(primary[0])
+    )
+
+
+def select_authoritative_expert_bundle(
     results: List[Any],
     *,
     max_items: int = 3,
-    exclude_local_examples: bool = False,
 ) -> List[Any]:
-    """Choose a compact, coherent evidence bundle for safe fallback text.
+    """Select complete reviewed expert units that can answer this query.
 
-    Retrieval intentionally keeps diverse top-k candidates for recall.  An
-    extractive answer has a different contract: concatenating unrelated
-    candidates makes a safe fallback look like a direct multi-part answer.
-    Keep split units from one immutable source together and cap unrelated
-    expert supplementation at one record. Once a non-local expert anchors the
-    answer, web and local-example candidates are not appended merely to
-    diversify a dense fallback. A local or web candidate may anchor only when
-    it has a direct query signal; rejected local generalizations exclude local
-    examples entirely.
+    Retrieval and generation selection establish candidate order and range
+    applicability, but a lower expert candidate is not automatically direct
+    authority. The leading primary result must itself be a finalized expert
+    with an explicit lexical, alias, relation, or calibrated semantic signal.
+    Thus a direct web result remains authoritative over a merely related
+    expert result farther down the ranking.
+
+    The smallest sufficient unit is the direct anchor. Additional units are
+    admitted only when they have the same complete immutable source set and
+    the same positive source-question alias tier as the anchor, and each has
+    its own direct semantic support. Mere source-ID overlap is insufficient:
+    one broad annotation can be split into an exact answer and unrelated
+    background. Duplicate curated answers are removed without merging units.
     """
 
     if max_items < 1 or not results:
         return []
     primary = primary_grounding_results(results)
     if not primary:
-        # Keep the existing explicit other-range fallback path intact.
-        return list(results)
-    def has_direct_query_signal(result: Any) -> bool:
-        return bool(
-            result.alias_score > 0
-            or result.answer_relation_score > 0
-            or result.text_score > 0
-            or (
-                result.concept_coverage >= 0.5
-                and result.content_concept_coverage >= 0.5
-            )
-        )
+        return []
 
-    def directness_anchor(candidates: List[Any]) -> Any:
-        return max(
-            enumerate(candidates),
-            key=lambda item: (
-                item[1].alias_score > 0,
-                item[1].alias_score,
-                item[1].answer_relation_score,
-                item[1].concept_coverage,
-                item[1].content_concept_coverage,
-                -item[0],
-            ),
-        )[1]
-
-    eligible_primary = [
-        result
-        for result in primary
-        if not (
-            exclude_local_examples
-            and result.scope_match == "local_example"
-        )
-    ]
-    expert = [
-        result
-        for result in eligible_primary
-        if result.record.get("evidence_type") == "expert_annotation"
-    ]
-    broad_guidance = any(
-        result.semantic_match_type == "broad_guidance"
-        for result in expert
-    )
-    general = [
-        result
-        for result in expert
-        if result.scope_match in {"general_evidence", "global_context"}
-    ]
-    anchor = None
-    if broad_guidance and general:
-        pool = general
-        anchor = max(
-            pool,
-            key=lambda result: (
-                result.score,
-                result.text_score,
-                result.dense_score,
-            ),
-        )
-    elif expert:
-        pool = expert
-        anchor = directness_anchor(pool)
-        if anchor.scope_match == "local_example":
-            if not has_direct_query_signal(anchor):
-                non_local_expert = [
-                    result
-                    for result in expert
-                    if result.scope_match != "local_example"
-                ]
-                if non_local_expert:
-                    pool = non_local_expert
-                    anchor = directness_anchor(pool)
-                else:
-                    anchor = None
-            # A genuinely direct local-only result remains useful, but it
-            # does not authorize unrelated whole-piece supplementation.
-            if anchor is not None and anchor.scope_match == "local_example":
-                pool = [
-                    result
-                    for result in expert
-                    if result.scope_match == "local_example"
-                ]
-        else:
-            # Expert whole-piece evidence has higher answer authority than a
-            # local example or a web research lead. Preserve those candidates
-            # in diagnostics, not in the deterministic answer bundle.
-            pool = [
-                result
-                for result in expert
-                if result.scope_match != "local_example"
-            ]
-
-    if anchor is None:
-        pool = [
-            result
-            for result in eligible_primary
-            if has_direct_query_signal(result)
-        ]
-        if not pool:
-            return []
-        anchor = directness_anchor(pool)
-
-    anchor_sources = set(anchor.record.get("source_ids") or [])
-    selected = [anchor]
-    siblings = [
-        result
-        for result in pool
+    def is_direct_expert(result: Any) -> bool:
+        record = result.record
         if (
-            result is not anchor
-            and anchor_sources.intersection(
-                result.record.get("source_ids") or []
+            record.get("evidence_type") != "expert_annotation"
+            or not _expert_record_is_finalized(record)
+            or not str(record.get("answer") or "").strip()
+            or result.semantic_match_type == "selector_candidate"
+        ):
+            return False
+        return _has_direct_query_signal(result)
+
+    anchor = primary[0]
+    if not is_direct_expert(anchor):
+        return []
+    anchor_sources = set(anchor.record.get("source_ids") or [])
+    candidates = [anchor]
+    if (
+        anchor.semantic_match_type == "broad_guidance"
+        and anchor.alias_score <= 0
+    ):
+        # The broad-guidance retriever facet-scores every returned unit
+        # independently and intentionally interleaves complementary facets.
+        # Preserve that compact bundle, but do not admit ordinary dense or
+        # lexical records that merely happened to follow it in the ranking.
+        candidates.extend(
+            result
+            for result in primary[1:]
+            if (
+                result.semantic_match_type == "broad_guidance"
+                and is_direct_expert(result)
             )
         )
-    ]
-    if (
-        not broad_guidance
-        and anchor is primary[0]
-        and anchor.scope_match
-        in {"unscoped_pending_review", "unspecified_scope"}
+    elif (
+        anchor.semantic_match_type == SOURCE_QUESTION_LED_MATCH_TYPE
+        and anchor_sources
     ):
-        # A top-ranked unscoped record can be the exact source-question answer
-        # whose location alone awaits curation. Do not dilute it with an
-        # unrelated general record merely because both are primary evidence.
-        return [anchor, *siblings][:max_items]
-    independent = [
-        result
-        for result in pool
-        if result is not anchor and result not in siblings
-    ]
-    if anchor.scope_match == "local_example":
-        selected.extend(siblings)
-    elif broad_guidance or anchor.alias_score > 0:
-        selected.extend(siblings)
-        selected.extend(independent[:1])
-    else:
-        # Retrieval order breaks ambiguity without turning every diverse
-        # candidate into a claim. Same-source siblings may still fill the
-        # remaining compact bundle after that single contender.
-        selected.extend(independent[:1])
-        selected.extend(siblings)
-    return selected[:max_items]
+        candidates.extend(
+            result
+            for result in primary[1:]
+            if (
+                result.semantic_match_type
+                == SOURCE_QUESTION_LED_MATCH_TYPE
+                and bool(
+                    anchor_sources.intersection(
+                        result.record.get("source_ids") or []
+                    )
+                )
+                and is_direct_expert(result)
+            )
+        )
+    elif (
+        anchor.semantic_match_type
+        == DENSE_SEMANTIC_AUTHORITY_MATCH_TYPE
+        and anchor_sources
+    ):
+        candidates.extend(
+            result
+            for result in primary[1:]
+            if (
+                result.semantic_match_type
+                == DENSE_SEMANTIC_AUTHORITY_MATCH_TYPE
+                and set(result.record.get("source_ids") or [])
+                == anchor_sources
+                and is_direct_expert(result)
+            )
+        )
+    elif anchor.alias_score > 0 and anchor_sources:
+        candidates.extend(
+            result
+            for result in primary[1:]
+            if (
+                result.alias_score == anchor.alias_score
+                and set(result.record.get("source_ids") or [])
+                == anchor_sources
+                and is_direct_expert(result)
+            )
+        )
+
+    selected: List[Any] = []
+    seen_answers: set[str] = set()
+    for result in candidates:
+        record = result.record
+        answer = re.sub(r"\s+", " ", str(record.get("answer") or "")).strip()
+        if not answer or answer in seen_answers:
+            continue
+        selected.append(result)
+        seen_answers.add(answer)
+        if len(selected) >= max_items:
+            break
+    return selected
 
 
 def build_extractive_answer(
@@ -1827,38 +2103,10 @@ def build_extractive_answer(
             else primary
         )
         body = "\n\n".join(
-            "%s%s [%s]"
-            % (
-                (
-                    "일반 참고 근거: "
-                    if result.scope_match == "global_context"
-                    else (
-                        "확인된 국소 예시(마디 %s): "
-                        % format_measure_range(
-                            result.record.get("measure_range") or []
-                        )
-                        if result.scope_match == "local_example"
-                        else ""
-                    )
-                ),
-                result.record["answer"].strip(),
-                result.record["id"],
-            )
+            result.record["answer"].strip()
             for result in answer_primary
         )
-        disclosure = build_review_disclosure(answer_primary)
-        scope_notice = (
-            "범위 안내: 아래 내용은 표시된 마디에서 확인된 국소 "
-            "예시다. 이 근거만으로 곡 전체의 빈도나 모든 구간에 "
-            "항상 적용되는 규칙을 뜻하지 않는다."
-            if local_examples_are_only_scope_authority(answer_primary)
-            else ""
-        )
-        return "\n\n".join(
-            part
-            for part in (disclosure, scope_notice, body)
-            if part
-        )
+        return finalize_user_visible_answer(body, answer_primary)
 
     secondary = [
         result
@@ -1867,28 +2115,493 @@ def build_extractive_answer(
     ]
     if not secondary:
         return NO_CORPUS_EVIDENCE_MESSAGE
+    selected_secondary = secondary[:3]
     context_lines = [
-        "다른 구간의 관련 주석: %s [%s]"
-        % (
-            result.record["answer"].strip(),
-            result.record["id"],
-        )
-        for result in secondary[:3]
+        result.record["answer"].strip()
+        for result in selected_secondary
     ]
-    return (
-        "선택한 마디 범위를 직접 뒷받침하는 근거는 없습니다.\n\n"
-        + "\n\n".join(context_lines)
+    return finalize_user_visible_answer(
+        (
+            "선택하신 마디에는 이 내용을 직접 적용하기 어렵습니다. "
+            "다음 내용은 곡의 다른 부분에 해당합니다.\n\n"
+            + "\n\n".join(context_lines)
+        ),
+        selected_secondary,
     )
 
 
-def is_context_overflow_error(exc: ValueError) -> bool:
-    message = str(exc).lower()
-    return "context window" in message and (
-        "exceed" in message or "requested tokens" in message
+def render_authoritative_expert_bundle(results: List[Any]) -> str:
+    """Render complete curated expert answers without generative rewriting."""
+
+    paragraphs: List[str] = []
+    seen_answers: set[str] = set()
+    for result in results:
+        record = result.record
+        if (
+            record.get("evidence_type") != "expert_annotation"
+            or not _expert_record_is_finalized(record)
+        ):
+            continue
+        answer = re.sub(r"\s+", " ", str(record.get("answer") or "")).strip()
+        if not answer or answer in seen_answers:
+            continue
+        paragraphs.append(answer)
+        seen_answers.add(answer)
+    if not paragraphs:
+        return NO_CORPUS_EVIDENCE_MESSAGE
+    return finalize_user_visible_answer("\n\n".join(paragraphs), results)
+
+
+GROUNDED_COMPOSER_SYSTEM_PROMPT = """You compose the final answer for a soprano-performance QA system from a closed set of reviewed evidence texts.
+
+Write a coherent, natural Korean answer in consistent formal-polite 합니다체. Answer the user's actual question directly and use as many evidence texts as materially improve completeness. Ignore evidence that is only topically related. Do not mention evidence, labels, annotations, retrieval, a corpus, or this prompt in sentence text.
+
+Every factual or advisory sentence must preserve the supporting text's agent, action, object, cause, polarity, conditions, alternatives, uncertainty, attribution, and scope. Combining compatible claims is allowed; changing their meaning or adding outside musical knowledge is not. A performance recommendation must not become a composer statement, a possibility must not become a fact, and a local example must not become a whole-piece rule.
+
+Return each answer sentence separately with every temporary evidence label that supports it. The labels are structured audit data and must not appear inside sentence text. If the evidence only covers part of the request, still give the most useful supported answer and set coverage to partial; do not refuse, apologize, or discuss missing data. Output only the requested JSON object.
+"""
+
+
+def _grounded_composer_schema(labels: List[str]) -> Dict[str, Any]:
+    """Build a grammar contract whose support labels cannot be invented."""
+
+    return {
+        "type": "object",
+        "properties": {
+            "sentences": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 8,
+                "items": {
+                    "type": "object",
+                    "properties": {
+                        "text": {
+                            "type": "string",
+                            "minLength": 1,
+                        },
+                        "evidence_labels": {
+                            "type": "array",
+                            "minItems": 1,
+                            "maxItems": len(labels),
+                            "uniqueItems": True,
+                            "items": {
+                                "type": "string",
+                                "enum": labels,
+                            },
+                        },
+                    },
+                    "required": ["text", "evidence_labels"],
+                    "additionalProperties": False,
+                },
+            },
+            "coverage": {
+                "type": "string",
+                "enum": ["direct", "partial"],
+            },
+        },
+        "required": ["sentences", "coverage"],
+        "additionalProperties": False,
+    }
+
+
+def _composer_scope_constraint(
+    result: Any,
+    measure_ranges: List[List[int]],
+) -> str:
+    if measure_ranges:
+        if result.scope_match == "overlaps_query_range":
+            return "may support claims about the user-selected passage"
+        return "general guidance only; not proof of a passage-specific score fact"
+    if result.scope_match == "local_example":
+        return "passage-specific example; do not generalize it to the whole piece"
+    if result.scope_match == "unspecified_scope":
+        return "scope is unspecified; do not claim whole-piece frequency or universality"
+    return "may support a general answer when its text matches the question"
+
+
+def build_grounded_composer_messages(
+    *,
+    piece: str,
+    measure_ranges: List[List[int]],
+    question: str,
+    results: List[Any],
+) -> List[Dict[str, str]]:
+    """Expose complete reviewed texts, but no opaque IDs or editorial data."""
+
+    evidence = []
+    for index, result in enumerate(results, start=1):
+        record = result.record
+        evidence.append(
+            {
+                "label": f"E{index}",
+                "scope_constraint": _composer_scope_constraint(
+                    result,
+                    measure_ranges,
+                ),
+                "source_question_hints": list(
+                    record.get("retrieval_aliases")
+                    or ([record["question"]] if record.get("question") else [])
+                ),
+                "reviewed_answer_text": re.sub(
+                    r"\s+",
+                    " ",
+                    str(record.get("answer") or ""),
+                ).strip(),
+            }
+        )
+    payload = {
+        "piece": piece,
+        "user_selected_a_measure_range": bool(measure_ranges),
+        "question": question,
+        "evidence": evidence,
+    }
+    return [
+        {"role": "system", "content": GROUNDED_COMPOSER_SYSTEM_PROMPT},
+        {
+            "role": "user",
+            "content": (
+                "Compose the grounded answer from this closed evidence set.\n"
+                + json.dumps(
+                    payload,
+                    ensure_ascii=False,
+                    separators=(",", ":"),
+                )
+                + "\n/no_think"
+            ),
+        },
+    ]
+
+
+def compose_grounded_answer_with_model(
+    model_path: str,
+    *,
+    piece: str,
+    measure_ranges: List[List[int]],
+    question: str,
+    results: List[Any],
+    llm_settings: Dict[str, Any],
+) -> tuple[str, List[Any], str]:
+    """Compose once from full reviewed texts and return only cited evidence.
+
+    The model never receives opaque knowledge-unit IDs. Temporary E-labels are
+    grammar constrained, validated structurally, and removed before display.
+    There is no alternate model, internal-knowledge answer, or prose fallback.
+    """
+
+    candidates = [
+        result
+        for result in primary_grounding_results(results)
+        if str(result.record.get("answer") or "").strip()
+    ]
+    if not candidates:
+        raise GeneratedAnswerRejected(
+            "No answer-authoritative reviewed text is available for composition"
+        )
+    labels = [f"E{index}" for index in range(1, len(candidates) + 1)]
+    messages = build_grounded_composer_messages(
+        piece=piece,
+        measure_ranges=measure_ranges,
+        question=question,
+        results=candidates,
     )
+    composition = generate_json(
+        model_path,
+        messages,
+        llm_settings,
+        schema=_grounded_composer_schema(labels),
+        max_tokens=768,
+    )
+    sentences = composition.get("sentences")
+    coverage = composition.get("coverage")
+    if (
+        not isinstance(sentences, list)
+        or not sentences
+        or len(sentences) > 8
+        or coverage not in {"direct", "partial"}
+    ):
+        raise GeneratedAnswerRejected(
+            "Grounded composer violated its response contract"
+        )
+
+    label_to_result = dict(zip(labels, candidates))
+    sentence_texts: List[str] = []
+    cited_answer_parts: List[str] = []
+    used_labels: set[str] = set()
+    for sentence in sentences:
+        if not isinstance(sentence, dict):
+            raise GeneratedAnswerRejected(
+                "Grounded composer returned a malformed sentence"
+            )
+        text = re.sub(r"\s+", " ", str(sentence.get("text") or "")).strip()
+        evidence_labels = sentence.get("evidence_labels")
+        if (
+            not text
+            or not isinstance(evidence_labels, list)
+            or not evidence_labels
+            or len(set(evidence_labels)) != len(evidence_labels)
+            or any(label not in label_to_result for label in evidence_labels)
+        ):
+            raise GeneratedAnswerRejected(
+                "Grounded composer returned invalid sentence support"
+            )
+        sentence_texts.append(text)
+        used_labels.update(evidence_labels)
+        cited_answer_parts.append(
+            f"{text} [{', '.join(evidence_labels)}]"
+        )
+
+    raw_answer = " ".join(sentence_texts)
+    cited_answer = " ".join(cited_answer_parts)
+    suspicious = suspicious_generation_tokens(raw_answer, messages)
+    if suspicious:
+        raise GeneratedAnswerRejected(
+            "Generated answer contains unsupported tokens: %s"
+            % ", ".join(suspicious)
+        )
+    if answer_overgeneralizes_local_examples(
+        cited_answer,
+        candidates,
+        measure_ranges,
+    ):
+        raise GeneratedAnswerRejected(
+            "Generated answer overgeneralizes local evidence"
+        )
+    used_results = [
+        result
+        for label, result in label_to_result.items()
+        if label in used_labels
+    ]
+    finalized = finalize_user_visible_answer(raw_answer, used_results)
+    if finalized == NO_CORPUS_EVIDENCE_MESSAGE:
+        raise GeneratedAnswerRejected(
+            "Generated answer contains forbidden internal metadata"
+        )
+    return finalized, used_results, coverage
 
 
-def generate_with_context_retry(
+EXPERT_SELECTOR_SYSTEM_PROMPT = """You are a closed-world evidence reranker for a soprano-performance QA system.
+
+Do not answer the user and do not use outside musical knowledge. The finalized answer is the sole claim authority; aliases are retrieval hints, not additional facts.
+
+First identify the core relation requested: identification or meaning, cause or intent, effect or interpretation, performance procedure, placement or scope, comparison or choice, or broad performance guidance. Then choose one anchor whose finalized answer most directly states that relation for the named musical subject. A how-to statement does not establish a cause; pronunciation or transition advice does not establish placement; shared musical vocabulary does not establish relevance.
+
+After choosing the anchor, add a complementary candidate only if removing it would leave a requested part or a genuinely useful facet of an explicitly broad request materially unanswered. A complement must state its own directly responsive claim. Do not add background, a weaker alternative, a conflicting recommendation, a duplicate, or merely related advice. If the anchor fully answers the request, return no complements.
+
+For a comparison or choice, preserve supported alternatives and uncertainty; do not combine a permissive answer with a categorical instruction that changes it. Scope eligibility has already been enforced, so semantic fit—not location alone—decides. Never infer a cause, intention, rule, frequency, location, certainty, or connection across candidates.
+
+If nothing fully answers, choose the safest anchor that covers the largest supported part, keep complements minimal, and report partial coverage. Output only the requested JSON object.
+"""
+
+
+def _expert_selector_schema(candidate_ids: List[str]) -> Dict[str, Any]:
+    return {
+        "type": "object",
+        "properties": {
+            "request_relation": {
+                "type": "string",
+                "enum": [
+                    "identification_meaning",
+                    "cause_intent",
+                    "effect_interpretation",
+                    "performance_procedure",
+                    "placement_scope",
+                    "comparison_choice",
+                    "broad_performance_guidance",
+                ],
+            },
+            "anchor_id": {
+                "type": "string",
+                "enum": candidate_ids,
+            },
+            "complementary_ids": {
+                "type": "array",
+                "items": {
+                    "type": "string",
+                    "enum": candidate_ids,
+                },
+                "maxItems": EXPERT_SELECTOR_MAX_ITEMS - 1,
+                "uniqueItems": True,
+            },
+            "coverage": {
+                "type": "string",
+                "enum": ["direct", "partial"],
+            },
+        },
+        "required": [
+            "request_relation",
+            "anchor_id",
+            "complementary_ids",
+            "coverage",
+        ],
+        "additionalProperties": False,
+    }
+
+
+def _expert_selector_candidates(results: List[Any]) -> List[Any]:
+    """Keep only release-ready expert units that can authorize prose."""
+
+    selected: List[Any] = []
+    seen_ids: set[str] = set()
+    for result in primary_grounding_results(results):
+        record = result.record
+        record_id = str(record.get("id") or "")
+        if (
+            not record_id
+            or record_id in seen_ids
+            or record.get("evidence_type") != "expert_annotation"
+            or not _expert_record_is_finalized(record)
+            or not str(record.get("answer") or "").strip()
+        ):
+            continue
+        selected.append(result)
+        seen_ids.add(record_id)
+    return selected[:EXPERT_SELECTOR_CANDIDATE_LIMIT]
+
+
+def build_expert_selector_messages(
+    *,
+    piece: str,
+    measure_ranges: List[List[int]],
+    question: str,
+    candidates: List[Any],
+) -> List[Dict[str, str]]:
+    """Build the closed-world candidate-selection prompt."""
+
+    payload = []
+    for result in candidates:
+        record = result.record
+        payload.append(
+            {
+                "id": record["id"],
+                "applicability": (
+                    "selected_range_support"
+                    if result.scope_match == "overlaps_query_range"
+                    else (
+                        "whole_piece_support"
+                        if result.scope_match
+                        in {"global_context", "general_evidence"}
+                        else "local_example"
+                    )
+                ),
+                "source_question_aliases": list(
+                    record.get("retrieval_aliases") or []
+                ),
+                "finalized_answer": re.sub(
+                    r"\s+",
+                    " ",
+                    str(record.get("answer") or ""),
+                ).strip(),
+            }
+        )
+    user_prompt = (
+        "Select finalized expert evidence for this request.\n"
+        + json.dumps(
+            {
+                "piece": piece,
+                "selected_measure_ranges": measure_ranges,
+                "question": question,
+                "candidates": payload,
+            },
+            ensure_ascii=False,
+            separators=(",", ":"),
+        )
+        + "\n/no_think"
+    )
+    return [
+        {"role": "system", "content": EXPERT_SELECTOR_SYSTEM_PROMPT},
+        {"role": "user", "content": user_prompt},
+    ]
+
+
+def select_expert_bundle_with_model(
+    model_path: str,
+    *,
+    piece: str,
+    measure_ranges: List[List[int]],
+    question: str,
+    results: List[Any],
+    llm_settings: Dict[str, Any],
+) -> List[Any]:
+    """Choose supplied finalized KUs with one constrained local-model call.
+
+    The call selects IDs only.  User-visible prose is subsequently rendered
+    from the immutable curated answers, so the selector cannot paraphrase,
+    merge, or invent a musical claim.  Invalid output raises immediately;
+    there is no rank-one, internal-knowledge, or alternate-model fallback.
+    """
+
+    candidates = _expert_selector_candidates(results)
+    if not candidates:
+        raise GeneratedAnswerRejected(
+            "No scope-applicable finalized expert candidates are available"
+        )
+    candidate_by_id = {
+        result.record["id"]: result for result in candidates
+    }
+    selection = generate_json(
+        model_path,
+        build_expert_selector_messages(
+            piece=piece,
+            measure_ranges=measure_ranges,
+            question=question,
+            candidates=candidates,
+        ),
+        llm_settings,
+        schema=_expert_selector_schema(list(candidate_by_id)),
+    )
+    anchor_id = selection.get("anchor_id")
+    complementary_ids = selection.get("complementary_ids")
+    request_relation = selection.get("request_relation")
+    coverage = selection.get("coverage")
+    if (
+        not isinstance(anchor_id, str)
+        or not isinstance(complementary_ids, list)
+        or len(complementary_ids) >= EXPERT_SELECTOR_MAX_ITEMS
+        or any(not isinstance(item, str) for item in complementary_ids)
+        or len(set(complementary_ids)) != len(complementary_ids)
+        or anchor_id in complementary_ids
+        or coverage not in {"direct", "partial"}
+        or request_relation not in {
+            "identification_meaning",
+            "cause_intent",
+            "effect_interpretation",
+            "performance_procedure",
+            "placement_scope",
+            "comparison_choice",
+            "broad_performance_guidance",
+        }
+    ):
+        raise GeneratedAnswerRejected(
+            "Grounded expert selector violated its response contract"
+        )
+    selected_ids = [anchor_id, *complementary_ids]
+    unknown = [
+        record_id
+        for record_id in selected_ids
+        if record_id not in candidate_by_id
+    ]
+    if unknown:
+        raise GeneratedAnswerRejected(
+            "Grounded expert selector returned IDs outside its candidates: "
+            + ", ".join(unknown)
+        )
+    return [candidate_by_id[record_id] for record_id in selected_ids]
+
+
+def _merge_unique_results(*groups: List[Any]) -> List[Any]:
+    merged: List[Any] = []
+    seen_ids: set[str] = set()
+    for group in groups:
+        for result in group:
+            record_id = str(result.record.get("id") or "")
+            if not record_id or record_id in seen_ids:
+                continue
+            merged.append(result)
+            seen_ids.add(record_id)
+    return merged
+
+
+def retrieve_generation_evidence(
     index: SearchIndex,
     *,
     query: str,
@@ -1897,155 +2610,118 @@ def generate_with_context_retry(
     measures: str,
     topic: str | None,
     top_k: int,
-    generator: Callable[[List[Dict[str, str]]], str],
-) -> tuple[str, List[Any], List[Dict[str, str]], bool]:
-    """Retry with fewer whole records when llama.cpp reports context overflow."""
+) -> tuple[List[Any], List[Dict[str, str]]]:
+    """Retrieve and freeze the one evidence bundle used for generation.
 
-    search_limit = top_k
-    context_limited = False
-    last_results: List[Any] = []
-    last_messages = build_messages(piece, measures, query, [])
-    while search_limit > 0:
-        results = index.search(
-            query=query,
-            piece=piece,
-            measure_ranges=measure_ranges,
-            topic=topic,
-            top_k=search_limit,
+    The function performs no model call, repair call, context retry, or
+    alternate retrieval. Callers either render a complete authoritative
+    expert unit or make exactly one grounded generation call with the
+    returned messages.
+    """
+
+    if top_k < 1:
+        return [], build_messages(piece, measures, query, [])
+    candidate_limit = (
+        max(top_k, NO_RANGE_STABLE_CANDIDATE_MIN)
+        if not measure_ranges
+        else top_k
+    )
+    stable_candidates = index.search(
+        query=query,
+        piece=piece,
+        measure_ranges=measure_ranges,
+        topic=topic,
+        top_k=candidate_limit,
+    )
+    rejected_candidates = list(
+        getattr(index, "last_answer_candidates", []) or []
+    )
+    semantic_authority = (
+        (
+            semantically_dominant_no_range_local_expert_bundle(
+                stable_candidates
+            )
+            or semantically_dominant_no_range_general_expert_bundle(
+                stable_candidates
+            )
         )
-        results = select_generation_evidence(results)
-        messages = build_messages(piece, measures, query, results)
-        if not results:
-            if context_limited and last_results:
-                return "", last_results, last_messages, context_limited
-            return "", results, messages, context_limited
-        last_results = results
-        last_messages = messages
-        if measure_ranges and not has_primary_grounding(results):
-            # Preserve related other-range records for inspection, but do not
-            # ask the model to turn them into an answer about the selected
-            # range.
-            return "", results, messages, context_limited
-        try:
-            answer = generator(messages)
-            for _ in range(2):
-                suspicious_tokens = suspicious_generation_tokens(
-                    answer,
-                    messages,
-                )
-                if not suspicious_tokens:
-                    break
-                answer = generator(
-                    build_generation_repair_messages(
-                        messages,
-                        answer,
-                        suspicious_tokens,
+        if not measure_ranges
+        else semantically_dominant_ranged_expert_bundle(
+            stable_candidates
+        )
+    )
+    selected_results = select_generation_evidence(
+        stable_candidates,
+        query=query,
+        piece=piece,
+        measure_ranges=measure_ranges,
+    )
+    if semantic_authority:
+        authority_ids = {
+            result.record["id"] for result in semantic_authority
+        }
+        if not measure_ranges:
+            selected_results = list(semantic_authority)
+        else:
+            selected_results = [
+                *semantic_authority,
+                *(
+                    result
+                    for result in selected_results
+                    if (
+                        result.record["id"] not in authority_ids
+                        and result.scope_match
+                        in RANGED_CONTEXT_ONLY_SCOPE_MATCHES
                     )
-                )
-            supplied_review_results = [
-                result
-                for result in primary_grounding_results(results)
-                if result.record.get("retrieval_review_warning")
+                ),
             ]
-            cited_results = cited_primary_grounding_results(answer, results)
-            if (
-                answer.strip()
-                and not is_grounded_insufficiency_answer(answer)
-                and supplied_review_results
-                and not cited_results
-            ):
-                # With provisional evidence in the prompt, an uncited draft
-                # cannot prove which warning contract applies.  Let the caller
-                # use the deterministic extractive fallback instead of adding
-                # every retrieved warning to an ambiguous answer.
-                answer = NO_GROUNDED_ANSWER_SENTINEL
-            if (
-                answer.strip()
-                and not is_grounded_insufficiency_answer(answer)
-                and requires_review_compliance_repair(cited_results)
-            ):
-                answer = generator(
-                    build_review_compliance_repair_messages(
-                        messages,
-                        answer,
-                        cited_results,
-                    )
-                )
-                for _ in range(2):
-                    suspicious_tokens = suspicious_generation_tokens(
-                        answer,
-                        messages,
-                    )
-                    if not suspicious_tokens:
-                        break
-                    answer = generator(
-                        build_generation_repair_messages(
-                            messages,
-                            answer,
-                            suspicious_tokens,
-                        )
-                    )
-            if (
-                answer.strip()
-                and not is_grounded_insufficiency_answer(answer)
-                and answer_overgeneralizes_local_examples(
-                    answer,
-                    results,
-                    measure_ranges,
-                )
-            ):
-                answer = generator(
-                    build_local_scope_repair_messages(
-                        messages,
-                        answer,
-                    )
-                )
-                for _ in range(2):
-                    suspicious_tokens = suspicious_generation_tokens(
-                        answer,
-                        messages,
-                    )
-                    if not suspicious_tokens:
-                        break
-                    answer = generator(
-                        build_generation_repair_messages(
-                            messages,
-                            answer,
-                            suspicious_tokens,
-                        )
-                    )
-                if measure_ranges and answer_overgeneralizes_local_examples(
-                    answer,
-                    results,
-                    measure_ranges,
-                ):
-                    # Service consumers do not pass the selected range into
-                    # their final generic safety check. Fail closed here if
-                    # the repair still names a location outside that range.
-                    answer = ""
-            if (
-                answer.strip()
-                and not is_grounded_insufficiency_answer(answer)
-            ):
-                cited_results = cited_primary_grounding_results(
-                    answer,
-                    results,
-                )
-                if supplied_review_results and not cited_results:
-                    answer = NO_GROUNDED_ANSWER_SENTINEL
-                else:
-                    answer = reconcile_review_disclosure(
-                        answer,
-                        results,
-                        cited_results,
-                    )
-            return answer, results, messages, context_limited
-        except ValueError as exc:
-            if not is_context_overflow_error(exc):
-                raise
-            context_limited = True
-            search_limit = len(results) - 1
-    return "", last_results, last_messages, context_limited
+        selected_results = [
+            replace(
+                result,
+                semantic_match_type=(
+                    DENSE_SEMANTIC_AUTHORITY_MATCH_TYPE
+                    if result.record["id"] in authority_ids
+                    else result.semantic_match_type
+                ),
+            )
+            for result in selected_results
+        ]
+    needs_expert_selector = (
+        not select_authoritative_expert_bundle(selected_results)
+        and not has_grounded_generation_authority(selected_results)
+    )
+    if needs_expert_selector:
+        semantic_search = getattr(index, "semantic_candidates", None)
+        broad_candidates = (
+            semantic_search(
+                query=query,
+                piece=piece,
+                measure_ranges=measure_ranges,
+                topic=topic,
+                top_k=EXPERT_SELECTOR_CANDIDATE_LIMIT,
+            )
+            if callable(semantic_search)
+            else []
+        )
+        selected_results = _merge_unique_results(
+            rejected_candidates,
+            selected_results,
+            broad_candidates,
+        )[:EXPERT_SELECTOR_CANDIDATE_LIMIT]
+        selected_results = [
+            replace(
+                result,
+                semantic_match_type="selector_candidate",
+            )
+            for result in selected_results
+        ]
+    result_limit = (
+        EXPERT_SELECTOR_CANDIDATE_LIMIT
+        if needs_expert_selector
+        else top_k
+    )
+    results = selected_results[: min(result_limit, len(selected_results))]
+    return results, build_messages(piece, measures, query, results)
 
 
 def build_evidence_notices(results: List[Any]) -> List[Dict[str, Any]]:
@@ -2210,10 +2886,12 @@ def answer_references_secondary_evidence(
 
 
 def finalize_answer_citations(answer: str, results: List[Any]) -> str:
+    """Validate internal citations, then remove them from displayed prose."""
+
     answer = _remove_evidence_footer(answer)
     all_record_ids = [result.record["id"] for result in results]
     if not all_record_ids:
-        return answer
+        return finalize_user_visible_answer(answer, results)
     primary_results = primary_grounding_results(results)
     record_ids = [result.record["id"] for result in primary_results]
     record_id_by_label = [
@@ -2225,13 +2903,8 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         for result in results
     ]
     if answer_references_secondary_evidence(answer, results):
-        # A sentence tied to other-range evidence cannot be made safe merely
-        # by deleting its citation. Fall back to the primary extractive answer
-        # so the secondary claim is removed together with its attribution.
-        return build_extractive_answer(
-            select_extractive_fallback_evidence(
-                primary_results if primary_results else results
-            )
+        raise GeneratedAnswerRejected(
+            "Generated answer cites context-only evidence"
         )
     provenance_ids = {
         provenance_id
@@ -2278,21 +2951,9 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         cited_id = match.group(1)
         if cited_id in valid_ids:
             return match.group(0)
-        if cited_id in all_record_ids:
-            # The model cited a known context-only record. Remove it rather
-            # than fuzzily rewriting it into a primary evidence ID.
-            return ""
-        ranked = sorted(
-            (
-                (difflib.SequenceMatcher(None, cited_id, record_id).ratio(), record_id)
-                for record_id in record_ids
-            ),
-            reverse=True,
+        raise GeneratedAnswerRejected(
+            "Generated answer contains an unknown or context-only evidence ID"
         )
-        if ranked and ranked[0][0] >= 0.88:
-            if len(ranked) == 1 or ranked[0][0] - ranked[1][0] >= 0.05:
-                return "[%s]" % ranked[0][1]
-        return ""
 
     finalized = re.sub(
         r"\[(" + OPAQUE_CITATION_ID_PATTERN + r")\]",
@@ -2306,15 +2967,21 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         if content in valid_ids:
             return "[%s]" % content
         if any(provenance_id in content for provenance_id in provenance_ids):
-            return ""
+            raise GeneratedAnswerRejected(
+                "Generated answer exposes provenance metadata"
+            )
         if re.fullmatch(r"[0-9]+(?:\s*[,;]\s*[0-9]+)*", content):
-            return ""
+            raise GeneratedAnswerRejected(
+                "Generated answer contains an unresolvable citation"
+            )
         if re.match(
             r"^(?:출처|근거|source|citation)\s*(?::|：|-)?",
             content,
             flags=re.IGNORECASE,
         ):
-            return ""
+            raise GeneratedAnswerRejected(
+                "Generated answer contains an unresolvable citation"
+            )
         if re.match(
             r"^(?:E\s*[0-9]|Evidence\b|"
             r"(?:[a-z0-9]+-)+ku(?:[-_]|[0-9])|sqa(?:[-_]|[0-9])|"
@@ -2322,7 +2989,9 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
             content,
             flags=re.IGNORECASE,
         ):
-            return ""
+            raise GeneratedAnswerRejected(
+                "Generated answer contains an unresolvable citation"
+            )
         return match.group(0)
 
     finalized = re.sub(
@@ -2331,16 +3000,50 @@ def finalize_answer_citations(answer: str, results: List[Any]) -> str:
         finalized,
     )
     if not record_ids:
-        return finalized.strip()
+        return finalize_user_visible_answer(finalized, results)
     if not any("[%s]" % record_id in finalized for record_id in record_ids):
-        generated_text = finalized.strip()
-        if not generated_text:
-            return "생성된 답변에서 유효한 내용을 확인하지 못했습니다."
-        # Some local-model generations follow the evidence but omit the label.
-        # Preserve that useful answer without adding record IDs to user-facing
-        # prose; callers receive the retrieved evidence as separate metadata.
-        return generated_text
-    return finalized.strip()
+        raise GeneratedAnswerRejected(
+            "Generated answer does not cite primary retrieved evidence"
+        )
+    return finalize_user_visible_answer(finalized, results)
+
+
+def finalize_grounded_generated_answer(
+    answer: str,
+    results: List[Any],
+    messages: List[Dict[str, str]],
+    measure_ranges: List[List[int]],
+) -> str:
+    """Validate the sole model draft without repair or substitution."""
+
+    if not answer.strip() or is_grounded_insufficiency_answer(answer):
+        raise GeneratedAnswerRejected(
+            "Grounded model returned no usable answer"
+        )
+    suspicious = suspicious_generation_tokens(answer, messages)
+    if suspicious:
+        raise GeneratedAnswerRejected(
+            "Generated answer contains unsupported tokens: %s"
+            % ", ".join(suspicious)
+        )
+    if answer_references_secondary_evidence(answer, results):
+        raise GeneratedAnswerRejected(
+            "Generated answer cites context-only evidence"
+        )
+    if answer_overgeneralizes_local_examples(
+        answer,
+        results,
+        measure_ranges,
+    ):
+        raise GeneratedAnswerRejected(
+            "Generated answer overgeneralizes local evidence"
+        )
+    finalized = finalize_answer_citations(answer, results)
+    if finalized == NO_CORPUS_EVIDENCE_MESSAGE:
+        raise GeneratedAnswerRejected(
+            "Generated answer contains forbidden internal metadata"
+        )
+    return finalized
 
 
 def ensure_corpus(settings: Dict[str, Any], rebuild: bool) -> None:
@@ -2352,7 +3055,8 @@ def ensure_corpus(settings: Dict[str, Any], rebuild: bool) -> None:
                 stats = json.load(f)
             stats_are_current = (
                 isinstance(stats, dict)
-                and stats.get("corpus_schema_version") == 6
+                and stats.get("corpus_schema_version")
+                == CORPUS_SCHEMA_VERSION
                 and stats.get("web_export_files") == expected_web_exports
                 and stats.get("dataset_root") == os.path.realpath(settings["dataset_root"])
                 and stats.get("input_fingerprint") == corpus_input_fingerprint(settings)
@@ -2388,39 +3092,74 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--question", required=True, help="Singer/user question")
     parser.add_argument("--top-k", type=positive_int, default=6, help="Number of chunks to retrieve")
     parser.add_argument("--no-generate", action="store_true", help="Only retrieve evidence")
-    parser.add_argument(
-        "--no-internal-knowledge",
-        action="store_true",
-        help=(
-            "Do not answer from pretrained model knowledge when retrieval "
-            "finds no corpus evidence"
-        ),
-    )
     parser.add_argument("--rebuild-corpus", action="store_true", help="Rebuild corpus before asking")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON")
     args = parser.parse_args()
     try:
-        args.measure_ranges = parse_measure_ranges(args.measures)
-        validate_question_measure_contract(args.question, args.measure_ranges)
+        selected_measure_ranges = parse_measure_ranges(args.measures)
+        question_measure_ranges = validate_question_measure_contract(
+            args.question,
+            selected_measure_ranges,
+        )
+        args.selected_measure_ranges = selected_measure_ranges
+        args.measure_ranges = (
+            question_measure_ranges or selected_measure_ranges
+        )
+        args.measures = (
+            format_measure_range(args.measure_ranges)
+            if args.measure_ranges
+            else ""
+        )
     except ValueError as exc:
         parser.error(str(exc))
     return args
 
 
+def _retrieval_unavailable_reason(
+    index: SearchIndex,
+    *,
+    question: str,
+    piece: str,
+    measure_ranges: List[List[int]],
+    results: List[Any],
+) -> str:
+    if retrieval_abstained_for_ambiguity(index):
+        return "ambiguous_dense_grounding"
+    if retrieval_abstained_for_missing_causal_authority(index):
+        return "missing_scoped_causal_authority"
+    if (
+        not results
+        and is_underspecified_ranged_query(
+            question,
+            piece,
+            measure_ranges,
+        )
+    ):
+        return "underspecified_ranged_question"
+    return "no_corpus_evidence"
+
+
 def main() -> None:
     args = parse_args()
-    settings = load_settings(args.settings) if args.settings else load_settings()
+    settings = load_settings(
+        args.settings,
+        use_legacy_dataset_env=False,
+    ) if args.settings else load_settings(use_legacy_dataset_env=False)
     try:
         validate_retrieval_requirements(settings)
-    except DenseRetrievalUnavailable as exc:
+        if not args.no_generate:
+            validate_generation_requirements(
+                settings["model_path"],
+                settings["llm"],
+            )
+    except (DenseRetrievalUnavailable, GenerationBackendUnavailable) as exc:
         raise SystemExit(str(exc)) from exc
-    ensure_corpus(settings, args.rebuild_corpus)
 
+    ensure_corpus(settings, args.rebuild_corpus)
     records = load_corpus(settings["corpus_path"])
     index = build_retrieval_index(records, settings)
-    generation_mode = "retrieval_only" if args.no_generate else "llm"
-    answer_basis = "retrieval_only" if args.no_generate else "retrieved_evidence"
-    generation_fallback_reason = None
+    unavailable_reason: str | None = None
+
     if args.no_generate:
         results = index.search(
             query=args.question,
@@ -2429,18 +3168,23 @@ def main() -> None:
             topic=args.topic,
             top_k=args.top_k,
         )
-        messages = build_messages(args.piece, args.measures, args.question, results)
         answer = ""
+        generation_mode = (
+            "retrieval_only" if results else "unavailable"
+        )
+        answer_basis = (
+            "retrieved_evidence" if results else "no_corpus_evidence"
+        )
+        if not results:
+            unavailable_reason = _retrieval_unavailable_reason(
+                index,
+                question=args.question,
+                piece=args.piece,
+                measure_ranges=args.measure_ranges,
+                results=results,
+            )
     else:
-        def run_generation(prompt_messages: List[Dict[str, str]]) -> str:
-            if not os.path.exists(settings["model_path"]):
-                raise SystemExit(
-                    "Missing model checkpoint: %s. Run scripts/download_model.py first."
-                    % settings["model_path"]
-                )
-            return generate(settings["model_path"], prompt_messages, settings["llm"])
-
-        raw_answer, results, messages, context_limited = generate_with_context_retry(
+        results, messages = retrieve_generation_evidence(
             index,
             query=args.question,
             piece=args.piece,
@@ -2448,102 +3192,71 @@ def main() -> None:
             measures=args.measures,
             topic=args.topic,
             top_k=args.top_k,
-            generator=run_generation,
         )
-        grounded_answer_unusable = (
-            is_grounded_insufficiency_answer(raw_answer)
-            or (not context_limited and not raw_answer.strip())
-        )
-        if not results and not args.no_internal_knowledge:
-            messages = build_internal_knowledge_messages(
-                args.piece,
-                args.measures,
-                args.question,
+        if not results or (
+            args.measure_ranges and not has_primary_grounding(results)
+        ):
+            answer = NO_CORPUS_EVIDENCE_MESSAGE
+            generation_mode = "unavailable"
+            answer_basis = "no_corpus_evidence"
+            unavailable_reason = _retrieval_unavailable_reason(
+                index,
+                question=args.question,
+                piece=args.piece,
+                measure_ranges=args.measure_ranges,
+                results=results,
             )
-            answer = finalize_internal_knowledge_answer(
-                run_generation(messages)
+        else:
+            authoritative_expert = select_authoritative_expert_bundle(
+                results
             )
-            results = []
-            if answer:
-                answer_basis = "internal_knowledge"
-            else:
-                answer = INTERNAL_GENERATION_UNAVAILABLE_MESSAGE
-                answer_basis = "generation_unavailable"
-                generation_mode = "unavailable"
-                generation_fallback_reason = (
-                    "local model returned no usable answer"
+            if authoritative_expert:
+                answer = render_authoritative_expert_bundle(
+                    authoritative_expert
                 )
-        elif results and grounded_answer_unusable:
-            answer = build_extractive_answer(
-                select_extractive_fallback_evidence(results)
-            )
-            answer_basis = (
-                "retrieval_extractive"
-                if has_primary_grounding(results)
-                else "retrieved_secondary_context"
-            )
-            generation_mode = "extractive"
-            generation_fallback_reason = (
-                "grounded model returned no usable answer"
-                if has_primary_grounding(results)
-                else "only other-range context retrieved"
-            )
-        elif context_limited and not raw_answer:
-            if results:
-                answer = build_extractive_answer(
-                    select_extractive_fallback_evidence(results)
+                generation_mode = "expert_verbatim"
+                answer_basis = "authoritative_expert"
+            elif has_grounded_generation_authority(results):
+                raw_answer = generate(
+                    settings["model_path"],
+                    messages,
+                    settings["llm"],
                 )
-                answer_basis = "retrieval_extractive"
-                generation_mode = "extractive"
-                generation_fallback_reason = "model context limit exceeded"
-            else:
-                answer = "검색 근거가 모델 컨텍스트 한도를 초과하여 안전하게 답변하지 못했습니다."
-                answer_basis = "generation_unavailable"
-                generation_mode = "unavailable"
-                generation_fallback_reason = "model context limit exceeded"
-        elif results:
-            secondary_citation_rejected = (
-                answer_references_secondary_evidence(
+                answer = finalize_grounded_generated_answer(
                     raw_answer,
                     results,
-                )
-            )
-            local_scope_rejected = (
-                answer_overgeneralizes_local_examples(
-                    raw_answer,
-                    results,
+                    messages,
                     args.measure_ranges,
                 )
-            )
-            answer = (
-                build_extractive_answer(
-                    select_extractive_fallback_evidence(
-                        results,
-                        exclude_local_examples=True,
-                    )
+                generation_mode = "llm"
+                answer_basis = "retrieved_evidence"
+            else:
+                selected_expert = select_expert_bundle_with_model(
+                    settings["model_path"],
+                    piece=args.piece,
+                    measure_ranges=args.measure_ranges,
+                    question=args.question,
+                    results=results,
+                    llm_settings=settings["llm"],
                 )
-                if local_scope_rejected
-                else finalize_answer_citations(raw_answer, results)
-            )
-            if secondary_citation_rejected:
-                generation_mode = "extractive"
-                answer_basis = "retrieval_extractive"
-                generation_fallback_reason = (
-                    "secondary evidence citation rejected"
+                answer = render_authoritative_expert_bundle(
+                    selected_expert
                 )
-            elif local_scope_rejected:
-                generation_mode = "extractive"
-                answer_basis = "retrieval_extractive"
-                generation_fallback_reason = (
-                    "unsupported local-example generalization rejected"
-                )
-        else:
-            answer = NO_CORPUS_EVIDENCE_MESSAGE
-            answer_basis = "no_corpus_evidence"
-            generation_mode = "unavailable"
-            generation_fallback_reason = (
-                "internal knowledge fallback disabled"
-            )
+                results = selected_expert
+                generation_mode = "expert_verbatim"
+                answer_basis = "authoritative_expert"
+
+    answer = finalize_user_visible_answer(answer, results)
+    if (
+        answer == NO_CORPUS_EVIDENCE_MESSAGE
+        and answer_basis not in {
+            "no_corpus_evidence",
+            "retrieved_secondary_context",
+        }
+    ):
+        generation_mode = "unavailable"
+        answer_basis = "no_corpus_evidence"
+        unavailable_reason = "forbidden_internal_metadata"
     evidence_notices = build_evidence_notices(results)
 
     if args.json:
@@ -2552,7 +3265,12 @@ def main() -> None:
                 {
                     "query": {
                         "piece": args.piece,
-                        "measure_range": args.measure_ranges,
+                        "measure_range": getattr(
+                            args,
+                            "selected_measure_ranges",
+                            args.measure_ranges,
+                        ),
+                        "effective_measure_range": args.measure_ranges,
                         "question": args.question,
                         "topic": args.topic,
                         "top_k": args.top_k,
@@ -2560,7 +3278,7 @@ def main() -> None:
                     "answer": answer,
                     "generation_mode": generation_mode,
                     "answer_basis": answer_basis,
-                    "generation_fallback_reason": generation_fallback_reason,
+                    "unavailable_reason": unavailable_reason,
                     "retrieval": retrieval_diagnostics(index),
                     "has_primary_grounding": has_primary_grounding(results),
                     "has_selected_range_grounding": (
@@ -2631,7 +3349,5 @@ def main() -> None:
         for notice in evidence_notices:
             print(format_evidence_notice(notice))
             print()
-
-
 if __name__ == "__main__":
     main()
