@@ -1,9 +1,5 @@
 # Soprano QA RAG System
 
-> **Moved.** This repository is archived. Its code and full history now live in
-> [`rag/`](https://github.com/minigb/soprano-lab/tree/main/rag) of
-> [minigb/soprano-lab](https://github.com/minigb/soprano-lab).
-
 Local, measure-aware hybrid retrieval and grounded answer generation for five
 soprano works. Every grounded request sends the complete selected, reviewed
 knowledge-unit answer texts to one local Qwen3-14B call, which composes a
