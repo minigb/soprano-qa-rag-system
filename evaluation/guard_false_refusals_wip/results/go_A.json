@@ -1,0 +1,1435 @@
+[
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "What does the accent on the second beat in the piano part express?",
+   "measure_range": [
+    2,
+    27
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "What does the accent on the second beat in the piano part express?",
+   "measure_range": [
+    2,
+    27
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "Why is this piece difficult to sing even though its notes are not high?",
+   "measure_range": null,
+   "language": "en",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "Why is this piece difficult to sing even though its notes are not high?",
+   "measure_range": null,
+   "language": "en",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "How should a change in the piece's mood be expressed?",
+   "measure_range": [
+    28,
+    40
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "How should a change in the piece's mood be expressed?",
+   "measure_range": [
+    28,
+    40
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "reject",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "What should a singer do when German pronunciation is difficult?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "reject",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "What should a singer do to sing this piece well?",
+   "measure_range": null,
+   "language": "en",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "What should a singer do to sing this piece well?",
+   "measure_range": null,
+   "language": "en",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "Why did Rossini use a double-dotted rhythm instead of a standard dotted rhythm?",
+   "measure_range": [
+    21,
+    22
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "Why did Rossini use a double-dotted rhythm instead of a standard dotted rhythm?",
+   "measure_range": [
+    21,
+    22
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "reject",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "How can rapid diction be practiced in passages with many short notes?",
+   "measure_range": [
+    31,
+    34
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "How can rapid diction be practiced in passages with many short notes?",
+   "measure_range": [
+    31,
+    34
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "The interludes in this piece are so long that I don't know what to do during them.",
+   "measure_range": null,
+   "language": "en",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "The interludes in this piece are so long that I don't know what to do during them.",
+   "measure_range": null,
+   "language": "en",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "How should one practice coloratura technique effectively?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "reject",
+  "new": "security_admission_rejected",
+  "raw": "{\"allow\": false}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "Why does this aria contain so many ornaments?",
+   "measure_range": null,
+   "language": "en",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "Why does this aria contain so many ornaments?",
+   "measure_range": null,
+   "language": "en",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "What musical effect does the contrast between ff and pp express?",
+   "measure_range": [
+    117,
+    124
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "What musical effect does the contrast between ff and pp express?",
+   "measure_range": [
+    117,
+    124
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should a trill be sung?",
+   "measure_range": [
+    137,
+    137
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should a trill be sung?",
+   "measure_range": [
+    137,
+    137
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should the beat and rhythm be maintained in a passage without accompaniment?",
+   "measure_range": [
+    135,
+    137
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should the beat and rhythm be maintained in a passage without accompaniment?",
+   "measure_range": [
+    135,
+    137
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should a slashed ornament be fitted into the rhythm?",
+   "measure_range": [
+    22,
+    22
+   ],
+   "language": "en",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should a slashed ornament be fitted into the rhythm?",
+   "measure_range": [
+    22,
+    22
+   ],
+   "language": "en",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+   "measure_range": [
+    80,
+    80
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+   "measure_range": [
+    80,
+    80
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "How should a sudden upward leap be sung?",
+   "measure_range": [
+    11,
+    17
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "How should a sudden upward leap be sung?",
+   "measure_range": [
+    11,
+    17
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "What should a singer do when singing is difficult or breath runs short?",
+   "measure_range": [
+    44,
+    52
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "What should a singer do when singing is difficult or breath runs short?",
+   "measure_range": [
+    44,
+    52
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "How long should the final note be held?",
+   "measure_range": [
+    34,
+    35
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "reject",
+  "new": "security_admission_rejected",
+  "raw": "{\"allow\": false}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "With what dynamic should the opening note begin?",
+   "measure_range": [
+    7,
+    8
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "With what dynamic should the opening note begin?",
+   "measure_range": [
+    7,
+    8
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "If kkotbaram (\"flower breeze\") is often sung staccato in recordings but has no such marking in the score, what should guide the performance?",
+   "measure_range": [
+    11,
+    12
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "If kkotbaram (\"flower breeze\") is often sung staccato in recordings but has no such marking in the score, what should guide the performance?",
+   "measure_range": [
+    11,
+    12
+   ],
+   "language": "en",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "Why does the meter change, and how does the mood of the piece change?",
+   "measure_range": [
+    39,
+    49
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "Why does the meter change, and how does the mood of the piece change?",
+   "measure_range": [
+    39,
+    49
+   ],
+   "language": "en",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "How slowly should Larghetto be taken?",
+   "measure_range": [
+    74,
+    79
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "How slowly should Larghetto be taken?",
+   "measure_range": [
+    74,
+    79
+   ],
+   "language": "en",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "If this song is too high, may I adjust or arrange it?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "If this song is too high, may I adjust or arrange it?",
+   "measure_range": null,
+   "language": "en",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+   "measure_range": [
+    19,
+    21
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+   "measure_range": [
+    19,
+    21
+   ],
+   "language": "en",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "피아노 파트에서 두 번째 박의 악센트는 무엇을 표현할까?",
+   "measure_range": [
+    2,
+    27
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "피아노 파트에서 두 번째 박의 악센트는 무엇을 표현할까?",
+   "measure_range": [
+    2,
+    27
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "음이 높지 않은데도 이 곡을 부르기 어려운 이유는 무엇일까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "음이 높지 않은데도 이 곡을 부르기 어려운 이유는 무엇일까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+   "measure_range": [
+    28,
+    40
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+   "measure_range": [
+    28,
+    40
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "독일어 발음이 어려울 때 어떻게 해야 할까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "독일어 발음이 어려울 때 어떻게 해야 할까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "이 곡을 잘 부르려면 어떻게 해야 할까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "die-forelle",
+   "question": "이 곡을 잘 부르려면 어떻게 해야 할까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "로시니가 일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유는 무엇일까?",
+   "measure_range": [
+    21,
+    22
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "로시니가 일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유는 무엇일까?",
+   "measure_range": [
+    21,
+    22
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "짧은 음표가 많은 부분에서 빠른 발음은 어떻게 연습할까?",
+   "measure_range": [
+    31,
+    34
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "짧은 음표가 많은 부분에서 빠른 발음은 어떻게 연습할까?",
+   "measure_range": [
+    31,
+    34
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "이 곡에 간주가 너무 길어서 그동안 뭘 해야할지 모르겠다",
+   "measure_range": null,
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "이 곡에 간주가 너무 길어서 그동안 뭘 해야할지 모르겠다",
+   "measure_range": null,
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "콜로라투라 테크닉을 잘 익히려면 어떻게 연습할까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "reject",
+  "new": "security_admission_rejected",
+  "raw": "{\"allow\": false}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "꾸밈음이 많이 나오는 이유는 무엇일까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "una-voce-poco-fa",
+   "question": "꾸밈음이 많이 나오는 이유는 무엇일까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "ff와 pp의 대비는 어떤 음악적 효과를 표현할까?",
+   "measure_range": [
+    117,
+    124
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "ff와 pp의 대비는 어떤 음악적 효과를 표현할까?",
+   "measure_range": [
+    117,
+    124
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "트릴은 어떻게 노래해야 할까?",
+   "measure_range": [
+    137,
+    137
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "트릴은 어떻게 노래해야 할까?",
+   "measure_range": [
+    137,
+    137
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "반주가 없는 곳에서는 박자와 리듬을 어떻게 잡아야 할까?",
+   "measure_range": [
+    135,
+    137
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "반주가 없는 곳에서는 박자와 리듬을 어떻게 잡아야 할까?",
+   "measure_range": [
+    135,
+    137
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+   "measure_range": [
+    22,
+    22
+   ],
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+   "measure_range": [
+    22,
+    22
+   ],
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "‘l’erbe ed i fior’의 가사를 음정에 어떻게 붙여야 할까?",
+   "measure_range": [
+    80,
+    80
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "la-capinera",
+   "question": "‘l’erbe ed i fior’의 가사를 음정에 어떻게 붙여야 할까?",
+   "measure_range": [
+    80,
+    80
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "음이 갑자기 올라갈 때 어떻게 부르는 것이 좋을까?",
+   "measure_range": [
+    11,
+    17
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "음이 갑자기 올라갈 때 어떻게 부르는 것이 좋을까?",
+   "measure_range": [
+    11,
+    17
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+   "measure_range": [
+    44,
+    52
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+   "measure_range": [
+    44,
+    52
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+   "measure_range": [
+    34,
+    35
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "reject",
+  "new": "security_admission_rejected",
+  "raw": "{\"allow\": false}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "이 곡을 클래식 장르로 볼 수 있을까? 클래식 발성으로 불러도 될까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "이 곡을 클래식 장르로 볼 수 있을까? 클래식 발성으로 불러도 될까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "첫 소리는 어떤 다이나믹으로 시작할까?",
+   "measure_range": [
+    7,
+    8
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "nella-fantasia",
+   "question": "첫 소리는 어떤 다이나믹으로 시작할까?",
+   "measure_range": [
+    7,
+    8
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "‘꽃바람’을 음원에서는 스타카토로 부르는 경우가 많지만 악보에 표시가 없다면 무엇을 따라야 할까?",
+   "measure_range": [
+    11,
+    12
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "‘꽃바람’을 음원에서는 스타카토로 부르는 경우가 많지만 악보에 표시가 없다면 무엇을 따라야 할까?",
+   "measure_range": [
+    11,
+    12
+   ],
+   "language": "ko",
+   "n": 1
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "박자가 바뀌는 이유는 무엇이며, 곡의 분위기는 어떻게 달라질까?",
+   "measure_range": [
+    39,
+    49
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "박자가 바뀌는 이유는 무엇이며, 곡의 분위기는 어떻게 달라질까?",
+   "measure_range": [
+    39,
+    49
+   ],
+   "language": "ko",
+   "n": 2
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "Larghetto는 어느 정도로 느리게 해야 할까?",
+   "measure_range": [
+    74,
+    79
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "Larghetto는 어느 정도로 느리게 해야 할까?",
+   "measure_range": [
+    74,
+    79
+   ],
+   "language": "ko",
+   "n": 3
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "이 노래가 너무 높으면 조정하거나 편곡해도 될까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "이 노래가 너무 높으면 조정하거나 편곡해도 될까?",
+   "measure_range": null,
+   "language": "ko",
+   "n": 4
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "프레이즈의 시작에 높은 음이 나오는 경우 첫 소리가 잘 나지 않으면 어떻게 해야 할까?",
+   "measure_range": [
+    19,
+    21
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "admission",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ },
+ {
+  "case": {
+   "piece_id": "in-flowery-clouds",
+   "question": "프레이즈의 시작에 높은 음이 나오는 경우 첫 소리가 잘 나지 않으면 어떻게 해야 할까?",
+   "measure_range": [
+    19,
+    21
+   ],
+   "language": "ko",
+   "n": 5
+  },
+  "stage": "output",
+  "old": "allow",
+  "new": "allow",
+  "raw": "{\"allow\": true}"
+ }
+]
