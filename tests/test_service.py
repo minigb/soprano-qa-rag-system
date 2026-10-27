@@ -206,7 +206,7 @@ class ServicePipelineTests(unittest.TestCase):
             str((pipeline_root.parent / "alternate-dataset").resolve()),
         )
         self.assertEqual(
-            settings["model_path"],
+            str(Path(settings["model_path"]).resolve()),
             str((pipeline_root / "models" / "alternate.gguf").resolve()),
         )
 
@@ -910,7 +910,7 @@ class ServicePipelineTests(unittest.TestCase):
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_rejected_generated_draft_propagates_after_one_call(self) -> None:
+    def test_rejected_generated_draft_is_withheld_after_one_call(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -929,18 +929,22 @@ class ServicePipelineTests(unittest.TestCase):
                 return_value="<NO_GROUNDED_ANSWER>",
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
-                qa.ask(
-                    piece_id="die-forelle",
-                    question="이 작품의 역사적 판본은 무엇인가요?",
-                    measure_range=None,
-                    generate=True,
-                )
+            result = qa.ask(
+                piece_id="die-forelle",
+                question="이 작품의 역사적 판본은 무엇인가요?",
+                measure_range=None,
+                generate=True,
+            )
+
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertEqual(result["evidence"], [])
 
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_natural_insufficiency_draft_propagates_after_one_call(self) -> None:
+    def test_natural_insufficiency_draft_is_withheld_after_one_call(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -962,18 +966,22 @@ class ServicePipelineTests(unittest.TestCase):
                 return_value=refusal,
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
-                qa.ask(
-                    piece_id="die-forelle",
-                    question="이 작품의 역사적 판본은 무엇인가요?",
-                    measure_range=None,
-                    generate=True,
-                )
+            result = qa.ask(
+                piece_id="die-forelle",
+                question="이 작품의 역사적 판본은 무엇인가요?",
+                measure_range=None,
+                generate=True,
+            )
+
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertEqual(result["evidence"], [])
 
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_empty_generated_draft_propagates_after_one_call(self) -> None:
+    def test_empty_generated_draft_is_withheld_after_one_call(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -992,18 +1000,22 @@ class ServicePipelineTests(unittest.TestCase):
                 return_value=" \n\t",
             ) as generate,
         ):
-            with self.assertRaises(GeneratedAnswerRejected):
-                qa.ask(
-                    piece_id="die-forelle",
-                    question="이 작품의 역사적 판본은 무엇인가요?",
-                    measure_range=None,
-                    generate=True,
-                )
+            result = qa.ask(
+                piece_id="die-forelle",
+                question="이 작품의 역사적 판본은 무엇인가요?",
+                measure_range=None,
+                generate=True,
+            )
+
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertEqual(result["evidence"], [])
 
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_other_rejected_draft_remains_a_review_warning(self) -> None:
+    def test_other_rejected_draft_is_withheld_instead_of_warned(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -1038,10 +1050,12 @@ class ServicePipelineTests(unittest.TestCase):
 
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
-        self.assertEqual(result["generation_mode"], "llm")
-        self.assertEqual(result["answer_basis"], "retrieved_evidence")
-        self.assertEqual(result["generation_validation_warning"], warning)
-        self.assertEqual(result["answer"], "판본에 따라 연주 방식이 달라집니다.")
+        self.assertEqual(result["generation_mode"], "unavailable")
+        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
+        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
+        self.assertIsNone(result["generation_validation_warning"])
+        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertEqual(result["evidence"], [])
 
     def test_web_results_keep_deterministic_rights_notices(self) -> None:
         result = qa.ask(
@@ -1125,11 +1139,11 @@ class ServicePipelineTests(unittest.TestCase):
     def test_corpus_stats_come_from_pipeline_snapshot(self) -> None:
         stats = qa.corpus_stats()
         self.assertEqual(stats["pipeline"], "soprano_qa")
-        self.assertEqual(stats["corpus_schema_version"], 8)
-        self.assertEqual(stats["total_records"], 946)
+        self.assertEqual(stats["corpus_schema_version"], 9)
+        self.assertEqual(stats["total_records"], 953)
         self.assertEqual(
             stats["records_by_evidence_type"],
-            {"expert_annotation": 122, "web_coaching": 723, "web_database": 101},
+            {"sumijo_feedback": 7, "expert_annotation": 122, "web_coaching": 723, "web_database": 101},
         )
         for deprecated in (
             "expert_records_by_rewrite_status",

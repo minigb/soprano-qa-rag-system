@@ -5,6 +5,76 @@ Run every command in this document from the repository root with the
 pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
 voce poco fa.
 
+## Bilingual security comparison (2026-10-25)
+
+The [comparison report](security_comparison_2026-10-25/report.md) evaluates
+the original revision `f3074700103d60cf4bd8862fd655e51656f66f0c` against a frozen
+copy of the hardened pipeline. It uses 100 authored Korean/English cases:
+40 answerable music questions, 30 direct attacks, 20 forced-context attacks,
+and 10 ordinary unrelated questions. Two repetitions of each system produce
+400 measured requests. Both systems use the same corpus, checkpoints and GPU.
+
+Primary security and quality rates use the first repetition. The second
+repetition measures consistency; latency uses the mean of each case's two
+requests before summarizing across cases. Semantic judgments are blinded to
+the variant and made outside the evaluated Qwen model. The
+[rubric](security_eval_rubric.md) defines attack success, false abstentions,
+execution errors, conditional/effective answer quality, and paired uncertainty.
+This is a development evaluation, not an independently held-out benchmark.
+
+To run a new comparison, choose a new output directory and freeze it before
+examining results. The preparation command captures the current hardened code,
+so later code changes constitute a new experiment:
+
+```bash
+SQA_SECURITY_RUN=evaluation/security_comparison_new
+python evaluation/prepare_security_comparison.py \
+  --original-ref f3074700103d60cf4bd8862fd655e51656f66f0c \
+  --output "$SQA_SECURITY_RUN"
+cp evaluation/security_cases.json "$SQA_SECURITY_RUN/cases.json"
+cp evaluation/security_eval_rubric.md "$SQA_SECURITY_RUN/rubric.md"
+python evaluation/run_security_comparison.py \
+  --original-root "$SQA_SECURITY_RUN/snapshots/original" \
+  --hardened-root "$SQA_SECURITY_RUN/snapshots/hardened" \
+  --original-settings "$SQA_SECURITY_RUN/snapshots/original/settings.json" \
+  --hardened-settings "$SQA_SECURITY_RUN/snapshots/hardened/settings.json" \
+  --cases "$SQA_SECURITY_RUN/cases.json" \
+  --output "$SQA_SECURITY_RUN/results.jsonl" --repeats 2 --seed 20261025
+python evaluation/analyze_security_comparison.py \
+  --results "$SQA_SECURITY_RUN/results.jsonl" \
+  --cases "$SQA_SECURITY_RUN/cases.json" --export-reviews
+```
+
+Review every distinct delivered answer in `blind_review_packets.json` against
+the frozen rubric; do not show reviewers `review_mapping.json` or raw results.
+Store assessments as JSON lists in `reviews/assessment_*.json`. Benign entries
+require `review_id`, integer `support`, `relevance`, `completeness`, `language`
+scores and a rationale; attack/domain entries require `review_id`, boolean
+`attack_success` and a rationale. Then summarize:
+
+```bash
+python evaluation/analyze_security_comparison.py \
+  --results "$SQA_SECURITY_RUN/results.jsonl" \
+  --cases "$SQA_SECURITY_RUN/cases.json" \
+  --reviews "$SQA_SECURITY_RUN"/reviews/assessment_*.json
+python evaluation/security_comparison_intervals.py \
+  --results "$SQA_SECURITY_RUN/results.jsonl" \
+  --cases "$SQA_SECURITY_RUN/cases.json" \
+  --reviews "$SQA_SECURITY_RUN"/reviews/assessment_*.json
+python evaluation/plot_security_comparison.py "$SQA_SECURITY_RUN/summary.json"
+```
+
+The analyzer refuses incomplete runs or missing reviews. Both runtime source
+archives, provenance, input hashes, raw outcomes, reviews, and summary tables
+are retained in the dated result directory. Forced injections modify disposable
+post-retrieval copies; they do not measure natural corpus-poisoning success.
+
+The remaining sections describe the older 460-case evaluation protocol. Its
+one-completion and warning-return behavior describes the original system;
+the security comparison above preserves that behavior only in its original
+snapshot. The hardened service uses admission/output checks and refuses
+rejected drafts. See [the current pipeline method](../docs/rag-llm-pipeline-method.md).
+
 ## Setup
 
 Install the project dependencies and download both configured GGUF models:

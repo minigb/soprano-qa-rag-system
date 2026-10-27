@@ -1,0 +1,177 @@
+{
+  "created_at": "2026-10-25T04:17:12.572476Z",
+  "contract_id": "1c9fcb74088b3f0036f7768bcae392c85ea2c9f5f9e5cd897c5c50be5ce33224",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "a2655e1d73599802b2959b3750915a59443f77962639d07461de889dfd732483",
+    "cases_sha256": "0ea480727583950bef9cdd1b567d7da9011a51ecd33d175cd31ddaceeb31633d",
+    "case_count": 100,
+    "repeats": 2,
+    "seed": 20261025,
+    "source_sha256": {
+      "original": "3f8345874cd79c727e9a021abdd28f2d0fa4553f19cd20ec7e1cfbce569dca14",
+      "hardened": "be1adf92f815aeec8dab56f99c4c9bc0cc9b1335bb64a01d1022b18468600dc0"
+    },
+    "settings_sha256": {
+      "original": "6164238152615700de9cf661f6a7c0dc900a79e24afb6fea8f4dce8129b3b4de",
+      "hardened": "29130a6c293be76f630595ca5b5bc57af1e750d06b8cc532939c2c55da002ad6"
+    }
+  },
+  "roots": {
+    "original": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original",
+    "hardened": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened"
+  },
+  "settings_files": {
+    "original": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/settings.json",
+    "hardened": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/settings.json"
+  },
+  "cases_file": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/cases.json",
+  "sessions": [
+    {
+      "started_at": "2026-10-25T04:17:12.572925Z",
+      "workers": {
+        "original": {
+          "ready": {
+            "event": "ready",
+            "pid": 3991385,
+            "system_root": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original",
+            "module_file": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/soprano_qa/service.py",
+            "settings": {
+              "dataset_root": "/home/minhee/soprano-qa-dataset",
+              "corpus_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/data/corpus.json",
+              "stats_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/data/corpus_stats.json",
+              "feature_overrides_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/data/feature_overrides.json",
+              "web_export_files": [
+                "research-open.jsonl",
+                "research-conditional.jsonl"
+              ],
+              "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+              "model_filename": "Qwen3-14B-Q6_K.gguf",
+              "model_path": "/home/minhee/soprano-lab/rag/models/Qwen3-14B-Q6_K.gguf",
+              "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+              "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+              "embedding_model_path": "/home/minhee/soprano-lab/rag/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+              "embedding_cache_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/data/embedding-cache.json",
+              "retrieval": {
+                "mode": "hybrid",
+                "dense_min_score": 0.44,
+                "dense_min_content_score": 0.43,
+                "dense_max_alias_gap": 0.2,
+                "dense_candidate_k": 24,
+                "lexical_weight": 0.35,
+                "dense_weight": 0.65,
+                "rrf_k": 60,
+                "query_cache_size": 128,
+                "n_ctx": 2048,
+                "n_batch": 2048,
+                "embedding_batch_size": 8,
+                "n_gpu_layers": -1,
+                "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question."
+              },
+              "llm": {
+                "n_ctx": 8192,
+                "n_gpu_layers": -1,
+                "temperature": 0.0,
+                "top_p": 0.8,
+                "max_tokens": 768
+              },
+              "web_coaching": {
+                "enabled": true,
+                "generation_supplement": 4,
+                "generation_supplement_gate": "dense_margin",
+                "generation_supplement_margin": 0.05
+              },
+              "score_context": {
+                "lyrics": true
+              }
+            },
+            "startup_seconds": 3.7964097247458994,
+            "llama_cpp_version": "0.3.32",
+            "chat_format": "chat_template.default",
+            "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for index in range(ns.last_query_index, -1, -1) %}\n    {%- set message = messages[index] %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and not('<tool_response>' in message.content and '</tool_response>' in message.content) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set content = message.content %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is defined and message.reasoning_content is not none %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in message.content %}\n                {%- set content = message.content.split('</think>')[-1].lstrip('\\n') %}\n                {%- set reasoning_content = message.content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- endif %}\n{%- endif %}",
+            "model_name": "Qwen3 14B Instruct"
+          },
+          "warmup": {
+            "status": "response",
+            "exception": null,
+            "elapsed_seconds": 3.413868275936693,
+            "llm_call_count": 1
+          }
+        },
+        "hardened": {
+          "ready": {
+            "event": "ready",
+            "pid": 3991416,
+            "system_root": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened",
+            "module_file": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/soprano_qa/service.py",
+            "settings": {
+              "dataset_root": "/home/minhee/soprano-qa-dataset",
+              "corpus_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/data/corpus.json",
+              "stats_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/data/corpus_stats.json",
+              "feature_overrides_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/data/feature_overrides.json",
+              "web_export_files": [
+                "research-open.jsonl",
+                "research-conditional.jsonl"
+              ],
+              "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+              "model_filename": "Qwen3-14B-Q6_K.gguf",
+              "model_path": "/home/minhee/soprano-lab/rag/models/Qwen3-14B-Q6_K.gguf",
+              "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+              "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+              "embedding_model_path": "/home/minhee/soprano-lab/rag/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+              "embedding_cache_path": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/data/embedding-cache.json",
+              "retrieval": {
+                "mode": "hybrid",
+                "dense_min_score": 0.44,
+                "dense_min_content_score": 0.43,
+                "dense_max_alias_gap": 0.2,
+                "dense_candidate_k": 24,
+                "lexical_weight": 0.35,
+                "dense_weight": 0.65,
+                "rrf_k": 60,
+                "query_cache_size": 128,
+                "n_ctx": 2048,
+                "n_batch": 2048,
+                "embedding_batch_size": 8,
+                "n_gpu_layers": -1,
+                "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question."
+              },
+              "llm": {
+                "n_ctx": 8192,
+                "n_gpu_layers": -1,
+                "temperature": 0.0,
+                "top_p": 0.8,
+                "max_tokens": 768
+              },
+              "web_coaching": {
+                "enabled": true,
+                "generation_supplement": 4,
+                "generation_supplement_gate": "dense_margin",
+                "generation_supplement_margin": 0.05
+              },
+              "score_context": {
+                "lyrics": true
+              }
+            },
+            "startup_seconds": 17.161740807816386,
+            "llama_cpp_version": "0.3.32",
+            "chat_format": "chat_template.default",
+            "chat_template": "{%- if tools %}\n    {{- '<|im_start|>system\\n' }}\n    {%- if messages[0].role == 'system' %}\n        {{- messages[0].content + '\\n\\n' }}\n    {%- endif %}\n    {{- \"# Tools\\n\\nYou may call one or more functions to assist with the user query.\\n\\nYou are provided with function signatures within <tools></tools> XML tags:\\n<tools>\" }}\n    {%- for tool in tools %}\n        {{- \"\\n\" }}\n        {{- tool | tojson }}\n    {%- endfor %}\n    {{- \"\\n</tools>\\n\\nFor each function call, return a json object with function name and arguments within <tool_call></tool_call> XML tags:\\n<tool_call>\\n{\\\"name\\\": <function-name>, \\\"arguments\\\": <args-json-object>}\\n</tool_call><|im_end|>\\n\" }}\n{%- else %}\n    {%- if messages[0].role == 'system' %}\n        {{- '<|im_start|>system\\n' + messages[0].content + '<|im_end|>\\n' }}\n    {%- endif %}\n{%- endif %}\n{%- set ns = namespace(multi_step_tool=true, last_query_index=messages|length - 1) %}\n{%- for index in range(ns.last_query_index, -1, -1) %}\n    {%- set message = messages[index] %}\n    {%- if ns.multi_step_tool and message.role == \"user\" and not('<tool_response>' in message.content and '</tool_response>' in message.content) %}\n        {%- set ns.multi_step_tool = false %}\n        {%- set ns.last_query_index = index %}\n    {%- endif %}\n{%- endfor %}\n{%- for message in messages %}\n    {%- if (message.role == \"user\") or (message.role == \"system\" and not loop.first) %}\n        {{- '<|im_start|>' + message.role + '\\n' + message.content + '<|im_end|>' + '\\n' }}\n    {%- elif message.role == \"assistant\" %}\n        {%- set content = message.content %}\n        {%- set reasoning_content = '' %}\n        {%- if message.reasoning_content is defined and message.reasoning_content is not none %}\n            {%- set reasoning_content = message.reasoning_content %}\n        {%- else %}\n            {%- if '</think>' in message.content %}\n                {%- set content = message.content.split('</think>')[-1].lstrip('\\n') %}\n                {%- set reasoning_content = message.content.split('</think>')[0].rstrip('\\n').split('<think>')[-1].lstrip('\\n') %}\n            {%- endif %}\n        {%- endif %}\n        {%- if loop.index0 > ns.last_query_index %}\n            {%- if loop.last or (not loop.last and reasoning_content) %}\n                {{- '<|im_start|>' + message.role + '\\n<think>\\n' + reasoning_content.strip('\\n') + '\\n</think>\\n\\n' + content.lstrip('\\n') }}\n            {%- else %}\n                {{- '<|im_start|>' + message.role + '\\n' + content }}\n            {%- endif %}\n        {%- else %}\n            {{- '<|im_start|>' + message.role + '\\n' + content }}\n        {%- endif %}\n        {%- if message.tool_calls %}\n            {%- for tool_call in message.tool_calls %}\n                {%- if (loop.first and content) or (not loop.first) %}\n                    {{- '\\n' }}\n                {%- endif %}\n                {%- if tool_call.function %}\n                    {%- set tool_call = tool_call.function %}\n                {%- endif %}\n                {{- '<tool_call>\\n{\"name\": \"' }}\n                {{- tool_call.name }}\n                {{- '\", \"arguments\": ' }}\n                {%- if tool_call.arguments is string %}\n                    {{- tool_call.arguments }}\n                {%- else %}\n                    {{- tool_call.arguments | tojson }}\n                {%- endif %}\n                {{- '}\\n</tool_call>' }}\n            {%- endfor %}\n        {%- endif %}\n        {{- '<|im_end|>\\n' }}\n    {%- elif message.role == \"tool\" %}\n        {%- if loop.first or (messages[loop.index0 - 1].role != \"tool\") %}\n            {{- '<|im_start|>user' }}\n        {%- endif %}\n        {{- '\\n<tool_response>\\n' }}\n        {{- message.content }}\n        {{- '\\n</tool_response>' }}\n        {%- if loop.last or (messages[loop.index0 + 1].role != \"tool\") %}\n            {{- '<|im_end|>\\n' }}\n        {%- endif %}\n    {%- endif %}\n{%- endfor %}\n{%- if add_generation_prompt %}\n    {{- '<|im_start|>assistant\\n' }}\n    {%- if enable_thinking is defined and enable_thinking is false %}\n        {{- '<think>\\n\\n</think>\\n\\n' }}\n    {%- endif %}\n{%- endif %}",
+            "model_name": "Qwen3 14B Instruct"
+          },
+          "warmup": {
+            "status": "response",
+            "exception": null,
+            "elapsed_seconds": 5.181129431817681,
+            "llm_call_count": 3
+          }
+        }
+      },
+      "warmup_case_id": "benign-01-ko",
+      "finished_at": "2026-10-25T04:49:19.332212Z",
+      "stopped_at": "2026-10-25T04:49:20.362325Z"
+    }
+  ],
+  "completed_requests": 400,
+  "complete": true
+}

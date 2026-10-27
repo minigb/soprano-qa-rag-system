@@ -1,0 +1,706 @@
+{
+  "mode": "hybrid",
+  "input_fingerprint": "3bca212d397f13664f32564f5ffd8363bdd1c52935f7b58cf7e2de8c1e58a86a",
+  "questions_sha256": "5a8222933f1c5d09bdb565dfdafce644741a205ced7cd139220c0ecbdb2408f0",
+  "source_priority_sha256": "cf6d891e1fb162604eff982bac7eeacc23c8e13c96f3d33d0693632d8163b885",
+  "sumijo_settings": {
+    "enabled": true,
+    "dense_min_score": 0.6,
+    "dense_margin": 0.04
+  },
+  "embedding_model": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+  "corpus_counts": {
+    "sumijo_feedback": 7,
+    "expert_annotation": 122,
+    "web_database": 101,
+    "web_coaching": 723
+  },
+  "limitations": "Small manually authored development pilot, not an independent benchmark. Baseline lacks Sumi Jo data; recall difference measures source availability plus routing, not causal ranking quality. No answer-quality judgment or LLM generation.",
+  "summary": {
+    "expert_web_baseline": {
+      "target_top1": 0,
+      "target_recall_at6": 0,
+      "positive_questions": 10,
+      "sumijo_false_positives": 0,
+      "negative_questions": 4,
+      "authority_order_violations": 0
+    },
+    "source_priority": {
+      "target_top1": 8,
+      "target_recall_at6": 8,
+      "positive_questions": 10,
+      "sumijo_false_positives": 0,
+      "negative_questions": 4,
+      "authority_order_violations": 0
+    }
+  },
+  "cases": [
+    {
+      "id": "opening",
+      "piece": "nella-fantasia",
+      "question": "첫소리를 부드럽게 시작하려면 어떻게 해야 하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-036-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-036-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "dynamics",
+      "piece": "nella-fantasia",
+      "question": "첫소리의 다이나믹은 어떻게 설정하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-036-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-036-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "microphone",
+      "piece": "nella-fantasia",
+      "question": "마이크를 사용할 때 어떤 음색으로 노래해야 하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-037-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5029",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5026",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5027",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5106",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-037-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5029",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-wc-5026",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "hall",
+      "piece": "nella-fantasia",
+      "question": "마이크 없이 큰 홀에서 부를 때 어떤 발성이 필요한가요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-037-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-008",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-006",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "nella-fantasia-ku-008",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-006",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "legato",
+      "piece": "nella-fantasia",
+      "question": "긴 프레이즈에서 호흡을 어떻게 유지하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-038-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-038-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "sumijo-nella-fantasia-036-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "ending",
+      "piece": "nella-fantasia",
+      "question": "마지막 음을 길게 유지할 때 반주와 어떻게 마무리하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-039-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-010",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-010",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "breath",
+      "piece": "nella-fantasia",
+      "question": "고음이나 도약음에서 숨을 많이 쓰면 다음 프레이즈에 어떤 문제가 생기나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-040-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-008",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-040-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-008",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "word",
+      "piece": "nella-fantasia",
+      "question": "성악적으로 표현할 때 단어 중간에서 숨을 쉬어도 되나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-040-ku-02",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-009",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-040-ku-02",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-009",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rhythm",
+      "piece": "nella-fantasia",
+      "question": "셋잇단음표 리듬을 정확하게 지켜야 하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-041-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-016",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "sumijo-nella-fantasia-041-ku-01",
+            "lineage": "sumijo_feedback",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-016",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          }
+        ]
+      }
+    },
+    {
+      "id": "rubato",
+      "piece": "nella-fantasia",
+      "question": "가사의 자연스러운 억양을 위해 미세한 루바도를 사용할 수 있나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": "sumijo-nella-fantasia-041-ku-01",
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-006",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-006",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          }
+        ]
+      }
+    },
+    {
+      "id": "composer",
+      "piece": "nella-fantasia",
+      "question": "이 곡의 작곡가는 누구인가요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": null,
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "webchunk-16d07bb87436816cbb1c",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "webchunk-a96699ec458f91d3e3dc",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "webchunk-2d88d1917a6a09f21631",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "webchunk-16d07bb87436816cbb1c",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "webchunk-a96699ec458f91d3e3dc",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "webchunk-2d88d1917a6a09f21631",
+            "lineage": "web_database",
+            "scope": "general_evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unsupported",
+      "piece": "nella-fantasia",
+      "question": "이 곡을 작곡할 때 사용한 연필 브랜드는 무엇인가요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": null,
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-007",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-012",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "nella-fantasia-ku-002",
+            "lineage": "expert_annotation",
+            "scope": "local_example"
+          },
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-007",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "nella-fantasia-ku-012",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          },
+          {
+            "id": "nella-fantasia-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "unspecified_scope"
+          }
+        ]
+      }
+    },
+    {
+      "id": "wrong-piece",
+      "piece": "die-forelle",
+      "question": "마이크를 사용할 때 어떤 음색으로 노래해야 하나요?",
+      "measure_ranges": [],
+      "expected_sumijo_id": null,
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "die-forelle-ku-016",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-5039",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-0078",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-0065",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-5010",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "die-forelle-ku-016",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-ku-005",
+            "lineage": "expert_annotation",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-5039",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-0078",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-0065",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          },
+          {
+            "id": "die-forelle-wc-5010",
+            "lineage": "web_coaching",
+            "scope": "general_evidence"
+          }
+        ]
+      }
+    },
+    {
+      "id": "unreviewed-range",
+      "piece": "nella-fantasia",
+      "question": "마이크를 사용할 때 어떤 음색으로 노래해야 하나요?",
+      "measure_ranges": [
+        [
+          1,
+          4
+        ]
+      ],
+      "expected_sumijo_id": null,
+      "conditions": {
+        "expert_web_baseline": [
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-009",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-007",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-011",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          }
+        ],
+        "source_priority": [
+          {
+            "id": "nella-fantasia-ku-004",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-009",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-003",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-015",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-007",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          },
+          {
+            "id": "nella-fantasia-ku-011",
+            "lineage": "expert_annotation",
+            "scope": "global_context"
+          }
+        ]
+      }
+    }
+  ]
+}

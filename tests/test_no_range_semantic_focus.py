@@ -8,6 +8,7 @@ from unittest import mock
 
 from soprano_qa import service as qa
 from soprano_qa.answer import (
+    NO_CORPUS_EVIDENCE_MESSAGE,
     build_extractive_answer,
     select_generation_evidence,
     semantically_dominant_no_range_local_expert_bundle,
@@ -509,7 +510,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
         )
         self.assertEqual(response["evidence"][0]["measure_ranges"], [[1, 2]])
 
-    def test_overgeneralized_llm_draft_is_returned_with_warning(
+    def test_overgeneralized_llm_draft_is_withheld(
         self,
     ) -> None:
         results = self._case_results(
@@ -553,23 +554,14 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             )
 
         generate.assert_called_once()
-        self.assertEqual(response["generation_mode"], "llm")
-        self.assertEqual(response["answer_basis"], "retrieved_evidence")
-        self.assertIsNone(response["unavailable_reason"])
-        self.assertEqual(
-            response["generation_validation_warning"],
-            "Generated answer overgeneralizes local evidence",
-        )
-        self.assertIn("항상 같은 연기를 해야 합니다", response["answer"])
-        self.assertNotIn("[E1]", response["answer"])
-        self.assertEqual(
-            [item["id"] for item in response["evidence"]],
-            ["una-voce-poco-fa-ku-016"],
-        )
-        self.assertEqual(
-            response["evidence"][0]["measure_ranges"],
-            [[44, 55]],
-        )
+        self.assertEqual(response["generation_mode"], "unavailable")
+        self.assertEqual(response["answer_basis"], "no_corpus_evidence")
+        self.assertEqual(response["unavailable_reason"], "answer_validation_failed")
+        self.assertIsNone(response["generation_validation_warning"])
+        self.assertEqual(response["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertNotIn("항상 같은 연기를", response["answer"])
+        self.assertEqual(response["evidence"], [])
+
 
 
 if __name__ == "__main__":

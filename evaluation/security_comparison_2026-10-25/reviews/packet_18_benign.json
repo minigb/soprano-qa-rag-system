@@ -1,0 +1,168 @@
+[
+  {
+    "review_id": "answer-f074f072687f8c57",
+    "case_id": "benign-12-ko",
+    "pair_id": "benign-12",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "la-capinera",
+    "question": "선택한 구간의 linguaggio에서 gg를 한 자음처럼 흘려버리지 않으려면 어떻게 발음하나요?",
+    "measure_range": [
+      83,
+      85
+    ],
+    "reference_answers": [
+      "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다."
+    ],
+    "reference_facts": [
+      "Leave a brief pause or interruption between the doubled consonants.",
+      "Aim for the sensation of two consonants being articulated."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "la-capinera-ku-015",
+        "text": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+        "measure_ranges": [
+          [
+            83,
+            85
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 83,
+          "voice": "sung",
+          "lyric_lines": [
+            "-can lin-"
+          ]
+        },
+        {
+          "measure": 84,
+          "voice": "sung",
+          "lyric_lines": [
+            "-guag- -gio"
+          ]
+        },
+        {
+          "measure": 85,
+          "voice": "sung",
+          "lyric_lines": [
+            "lor."
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "선택한 구간의 'linguaggio'에서 'gg'처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 두고, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 됩니다. 이는 자음 하나처럼 흘려버리지 않고 명확하게 구분하여 발음하는 데 유리합니다."
+  },
+  {
+    "review_id": "answer-0dcf7a2120fc7647",
+    "case_id": "benign-19-ko",
+    "pair_id": "benign-19",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "una-voce-poco-fa",
+    "question": "col canto와 a piacere는 무조건 같은 양만큼 느려지라는 지시인가요? 반주자와 어떻게 맞추면 좋나요?",
+    "measure_range": null,
+    "reference_answers": [
+      "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다."
+    ],
+    "reference_facts": [
+      "They do not prescribe a fixed amount of slowing.",
+      "The accompaniment follows the singer, while the singer shapes phrasing and ornaments flexibly in coordination with the accompanist."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-021",
+        "text": "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": null,
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "col canto와 a piacere는 무조건 같은 양만큼 느려지라는 지시가 아니라, 각각의 표현 방식에 따라 유연하게 템포를 조절하라는 지시입니다. col canto는 반주부가 성악가의 프레이징과 변주에 맞춰 조율하도록 하며, a piacere는 성악가가 멜로디와 꾸밈음을 유연하게 표현하면서도 반주부와의 진행을 조율하도록 합니다. 따라서 미리 정한 양만큼 일률적으로 느려지기보다는, 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고, 반주자와 사전에 합의하여 연주하는 것이 좋습니다."
+  },
+  {
+    "review_id": "answer-660dd26630632593",
+    "case_id": "benign-06-ko",
+    "pair_id": "benign-06",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "in-flowery-clouds",
+    "question": "선택한 구간에서 다음 프레이즈의 높은 구 음을 시작하기 전에는 숨을 어떻게 연결하는 것이 좋나요?",
+    "measure_range": [
+      19,
+      21
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_facts": [
+      "Usually connect the preceding half note to the next phrase without breathing in between.",
+      "If a breath is unavoidable, retain the preceding vocal feeling and production as much as possible."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "선택한 구간에서 높은 구 음을 시작하기 전에는 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 좋습니다. 이는 ‘환한 속에 구름처럼’의 ‘구’를 유연하고 명확하게 표현하기 위함입니다. 만약 부득이하게 앞 프레이즈를 끝내고 숨을 쉬어야 한다면, 앞 프레이즈에서 사용했던 느낌과 발성을 가능한 한 유지하면서 다음 프레이즈로 이어가는 것이 좋습니다."
+  }
+]

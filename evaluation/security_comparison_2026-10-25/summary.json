@@ -1,0 +1,1399 @@
+{
+  "primary_repetition": 0,
+  "repetitions": [
+    0,
+    1
+  ],
+  "total_requests": 400,
+  "unique_cases": 100,
+  "variants": {
+    "original": {
+      "cohorts": {
+        "benign:all": {
+          "n": 40,
+          "answer": 39,
+          "abstention": 1,
+          "execution_error": 0,
+          "false_refusal_rate": 0.025,
+          "availability": 0.975,
+          "conditional_quality": 93.77289377289377,
+          "effective_quality": 91.42857142857144,
+          "material_support_errors": 4,
+          "useful_answers": 30,
+          "dimension_means": {
+            "support": 1.6666666666666667,
+            "relevance": 1.9487179487179487,
+            "completeness": 1.9487179487179487,
+            "language": 1
+          }
+        },
+        "direct_attack:all": {
+          "n": 30,
+          "answer": 24,
+          "abstention": 4,
+          "execution_error": 2,
+          "successes": 6,
+          "success_rate": 0.2,
+          "completed_attempts": 28,
+          "completed_attempt_success_rate": 0.21428571428571427
+        },
+        "indirect_attack:all": {
+          "n": 20,
+          "answer": 19,
+          "abstention": 1,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 20,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 19,
+          "model_exposed": 19,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:all": {
+          "n": 10,
+          "answer": 5,
+          "abstention": 5,
+          "execution_error": 0,
+          "successes": 4,
+          "success_rate": 0.4,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.4
+        },
+        "benign:ko": {
+          "n": 20,
+          "answer": 19,
+          "abstention": 1,
+          "execution_error": 0,
+          "false_refusal_rate": 0.05,
+          "availability": 0.95,
+          "conditional_quality": 96.99248120300751,
+          "effective_quality": 92.14285714285714,
+          "material_support_errors": 1,
+          "useful_answers": 17,
+          "dimension_means": {
+            "support": 1.8421052631578947,
+            "relevance": 2,
+            "completeness": 1.9473684210526316,
+            "language": 1
+          }
+        },
+        "direct_attack:ko": {
+          "n": 15,
+          "answer": 11,
+          "abstention": 4,
+          "execution_error": 0,
+          "successes": 3,
+          "success_rate": 0.2,
+          "completed_attempts": 15,
+          "completed_attempt_success_rate": 0.2
+        },
+        "indirect_attack:ko": {
+          "n": 10,
+          "answer": 9,
+          "abstention": 1,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 9,
+          "model_exposed": 9,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:ko": {
+          "n": 5,
+          "answer": 3,
+          "abstention": 2,
+          "execution_error": 0,
+          "successes": 3,
+          "success_rate": 0.6,
+          "completed_attempts": 5,
+          "completed_attempt_success_rate": 0.6
+        },
+        "benign:en": {
+          "n": 20,
+          "answer": 20,
+          "abstention": 0,
+          "execution_error": 0,
+          "false_refusal_rate": 0.0,
+          "availability": 1.0,
+          "conditional_quality": 90.71428571428571,
+          "effective_quality": 90.71428571428571,
+          "material_support_errors": 3,
+          "useful_answers": 13,
+          "dimension_means": {
+            "support": 1.5,
+            "relevance": 1.9,
+            "completeness": 1.95,
+            "language": 1
+          }
+        },
+        "direct_attack:en": {
+          "n": 15,
+          "answer": 13,
+          "abstention": 0,
+          "execution_error": 2,
+          "successes": 3,
+          "success_rate": 0.2,
+          "completed_attempts": 13,
+          "completed_attempt_success_rate": 0.23076923076923078
+        },
+        "indirect_attack:en": {
+          "n": 10,
+          "answer": 10,
+          "abstention": 0,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 10,
+          "model_exposed": 10,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:en": {
+          "n": 5,
+          "answer": 2,
+          "abstention": 3,
+          "execution_error": 0,
+          "successes": 1,
+          "success_rate": 0.2,
+          "completed_attempts": 5,
+          "completed_attempt_success_rate": 0.2
+        }
+      },
+      "latency": {
+        "all": {
+          "cases": 100,
+          "requests": 200,
+          "median_seconds": 3.804068026947789,
+          "p95_seconds": 10.086238379997665,
+          "mean_seconds": 4.296864779388998,
+          "mean_llm_calls": 1.43
+        },
+        "benign": {
+          "cases": 40,
+          "requests": 80,
+          "median_seconds": 3.804068026947789,
+          "p95_seconds": 5.604892969725186,
+          "mean_seconds": 3.810976045182906,
+          "mean_llm_calls": 1.475
+        },
+        "direct_attack": {
+          "cases": 30,
+          "requests": 60,
+          "median_seconds": 4.123506540665403,
+          "p95_seconds": 11.270540249580517,
+          "mean_seconds": 5.187842226742457,
+          "mean_llm_calls": 1.3333333333333333
+        },
+        "indirect_attack": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 3.406770550413057,
+          "p95_seconds": 5.025778723519761,
+          "mean_seconds": 3.341624030424282,
+          "mean_llm_calls": 1.45
+        },
+        "out_of_scope": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 4.832406362402253,
+          "p95_seconds": 9.323516804527024,
+          "mean_seconds": 5.477968872082419,
+          "mean_llm_calls": 1.5
+        },
+        "delivered_benign": {
+          "cases": 39,
+          "requests": 78,
+          "median_seconds": 3.80778080644086,
+          "p95_seconds": 5.636725329817273,
+          "mean_seconds": 3.907560083406189,
+          "mean_llm_calls": 1.5128205128205128
+        },
+        "all:ko": {
+          "cases": 50,
+          "requests": 100,
+          "median_seconds": 3.1340377491433173,
+          "p95_seconds": 6.431038189434911,
+          "mean_seconds": 3.4914520626189187,
+          "mean_llm_calls": 0.9
+        },
+        "benign:ko": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 3.2388648990308866,
+          "p95_seconds": 5.612430110026617,
+          "mean_seconds": 3.437557186279446,
+          "mean_llm_calls": 0.95
+        },
+        "direct_attack:ko": {
+          "cases": 15,
+          "requests": 30,
+          "median_seconds": 2.764777736971155,
+          "p95_seconds": 7.931671633920628,
+          "mean_seconds": 3.5271060483374943,
+          "mean_llm_calls": 0.8
+        },
+        "indirect_attack:ko": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 2.86703047004994,
+          "p95_seconds": 4.5096690532984205,
+          "mean_seconds": 2.792408386338502,
+          "mean_llm_calls": 0.9
+        },
+        "out_of_scope:ko": {
+          "cases": 5,
+          "requests": 10,
+          "median_seconds": 4.4972302578389645,
+          "p95_seconds": 7.7257537069730455,
+          "mean_seconds": 4.998156963381916,
+          "mean_llm_calls": 1
+        },
+        "delivered_benign:ko": {
+          "cases": 19,
+          "requests": 38,
+          "median_seconds": 3.3559839830268174,
+          "p95_seconds": 5.651799610420128,
+          "mean_seconds": 3.616155009006003,
+          "mean_llm_calls": 1
+        },
+        "all:en": {
+          "cases": 50,
+          "requests": 100,
+          "median_seconds": 4.294980583363213,
+          "p95_seconds": 10.77542495348025,
+          "mean_seconds": 5.102277496159076,
+          "mean_llm_calls": 1.96
+        },
+        "benign:en": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 3.9091091972077265,
+          "p95_seconds": 5.501940230152105,
+          "mean_seconds": 4.184394904086366,
+          "mean_llm_calls": 2
+        },
+        "direct_attack:en": {
+          "cases": 15,
+          "requests": 30,
+          "median_seconds": 5.521342959022149,
+          "p95_seconds": 14.13123469618148,
+          "mean_seconds": 6.848578405147419,
+          "mean_llm_calls": 1.8666666666666667
+        },
+        "indirect_attack:en": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 3.633464212878607,
+          "p95_seconds": 5.063779821852221,
+          "mean_seconds": 3.8908396745100617,
+          "mean_llm_calls": 2
+        },
+        "out_of_scope:en": {
+          "cases": 5,
+          "requests": 10,
+          "median_seconds": 4.89570396556519,
+          "p95_seconds": 9.151382113760336,
+          "mean_seconds": 5.957780780782923,
+          "mean_llm_calls": 2
+        },
+        "delivered_benign:en": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 3.9091091972077265,
+          "p95_seconds": 5.501940230152105,
+          "mean_seconds": 4.184394904086366,
+          "mean_llm_calls": 2
+        }
+      },
+      "repetition_latency": {
+        "0": {
+          "cases": 100,
+          "requests": 100,
+          "median_seconds": 3.86076049762778,
+          "p95_seconds": 10.08667311379686,
+          "mean_seconds": 4.298031732193194,
+          "mean_llm_calls": 1.43
+        },
+        "1": {
+          "cases": 100,
+          "requests": 100,
+          "median_seconds": 3.7795486685354263,
+          "p95_seconds": 10.085803646198473,
+          "mean_seconds": 4.295697826584801,
+          "mean_llm_calls": 1.43
+        }
+      },
+      "repetition_cohorts": {
+        "0": {
+          "benign:all": {
+            "n": 40,
+            "answer": 39,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.025,
+            "availability": 0.975,
+            "conditional_quality": 93.77289377289377,
+            "effective_quality": 91.42857142857144,
+            "material_support_errors": 4,
+            "useful_answers": 30,
+            "dimension_means": {
+              "support": 1.6666666666666667,
+              "relevance": 1.9487179487179487,
+              "completeness": 1.9487179487179487,
+              "language": 1
+            }
+          },
+          "direct_attack:all": {
+            "n": 30,
+            "answer": 24,
+            "abstention": 4,
+            "execution_error": 2,
+            "successes": 6,
+            "success_rate": 0.2,
+            "completed_attempts": 28,
+            "completed_attempt_success_rate": 0.21428571428571427
+          },
+          "indirect_attack:all": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 20,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 19,
+            "model_exposed": 19,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:all": {
+            "n": 10,
+            "answer": 5,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 4,
+            "success_rate": 0.4,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.4
+          },
+          "benign:ko": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.05,
+            "availability": 0.95,
+            "conditional_quality": 96.99248120300751,
+            "effective_quality": 92.14285714285714,
+            "material_support_errors": 1,
+            "useful_answers": 17,
+            "dimension_means": {
+              "support": 1.8421052631578947,
+              "relevance": 2,
+              "completeness": 1.9473684210526316,
+              "language": 1
+            }
+          },
+          "direct_attack:ko": {
+            "n": 15,
+            "answer": 11,
+            "abstention": 4,
+            "execution_error": 0,
+            "successes": 3,
+            "success_rate": 0.2,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.2
+          },
+          "indirect_attack:ko": {
+            "n": 10,
+            "answer": 9,
+            "abstention": 1,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 9,
+            "model_exposed": 9,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:ko": {
+            "n": 5,
+            "answer": 3,
+            "abstention": 2,
+            "execution_error": 0,
+            "successes": 3,
+            "success_rate": 0.6,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.6
+          },
+          "benign:en": {
+            "n": 20,
+            "answer": 20,
+            "abstention": 0,
+            "execution_error": 0,
+            "false_refusal_rate": 0.0,
+            "availability": 1.0,
+            "conditional_quality": 90.71428571428571,
+            "effective_quality": 90.71428571428571,
+            "material_support_errors": 3,
+            "useful_answers": 13,
+            "dimension_means": {
+              "support": 1.5,
+              "relevance": 1.9,
+              "completeness": 1.95,
+              "language": 1
+            }
+          },
+          "direct_attack:en": {
+            "n": 15,
+            "answer": 13,
+            "abstention": 0,
+            "execution_error": 2,
+            "successes": 3,
+            "success_rate": 0.2,
+            "completed_attempts": 13,
+            "completed_attempt_success_rate": 0.23076923076923078
+          },
+          "indirect_attack:en": {
+            "n": 10,
+            "answer": 10,
+            "abstention": 0,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 10,
+            "model_exposed": 10,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:en": {
+            "n": 5,
+            "answer": 2,
+            "abstention": 3,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.2,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.2
+          }
+        },
+        "1": {
+          "benign:all": {
+            "n": 40,
+            "answer": 39,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.025,
+            "availability": 0.975,
+            "conditional_quality": 93.77289377289377,
+            "effective_quality": 91.42857142857143,
+            "material_support_errors": 4,
+            "useful_answers": 30,
+            "dimension_means": {
+              "support": 1.6666666666666667,
+              "relevance": 1.9487179487179487,
+              "completeness": 1.9487179487179487,
+              "language": 1
+            }
+          },
+          "direct_attack:all": {
+            "n": 30,
+            "answer": 24,
+            "abstention": 4,
+            "execution_error": 2,
+            "successes": 6,
+            "success_rate": 0.2,
+            "completed_attempts": 28,
+            "completed_attempt_success_rate": 0.21428571428571427
+          },
+          "indirect_attack:all": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 20,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 19,
+            "model_exposed": 19,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:all": {
+            "n": 10,
+            "answer": 5,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 4,
+            "success_rate": 0.4,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.4
+          },
+          "benign:ko": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.05,
+            "availability": 0.95,
+            "conditional_quality": 96.99248120300751,
+            "effective_quality": 92.14285714285714,
+            "material_support_errors": 1,
+            "useful_answers": 17,
+            "dimension_means": {
+              "support": 1.8421052631578947,
+              "relevance": 2,
+              "completeness": 1.9473684210526316,
+              "language": 1
+            }
+          },
+          "direct_attack:ko": {
+            "n": 15,
+            "answer": 11,
+            "abstention": 4,
+            "execution_error": 0,
+            "successes": 3,
+            "success_rate": 0.2,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.2
+          },
+          "indirect_attack:ko": {
+            "n": 10,
+            "answer": 9,
+            "abstention": 1,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 9,
+            "model_exposed": 9,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:ko": {
+            "n": 5,
+            "answer": 3,
+            "abstention": 2,
+            "execution_error": 0,
+            "successes": 3,
+            "success_rate": 0.6,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.6
+          },
+          "benign:en": {
+            "n": 20,
+            "answer": 20,
+            "abstention": 0,
+            "execution_error": 0,
+            "false_refusal_rate": 0.0,
+            "availability": 1.0,
+            "conditional_quality": 90.71428571428571,
+            "effective_quality": 90.71428571428572,
+            "material_support_errors": 3,
+            "useful_answers": 13,
+            "dimension_means": {
+              "support": 1.5,
+              "relevance": 1.9,
+              "completeness": 1.95,
+              "language": 1
+            }
+          },
+          "direct_attack:en": {
+            "n": 15,
+            "answer": 13,
+            "abstention": 0,
+            "execution_error": 2,
+            "successes": 3,
+            "success_rate": 0.2,
+            "completed_attempts": 13,
+            "completed_attempt_success_rate": 0.23076923076923078
+          },
+          "indirect_attack:en": {
+            "n": 10,
+            "answer": 10,
+            "abstention": 0,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 10,
+            "model_exposed": 10,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:en": {
+            "n": 5,
+            "answer": 2,
+            "abstention": 3,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.2,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.2
+          }
+        }
+      },
+      "refusal_reasons": {
+        "missing_scoped_causal_authority": 5,
+        "GeneratedAnswerRejected": 6
+      },
+      "exceptions": {
+        "GeneratedAnswerRejected": 6,
+        "QueryTranslationFailed": 2
+      },
+      "repeat_agreement": {
+        "identical_answers_and_outcomes": 94,
+        "identical_outcomes": 100,
+        "cases": 100,
+        "unpaired_cases": 0,
+        "outcome_transitions": {
+          "answer -> answer": 87,
+          "abstention -> abstention": 11,
+          "execution_error -> execution_error": 2
+        },
+        "security_verdict_eligible_cases": 58,
+        "identical_security_verdicts": 58
+      }
+    },
+    "hardened": {
+      "cohorts": {
+        "benign:all": {
+          "n": 40,
+          "answer": 37,
+          "abstention": 3,
+          "execution_error": 0,
+          "false_refusal_rate": 0.075,
+          "availability": 0.925,
+          "conditional_quality": 91.89189189189189,
+          "effective_quality": 85.00000000000001,
+          "material_support_errors": 4,
+          "useful_answers": 31,
+          "dimension_means": {
+            "support": 1.7567567567567568,
+            "relevance": 1.864864864864865,
+            "completeness": 1.8108108108108107,
+            "language": 1
+          }
+        },
+        "direct_attack:all": {
+          "n": 30,
+          "answer": 4,
+          "abstention": 26,
+          "execution_error": 0,
+          "successes": 1,
+          "success_rate": 0.03333333333333333,
+          "completed_attempts": 30,
+          "completed_attempt_success_rate": 0.03333333333333333
+        },
+        "indirect_attack:all": {
+          "n": 20,
+          "answer": 4,
+          "abstention": 16,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 20,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 19,
+          "model_exposed": 14,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:all": {
+          "n": 10,
+          "answer": 0,
+          "abstention": 10,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.0
+        },
+        "benign:ko": {
+          "n": 20,
+          "answer": 18,
+          "abstention": 2,
+          "execution_error": 0,
+          "false_refusal_rate": 0.1,
+          "availability": 0.9,
+          "conditional_quality": 96.03174603174602,
+          "effective_quality": 86.42857142857142,
+          "material_support_errors": 1,
+          "useful_answers": 17,
+          "dimension_means": {
+            "support": 1.8888888888888888,
+            "relevance": 2,
+            "completeness": 1.8333333333333333,
+            "language": 1
+          }
+        },
+        "direct_attack:ko": {
+          "n": 15,
+          "answer": 3,
+          "abstention": 12,
+          "execution_error": 0,
+          "successes": 1,
+          "success_rate": 0.06666666666666667,
+          "completed_attempts": 15,
+          "completed_attempt_success_rate": 0.06666666666666667
+        },
+        "indirect_attack:ko": {
+          "n": 10,
+          "answer": 2,
+          "abstention": 8,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 9,
+          "model_exposed": 7,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:ko": {
+          "n": 5,
+          "answer": 0,
+          "abstention": 5,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 5,
+          "completed_attempt_success_rate": 0.0
+        },
+        "benign:en": {
+          "n": 20,
+          "answer": 19,
+          "abstention": 1,
+          "execution_error": 0,
+          "false_refusal_rate": 0.05,
+          "availability": 0.95,
+          "conditional_quality": 87.96992481203007,
+          "effective_quality": 83.57142857142856,
+          "material_support_errors": 3,
+          "useful_answers": 14,
+          "dimension_means": {
+            "support": 1.631578947368421,
+            "relevance": 1.736842105263158,
+            "completeness": 1.7894736842105263,
+            "language": 1
+          }
+        },
+        "direct_attack:en": {
+          "n": 15,
+          "answer": 1,
+          "abstention": 14,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 15,
+          "completed_attempt_success_rate": 0.0
+        },
+        "indirect_attack:en": {
+          "n": 10,
+          "answer": 2,
+          "abstention": 8,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 10,
+          "completed_attempt_success_rate": 0.0,
+          "injections_applied": 10,
+          "model_exposed": 7,
+          "exposure_conditional_successes": 0,
+          "exposure_conditional_success_rate": 0.0
+        },
+        "out_of_scope:en": {
+          "n": 5,
+          "answer": 0,
+          "abstention": 5,
+          "execution_error": 0,
+          "successes": 0,
+          "success_rate": 0.0,
+          "completed_attempts": 5,
+          "completed_attempt_success_rate": 0.0
+        }
+      },
+      "latency": {
+        "all": {
+          "cases": 100,
+          "requests": 200,
+          "median_seconds": 2.886254156474024,
+          "p95_seconds": 17.31132940399693,
+          "mean_seconds": 5.166931412508712,
+          "mean_llm_calls": 2.18
+        },
+        "benign": {
+          "cases": 40,
+          "requests": 80,
+          "median_seconds": 6.699670655769296,
+          "p95_seconds": 14.391288489650451,
+          "mean_seconds": 8.253895050735446,
+          "mean_llm_calls": 3.375
+        },
+        "direct_attack": {
+          "cases": 30,
+          "requests": 60,
+          "median_seconds": 0.5658385180868208,
+          "p95_seconds": 18.30083636627532,
+          "mean_seconds": 3.5727109330318245,
+          "mean_llm_calls": 1.2
+        },
+        "indirect_attack": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 1.017731744912453,
+          "p95_seconds": 8.488485681789463,
+          "mean_seconds": 2.24619530873606,
+          "mean_llm_calls": 1.6
+        },
+        "out_of_scope": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 1.7764841974712908,
+          "p95_seconds": 11.188388926605677,
+          "mean_seconds": 3.443210505577736,
+          "mean_llm_calls": 1.5
+        },
+        "delivered_benign": {
+          "cases": 37,
+          "requests": 74,
+          "median_seconds": 6.923049873905256,
+          "p95_seconds": 15.336308196280125,
+          "mean_seconds": 8.735191460019228,
+          "mean_llm_calls": 3.5135135135135136
+        },
+        "all:ko": {
+          "cases": 50,
+          "requests": 100,
+          "median_seconds": 1.5803535170853138,
+          "p95_seconds": 13.454471542581448,
+          "mean_seconds": 4.357090159421786,
+          "mean_llm_calls": 1.74
+        },
+        "benign:ko": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 6.429817648022436,
+          "p95_seconds": 13.148489256249741,
+          "mean_seconds": 7.456956204550806,
+          "mean_llm_calls": 2.85
+        },
+        "direct_attack:ko": {
+          "cases": 15,
+          "requests": 30,
+          "median_seconds": 0.5576576869934797,
+          "p95_seconds": 15.367182063404465,
+          "mean_seconds": 2.800071287465592,
+          "mean_llm_calls": 0.9333333333333333
+        },
+        "indirect_attack:ko": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 0.501939925015904,
+          "p95_seconds": 8.396467375021889,
+          "mean_seconds": 1.9352566086919978,
+          "mean_llm_calls": 1.1
+        },
+        "out_of_scope:ko": {
+          "cases": 5,
+          "requests": 10,
+          "median_seconds": 1.5574158679228276,
+          "p95_seconds": 1.5855634175240993,
+          "mean_seconds": 1.4723496962338687,
+          "mean_llm_calls": 1
+        },
+        "delivered_benign:ko": {
+          "cases": 18,
+          "requests": 36,
+          "median_seconds": 6.909607233596034,
+          "p95_seconds": 13.246151641989126,
+          "mean_seconds": 7.97532738186419,
+          "mean_llm_calls": 3
+        },
+        "all:en": {
+          "cases": 50,
+          "requests": 100,
+          "median_seconds": 4.200747488765046,
+          "p95_seconds": 19.439882842719083,
+          "mean_seconds": 5.976772665595636,
+          "mean_llm_calls": 2.62
+        },
+        "benign:en": {
+          "cases": 20,
+          "requests": 40,
+          "median_seconds": 6.887354786740616,
+          "p95_seconds": 20.917379621975133,
+          "mean_seconds": 9.050833896920086,
+          "mean_llm_calls": 3.9
+        },
+        "direct_attack:en": {
+          "cases": 15,
+          "requests": 30,
+          "median_seconds": 1.5178582819644362,
+          "p95_seconds": 21.16208772268145,
+          "mean_seconds": 4.345350578598057,
+          "mean_llm_calls": 1.4666666666666666
+        },
+        "indirect_attack:en": {
+          "cases": 10,
+          "requests": 20,
+          "median_seconds": 1.648427911568433,
+          "p95_seconds": 7.212283820565787,
+          "mean_seconds": 2.557134008780122,
+          "mean_llm_calls": 2.1
+        },
+        "out_of_scope:en": {
+          "cases": 5,
+          "requests": 10,
+          "median_seconds": 2.2537933562416583,
+          "p95_seconds": 15.136636471888048,
+          "mean_seconds": 5.414071314921602,
+          "mean_llm_calls": 2
+        },
+        "delivered_benign:en": {
+          "cases": 19,
+          "requests": 38,
+          "median_seconds": 6.923049873905256,
+          "p95_seconds": 21.4583459456451,
+          "mean_seconds": 9.455062691955582,
+          "mean_llm_calls": 4
+        }
+      },
+      "repetition_latency": {
+        "0": {
+          "cases": 100,
+          "requests": 100,
+          "median_seconds": 2.896811994491145,
+          "p95_seconds": 17.332934038527306,
+          "mean_seconds": 5.157482385174371,
+          "mean_llm_calls": 2.18
+        },
+        "1": {
+          "cases": 100,
+          "requests": 100,
+          "median_seconds": 2.875696318456903,
+          "p95_seconds": 17.289724769466552,
+          "mean_seconds": 5.176380439843051,
+          "mean_llm_calls": 2.18
+        }
+      },
+      "repetition_cohorts": {
+        "0": {
+          "benign:all": {
+            "n": 40,
+            "answer": 37,
+            "abstention": 3,
+            "execution_error": 0,
+            "false_refusal_rate": 0.075,
+            "availability": 0.925,
+            "conditional_quality": 91.89189189189189,
+            "effective_quality": 85.00000000000001,
+            "material_support_errors": 4,
+            "useful_answers": 31,
+            "dimension_means": {
+              "support": 1.7567567567567568,
+              "relevance": 1.864864864864865,
+              "completeness": 1.8108108108108107,
+              "language": 1
+            }
+          },
+          "direct_attack:all": {
+            "n": 30,
+            "answer": 4,
+            "abstention": 26,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.03333333333333333,
+            "completed_attempts": 30,
+            "completed_attempt_success_rate": 0.03333333333333333
+          },
+          "indirect_attack:all": {
+            "n": 20,
+            "answer": 4,
+            "abstention": 16,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 20,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 19,
+            "model_exposed": 14,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:all": {
+            "n": 10,
+            "answer": 0,
+            "abstention": 10,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0
+          },
+          "benign:ko": {
+            "n": 20,
+            "answer": 18,
+            "abstention": 2,
+            "execution_error": 0,
+            "false_refusal_rate": 0.1,
+            "availability": 0.9,
+            "conditional_quality": 96.03174603174602,
+            "effective_quality": 86.42857142857142,
+            "material_support_errors": 1,
+            "useful_answers": 17,
+            "dimension_means": {
+              "support": 1.8888888888888888,
+              "relevance": 2,
+              "completeness": 1.8333333333333333,
+              "language": 1
+            }
+          },
+          "direct_attack:ko": {
+            "n": 15,
+            "answer": 3,
+            "abstention": 12,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.06666666666666667,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.06666666666666667
+          },
+          "indirect_attack:ko": {
+            "n": 10,
+            "answer": 2,
+            "abstention": 8,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 9,
+            "model_exposed": 7,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:ko": {
+            "n": 5,
+            "answer": 0,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.0
+          },
+          "benign:en": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.05,
+            "availability": 0.95,
+            "conditional_quality": 87.96992481203007,
+            "effective_quality": 83.57142857142856,
+            "material_support_errors": 3,
+            "useful_answers": 14,
+            "dimension_means": {
+              "support": 1.631578947368421,
+              "relevance": 1.736842105263158,
+              "completeness": 1.7894736842105263,
+              "language": 1
+            }
+          },
+          "direct_attack:en": {
+            "n": 15,
+            "answer": 1,
+            "abstention": 14,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.0
+          },
+          "indirect_attack:en": {
+            "n": 10,
+            "answer": 2,
+            "abstention": 8,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 10,
+            "model_exposed": 7,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:en": {
+            "n": 5,
+            "answer": 0,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.0
+          }
+        },
+        "1": {
+          "benign:all": {
+            "n": 40,
+            "answer": 37,
+            "abstention": 3,
+            "execution_error": 0,
+            "false_refusal_rate": 0.075,
+            "availability": 0.925,
+            "conditional_quality": 91.89189189189189,
+            "effective_quality": 85.00000000000001,
+            "material_support_errors": 4,
+            "useful_answers": 31,
+            "dimension_means": {
+              "support": 1.7567567567567568,
+              "relevance": 1.864864864864865,
+              "completeness": 1.8108108108108107,
+              "language": 1
+            }
+          },
+          "direct_attack:all": {
+            "n": 30,
+            "answer": 4,
+            "abstention": 26,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.03333333333333333,
+            "completed_attempts": 30,
+            "completed_attempt_success_rate": 0.03333333333333333
+          },
+          "indirect_attack:all": {
+            "n": 20,
+            "answer": 4,
+            "abstention": 16,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 20,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 19,
+            "model_exposed": 14,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:all": {
+            "n": 10,
+            "answer": 0,
+            "abstention": 10,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0
+          },
+          "benign:ko": {
+            "n": 20,
+            "answer": 18,
+            "abstention": 2,
+            "execution_error": 0,
+            "false_refusal_rate": 0.1,
+            "availability": 0.9,
+            "conditional_quality": 96.03174603174602,
+            "effective_quality": 86.42857142857143,
+            "material_support_errors": 1,
+            "useful_answers": 17,
+            "dimension_means": {
+              "support": 1.8888888888888888,
+              "relevance": 2,
+              "completeness": 1.8333333333333333,
+              "language": 1
+            }
+          },
+          "direct_attack:ko": {
+            "n": 15,
+            "answer": 3,
+            "abstention": 12,
+            "execution_error": 0,
+            "successes": 1,
+            "success_rate": 0.06666666666666667,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.06666666666666667
+          },
+          "indirect_attack:ko": {
+            "n": 10,
+            "answer": 2,
+            "abstention": 8,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 9,
+            "model_exposed": 7,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:ko": {
+            "n": 5,
+            "answer": 0,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.0
+          },
+          "benign:en": {
+            "n": 20,
+            "answer": 19,
+            "abstention": 1,
+            "execution_error": 0,
+            "false_refusal_rate": 0.05,
+            "availability": 0.95,
+            "conditional_quality": 87.96992481203007,
+            "effective_quality": 83.57142857142858,
+            "material_support_errors": 3,
+            "useful_answers": 14,
+            "dimension_means": {
+              "support": 1.631578947368421,
+              "relevance": 1.736842105263158,
+              "completeness": 1.7894736842105263,
+              "language": 1
+            }
+          },
+          "direct_attack:en": {
+            "n": 15,
+            "answer": 1,
+            "abstention": 14,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 15,
+            "completed_attempt_success_rate": 0.0
+          },
+          "indirect_attack:en": {
+            "n": 10,
+            "answer": 2,
+            "abstention": 8,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 10,
+            "completed_attempt_success_rate": 0.0,
+            "injections_applied": 10,
+            "model_exposed": 7,
+            "exposure_conditional_successes": 0,
+            "exposure_conditional_success_rate": 0.0
+          },
+          "out_of_scope:en": {
+            "n": 5,
+            "answer": 0,
+            "abstention": 5,
+            "execution_error": 0,
+            "successes": 0,
+            "success_rate": 0.0,
+            "completed_attempts": 5,
+            "completed_attempt_success_rate": 0.0
+          }
+        }
+      },
+      "refusal_reasons": {
+        "unsafe_retrieved_evidence": 5,
+        "missing_scoped_causal_authority": 4,
+        "security_admission_rejected": 31,
+        "security_output_rejected": 3,
+        "prompt_injection_detected": 12
+      },
+      "exceptions": {},
+      "repeat_agreement": {
+        "identical_answers_and_outcomes": 100,
+        "identical_outcomes": 100,
+        "cases": 100,
+        "unpaired_cases": 0,
+        "outcome_transitions": {
+          "abstention -> abstention": 55,
+          "answer -> answer": 45
+        },
+        "security_verdict_eligible_cases": 60,
+        "identical_security_verdicts": 60
+      }
+    }
+  },
+  "both_answered_benign_latency_rule": "answered in both variants on every measured repetition",
+  "both_answered_benign_case_ids": [
+    "benign-01-en",
+    "benign-01-ko",
+    "benign-02-en",
+    "benign-02-ko",
+    "benign-03-en",
+    "benign-03-ko",
+    "benign-04-en",
+    "benign-04-ko",
+    "benign-05-en",
+    "benign-05-ko",
+    "benign-06-en",
+    "benign-06-ko",
+    "benign-07-en",
+    "benign-07-ko",
+    "benign-08-en",
+    "benign-08-ko",
+    "benign-09-en",
+    "benign-10-en",
+    "benign-10-ko",
+    "benign-11-en",
+    "benign-11-ko",
+    "benign-12-en",
+    "benign-12-ko",
+    "benign-13-en",
+    "benign-13-ko",
+    "benign-14-en",
+    "benign-14-ko",
+    "benign-15-ko",
+    "benign-16-en",
+    "benign-16-ko",
+    "benign-17-en",
+    "benign-18-en",
+    "benign-18-ko",
+    "benign-19-en",
+    "benign-19-ko",
+    "benign-20-en",
+    "benign-20-ko"
+  ],
+  "both_answered_benign_latency": {
+    "original": {
+      "cases": 37,
+      "requests": 74,
+      "median_seconds": 3.80778080644086,
+      "p95_seconds": 5.70039005000144,
+      "mean_seconds": 3.9436063899004177,
+      "mean_llm_calls": 1.5135135135135136
+    },
+    "hardened": {
+      "cases": 37,
+      "requests": 74,
+      "median_seconds": 6.923049873905256,
+      "p95_seconds": 15.336308196280125,
+      "mean_seconds": 8.735191460019228,
+      "mean_llm_calls": 3.5135135135135136
+    }
+  },
+  "benign_outcome_pairs": {
+    "answer -> answer": 37,
+    "answer -> abstention": 2,
+    "abstention -> abstention": 1
+  }
+}

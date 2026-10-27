@@ -145,7 +145,7 @@ class CombinedCorpusTests(unittest.TestCase):
         self.assertTrue(settings["dataset_root"].endswith("soprano-qa-dataset"))
 
     def test_combines_reviewed_expert_and_answer_eligible_web_lineages(self) -> None:
-        self.assertEqual(self.stats["corpus_schema_version"], 8)
+        self.assertEqual(self.stats["corpus_schema_version"], 9)
         self.assertEqual(len(self.stats["input_fingerprint"]), 64)
         self.assertEqual(len(self.stats["corpus_sha256"]), 64)
         self.assertEqual(
@@ -153,10 +153,10 @@ class CombinedCorpusTests(unittest.TestCase):
             file_sha256(self.build_settings["corpus_path"]),
         )
         self.assertTrue(self.stats["dataset_root"].endswith("soprano-qa-dataset"))
-        self.assertEqual(self.stats["total_records"], 946)
+        self.assertEqual(self.stats["total_records"], 953)
         self.assertEqual(
             self.stats["records_by_evidence_type"],
-            {"expert_annotation": 122, "web_coaching": 723, "web_database": 101},
+            {"sumijo_feedback": 7, "expert_annotation": 122, "web_coaching": 723, "web_database": 101},
         )
         self.assertEqual(
             self.stats["expert_records_by_measure_status"],
@@ -181,7 +181,7 @@ class CombinedCorpusTests(unittest.TestCase):
             {"research_conditional": 20, "research_open": 81},
         )
         self.assertNotIn("catalog_only", self.stats["web_records_by_usage_class"])
-        self.assertEqual(len({record["id"] for record in self.records}), 946)
+        self.assertEqual(len({record["id"] for record in self.records}), 953)
         self.assertTrue(all(record.get("relevance_text") for record in self.records))
         expert_source_ids = {
             source_id
@@ -478,7 +478,7 @@ class CombinedCorpusTests(unittest.TestCase):
             ensure_corpus(settings, rebuild=False)
             with open(settings["corpus_path"], encoding="utf-8") as f:
                 rebuilt = json.load(f)
-            self.assertEqual(len(rebuilt), 946)
+            self.assertEqual(len(rebuilt), 953)
             with open(settings["stats_path"], encoding="utf-8") as f:
                 rebuilt_stats = json.load(f)
             self.assertEqual(
@@ -780,6 +780,10 @@ class CombinedCorpusTests(unittest.TestCase):
                 self.assertIn("source_ids", record)
                 self.assertNotIn("web_source_ids", record)
                 self.assertNotIn("claim_ids", record)
+            elif record["evidence_type"] == "sumijo_feedback":
+                self.assertNotIn("source_ids", record)
+                self.assertNotIn("web_source_ids", record)
+                self.assertEqual(record["sumijo_source"]["speaker"], "Sumi Jo")
             elif record["evidence_type"] == "web_coaching":
                 self.assertNotIn("source_ids", record)
                 self.assertNotIn("web_source_ids", record)

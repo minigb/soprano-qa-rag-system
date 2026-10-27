@@ -1,0 +1,34 @@
+{
+  "captured_at": "2026-10-25T05:41:50.030057+00:00",
+  "note": "Runtime file hashes captured during the run; production source is unchanged by this evaluation.",
+  "python_for_inference": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "production_source_sha256": {
+    "soprano_qa/__init__.py": "09861dc8855d3ccff8f9e63922f676591b3e67eb1e3941f29b6ab47ae0cfdd1f",
+    "soprano_qa/answer.py": "d4e1a64d08ca68c8f39a127f4a85c77a3b10dc0e54f64f2354b3a3927094cfae",
+    "soprano_qa/coaching_index.py": "b18019bdc8da73a8f0b6d4d51e7958e5eaa1334f33d683e4007e7d1eedf7a763",
+    "soprano_qa/corpus.py": "642cd6a57a622a6c8eca415e83f375555622b0daa3c952ddcb659058941c0cf4",
+    "soprano_qa/dense.py": "ac2e990bca1b4675ae2e4b097c8aef0222a5dafb112693c86f5c44b73ce813c7",
+    "soprano_qa/llm.py": "3fd5114fabc3de95ebd5abc0894c2eec494d388226a263a2d4d875ca9b6ed510",
+    "soprano_qa/retrieval.py": "d050e962dcbcccb099c04b65fcb4a89b84bf224dd6e79ec3d2e05d31e31c7261",
+    "soprano_qa/score_context.py": "d9d901d42a8b13b49125b6f5f80ab85865fc6c9d808d9e2f8aefa332b9241b16",
+    "soprano_qa/security.py": "b6f3f7a8e58af2bd7f46bb2e30f80ff6a86024d825d5e30da66551d4f116c642",
+    "soprano_qa/service.py": "0a09be757bf55879ef886268ac9932ffb4c317130e029d40df18f10c4c4b32c7",
+    "soprano_qa/settings.py": "18fd71fdb0a8bbafef4cb49d67f58416ae744a7739f74e3a3fb0be5b157aecb2",
+    "soprano_qa/source_priority.py": "cf6d891e1fb162604eff982bac7eeacc23c8e13c96f3d33d0693632d8163b885",
+    "soprano_qa/structured_answer.py": "1f6be83e309fc0c56f063583da766e027099ecebaa64316af441141186c7f506",
+    "soprano_qa/sumijo.py": "771826981c584e868f4b7e6ddc69ae2d93de355430a74f0cf64cb73d01015685",
+    "soprano_qa/translation.py": "13b764be0df597b4e2936cce8a75ea71268a7e8633ec86a24049adc3cea90ba2"
+  },
+  "model_files": {
+    "model_path": {
+      "filename": "Qwen3-14B-Q6_K.gguf",
+      "bytes": 12121937248,
+      "sha256": "ec1f1d1421d7636a23e17645cac6fda39ee4b5f1f11e42eb09238089705ef699"
+    },
+    "embedding_model_path": {
+      "filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "bytes": 639150592,
+      "sha256": "06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439"
+    }
+  }
+}

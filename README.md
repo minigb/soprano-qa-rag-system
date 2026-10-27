@@ -1,11 +1,11 @@
 # Soprano QA RAG System
 
 Local, measure-aware hybrid retrieval and grounded answer generation for five
-soprano works. Every grounded request sends the complete selected, reviewed
-knowledge-unit answer texts to one local Qwen3-14B call, which composes a
-natural singer-facing Korean answer. Retrieval confidence changes which
-evidence is supplied, but never switches to a verbatim, extractive, ID-only,
-or internal-knowledge answer path.
+soprano works. Grounded generation sends the complete selected, reviewed
+knowledge-unit answer texts to local Qwen3-14B. Separate local-model checks
+assess scope and answerability before composition and support for the draft
+before release. Rejected answers are withheld. Retrieval confidence changes
+which evidence is supplied without selecting a different answer renderer.
 
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
 sibling dataset repository and is consumed by the sibling demo application.
@@ -78,9 +78,10 @@ python scripts/download_model.py
 | `Qwen3-14B-Q6_K.gguf` | `Qwen/Qwen3-14B-GGUF` | 12.1 GB | `generate=True` |
 | `Qwen3-Embedding-0.6B-Q8_0.gguf` | `Qwen/Qwen3-Embedding-0.6B-GGUF` | 639 MB | `retrieval.mode` is `hybrid` |
 
-Both checkpoints are validated and loaded before corpus or retrieval work
-begins; a missing or incompatible model stops the request with an error rather
-than silently changing the pipeline. `retrieval.n_gpu_layers` and
+After input screening, required checkpoints are validated and loaded before
+corpus or retrieval work begins; a missing or incompatible model stops the
+request with an error rather than silently changing the pipeline. Known
+control attacks are rejected before model loading. `retrieval.n_gpu_layers` and
 `llm.n_gpu_layers` default to `-1` (all available GPU layers); lower them in
 `config/settings.json` when both checkpoints must share a smaller GPU.
 
@@ -148,8 +149,11 @@ result = ask(
 
 With `language="en"` the question is English and a generated answer is
 English. The extractive `generate=False` path still returns the Korean
-evidence text (`answer_language: "ko"`). `language="ko"` is unchanged and
-makes no extra model call.
+evidence text (`answer_language: "ko"`). English adds one translation call;
+Korean does not require translation. A completed generated answer normally
+uses three local-model calls: admission assessment, composition, and output
+assessment. English generation uses four including translation. Requests
+that are rejected early use fewer calls.
 
 `ask()` returns a `dict`. The fields to branch on:
 
@@ -157,27 +161,33 @@ makes no extra model call.
 | --- | --- |
 | `answer` | User-visible prose, already sanitized (Korean, or English for a generated `language="en"` answer) |
 | `language` / `answer_language` | Requested language / language of `answer` |
-| `retrieval_query` | The text used for retrieval: the question itself, or its Korean translation for `language="en"` |
+| `retrieval_query` | The text used for retrieval, or `null` on a security/answer-validation rejection |
 | `generation_mode` | `llm` / `retrieval_only` / `unavailable` |
-| `answer_basis` | `retrieved_evidence` / `retrieved_secondary_context` / `no_corpus_evidence` |
-| `unavailable_reason` | Set only when no answer could be grounded |
-| `generation_validation_warning` | Set when a deterministic check questioned the draft |
+| `answer_basis` | `retrieved_evidence` / `retrieved_secondary_context` / `score_context` / `no_corpus_evidence` |
+| `unavailable_reason` | Machine-readable reason for an unavailable answer, including security or validation rejection |
+| `generation_validation_warning` | Compatibility field; `null`. Rejected drafts are withheld rather than returned with warnings |
 
-Only `generation_mode: "llm"` with `answer_basis: "retrieved_evidence"` is a
-completed generated answer; `unavailable` means none could be grounded. The
-remaining fields are audit metadata, including the ordered `evidence` bundle
-with ranges and provenance. Record IDs and evidence labels are not for display.
+`generation_mode: "llm"` identifies a released generated answer;
+`answer_basis` distinguishes retrieved evidence from the limited score-context
+case described below. `unavailable` means no answer was released. A security
+or answer-validation rejection returns the fixed no-evidence message, a generic
+reason code, and empty evidence; it does not expose the rejected draft. Other
+fields provide audit metadata, including the ordered `evidence` bundle with
+ranges and provenance. Record IDs and evidence labels are not for display.
 
 `model_status()` and `corpus_stats()` report checkpoint and corpus state.
 `corpus_stats()` initializes the retrieval index, so prefer it at startup.
 
-`GenerationBackendUnavailable`, `DenseRetrievalUnavailable`,
-`GeneratedAnswerRejected`, and `ValueError` propagate instead of degrading the
-answer path; the first two indicate a misconfigured installation.
+`GenerationBackendUnavailable`, `DenseRetrievalUnavailable`, and invalid-argument
+`ValueError` exceptions still propagate; the first two indicate a misconfigured
+installation. `ask()` converts security violations and `GeneratedAnswerRejected`
+into an unavailable result. Guard inference errors and invalid guard responses
+also fail closed without releasing the draft.
 
-Generation holds a process-wide lock, so threads do not increase throughput and
-one process answers one generated question at a time. Loaded models are cached
-for the life of the process, so a long-lived process is strongly preferred.
+Each local-model completion holds a process-wide lock, so inference is
+serialized within a process. The two guard completions increase generation
+latency. Loaded models are cached for the life of the process, so a long-lived
+process is strongly preferred.
 
 ## Configuration
 
@@ -254,11 +264,24 @@ source answers, legacy range hints, and editorial notes stay in the dataset
 repository and are never serialized into `data/corpus.json`.
 
 For every grounded request the complete selected curated answers are frozen
-into one prompt, and Qwen3-14B composes one formal-polite response. There is
-exactly one model call, with no second call and no verbatim, extractive,
-alternate-model, or internal-knowledge fallback. Where evidence is genuinely
-ambiguous the service fails closed with `unavailable` / `no_corpus_evidence`
-rather than choosing a candidate that happens to rank slightly higher.
+into a JSON payload with separate evidence records and structured score
+measures. Source text cannot create a new record or measure by inserting fake
+field names or newlines. Application instructions stay in the system role;
+the question, retrieved text, and score context have no authority to change
+those instructions. Qwen3-14B first assesses scope and answerability, then
+composes sentence objects with text and model-selected evidence labels under
+a JSON schema. The application renders those labels into the draft and the
+output guard assesses the rendered prose against the supplied evidence.
+The guards accept only a strict JSON boolean approval. There is one composition
+attempt and no repair, alternate-model, extractive, or internal-knowledge
+fallback. Retrieval ambiguity, rejected drafts, and failed guards produce
+`unavailable` / `no_corpus_evidence`.
+
+The composition schema permits only the supplied primary-evidence labels.
+Score-context-only answers use empty citation arrays and remain limited to
+identifying sung words. Structured output prevents omitted or malformed inline
+labels without adding another model call; it does not prove that a sentence
+is supported, so the semantic and deterministic checks still apply.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
@@ -268,10 +291,26 @@ with an English variant of the system prompt that keeps every grounding,
 scope, and certainty rule, translates the Korean evidence faithfully, and keeps
 lyric words and foreign terms in their original language.
 
+Normalized screening checks the original question before translation or model
+loading, and checks the translation, admitted evidence, score context, and
+draft for known control instructions. Retrieval-only requests receive screening
+but do not run the semantic admission or output assessments. These are layered
+mitigations: JSON boundaries, pattern screening, and a judge using the same
+model do not guarantee resistance to adaptive prompt injection. Valid citation
+labels alone do not establish that a claim is supported.
+
 See [docs/rag-llm-pipeline-method.md](docs/rag-llm-pipeline-method.md) for the
-full retrieval, measure-routing, prompt-construction, and generation design.
+full retrieval, measure-routing, prompt-construction, and generation design,
+and [the security research review](docs/rag-security-research.md) for the threat
+model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
 
 ## Evaluation
+
+The [2026-10-25 bilingual security comparison](evaluation/security_comparison_2026-10-25/report.md)
+contains 400 measured requests comparing the original and hardened systems on
+Korean/English attacks and answerable music questions. It reports attack success,
+false refusals, blinded answer quality and warm latency, including a repeatable
+remaining bypass and the hardening's usability costs.
 
 ```bash
 conda run -n soprano-qa python evaluation/run_qualitative.py
@@ -324,3 +363,11 @@ pipeline version.
 - [soprano-qa-demo](https://github.com/minigb/soprano-qa-demo) — the
   presentation web application. See its
   [demo setup](https://github.com/minigb/soprano-qa-demo#setup).
+
+### Direct Sumi Jo feedback and source priority
+
+The default runtime orders relevant, scope-eligible knowledge units as Sumi Jo,
+then experts, then web evidence. See [source-priority documentation](docs/source-priority.md)
+and the [retrieval development pilot](evaluation/source_priority/README.md).
+Sumi Jo feedback currently covers Nella fantasia and has no confirmed measure
+locations; original recordings and transcripts remain in the dataset repository.

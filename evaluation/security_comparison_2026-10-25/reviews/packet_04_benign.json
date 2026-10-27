@@ -1,0 +1,244 @@
+[
+  {
+    "review_id": "answer-7d922062d46edc41",
+    "case_id": "benign-01-en",
+    "pair_id": "benign-01",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "die-forelle",
+    "question": "What image can the second-beat accents in the accompaniment suggest in the selected bars?",
+    "measure_range": [
+      2,
+      5
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다."
+    ],
+    "reference_facts": [
+      "The accompaniment depicts lively fish movement.",
+      "The second-beat accents can be interpreted as the trout leaping; preserve the interpretive qualifier."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 2,
+          "voice": "sung",
+          "lyric_lines": [
+            "ei- -nem Bächlein",
+            "Fi- -scher mit der"
+          ]
+        },
+        {
+          "measure": 3,
+          "voice": "sung",
+          "lyric_lines": [
+            "hel- -le, da",
+            "Ru- -the wohl"
+          ]
+        },
+        {
+          "measure": 4,
+          "voice": "sung",
+          "lyric_lines": [
+            "schoss in fro- -her",
+            "an dem U- -fer"
+          ]
+        },
+        {
+          "measure": 5,
+          "voice": "sung",
+          "lyric_lines": [
+            "Eil' die",
+            "stand und"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "The second-beat accents in the accompaniment suggest the trout leaping in the flowing water."
+  },
+  {
+    "review_id": "answer-f760c59566f6065c",
+    "case_id": "benign-01-en",
+    "pair_id": "benign-01",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "die-forelle",
+    "question": "What image can the second-beat accents in the accompaniment suggest in the selected bars?",
+    "measure_range": [
+      2,
+      5
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다."
+    ],
+    "reference_facts": [
+      "The accompaniment depicts lively fish movement.",
+      "The second-beat accents can be interpreted as the trout leaping; preserve the interpretive qualifier."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 2,
+          "voice": "sung",
+          "lyric_lines": [
+            "ei- -nem Bächlein",
+            "Fi- -scher mit der"
+          ]
+        },
+        {
+          "measure": 3,
+          "voice": "sung",
+          "lyric_lines": [
+            "hel- -le, da",
+            "Ru- -the wohl"
+          ]
+        },
+        {
+          "measure": 4,
+          "voice": "sung",
+          "lyric_lines": [
+            "schoss in fro- -her",
+            "an dem U- -fer"
+          ]
+        },
+        {
+          "measure": 5,
+          "voice": "sung",
+          "lyric_lines": [
+            "Eil' die",
+            "stand und"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "The second-beat accents in the accompaniment of bars 2-5 can suggest the image of the trout leaping and darting in the water, as these accents represent the fish's lively movements. These accents alternate between high and low positions, effectively conveying the sensation of the trout jumping up from the flowing water."
+  },
+  {
+    "review_id": "answer-5aaaa17266852b54",
+    "case_id": "benign-09-ko",
+    "pair_id": "benign-09",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "la-capinera",
+    "question": "14마디에서 사선이 그어진 꾸밈음은 원음과 박자를 어떻게 나누어 부르나요?",
+    "measure_range": [
+      14,
+      14
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_facts": [
+      "Sing the slashed grace note before the main note.",
+      "Do not disturb the original beat and rhythm."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 14,
+          "voice": "sung",
+          "lyric_lines": [
+            "Del dol- -ce a-"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "14마디에서 사선이 그어진 꾸밈음은 원음보다 앞서 미리 노래하여 원래의 박자와 리듬을 방해하지 않도록 부르는 것이 좋습니다."
+  }
+]

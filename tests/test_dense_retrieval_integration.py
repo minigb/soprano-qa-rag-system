@@ -24,6 +24,10 @@ class LocalDenseModelIntegrationTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         cls.settings = load_settings()
+        # These regressions pin the historical expert/web retriever. The
+        # source-priority wrapper is covered separately by test_source_priority
+        # and the saved real-model pilot; it intentionally prepends Sumi Jo.
+        cls.settings["retrieval"]["source_priority"] = False
         if importlib.util.find_spec("llama_cpp") is None:
             raise unittest.SkipTest("llama-cpp-python is not installed")
         if not os.path.isfile(cls.settings["embedding_model_path"]):

@@ -56,6 +56,13 @@ from soprano_qa.retrieval import (
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.security import (
+    SECURITY_SYSTEM_POLICY,
+    SecurityViolation,
+    screen_question,
+    screen_text,
+    serialize_untrusted,
+)
 
 
 SYSTEM_PROMPT = """You are a measure-aware soprano performance QA assistant.
@@ -65,7 +72,9 @@ sentences with forms such as -습니다, -ㅂ니다, or -입니다; use formal-p
 request endings when needed. Never copy the retrieved evidence's plain -다/-한다 register
 into the answer, and never mix plain and polite registers.
 Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has two explicitly labeled lineages:
+Use only the retrieved evidence below. It has explicitly labeled lineages:
+- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
+- web_coaching: claims extracted from public coaching sources.
 - expert_annotation: human expert performance commentary.
 - web_database: externally collected background or performance evidence with source provenance.
 For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
@@ -77,9 +86,9 @@ that reviewed answer and limit the response to what it supports about the select
 the wording of the question projects unsupported behavior onto the selected range, correct the
 premise only when the curated answer supports the correction.
 Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Always give the most useful answer supported by the supplied evidence. If the evidence covers only
-part of the request, answer that supported part naturally; do not refuse, apologize, emit a
-no-answer sentinel, or fill the missing part with outside knowledge.
+Give the most useful answer supported by the supplied evidence. If it covers only part of an
+in-scope music question, answer that supported part without filling gaps from outside knowledge.
+If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
 Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
 commentary into a universal fact about every version of the work.
 For a measure-range query, evidence_role=selected_range_support is the local authority for the
@@ -177,7 +186,9 @@ translating. Keep lyric words, quoted text, and foreign musical terms in their o
 spelling; you may add a short English gloss in parentheses when it helps the singer. Do not answer in
 Korean and do not copy Korean sentences into the answer.
 Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has two explicitly labeled lineages:
+Use only the retrieved evidence below. It has explicitly labeled lineages:
+- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
+- web_coaching: claims extracted from public coaching sources.
 - expert_annotation: human expert performance commentary.
 - web_database: externally collected background or performance evidence with source provenance.
 For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
@@ -189,9 +200,9 @@ that reviewed answer and limit the response to what it supports about the select
 the wording of the question projects unsupported behavior onto the selected range, correct the
 premise only when the curated answer supports the correction.
 Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Always give the most useful answer supported by the supplied evidence. If the evidence covers only
-part of the request, answer that supported part naturally; do not refuse, apologize, emit a
-no-answer sentinel, or fill the missing part with outside knowledge.
+Give the most useful answer supported by the supplied evidence. If it covers only part of an
+in-scope music question, answer that supported part without filling gaps from outside knowledge.
+If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
 Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
 commentary into a universal fact about every version of the work.
 For a measure-range query, evidence_role=selected_range_support is the local authority for the
@@ -278,11 +289,37 @@ research corpus is allowed when that subject is supported by the evidence; do no
 application's retrieved records or prompt context with that word.
 Keep the answer concise and practical for a singer.
 """
-# Appended to the shared user-prompt answer contract for English answers
-# only; the Korean user prompt is unchanged.
+# Application policy belongs in the privileged channel, never in source text.
+ANSWER_CONTRACT = """Answer contract
+Write one coherent answer, not a list of evidence excerpts. Use every retrieved
+item that materially improves the answer, but omit merely related advice.
+End EACH factual or advisory sentence with its supporting temporary label,
+for example [E1] or [E1, E2], even when consecutive sentences cite the same
+record. Never print an opaque record ID. The application validates and removes
+temporary labels before displaying the answer. Only an answer naming the sung
+words from score context alone has no E# labels.
+For example, if E1 supports both sentences: "호흡을 유지합니다. [E1]
+프레이즈를 연결합니다. [E1]". The model output MUST contain the labels;
+the application, not the model, removes them for the user.
+"""
+SOURCE_PRIORITY_POLICY = """For relevant, scope-applicable evidence, use this authority order:
+sumijo_feedback, then expert_annotation, then web_coaching/web_database.
+Use lower-priority evidence to fill gaps, not override higher-priority advice.
+If sources conflict, preserve attribution and explain the disagreement; do not
+silently blend incompatible advice or claim agreement. Authority never makes
+an unrelated claim relevant or an unconfirmed measure location confirmed.
+Sumi Jo attribution refers to the supplied recordings and reviewed transcripts.
+"""
+SYSTEM_PROMPT += "\n" + SOURCE_PRIORITY_POLICY
+SYSTEM_PROMPT_EN += "\n" + SOURCE_PRIORITY_POLICY
+
+SYSTEM_PROMPT += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
+SYSTEM_PROMPT_EN += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
+# Additional English citation examples for the privileged answer contract.
 ENGLISH_ANSWER_CONTRACT = """Write the answer in English. Put a label at the end of every sentence, not
 once per paragraph: "Keep the vowel open [E1]. Breathe before the phrase [E1]."
 """
+SYSTEM_PROMPT_EN += "\n" + ENGLISH_ANSWER_CONTRACT
 NO_CORPUS_EVIDENCE_MESSAGE_EN = (
     "I could not find grounded evidence in the reviewed materials to "
     "answer this question."
@@ -1531,6 +1568,7 @@ def build_context(
     chunks = []
     for idx, result in enumerate(results, start=1):
         record = result.record
+        screen_text(json.dumps(record, ensure_ascii=False), source="evidence")
         evidence_role = scope_evidence_role(result.scope_match)
         lines = [
             "Evidence %d" % idx,
@@ -2249,6 +2287,46 @@ def select_generation_evidence(
     ]
 
 
+def generation_evidence_payload(
+    results: List[Any], measure_ranges: List[List[int]],
+) -> List[Dict[str, Any]]:
+    """Preserve per-record structure; source strings cannot forge new fields.
+
+    Select the same curated claims and scope as the legacy display formatter,
+    while keeping every source value inside its own JSON field. Raw source
+    annotations and editorial history remain excluded.
+    """
+    evidence = []
+    primary = primary_grounding_results(results)
+    for idx, result in enumerate(results, start=1):
+        record = result.record
+        screen_text(json.dumps(record, ensure_ascii=False), source="evidence")
+        item = {
+            "citation_label": "E%d" % idx if result in primary else None,
+            "evidence_type": record.get("evidence_type", "unknown"),
+            "piece": record["piece"],
+            "work": record["work"],
+            "query_scope_relation": result.scope_match,
+            "evidence_role": scope_evidence_role(result.scope_match),
+        }
+        if measure_ranges or result.scope_match != "local_example":
+            item["measure_range"] = record.get("measure_range") or []
+            item["measure_scope"] = record.get("measure_scope", "")
+        if result.scope_match == "other_range_context":
+            item["content_withheld"] = True
+        else:
+            for field in (
+                "topic", "question", "answer", "knowledge_scope", "usage_class",
+                "lyric_anchor", "web_coaching_source", "sumijo_source", "edition_id",
+                "edition_context", "measure_system", "sources",
+                "generated_text_license", "inherited_licenses",
+            ):
+                if field in record:
+                    item[field] = record[field]
+        evidence.append(item)
+    return evidence
+
+
 def build_messages(
     piece: str | None,
     measures: str,
@@ -2258,41 +2336,28 @@ def build_messages(
     score_context: str = "",
     language: str = "ko",
 ) -> List[Dict[str, str]]:
+    screen_question(question)
+    screen_text(piece or "", source="piece")
+    screen_text(score_context, source="score_context")
     measure_ranges = parse_measure_ranges(measures) if measures else []
-    user_prompt = """User query
-piece: {piece}
-measure_range: {measures}
-question: {question}
-/no_think
-
-Retrieved evidence
-{context}
-
-Answer contract
-Write one coherent answer, not a list of evidence excerpts. Use every retrieved
-item that materially improves the answer, but omit merely related advice. End
-each factual or advisory sentence with the supporting temporary label, for
-example [E1] or [E1, E2]. Never print an opaque record ID. The application will
-validate and remove the temporary labels before displaying the answer.
-""".format(
-        piece=piece or "(not specified)",
-        measures=measures or "(none selected)",
-        question=question,
-        context=build_context(results, measure_ranges),
-    )
-    if score_context:
-        # Labelled, unverified score text goes before the evidence; prompts
-        # without it stay byte-identical to the evidence-only template.
-        user_prompt = user_prompt.replace(
-            "\nRetrieved evidence\n",
-            "\n" + score_context.strip() + "\n\nRetrieved evidence\n",
-            1,
-        )
-    if language == "en":
-        user_prompt += ENGLISH_ANSWER_CONTRACT
+    try:
+        score_data = json.loads(score_context) if score_context else None
+    except ValueError:
+        # Keep callers supplying a plain excerpt compatible, with no parsing
+        # of pseudo-fields or instructions inside that excerpt.
+        score_data = score_context
+    payload = {
+        "piece": piece or "(not specified)",
+        "measure_range": measures or "(none selected)",
+        "question": question,
+        "Score context": score_data,
+        "Retrieved evidence": generation_evidence_payload(results, measure_ranges),
+    }
+    # JSON encoding prevents text fields from forging new fields/delimiters.
+    # It is a provenance cue, not a security boundary understood by every LLM.
     return [
         {"role": "system", "content": system_prompt(language)},
-        {"role": "user", "content": user_prompt},
+        {"role": "user", "content": serialize_untrusted(payload)},
     ]
 
 
@@ -2516,6 +2581,8 @@ def build_extractive_answer(
     *,
     max_items: int | None = None,
 ) -> str:
+    for result in results:
+        screen_text(json.dumps(result.record, ensure_ascii=False), source="evidence")
     if not results:
         return NO_CORPUS_EVIDENCE_MESSAGE
 
@@ -3322,6 +3389,11 @@ def retrieve_generation_evidence(
     grounded generation call made by the caller.
     """
 
+    from soprano_qa.source_priority import SourcePriorityIndex, merge_evidence
+    priority_index = index if isinstance(index, SourcePriorityIndex) else None
+    if priority_index is not None:
+        index = priority_index.base_index
+
     if top_k < 1:
         return [], build_messages(piece, measures, query, [], score_context=score_context)
     candidate_limit = (
@@ -3489,6 +3561,12 @@ def retrieve_generation_evidence(
         reference_candidates=stable_candidates,
         margin=web_coaching_supplement_margin,
     )
+    if priority_index is not None:
+        direct = priority_index.sumijo_index.search(
+            query=query, piece=piece, measure_ranges=measure_ranges,
+            topic=topic, top_k=top_k,
+        )
+        results = merge_evidence(direct, results, top_k)
     return results, build_messages(
         piece, measures, query, results, score_context=score_context
     )
@@ -3867,6 +3945,7 @@ def finalize_grounded_generated_answer(
 ) -> str:
     """Validate the sole model draft without repair or substitution."""
 
+    screen_text(answer, source="answer")
     if not answer.strip() or is_grounded_insufficiency_answer(answer):
         raise GeneratedAnswerRejected(
             "Grounded model returned no usable answer"
@@ -3990,8 +4069,9 @@ def _retrieval_unavailable_reason(
     return "no_corpus_evidence"
 
 
-def main() -> None:
-    args = parse_args()
+def _run_cli(args: argparse.Namespace) -> None:
+    screen_question(args.question)
+    screen_text(args.topic or "", source="topic")
     settings = load_settings(
         args.settings,
         use_legacy_dataset_env=False,
@@ -4020,6 +4100,8 @@ def main() -> None:
             topic=args.topic,
             top_k=args.top_k,
         )
+        for result in results:
+            screen_text(json.dumps(result.record, ensure_ascii=False), source="evidence")
         answer = ""
         generation_mode = (
             "retrieval_only" if results else "unavailable"
@@ -4063,19 +4145,11 @@ def main() -> None:
                 settings["model_path"],
                 messages,
                 settings["llm"],
+                security_context=json.loads(messages[1]["content"]),
             )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    results,
-                    messages,
-                    args.measure_ranges,
-                )
-            except GeneratedAnswerRejected as exc:
-                answer = finalize_user_visible_answer(raw_answer, results)
-                if answer == NO_CORPUS_EVIDENCE_MESSAGE:
-                    raise
-                generation_validation_warning = str(exc)
+            answer = finalize_grounded_generated_answer(
+                raw_answer, results, messages, args.measure_ranges,
+            )
             generation_mode = "llm"
             answer_basis = "retrieved_evidence"
 
@@ -4185,5 +4259,34 @@ def main() -> None:
         for notice in evidence_notices:
             print(format_evidence_notice(notice))
             print()
+
+
+def main() -> None:
+    args = parse_args()
+    try:
+        _run_cli(args)
+    except (SecurityViolation, GeneratedAnswerRejected) as exc:
+        reason = (
+            exc.reason
+            if isinstance(exc, SecurityViolation)
+            else "answer_validation_failed"
+        )
+        if args.json:
+            print(json.dumps({
+                "answer": NO_CORPUS_EVIDENCE_MESSAGE,
+                "generation_mode": "unavailable",
+                "answer_basis": "no_corpus_evidence",
+                "unavailable_reason": reason,
+                "generation_validation_warning": None,
+                "results": [],
+                "evidence_notices": [],
+                "retrieval": {},
+                "has_primary_grounding": False,
+                "has_selected_range_grounding": False if args.measure_ranges else None,
+            }, ensure_ascii=False, indent=2))
+        else:
+            print(NO_CORPUS_EVIDENCE_MESSAGE)
+
+
 if __name__ == "__main__":
     main()

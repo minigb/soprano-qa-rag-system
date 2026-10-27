@@ -1,0 +1,161 @@
+{
+  "contract_id": "79135ed99020cde055c614b1241e3942e92eaebd1033fe6b3af86b3a4ec7039d",
+  "planned_outputs": 4,
+  "completed_outputs": 4,
+  "unique_prompts": 4,
+  "reused_identical_prompts": 0,
+  "reviewer": {
+    "identity": "Codex assistant",
+    "method": "Condition-masked review by experiment author; post-hoc real-source diagnostic; no independent expert validation",
+    "rubric": "../RUBRIC.md"
+  },
+  "summary": {
+    "observed_disagreement": {
+      "pairs": 2,
+      "different_selected_sets": 0,
+      "different_order_or_set": 2,
+      "priority": {
+        "accepted": 2,
+        "fully_satisfactory": 0,
+        "mean_quality_0_to_6": 3,
+        "mean_grounding_0_to_2": 0,
+        "mean_relevance_0_to_2": 2,
+        "mean_completeness_0_to_2": 1,
+        "target_retained": 2,
+        "mean_selected_cosine": 0.5323005946008581,
+        "contradiction_adopted": 0,
+        "conflict_exposed": 2,
+        "conflict_acknowledged_when_exposed": 2,
+        "attribution_errors": 2
+      },
+      "relevance": {
+        "accepted": 2,
+        "fully_satisfactory": 0,
+        "mean_quality_0_to_6": 3,
+        "mean_grounding_0_to_2": 0,
+        "mean_relevance_0_to_2": 2,
+        "mean_completeness_0_to_2": 1,
+        "target_retained": 2,
+        "mean_selected_cosine": 0.5323005946008581,
+        "contradiction_adopted": 0,
+        "conflict_exposed": 2,
+        "conflict_acknowledged_when_exposed": 2,
+        "attribution_errors": 2
+      },
+      "paired_quality_difference": {
+        "priority_minus_relevance": 0,
+        "cluster_bootstrap_95_percentile_interval": null,
+        "clusters": 1,
+        "pairs": 2,
+        "draws": 0,
+        "note": "Insufficient independent clusters for an uncertainty interval"
+      },
+      "paired_satisfactory_difference": {
+        "priority_minus_relevance": 0,
+        "cluster_bootstrap_95_percentile_interval": null,
+        "clusters": 1,
+        "pairs": 2,
+        "draws": 0,
+        "note": "Insufficient independent clusters for an uncertainty interval"
+      }
+    }
+  },
+  "pairs": [
+    {
+      "case_id": "observed-p-pp-2",
+      "cluster": "observed-p-pp",
+      "kind": "observed_disagreement",
+      "budget": 2,
+      "priority": {
+        "review_id": "review-c001d0fe9ddc39f2",
+        "grounding": 0,
+        "relevance": 2,
+        "completeness": 1,
+        "false_counterclaim_adopted": null,
+        "conflict_acknowledged": true,
+        "attribution_error": true,
+        "notes": "Invents balance/volume adjustment as the cause of different written source descriptions and cites Sumi Jo for that unsupported claim. Correct opening advice does not answer whether the cause can be established.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 1,
+        "status": "answer",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-036-ku-01",
+          "nella-fantasia-ku-002"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.5708628271097218
+      },
+      "relevance": {
+        "review_id": "review-945a0cb9f35e2fe7",
+        "grounding": 0,
+        "relevance": 2,
+        "completeness": 1,
+        "false_counterclaim_adopted": null,
+        "conflict_acknowledged": true,
+        "attribution_error": true,
+        "notes": "Treats the expert’s general warning about popular-music notation as the definite cause of the p/PP disagreement. Neither source establishes that causal explanation; partial credit for the quiet opening advice.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 1,
+        "status": "answer",
+        "target_retained": 1,
+        "selected_ids": [
+          "nella-fantasia-ku-002",
+          "sumijo-nella-fantasia-036-ku-01"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.5708628271097218
+      }
+    },
+    {
+      "case_id": "observed-p-pp-1",
+      "cluster": "observed-p-pp",
+      "kind": "observed_disagreement",
+      "budget": 2,
+      "priority": {
+        "review_id": "review-914709ce9fbad0b4",
+        "grounding": 0,
+        "relevance": 2,
+        "completeness": 1,
+        "false_counterclaim_adopted": null,
+        "conflict_acknowledged": true,
+        "attribution_error": true,
+        "notes": "Clearly distinguishes Sumi Jo PP and the other source p, but then invents interpretation/performer-expression differences to explain the discrepancy. The recorded sources do not support that explanation.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 1,
+        "status": "answer",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-036-ku-01",
+          "nella-fantasia-ku-002"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.4937383620919943
+      },
+      "relevance": {
+        "review_id": "review-bfdeb63c1799aad8",
+        "grounding": 0,
+        "relevance": 2,
+        "completeness": 1,
+        "false_counterclaim_adopted": null,
+        "conflict_acknowledged": true,
+        "attribution_error": true,
+        "notes": "Recognizes p/PP and correctly attributes PP to Sumi Jo, but supplies unsupported interpretation/performance differences as an explanation. General notation uncertainty in the expert source does not establish the cause of this discrepancy.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 1,
+        "status": "answer",
+        "target_retained": 1,
+        "selected_ids": [
+          "nella-fantasia-ku-002",
+          "sumijo-nella-fantasia-036-ku-01"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.4937383620919943
+      }
+    }
+  ]
+}

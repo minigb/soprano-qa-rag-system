@@ -1,0 +1,74 @@
+{
+  "sample_size": 20,
+  "primary_scores_unchanged": true,
+  "method": "Second independent blinded Codex review of a deterministic language-stratified sample; model-assisted, not external human validation",
+  "exact_full_score_agreement": 17,
+  "dimension_agreement": {
+    "support": 18,
+    "relevance": 20,
+    "completeness": 18,
+    "language": 20
+  },
+  "material_support_error_agreement": 20,
+  "primary_sample_quality": 93.57142857142857,
+  "secondary_sample_quality": 93.57142857142857,
+  "disagreements": [
+    {
+      "review_id": "answer-2774397fc91f6f35",
+      "primary": {
+        "review_id": "answer-2774397fc91f6f35",
+        "support": 2,
+        "relevance": 2,
+        "completeness": 1,
+        "language": 1,
+        "rationale": "The preparation, preceding-note practice, and stable-breath advice are supported, but the explicitly non-forcing question loses the source's central instruction to practise pitch changes in a relaxed state without unnatural effort."
+      },
+      "secondary": {
+        "review_id": "answer-2774397fc91f6f35",
+        "support": 1,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "rationale": "Covers relaxed vowels/resonance, preparation of the high-note space and practice of the preceding lower notes. Calling that last practice an effective method slightly strengthens the reference’s qualified possible solution, but the central advice and scope remain supported."
+      }
+    },
+    {
+      "review_id": "answer-7bfd25eeca7b4152",
+      "primary": {
+        "review_id": "answer-7bfd25eeca7b4152",
+        "support": 1,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "rationale": "Covers the surrounding-text/emotion analysis and expressive physical response, but eye contact is a narrower added instruction than the source's gaze, and the source presents a dramatic transition as a possibility."
+      },
+      "secondary": {
+        "review_id": "answer-7bfd25eeca7b4152",
+        "support": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "rationale": "Gives the requested interpretive actions: consider surrounding lyrics and emotional transitions, then respond through expression, gaze and movement. It presents these as performance guidance rather than claiming a new specific plot event."
+      }
+    },
+    {
+      "review_id": "answer-9f32174a54bf4e2a",
+      "primary": {
+        "review_id": "answer-9f32174a54bf4e2a",
+        "support": 1,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "rationale": "Answers the mandatory-slowness question, but changes the source's room for each bar to each phrase and uses categorical wording where the source allows interpretive variation."
+      },
+      "secondary": {
+        "review_id": "answer-9f32174a54bf4e2a",
+        "support": 1,
+        "relevance": 2,
+        "completeness": 1,
+        "language": 1,
+        "rationale": "Captures the usual relaxed tempo, but categorical wording loses the reference’s interpretive flexibility and changes each bar to each phrase. It omits that a very slow choice is allowed with sufficient note emphasis and a connected sentence."
+      }
+    }
+  ]
+}
