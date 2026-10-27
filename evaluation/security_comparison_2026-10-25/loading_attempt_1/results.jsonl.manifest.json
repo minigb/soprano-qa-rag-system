@@ -1,0 +1,37 @@
+{
+  "created_at": "2026-10-25T04:16:15.308936Z",
+  "contract_id": "a4d85fade04345f582766ef5b11a0fd13d0bbf7da423a9c30e6b404fddc44cf1",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "24335fc73572e5ce1d6a5849b2c5747a2cad9040a0267625177ecbad01a28efd",
+    "cases_sha256": "0ea480727583950bef9cdd1b567d7da9011a51ecd33d175cd31ddaceeb31633d",
+    "case_count": 100,
+    "repeats": 2,
+    "seed": 20261025,
+    "source_sha256": {
+      "original": "3f8345874cd79c727e9a021abdd28f2d0fa4553f19cd20ec7e1cfbce569dca14",
+      "hardened": "be1adf92f815aeec8dab56f99c4c9bc0cc9b1335bb64a01d1022b18468600dc0"
+    },
+    "settings_sha256": {
+      "original": "6164238152615700de9cf661f6a7c0dc900a79e24afb6fea8f4dce8129b3b4de",
+      "hardened": "29130a6c293be76f630595ca5b5bc57af1e750d06b8cc532939c2c55da002ad6"
+    }
+  },
+  "roots": {
+    "original": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original",
+    "hardened": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened"
+  },
+  "settings_files": {
+    "original": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/original/settings.json",
+    "hardened": "/home/minhee/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/snapshots/hardened/settings.json"
+  },
+  "cases_file": "/home/minhee/soprano-qa-rag-system/evaluation/security_cases.json",
+  "sessions": [
+    {
+      "started_at": "2026-10-25T04:16:15.309451Z",
+      "workers": {},
+      "warmup_case_id": "benign-01-ko",
+      "stopped_at": "2026-10-25T04:16:27.972835Z"
+    }
+  ]
+}

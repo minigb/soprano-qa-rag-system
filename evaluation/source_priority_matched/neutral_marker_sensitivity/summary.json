@@ -1,0 +1,369 @@
+{
+  "contract_id": "e33fbafaf960622e62bfc653ac9a91e8cd43d466417ecbd116ca1a92eeb14505",
+  "planned_outputs": 12,
+  "completed_outputs": 12,
+  "unique_prompts": 12,
+  "reused_identical_prompts": 0,
+  "reviewer": {
+    "identity": "Codex assistant",
+    "method": "Condition-masked rubric review by experiment author; not independent human or musical-expert validation",
+    "rubric": "RUBRIC.md"
+  },
+  "summary": {
+    "conflict_order_only_all3": {
+      "pairs": 6,
+      "different_selected_sets": 0,
+      "different_order_or_set": 6,
+      "priority": {
+        "accepted": 0,
+        "fully_satisfactory": 0,
+        "mean_quality_0_to_6": 3,
+        "mean_grounding_0_to_2": 2,
+        "mean_relevance_0_to_2": 1,
+        "mean_completeness_0_to_2": 0,
+        "target_retained": 6,
+        "mean_selected_cosine": 0.6429881589371871,
+        "contradiction_adopted": 0,
+        "conflict_exposed": 6,
+        "conflict_acknowledged_when_exposed": 0,
+        "attribution_errors": 0
+      },
+      "relevance": {
+        "accepted": 0,
+        "fully_satisfactory": 0,
+        "mean_quality_0_to_6": 3,
+        "mean_grounding_0_to_2": 2,
+        "mean_relevance_0_to_2": 1,
+        "mean_completeness_0_to_2": 0,
+        "target_retained": 6,
+        "mean_selected_cosine": 0.6429881589371871,
+        "contradiction_adopted": 0,
+        "conflict_exposed": 6,
+        "conflict_acknowledged_when_exposed": 0,
+        "attribution_errors": 0
+      },
+      "paired_quality_difference": {
+        "priority_minus_relevance": 0,
+        "cluster_bootstrap_95_percentile_interval": [
+          0,
+          0
+        ],
+        "clusters": 6,
+        "pairs": 6,
+        "draws": 10000
+      },
+      "paired_satisfactory_difference": {
+        "priority_minus_relevance": 0,
+        "cluster_bootstrap_95_percentile_interval": [
+          0,
+          0
+        ],
+        "clusters": 6,
+        "pairs": 6,
+        "draws": 10000
+      }
+    }
+  },
+  "pairs": [
+    {
+      "case_id": "conflict-syllable",
+      "cluster": "sumijo-nella-fantasia-040-ku-02",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "relevance": {
+        "review_id": "review-f1f88c13b44883f0",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-syllable",
+          "sumijo-nella-fantasia-040-ku-02",
+          "nella-fantasia-ku-009"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6555119415025152
+      },
+      "priority": {
+        "review_id": "review-f1f88c13b44883f0",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-040-ku-02",
+          "nella-fantasia-ku-009",
+          "synthetic-conflict-syllable"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6555119415025152
+      }
+    },
+    {
+      "case_id": "conflict-echo",
+      "cluster": "la-capinera-ku-018",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "priority": {
+        "review_id": "review-7abe211d7626af7a",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "la-capinera-ku-018",
+          "la-capinera-ku-017",
+          "synthetic-conflict-echo"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.47966746570708596
+      },
+      "relevance": {
+        "review_id": "review-7abe211d7626af7a",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-echo",
+          "la-capinera-ku-018",
+          "la-capinera-ku-017"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.47966746570708596
+      }
+    },
+    {
+      "case_id": "conflict-attack",
+      "cluster": "sumijo-nella-fantasia-036-ku-01",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "relevance": {
+        "review_id": "review-d4db9b933198bf90",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-attack",
+          "nella-fantasia-ku-002",
+          "sumijo-nella-fantasia-036-ku-01"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6283842878843476
+      },
+      "priority": {
+        "review_id": "review-d4db9b933198bf90",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-036-ku-01",
+          "nella-fantasia-ku-002",
+          "synthetic-conflict-attack"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6283842878843476
+      }
+    },
+    {
+      "case_id": "conflict-amplified",
+      "cluster": "sumijo-nella-fantasia-037-ku-01",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "priority": {
+        "review_id": "review-95b46e49cb448a04",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-037-ku-01",
+          "nella-fantasia-ku-004",
+          "synthetic-conflict-amplified"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6622173069875166
+      },
+      "relevance": {
+        "review_id": "review-95b46e49cb448a04",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-amplified",
+          "sumijo-nella-fantasia-037-ku-01",
+          "nella-fantasia-ku-004"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6622173069875166
+      }
+    },
+    {
+      "case_id": "conflict-release",
+      "cluster": "sumijo-nella-fantasia-039-ku-01",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "priority": {
+        "review_id": "review-249f2af7d2542bb2",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-039-ku-01",
+          "nella-fantasia-ku-010",
+          "synthetic-conflict-release"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.7433224686556318
+      },
+      "relevance": {
+        "review_id": "review-249f2af7d2542bb2",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-release",
+          "sumijo-nella-fantasia-039-ku-01",
+          "nella-fantasia-ku-010"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.7433224686556318
+      }
+    },
+    {
+      "case_id": "conflict-timing",
+      "cluster": "sumijo-nella-fantasia-041-ku-01",
+      "kind": "synthetic_conflict",
+      "budget": 3,
+      "relevance": {
+        "review_id": "review-079df08de724dce2",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "No unsupported returned advice, but abstains despite enough authoritative evidence to answer the performance question.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "synthetic-conflict-timing",
+          "sumijo-nella-fantasia-041-ku-01",
+          "nella-fantasia-ku-016"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6888254828860255
+      },
+      "priority": {
+        "review_id": "review-079df08de724dce2",
+        "grounding": 2,
+        "relevance": 1,
+        "completeness": 0,
+        "false_counterclaim_adopted": false,
+        "conflict_acknowledged": false,
+        "attribution_error": false,
+        "notes": "No unsupported returned advice, but abstains despite enough authoritative evidence to answer the performance question.",
+        "quality_sum": 3,
+        "fully_satisfactory": 0,
+        "accepted": 0,
+        "status": "rejected",
+        "target_retained": 1,
+        "selected_ids": [
+          "sumijo-nella-fantasia-041-ku-01",
+          "nella-fantasia-ku-016",
+          "synthetic-conflict-timing"
+        ],
+        "conflict_exposed": true,
+        "mean_selected_cosine": 0.6888254828860255
+      }
+    }
+  ]
+}

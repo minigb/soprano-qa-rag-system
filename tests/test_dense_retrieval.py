@@ -680,7 +680,9 @@ class DenseRetrievalTests(unittest.TestCase):
             mock.patch.object(
                 answer_cli,
                 "parse_args",
-                return_value=SimpleNamespace(settings=None),
+                return_value=SimpleNamespace(
+                    settings=None, question="호흡을 어떻게 유지하나요?", topic=None,
+                ),
             ),
             mock.patch.object(
                 answer_cli,

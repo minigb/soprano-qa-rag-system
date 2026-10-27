@@ -1,0 +1,409 @@
+{
+  "reviewer": {
+    "identity": "Codex assistant",
+    "method": "Condition-masked rubric review by experiment author; not independent human or musical-expert validation",
+    "rubric": "RUBRIC.md"
+  },
+  "reviews": [
+    {
+      "review_id": "review-729f38d3bc4a542b",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Correctly preserves basic rhythm and triplets while permitting small rubato; each claim cites supporting evidence."
+    },
+    {
+      "review_id": "review-d4db9b933198bf90",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-faa1b62c375db729",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-e9f233abfe544280",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-95b46e49cb448a04",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-612af0a9a198afc7",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Directly recommends the natural intimate timbre, preserving the microphone/venue distinction without endorsing the counterclaim."
+    },
+    {
+      "review_id": "review-bdce3f87d1347975",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Answers the small-venue microphone question and grounds the added diction advice in the selected coaching passage."
+    },
+    {
+      "review_id": "review-19c4bc53f567ed83",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Appropriately abstains: supplied Die Forelle excerpts do not establish microphone timbre advice; no cross-piece Sumi Jo transfer."
+    },
+    {
+      "review_id": "review-58539dcfbb9d7f29",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-771c9ac03321da3a",
+      "grounding": 0,
+      "relevance": 1,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": true,
+      "notes": "The second sentence attributes the word-splitting rule to the ending-note source 039, which does not support it, and generalizes that source beyond its closing-phrase context. The special-intent exception is omitted; prior-phrase energy advice is a tangent."
+    },
+    {
+      "review_id": "review-65a08e0a77e40fe3",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-5096ee678c252248",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-fae1d9970b33c9ab",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Selects the bird/echo interpretation with its original hedge and correct citation; does not incorporate the unrelated dialect distractor."
+    },
+    {
+      "review_id": "review-01cbdfea74b40958",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-16f69716623007e4",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-249f2af7d2542bb2",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-08569d4913956e28",
+      "grounding": 0,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": true,
+      "notes": "Misstates the source's apostrophe/elision explanation as omitting '를', drops the slur-specific condition, and never gives the target advice to divide the rhythm for the vowel transition."
+    },
+    {
+      "review_id": "review-0d2454bfdd9b549d",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-7abe211d7626af7a",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-f1f88c13b44883f0",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-7bf5b255da98ce5d",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-f608fd023f60eb51",
+      "grounding": 1,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Answers the trout imagery fully, but turns the expert interpretation and the coach’s experience of a particular pianist into categorical/general descriptions."
+    },
+    {
+      "review_id": "review-195ad4a35ba768d5",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Correctly preserves triplets despite small timing shifts, but two of three sentences add leap and breath-management advice beyond the requested rhythm issue."
+    },
+    {
+      "review_id": "review-9beb582840667620",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Covers stable breath, continuity, and musical tension/direction; added adjacent-note and vowel exercises follow the cited coaching passages."
+    },
+    {
+      "review_id": "review-944efe76a6837e2c",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Fully answers the soft opening question, including support/resonance at quiet volume; does not collapse the sources’ differing literal p/PP markings into a fabricated agreement."
+    },
+    {
+      "review_id": "review-079df08de724dce2",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "No unsupported returned advice, but abstains despite enough authoritative evidence to answer the performance question."
+    },
+    {
+      "review_id": "review-be1d9a91580be112",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "No unsupported returned advice, but abstains despite enough authoritative evidence to answer the performance question."
+    },
+    {
+      "review_id": "review-db5078c217f6d61e",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Appropriate abstention: none of the supplied sources identifies the recording microphone model."
+    },
+    {
+      "review_id": "review-7a4ec41e632e4e94",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Directly answers microphone/venue timbre; added diction and light-breath advice is supported by the selected coaching sources."
+    },
+    {
+      "review_id": "review-55b83989f2f9d1cf",
+      "grounding": 1,
+      "relevance": 1,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Covers prior energy, release, and rests, but strengthens advice into a guarantee of breath and adds a specific final-anima tangent not requested."
+    },
+    {
+      "review_id": "review-f0f9464fb315e8b9",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Addresses preceding-phrase energy, soft release/rests, and stable breath with matching citations and no invented score location."
+    },
+    {
+      "review_id": "review-6e03a477aed78b7b",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Safe abstention, but the authoritative selected sources support the central answer and it is not provided."
+    },
+    {
+      "review_id": "review-6f55676255ff9080",
+      "grounding": 1,
+      "relevance": 1,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Answers that both editions are allowed, but changes possible arrangement difference into a definite cause and adds unrequested transposition advice."
+    },
+    {
+      "review_id": "review-5a7938c18e094dd6",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Appropriate abstention with an empty confirmed-range evidence pool; no unconfirmed Sumi Jo location is transferred."
+    },
+    {
+      "review_id": "review-9a19c2b011f9aa71",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Covers stable breath and legato, but adds substantial high-note preparation advice and omits musical tension/direction from the reference requirements."
+    },
+    {
+      "review_id": "review-8ae882d14dfed136",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Cautious abstention does not endorse a fabricated claim, but fails to answer the supported performance question or explain the exposed disagreement."
+    },
+    {
+      "review_id": "review-a2bfe44d0c3c3ff4",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Repetitive but accurate and focused: preserves basic/triplet rhythm while allowing small language-led timing shifts."
+    },
+    {
+      "review_id": "review-e52271a4a64ee677",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Concise direct answer with the original interpretive hedge and correct source attribution."
+    },
+    {
+      "review_id": "review-e9cc6ac3a0454fe3",
+      "grounding": 1,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Covers soft attack and support, but presents PP and p as simultaneous unqualified score facts without distinguishing the actual disagreement between Sumi Jo and expert wording. Each citation is textually supported, yet the composite answer fails to explain the discrepancy."
+    },
+    {
+      "review_id": "review-3b56e42a68d4e806",
+      "grounding": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": null,
+      "attribution_error": false,
+      "notes": "Directly states the word-integrity rule and preserves the special-intent exception."
+    }
+  ]
+}

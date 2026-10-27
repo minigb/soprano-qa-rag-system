@@ -1,0 +1,69 @@
+{
+  "reviewer": {
+    "identity": "Codex assistant",
+    "method": "Condition-masked rubric review by experiment author; not independent human or musical-expert validation",
+    "rubric": "RUBRIC.md"
+  },
+  "reviews": [
+    {
+      "review_id": "review-d4db9b933198bf90",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-95b46e49cb448a04",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-249f2af7d2542bb2",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Returned cautious abstention contains no unsupported claim, but the supplied authoritative evidence supports the answerable question; central answer is missing."
+    },
+    {
+      "review_id": "review-7abe211d7626af7a",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-f1f88c13b44883f0",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "Cautious returned abstention is grounded but does not answer a question supported by the available authoritative evidence."
+    },
+    {
+      "review_id": "review-079df08de724dce2",
+      "grounding": 2,
+      "relevance": 1,
+      "completeness": 0,
+      "false_counterclaim_adopted": false,
+      "conflict_acknowledged": false,
+      "attribution_error": false,
+      "notes": "No unsupported returned advice, but abstains despite enough authoritative evidence to answer the performance question."
+    }
+  ]
+}

@@ -1,0 +1,842 @@
+{
+  "dataset_commit": "79c8a1595bf5750d8b4ffd752ab2b10fb1c922c2",
+  "dataset_status": [
+    "?? samples/"
+  ],
+  "files": [
+    {
+      "label": "database/exports/research-conditional.jsonl",
+      "sha256": "b07613299bc7853b4f6560d929ca1e9a58505b10c54524e5e200c597e24f0df6",
+      "bytes": 25024,
+      "mtime_ns": 1785081629607725728
+    },
+    {
+      "label": "database/exports/research-open.jsonl",
+      "sha256": "d9cf902b9fe0e8e25736f5d05e66b2e6796c7189da3fd5acc6217bd5f2b08c29",
+      "bytes": 105329,
+      "mtime_ns": 1785081629608086174
+    },
+    {
+      "label": "database/records/chunks.jsonl",
+      "sha256": "778c9cbfe87baa6035e9e6520af9b24a2c11b299b9000015939a02ffe1bb1f9c",
+      "bytes": 687449,
+      "mtime_ns": 1785081629610421190
+    },
+    {
+      "label": "database/records/claims.jsonl",
+      "sha256": "8b570abb907ece08f9f7f405be40e4e6924fa0bafdfe709624afa2db2519a29a",
+      "bytes": 2359050,
+      "mtime_ns": 1785081629617226626
+    },
+    {
+      "label": "database/records/sources.jsonl",
+      "sha256": "943367336e4fe01ce2acf1e80afa06804024ef1bb90a1f09fcd10a1775111138",
+      "bytes": 546431,
+      "mtime_ns": 1785081629620031440
+    },
+    {
+      "label": "database/reports/facts-only-release-audit.json",
+      "sha256": "8c80b6a279ddc63db48ff77371fe8c5fd5e80e867bdbf0dc9bc20f48edda9ba1",
+      "bytes": 428872,
+      "mtime_ns": 1785081629627210036
+    },
+    {
+      "label": "expert_curation/review/die-forelle.json",
+      "sha256": "d3a7a51affca1e0b66e32087a23c03310d01efe1c869054425eb137be87cd05d",
+      "bytes": 33030,
+      "mtime_ns": 1785745850850981540
+    },
+    {
+      "label": "expert_curation/review/in-flowery-clouds.json",
+      "sha256": "48fa5f5c8e6801098094b794ebb2b6e3a14f8cc94ec89773aca1878e48040e9d",
+      "bytes": 44379,
+      "mtime_ns": 1785744485005482582
+    },
+    {
+      "label": "expert_curation/review/la-capinera.json",
+      "sha256": "dd6680b19d477ad427a8ac47ee1b8fedff0f8bf734fbb423cdd0e6a17b93b9ed",
+      "bytes": 48612,
+      "mtime_ns": 1785832536418879125
+    },
+    {
+      "label": "expert_curation/review/nella-fantasia.json",
+      "sha256": "3391f9f641da8b5eba2038aec6ad96c7cf505596c774571dfb10ba93784e4186",
+      "bytes": 37196,
+      "mtime_ns": 1785744485009482499
+    },
+    {
+      "label": "expert_curation/review/una-voce-poco-fa.json",
+      "sha256": "f1d725662fae0f989f935b3468b0df20f83571fb3d20f1a260d9933b20716f79",
+      "bytes": 72161,
+      "mtime_ns": 1785837928443422286
+    },
+    {
+      "label": "project/feature_overrides.json",
+      "sha256": "37517e5f3dc66819f61f5a7bb8ace1921282415f10551d2defa5c3eb0985b570",
+      "bytes": 3,
+      "mtime_ns": 1784876350422759951
+    },
+    {
+      "label": "score/sheet_music/lyrics/die-forelle.json",
+      "sha256": "bae67e016c9b449e3f0c40b0437dee629c35a190d123d71cc07fe2dfa0548403",
+      "bytes": 10354,
+      "mtime_ns": 1792169843430378437
+    },
+    {
+      "label": "score/sheet_music/lyrics/in-flowery-clouds.json",
+      "sha256": "77f09cd500d124a08c9359fd413da77e8b6d58ad625583603034cd630d74129b",
+      "bytes": 13741,
+      "mtime_ns": 1792169843433192961
+    },
+    {
+      "label": "score/sheet_music/lyrics/la-capinera.json",
+      "sha256": "d6c98a0dafaa63f7672415b4497ce821ba6195ec592c8ce13202d546f40225bc",
+      "bytes": 24418,
+      "mtime_ns": 1792169843434544295
+    },
+    {
+      "label": "score/sheet_music/lyrics/nella-fantasia.json",
+      "sha256": "6622de00e5a7b196c4752ba7ef9026ccb1304b0da440eb1ee5383f41c25a6bec",
+      "bytes": 9943,
+      "mtime_ns": 1792169843435240872
+    },
+    {
+      "label": "score/sheet_music/lyrics/una-voce-poco-fa.json",
+      "sha256": "485ca3c55e15905f47c237a68d30dff9a90646f4d423af7b4352da23ef793c77",
+      "bytes": 30714,
+      "mtime_ns": 1792169843432081071
+    },
+    {
+      "label": "score/sheet_music/validate_lyrics.py",
+      "sha256": "394200bfae78250a42ca4de621cf226273fcca3ab4234bce59642f46666bd4ef",
+      "bytes": 2800,
+      "mtime_ns": 1792169843398136324
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-002.txt",
+      "sha256": "cf28c195703a3653de251683f251f57b32440156a269f5228daac62ef65793b7",
+      "bytes": 15568,
+      "mtime_ns": 1791810756399545964
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-003.txt",
+      "sha256": "48748ef598eacd3d24dd095b79042353206962b8e83bd745f79ba0f61079e128",
+      "bytes": 4172,
+      "mtime_ns": 1791810757621245484
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-004.txt",
+      "sha256": "de852f33eb1cabc942f3e88f60c9e534ee673919d2fd8354f7e7759782034aff",
+      "bytes": 1881,
+      "mtime_ns": 1791810758933403263
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-005.txt",
+      "sha256": "027275c342fc7ac0642a089eb07a75cc265821ed78ffb9245bb2dbe61399c69e",
+      "bytes": 2958,
+      "mtime_ns": 1791810759464556543
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-006.txt",
+      "sha256": "39ab09b6d11c59f418a1ecbc4d5df92378c5155b80082bb4f4053c86397d8b99",
+      "bytes": 14258,
+      "mtime_ns": 1791810760190286282
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-008.txt",
+      "sha256": "e4826050cac3641befa54832f0f6a36032762b9033d3a5fb210de8fc3e6dbe4d",
+      "bytes": 30340,
+      "mtime_ns": 1791810965063008099
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-010.txt",
+      "sha256": "fae608d420f0c5f9b0e931a833045c04aa8cd15b6326bf251d482e9b9c9b697f",
+      "bytes": 1071,
+      "mtime_ns": 1791810878734935356
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-011.txt",
+      "sha256": "1fb079d300a0fd1dbe5ad87bb071c0ef4f0112fcf41ba1a23e748cf24634864a",
+      "bytes": 2877,
+      "mtime_ns": 1791810881370073419
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-012.txt",
+      "sha256": "2de06c58ca772c55c22d04556695731451937ededa961c3f29fa536565defb59",
+      "bytes": 2494,
+      "mtime_ns": 1791810882306766932
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-013.txt",
+      "sha256": "c67d469d4e3659da9dbfe30797c3e91c89648ce6ee2eb23b09ced4172ed5a347",
+      "bytes": 2401,
+      "mtime_ns": 1791810986677650220
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-014.txt",
+      "sha256": "72e8e20070decdff4d46f0619699a5873a1d95814c589b38f91076e937f51884",
+      "bytes": 7323,
+      "mtime_ns": 1791810987938059437
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-015.txt",
+      "sha256": "8c5737a6dbc6ec5b3782fe19725f0b306768676e11c78048c09b00f23cf4bfac",
+      "bytes": 15691,
+      "mtime_ns": 1791811041718216739
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-016.txt",
+      "sha256": "47bfc9995ac7c5d0483d683040d4b06d12731ee8767fea362f0bc793f7b7a561",
+      "bytes": 4908,
+      "mtime_ns": 1791810934082092265
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-017.txt",
+      "sha256": "99954f09d1140f38f05fbc38e0a6c7561183ce823ef9c03f0a1081fe34c26606",
+      "bytes": 2667,
+      "mtime_ns": 1791810935884362887
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-019.txt",
+      "sha256": "cb9f6cc7c498fbe7187d3be41ea79731f001235d8aed14a2ca77b3bb93474dcd",
+      "bytes": 1052,
+      "mtime_ns": 1791810991124062818
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-020.txt",
+      "sha256": "7064ca8cb229152b8d48f07d488b9163077be940b8b21a95c84d635a87e51258",
+      "bytes": 1453,
+      "mtime_ns": 1791810999806714737
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-021.txt",
+      "sha256": "fed43df5bd2b0815268cd3ae7713398a5f08e395d9c7776974225545cd523a81",
+      "bytes": 12088,
+      "mtime_ns": 1791811000635567867
+    },
+    {
+      "label": "web_coaching/snapshots/wc-die-forelle-022.txt",
+      "sha256": "93f41952b896af6bbe580e4cf9b5f6d4713311e51bf5847ebeae4287efc69156",
+      "bytes": 9163,
+      "mtime_ns": 1791811044798418262
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-001.txt",
+      "sha256": "0bb6c9324d38fbbeb9f26e8ca703b18d1a37fbcc9520f5b0538fc20f19a54b1e",
+      "bytes": 2330,
+      "mtime_ns": 1791810710934012921
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-002.txt",
+      "sha256": "c0df4cf363304e4cbbeaf69c3ee2aaffee2ff3bda1aa61cf4f31874f28f6e43e",
+      "bytes": 9197,
+      "mtime_ns": 1791810711396446292
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-005.txt",
+      "sha256": "5bae78c857c30b9dcda2b43e3105cb95ae01430124de23d1f87b05314c09f7ef",
+      "bytes": 4414,
+      "mtime_ns": 1791810712882466424
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-013.txt",
+      "sha256": "87758fdb636ae174a5ef7c4474225fc29339c06913e2df316780d3c64e61e6aa",
+      "bytes": 14113,
+      "mtime_ns": 1791810745184530367
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-014.txt",
+      "sha256": "bc05b626bcad43360e1dd2923a0b78ae106f129431947e4b5c3a413730033744",
+      "bytes": 8090,
+      "mtime_ns": 1791810745721927978
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-015.txt",
+      "sha256": "1349361181cf93236821a177a6aafb45ce05ead11b925d20ec281cd1a23edd97",
+      "bytes": 10811,
+      "mtime_ns": 1791810746281962161
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-016.txt",
+      "sha256": "0100bf4d798dd2475dd4490ba8a67f84e3072a6e8be8638dff0ac86612adcfa6",
+      "bytes": 9693,
+      "mtime_ns": 1791810746836750645
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-020.txt",
+      "sha256": "6855f942887fc7902b1ad9e8e13bafa7ba11c2a8dc175f3d77e76ebe515bc5f5",
+      "bytes": 69296,
+      "mtime_ns": 1791810938568536963
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-021.txt",
+      "sha256": "a0d0c927dc3ba59bf6efa4d0c639d8785c99f03b5d49bea2d152433667e3e53e",
+      "bytes": 554,
+      "mtime_ns": 1791811068294783534
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-022.txt",
+      "sha256": "cb83c444be0ec95006e85b1ef3afdab571638067ada4d460ae5547dd4eb14b19",
+      "bytes": 3662,
+      "mtime_ns": 1791811032605661210
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-023.txt",
+      "sha256": "af3cdd7055b643280397e325ab3fb284f01c2c4e81fdd4bd41ad7f94914a0b95",
+      "bytes": 3841,
+      "mtime_ns": 1791811033230479181
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-024.txt",
+      "sha256": "ac361125318fbfefb1947dec3062226d6983ef4cad09cd63154e55812bba032f",
+      "bytes": 13465,
+      "mtime_ns": 1791811033711842955
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-030.txt",
+      "sha256": "e888253b9c1d96f42ad80560498b7999c316cdea869d51cf70365726c3ddb793",
+      "bytes": 2088,
+      "mtime_ns": 1791811093078435922
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-031.txt",
+      "sha256": "dda9f947d9bd616c7a7ae8b3af8b1b38c92d35bcfe312b82f995f0b68815c52e",
+      "bytes": 8167,
+      "mtime_ns": 1791811093613376317
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-032.txt",
+      "sha256": "5e5544432be4ef2279c0eafb52bb9ab128cc58ffad161df4f48078fd5c5f17ed",
+      "bytes": 73129,
+      "mtime_ns": 1791811132488467717
+    },
+    {
+      "label": "web_coaching/snapshots/wc-in-flowery-clouds-033.txt",
+      "sha256": "90830f6842078638c53162f291119903dcccd2959c571c90e5ae3a7d1dd38202",
+      "bytes": 93484,
+      "mtime_ns": 1791811161331098904
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-001.txt",
+      "sha256": "97125a1ffe3faf5d09fac9bd7ba013d2fae05d4ad84e92287de43b72941677c8",
+      "bytes": 3034,
+      "mtime_ns": 1791811021932613802
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-002.txt",
+      "sha256": "341988d33a4922bc5792828f683eb6bd0cbb0d15527d9689547bbf763ed058b4",
+      "bytes": 1814,
+      "mtime_ns": 1791811337743817695
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-003.txt",
+      "sha256": "769dfde7d92f18e800b8efdb19099c1f207cb85b692105aefd410a7dd2e0d494",
+      "bytes": 1077135,
+      "mtime_ns": 1791811339959551218
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-004.txt",
+      "sha256": "6a57a8a9f6c9cb6d7e0deba5d7c8846213a269f63bc9d06d14a43fc8b5cf42a0",
+      "bytes": 5478,
+      "mtime_ns": 1791811338086588377
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-005.txt",
+      "sha256": "aa11d9e35e977f7b09f513d2e523870e567c8f9d7e501ee880855e421438841a",
+      "bytes": 4213,
+      "mtime_ns": 1791811338663040069
+    },
+    {
+      "label": "web_coaching/snapshots/wc-la-capinera-006.txt",
+      "sha256": "295ed49875749d3d452924f73b8cc32c157954f499eb58b0d9b8a604714479cb",
+      "bytes": 61937,
+      "mtime_ns": 1791811339920924316
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-001.txt",
+      "sha256": "8fe1a6551c3fe79cfc7fbf0d9acfc1fd7730c938d9675ac853804070ef85fdf9",
+      "bytes": 8654,
+      "mtime_ns": 1791810729449630773
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-002.txt",
+      "sha256": "d0c0369b8e9665031f04ed0e5b8eb49ca4c3438031c169910793f4f7cdd4556f",
+      "bytes": 3509,
+      "mtime_ns": 1791810730359815462
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-004.txt",
+      "sha256": "190f4357259c8eedbd52ffc182d98397d3bd7ea72b94d38645b023ccc9851626",
+      "bytes": 5403,
+      "mtime_ns": 1791810732061343006
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-005.txt",
+      "sha256": "dcb7fa9a4e5e4a2a5844d508bfbea304a483a9a7721c27e606d88d9c63f0931b",
+      "bytes": 1796,
+      "mtime_ns": 1791810732864953885
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-006.txt",
+      "sha256": "cf554f59063e0c22ad4459ed2ea92e39c882e5fc012a0340560a4ef41e18a1d4",
+      "bytes": 1532,
+      "mtime_ns": 1791810735336804570
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-014.txt",
+      "sha256": "cfd312a8f6fef324a1d060d804e0c39e54490ddfde2082b6c919717390bba6ed",
+      "bytes": 3272,
+      "mtime_ns": 1791810833913406922
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-015.txt",
+      "sha256": "5b80ea4071f23c8568660d16e3d3bc4ec681fd94bf4a6d52afe7f0df78d43e68",
+      "bytes": 19493,
+      "mtime_ns": 1791810835970264559
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-017.txt",
+      "sha256": "3b0750210b915217c5cc5ce84148502d54518eb9ee49755744f6160d19d494b2",
+      "bytes": 1661,
+      "mtime_ns": 1791810843127012009
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-018.txt",
+      "sha256": "91e57e5e2a5f0cb23e0e55ac65e97659f3ec359754995b8b98ffb779d50412a8",
+      "bytes": 1672,
+      "mtime_ns": 1791810850157436255
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-020.txt",
+      "sha256": "0525619413b1705ba838b7dc795216c2a2df7ce3da3c1e101f4fe6b0e812aa05",
+      "bytes": 1777,
+      "mtime_ns": 1791810890306322535
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-022.txt",
+      "sha256": "20485ab0035ff1dd73110deccbce35087b4e117396fb65a3d0cc96e5d53e7362",
+      "bytes": 1273,
+      "mtime_ns": 1791810891317436962
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-024.txt",
+      "sha256": "2b7de617bf932050ae8c03bcceb69732b67e8af1dee643d4a9bbf3a80d72cd6c",
+      "bytes": 613,
+      "mtime_ns": 1791810892843983952
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-025.txt",
+      "sha256": "c170d6ea778c722fb57d7226d1f0041ceaef8077351cc105f1f21c73dc7c67e8",
+      "bytes": 1924,
+      "mtime_ns": 1791810893735352469
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-026.txt",
+      "sha256": "bcd1d1b5a73abf00acf710b14ae5b8d75650b6a3ef81d8a20b2af7aa1ca4e5c8",
+      "bytes": 643,
+      "mtime_ns": 1791810920418238858
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-027.txt",
+      "sha256": "c25ed46646ac9800f5fdd876d8c7f41d209a20ad4df2e3f90b8b786f05ad73f8",
+      "bytes": 3836,
+      "mtime_ns": 1791810920885047727
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-028.txt",
+      "sha256": "85ad087515efb5fae196c1efbe4074951495543794eae2c45931c0cd281e15b1",
+      "bytes": 2582,
+      "mtime_ns": 1791810954779213339
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-029.txt",
+      "sha256": "1117fcee1fe5e4e66d271015664471465aaff0e203e2910e5a263173799a48f7",
+      "bytes": 4182,
+      "mtime_ns": 1791810955359062792
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-030.txt",
+      "sha256": "0390271f6dd8db256766e7f1d64261f7f7a719ec237bbdcf407b642b0080e347",
+      "bytes": 2734,
+      "mtime_ns": 1791811002875922101
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-031.txt",
+      "sha256": "9c48243a6b4de480bb501dd39f59023d3231aca4a0d6b92922f733b0b4c2ebc5",
+      "bytes": 2648,
+      "mtime_ns": 1791810958845278855
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-033.txt",
+      "sha256": "e582dd114e6e37700ee962845c632bbed61a706de10ed46479ec45db9ac33f1d",
+      "bytes": 3515,
+      "mtime_ns": 1791810960701285566
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-037.txt",
+      "sha256": "a9915592dbfec809e1112a73bf8000b25abec645df5c2ffffa5b2cb166355fd0",
+      "bytes": 2384,
+      "mtime_ns": 1791811022986060593
+    },
+    {
+      "label": "web_coaching/snapshots/wc-nella-fantasia-039.txt",
+      "sha256": "d564f161e44ed4cd7361156f86b375186bd796dd560ac8a6e08a3168b82f0927",
+      "bytes": 3475,
+      "mtime_ns": 1791811024458707968
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-001.txt",
+      "sha256": "9799b0cb1bfa5b1672bf1706de98d3711fd922118967a93356c1f4904ae6ed91",
+      "bytes": 8717,
+      "mtime_ns": 1791810716592629393
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-002.txt",
+      "sha256": "03457b495b39e6e6fe6eea2cb6d7ad60d7c0d72b5bb204c2fe2ac779447f72f2",
+      "bytes": 34021,
+      "mtime_ns": 1791810801053052552
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-003.txt",
+      "sha256": "1492bfe01b05e1613f687be65c093080ec1a81476f293528798faec1f91c6c72",
+      "bytes": 5203,
+      "mtime_ns": 1791810718238387062
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-004.txt",
+      "sha256": "0d74bbc1673ce96c49bb1e51f2bb31bec8236d50fd021c757915f33c5b79c485",
+      "bytes": 14527,
+      "mtime_ns": 1791810719968846959
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-005.txt",
+      "sha256": "f09768730d949ac2b477363d30448c52c8e42a799526c198ba5bb93b6a783c12",
+      "bytes": 1547,
+      "mtime_ns": 1791810721727462858
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-006.txt",
+      "sha256": "6a33950636e58d2fd9efe06f94d603e5c4765047ebd40274f5e619f49f75a241",
+      "bytes": 6010,
+      "mtime_ns": 1791810722730109332
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-008.txt",
+      "sha256": "762c33f4d89d37b66e6c4bde90bd595a58167d032c90d0b917da57d4dcb0a03c",
+      "bytes": 3037,
+      "mtime_ns": 1791810725416452056
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-009.txt",
+      "sha256": "342cc5d1b08a3d5f442795294c6dffad5232319d0aa1f20ebf55a48dcabd7a1b",
+      "bytes": 15165,
+      "mtime_ns": 1791810763463486306
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-011.txt",
+      "sha256": "f2d381d0958d37345f4f3e50c3c55a918ac2cf29da972a002dcd58c86d4e7a86",
+      "bytes": 2282,
+      "mtime_ns": 1791810898344989810
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-012.txt",
+      "sha256": "1a323cb9bc4dc5bf0f96cba115715794221f37223b0f48ce52a618fe2b71acf2",
+      "bytes": 4775,
+      "mtime_ns": 1791810899696296179
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-013.txt",
+      "sha256": "98895ead8320ee0ace167676171ad69dc46c4a6dd090f132e9f6a4b4a53adc03",
+      "bytes": 1617,
+      "mtime_ns": 1791810853140614034
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-015.txt",
+      "sha256": "1cedeb99419e54a20b24ce90f3a903bcd2d6aa31a23742086e5741b517bb603e",
+      "bytes": 5183,
+      "mtime_ns": 1791810940601548235
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-016.txt",
+      "sha256": "c47860b793e389e283c654562c962514258ac10d1a0ed08bea24496742ae9792",
+      "bytes": 9208,
+      "mtime_ns": 1791810941610915450
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-017.txt",
+      "sha256": "28d9b71197e89296fce5837d5de21f5bc7598713fb633c3d051fa9c872ecc0d6",
+      "bytes": 8634,
+      "mtime_ns": 1791810944987536509
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-018.txt",
+      "sha256": "958794dea5054c80fd094f537bfc46fdb29b7ad57879c5b3e6d7ce98b48e27d2",
+      "bytes": 2114,
+      "mtime_ns": 1791810987983914333
+    },
+    {
+      "label": "web_coaching/snapshots/wc-una-voce-poco-fa-019.txt",
+      "sha256": "1287732b840d1c05ebdcfc515bef6c3fb98d9a5b93d2bc71c3478a302fce8db4",
+      "bytes": 1065,
+      "mtime_ns": 1791811004284225750
+    },
+    {
+      "label": "web_coaching/sources/die-forelle.video.json",
+      "sha256": "d79ac71e1554a0de6920b7c60484ebb11f0b69dbeb0cc9859cafc11e7919f9f7",
+      "bytes": 4613,
+      "mtime_ns": 1791814984495675164
+    },
+    {
+      "label": "web_coaching/sources/die-forelle.web.json",
+      "sha256": "a382c792c05c7f0c7a7cf635cd3e71a0106cdffbc6bb99b31e8e7b8340fca850",
+      "bytes": 9050,
+      "mtime_ns": 1791811336866612582
+    },
+    {
+      "label": "web_coaching/sources/in-flowery-clouds.video.json",
+      "sha256": "bd2bd4a99196b34c4f427f65d9442e6cb3742299c8ca0fe3ef68569ecbd671c3",
+      "bytes": 4967,
+      "mtime_ns": 1791814984484859600
+    },
+    {
+      "label": "web_coaching/sources/in-flowery-clouds.web.json",
+      "sha256": "1f2c04a04482addedebd3e126ad1afe0cde0d8d48e8c7208be2ab8e9af1aaef9",
+      "bytes": 9112,
+      "mtime_ns": 1791811379915935890
+    },
+    {
+      "label": "web_coaching/sources/la-capinera.video.json",
+      "sha256": "23239f626eeb0cfccc3ae199f4395400a1e54ca033b5d642f023e435c3df9b0f",
+      "bytes": 805,
+      "mtime_ns": 1791814180382526782
+    },
+    {
+      "label": "web_coaching/sources/la-capinera.web.json",
+      "sha256": "996125ce5da000cc3ab9f7059d1389ccc546e8402a767dade518667ca72d5763",
+      "bytes": 3475,
+      "mtime_ns": 1791811435899842669
+    },
+    {
+      "label": "web_coaching/sources/nella-fantasia.video.json",
+      "sha256": "360f7ba0dff7c10baf6702dfcf916afd0bfb605b62a5f3a1df07d34e124f2105",
+      "bytes": 5577,
+      "mtime_ns": 1791814827669508291
+    },
+    {
+      "label": "web_coaching/sources/nella-fantasia.web.json",
+      "sha256": "3722027effd6a4eddd4ee4661bc626388fe3a631b6403715bea00236043f25bf",
+      "bytes": 10787,
+      "mtime_ns": 1791811189392418620
+    },
+    {
+      "label": "web_coaching/sources/una-voce-poco-fa.video.json",
+      "sha256": "63537742cfdb714e1298a54432b56598ad6a7869fc00155296d91df67edad856",
+      "bytes": 4771,
+      "mtime_ns": 1791812346009029034
+    },
+    {
+      "label": "web_coaching/sources/una-voce-poco-fa.web.json",
+      "sha256": "03d5496c7ea6e99459c921d454dba75c1f4b50a27b7cdbbb369922d276f96349",
+      "bytes": 8849,
+      "mtime_ns": 1791811286224685368
+    },
+    {
+      "label": "web_coaching/tools/validate.py",
+      "sha256": "3697557bc931c0e22bedd8eca1b1ffd782ca79eaf9259d10000c5e5fa4da8608",
+      "bytes": 7330,
+      "mtime_ns": 1792154670031936700
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-502.json",
+      "sha256": "682ae4ec3a0eabe93fcd6cdc6613b4b65fc96e3a93709f2858d1ce768bebb605",
+      "bytes": 12938,
+      "mtime_ns": 1791812158065678674
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-503.json",
+      "sha256": "5c72d57614d3e977412109ca4c40b9c4626136a1bdf7ba2b739436d408e7d203",
+      "bytes": 4086,
+      "mtime_ns": 1791812193279651533
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-504.json",
+      "sha256": "641d8992bff3da329eebeb7e3aa88315dac6c08faa1f932f188469284574cdb9",
+      "bytes": 75796,
+      "mtime_ns": 1791812754143958144
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-505.json",
+      "sha256": "47d4756bc4cd43b0ef5a4229154c6ea8ea889d0a0e16159f710ea1949ae4626e",
+      "bytes": 36318,
+      "mtime_ns": 1791813117673519405
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-506.json",
+      "sha256": "23eea86f77fbaaabd60277c0e84d55ce0c236f130e5c1677e75f4c1133d5093c",
+      "bytes": 27983,
+      "mtime_ns": 1791814173258840824
+    },
+    {
+      "label": "web_coaching/transcripts/wc-die-forelle-507.json",
+      "sha256": "e544fc32106ad92a4be13559f77f7416d414856047ceac0587ef49ffba0bfd48",
+      "bytes": 16388,
+      "mtime_ns": 1791813235905565845
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-501.json",
+      "sha256": "0542e841d097a596f998a85983c77bb874c8355169d3b6d75cf5f8f9d3aa450d",
+      "bytes": 9371,
+      "mtime_ns": 1791814311333558370
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-502.json",
+      "sha256": "ba12b86d7177767cb6071f75e23d89ff59f14a23eb439245ec66d24db1887a12",
+      "bytes": 10293,
+      "mtime_ns": 1791814464327863056
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-503.json",
+      "sha256": "10f63290234cd4f27236e798775fddfec4d1e22874ee16f7f93f7c445c443825",
+      "bytes": 15667,
+      "mtime_ns": 1791814347274193187
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-504.json",
+      "sha256": "5725c733c78114297934e4650c7716facf08b745b5a10a768101ffcfe5650420",
+      "bytes": 12123,
+      "mtime_ns": 1791814517283329732
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-505.json",
+      "sha256": "18799e7b562b807eca7d7ebc100e57bc7b8391918c299647dc1fe2d4b1a73754",
+      "bytes": 11021,
+      "mtime_ns": 1791814545675833605
+    },
+    {
+      "label": "web_coaching/transcripts/wc-in-flowery-clouds-506.json",
+      "sha256": "a6cf503a06bf8cf97873debc27d7adc7ed107cafb36d5a3fbd601f0e2a06c589",
+      "bytes": 14569,
+      "mtime_ns": 1791814594506866306
+    },
+    {
+      "label": "web_coaching/transcripts/wc-la-capinera-501.json",
+      "sha256": "55adebbc0ee3151c7940e26934e41bc130a26540d9dea6c3b921e3e2537e8be1",
+      "bytes": 13961,
+      "mtime_ns": 1791814070049753290
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-501.json",
+      "sha256": "85543c31063f6fd2ea37c66a2cbf45b68c4cfb38c43795055955b03bea0adb87",
+      "bytes": 50373,
+      "mtime_ns": 1791813596419799499
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-502.json",
+      "sha256": "1c3e69cacda5db5c52fbde3b522ceb82ec4c99355669bb1189eb8904fab214a8",
+      "bytes": 17834,
+      "mtime_ns": 1791814215885675668
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-503.json",
+      "sha256": "c22848e1359ee935b74004199b00064c01d0d5a9e09b1501da3a45295874d65e",
+      "bytes": 40493,
+      "mtime_ns": 1791813824625434002
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-504.json",
+      "sha256": "830ab69663a888b3b90ae4c95b5977da5ceb47febc7a2c00454dba2153bf72d0",
+      "bytes": 24503,
+      "mtime_ns": 1791814252982465748
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-505.json",
+      "sha256": "2446c2e4ef65793ac4e20bc55cc4f981f68f2fd328b78abc7de4a8c4da254e1e",
+      "bytes": 21653,
+      "mtime_ns": 1791814291363693567
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-506.json",
+      "sha256": "8deb5b708efe77a7dfb32ddcfeeeb5e514a57bb8aba3d8cc925dc9b04d39e895",
+      "bytes": 18862,
+      "mtime_ns": 1791813864056245016
+    },
+    {
+      "label": "web_coaching/transcripts/wc-nella-fantasia-507.json",
+      "sha256": "82724dc5c17491ee0e226d6ba39301be8014a68c3d50d97134c5c990c271b5eb",
+      "bytes": 14921,
+      "mtime_ns": 1791813889686991935
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-501.json",
+      "sha256": "1d190700b63be01701875ef89ef173355e8264d424e59c95c0bc568cae307df5",
+      "bytes": 35007,
+      "mtime_ns": 1791811539461534821
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-502.json",
+      "sha256": "f8bf478fdf62cc85a6c5cce0297b9b353dc2b12d6348506072c91629daf7a652",
+      "bytes": 2611,
+      "mtime_ns": 1791811565131592201
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-503.json",
+      "sha256": "988a024e0a85fc32a5b18801f9dabbf4e8109c205fad50d33b2dd31de321e2ec",
+      "bytes": 1972,
+      "mtime_ns": 1791811584677345990
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-504.json",
+      "sha256": "96e2753a20e1e1ed187813f896b17ca1885f06b3ca0e6e0f27f049e1194baeb6",
+      "bytes": 6603,
+      "mtime_ns": 1791811635017432061
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-506.json",
+      "sha256": "f3818a8c80d87022b8946f9186f2df3219c485eca77aada1bbb04724e64f82c0",
+      "bytes": 2148,
+      "mtime_ns": 1791811651140923588
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-507.json",
+      "sha256": "0db0c929e2d6f373a156ed41141d6ad6928d8acead9320941a9bbb30386f1f3a",
+      "bytes": 32489,
+      "mtime_ns": 1791811878372918967
+    },
+    {
+      "label": "web_coaching/transcripts/wc-una-voce-poco-fa-508.json",
+      "sha256": "01fd18643a1991177b36decfe0d7f0e83bbcfa72ed64389e3778ea5f77e6781e",
+      "bytes": 19985,
+      "mtime_ns": 1791812007958375983
+    },
+    {
+      "label": "web_coaching/units/die-forelle.json",
+      "sha256": "af5e24737210eee12f6b319555744b8699df4815401fbd4814cd9b5422fdccba",
+      "bytes": 136677,
+      "mtime_ns": 1791814984508717333
+    },
+    {
+      "label": "web_coaching/units/in-flowery-clouds.json",
+      "sha256": "241c1be5fce47dd6e3bf0c91bf9eadd324cdf1a8c32d2748bb3c118d7dfd4909",
+      "bytes": 69289,
+      "mtime_ns": 1791814984495321688
+    },
+    {
+      "label": "web_coaching/units/la-capinera.json",
+      "sha256": "ed4fbd581067b9865a4cf51de19fef95f1434c764b9474ba82f55ceebf8e520f",
+      "bytes": 28510,
+      "mtime_ns": 1791814180382276381
+    },
+    {
+      "label": "web_coaching/units/nella-fantasia.json",
+      "sha256": "d2c4deefb43f32154de406057215c9a9bb51c36e03357d545ff6e6eec527a971",
+      "bytes": 122725,
+      "mtime_ns": 1791814827668997812
+    },
+    {
+      "label": "web_coaching/units/una-voce-poco-fa.json",
+      "sha256": "2182ef9fe8bb94911e48360c4e9859e5afd69a4444bdb81bbbfc3efd2083085d",
+      "bytes": 121264,
+      "mtime_ns": 1791812346007652231
+    }
+  ]
+}

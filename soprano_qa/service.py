@@ -12,13 +12,11 @@ from soprano_qa.answer import (
     build_extractive_answer,
     build_messages,
     build_evidence_notices,
-    build_messages,
     ensure_corpus,
     finalize_grounded_generated_answer,
     finalize_user_visible_answer,
     has_primary_grounding,
     has_selected_range_grounding,
-    is_grounded_insufficiency_answer,
     is_underspecified_ranged_query,
     no_corpus_evidence_message,
     retrieve_generation_evidence,
@@ -48,6 +46,7 @@ from soprano_qa.score_context import (
     selected_measure_lyrics,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.security import SecurityViolation, screen_question, screen_text
 from soprano_qa.translation import (
     translate_question_to_korean,
     validate_language,
@@ -153,7 +152,9 @@ def _result_to_evidence(
         "id": record["id"],
         "piece_id": record.get("piece"),
         "kind": (
-            "expert"
+            "sumijo"
+            if record.get("evidence_type") == "sumijo_feedback"
+            else "expert"
             if record.get("evidence_type") == "expert_annotation"
             else "web"
         ),
@@ -194,6 +195,7 @@ def _result_to_evidence(
         "semantic_match_type": result.semantic_match_type,
         "source_ids": record.get("source_ids", []),
         "web_source_ids": record.get("web_source_ids", []),
+        "sumijo_source": record.get("sumijo_source"),
         "claim_ids": record.get("claim_ids", []),
         "sources": record.get("sources", []),
         "generated_text_license": record.get("generated_text_license"),
@@ -226,7 +228,7 @@ def _retrieval_unavailable_reason(
     return "no_corpus_evidence"
 
 
-def ask(
+def _ask(
     *,
     piece_id: str,
     question: str,
@@ -235,24 +237,7 @@ def ask(
     top_k: int = 6,
     language: str = "ko",
 ) -> dict:
-    """Compose one grounded answer from the retrieved reviewed texts.
-
-    Generation eagerly validates the sole local GGUF backend before corpus
-    work. Every grounded case uses the same RAG+LLM composer; confidence never
-    switches the renderer to concatenated KU prose. If a deterministic scope
-    check questions the sole draft, the sanitized draft is still returned for
-    semantic red-flag review instead of being replaced by extraction or
-    internal model knowledge.
-
-    ``language="en"`` accepts an English question and, when generating,
-    answers in English. The Korean-calibrated retriever never sees the
-    English text: one extra local-model call translates the question to
-    Korean, and that translation (returned as ``retrieval_query``) drives
-    retrieval and Korean-oriented gating. Measure mentions are still parsed
-    from the original question, and the generation prompt carries the
-    original English question. ``language="ko"`` (the default) makes no
-    extra model call and is unchanged.
-    """
+    """Retrieve and compose one answer; the public boundary handles rejection."""
 
     validate_language(language)
     # English questions need the local model for translation even when no
@@ -301,6 +286,7 @@ def ask(
             measure_ranges,
         )
     score_block = format_score_context(score_context)
+    screen_text(score_block, source="score_context")
 
     if generate:
         results, messages = retrieve_generation_evidence(
@@ -380,36 +366,15 @@ def ask(
                 SETTINGS["model_path"],
                 messages,
                 SETTINGS["llm"],
+                security_context=json.loads(messages[1]["content"]),
             )
-            try:
-                answer = finalize_grounded_generated_answer(
-                    raw_answer,
-                    generation_results,
-                    messages,
-                    measure_ranges,
-                    language=language,
-                )
-            except GeneratedAnswerRejected as exc:
-                # Preserve the sole grounded model draft for review instead
-                # of substituting an extractive or internal-knowledge answer.
-                # Presentation sanitization remains mandatory; semantic or
-                # scope concerns are recorded for the red-flag evaluation.
-                if (
-                    not raw_answer.strip()
-                    or is_grounded_insufficiency_answer(raw_answer)
-                ):
-                    if grounded:
-                        raise
-                    answer = no_corpus_evidence_message(language)
-                else:
-                    answer = finalize_user_visible_answer(
-                        raw_answer,
-                        generation_results,
-                        language=language,
-                    )
-                    if answer == no_corpus_evidence_message(language) and grounded:
-                        raise
-                    generation_validation_warning = str(exc)
+            answer = finalize_grounded_generated_answer(
+                raw_answer,
+                generation_results,
+                messages,
+                measure_ranges,
+                language=language,
+            )
             if grounded:
                 generation_mode = "llm"
                 answer_basis = "retrieved_evidence"
@@ -502,3 +467,59 @@ def ask(
         ],
         "evidence_notices": build_evidence_notices(results),
     }
+
+
+def ask(
+    *,
+    piece_id: str,
+    question: str,
+    measure_range: Optional[tuple[int, int]],
+    generate: bool,
+    top_k: int = 6,
+    language: str = "ko",
+) -> dict:
+    """Answer only supported music questions, withholding rejected drafts.
+
+    Known control attacks are rejected before model loading, translation or
+    retrieval. Generated answers pass scope/answerability and semantic support
+    checks in the local backend plus deterministic citation/scope validation.
+    Guard errors and rejected drafts return a fixed refusal with no evidence
+    payload. Backend installation errors still propagate.
+    """
+    validate_language(language)
+    try:
+        screen_question(question)
+        screen_text(piece_id, source="piece")
+        return _ask(
+            piece_id=piece_id, question=question, measure_range=measure_range,
+            generate=generate, top_k=top_k, language=language,
+        )
+    except (SecurityViolation, GeneratedAnswerRejected) as exc:
+        reason = (
+            exc.reason
+            if isinstance(exc, SecurityViolation)
+            else "answer_validation_failed"
+        )
+        return {
+            "piece_id": piece_id,
+            "scope": "range" if measure_range else "whole_piece",
+            "measure_range": list(measure_range) if measure_range else None,
+            "language": language,
+            "answer_language": language,
+            "evidence_language": "ko",
+            "retrieval_query": None,
+            "answer": no_corpus_evidence_message(language),
+            "generation_mode": "unavailable",
+            "answer_basis": "no_corpus_evidence",
+            "unavailable_reason": reason,
+            "generation_validation_warning": None,
+            "score_context": None,
+            "has_primary_grounding": False,
+            "has_selected_range_grounding": False if measure_range else None,
+            "has_confirmed_local_examples": False,
+            "pipeline": "soprano_qa",
+            "model": model_status(),
+            "retrieval": {},
+            "evidence": [],
+            "evidence_notices": [],
+        }

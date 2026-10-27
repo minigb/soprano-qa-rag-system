@@ -10,6 +10,13 @@ import re
 import threading
 from typing import Any, Dict, List
 
+from soprano_qa.security import screen_text, semantic_guard
+from soprano_qa.structured_answer import (
+    STRUCTURED_ANSWER_POLICY,
+    answer_schema,
+    render_structured_answer,
+)
+
 
 _INFERENCE_LOCK = threading.Lock()
 
@@ -107,7 +114,28 @@ def generate(
     model_path: str,
     messages: List[Dict[str, str]],
     llm_settings: Dict[str, Any],
+    *,
+    security_context: Dict[str, Any] | None = None,
 ) -> str:
+    # Public answer paths supply the frozen question/evidence bundle. Guard
+    # calls omit this argument, so they cannot recursively invoke themselves.
+    # Run outside the inference lock: each completion acquires it separately.
+    completion_options: Dict[str, Any] = {}
+    if security_context is not None:
+        semantic_guard(
+            model_path, llm_settings, security_context,
+            stage="admission", generate_fn=generate,
+        )
+        # Citation IDs are selected by the model in constrained data, then
+        # rendered by application code and verified against the cited text.
+        # This prevents a missing inline label from invalidating useful prose.
+        messages = [
+            *messages,
+            {"role": "system", "content": STRUCTURED_ANSWER_POLICY},
+        ]
+        completion_options["response_format"] = {
+            "type": "json_object", "schema": answer_schema(security_context),
+        }
     # Consumers may serve requests concurrently, while llama.cpp completions
     # are not reentrant. Keep lazy model loading and inference within one
     # process-wide critical section.
@@ -123,5 +151,14 @@ def generate(
             temperature=float(llm_settings.get("temperature", 0.0)),
             top_p=float(llm_settings.get("top_p", 0.8)),
             max_tokens=int(llm_settings.get("max_tokens", 768)),
+            **completion_options,
         )
-    return strip_thinking(response["choices"][0]["message"]["content"])
+    answer = strip_thinking(response["choices"][0]["message"]["content"])
+    if security_context is not None:
+        answer = render_structured_answer(answer, security_context)
+        screen_text(answer, source="answer")
+        semantic_guard(
+            model_path, llm_settings, {**security_context, "draft": answer},
+            stage="output", generate_fn=generate,
+        )
+    return answer

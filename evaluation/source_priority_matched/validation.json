@@ -1,0 +1,15 @@
+{
+  "validated_at": "2026-10-25T05:53:16.575827+00:00",
+  "condition_outputs": 68,
+  "reconstructed_prompt_hashes_verified": 68,
+  "frozen_contracts_verified": 3,
+  "corpus_sha256_unchanged": true,
+  "production_source_sha256_unchanged": true,
+  "focused_tests": {
+    "command": "python3 -m unittest tests.test_source_priority_matched tests.test_source_priority -q",
+    "passed": 22
+  },
+  "git_diff_check": "passed",
+  "last_usage_used_percent": 84,
+  "usage_reset_observed": false
+}

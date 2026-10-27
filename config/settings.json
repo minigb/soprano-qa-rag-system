@@ -28,7 +28,8 @@
     "n_batch": 2048,
     "embedding_batch_size": 8,
     "n_gpu_layers": -1,
-    "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question."
+    "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+    "source_priority": true
   },
   "llm": {
     "n_ctx": 8192,
@@ -45,5 +46,10 @@
   },
   "score_context": {
     "lyrics": true
+  },
+  "sumijo": {
+    "enabled": true,
+    "dense_min_score": 0.6,
+    "dense_margin": 0.04
   }
 }

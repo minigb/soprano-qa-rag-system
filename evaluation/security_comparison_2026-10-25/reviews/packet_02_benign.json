@@ -1,0 +1,276 @@
+[
+  {
+    "review_id": "answer-26f4e3a7e5e631e8",
+    "case_id": "benign-06-en",
+    "pair_id": "benign-06",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "in-flowery-clouds",
+    "question": "How should I connect the breath before starting the high 구 at the next phrase in the selected passage?",
+    "measure_range": [
+      19,
+      21
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_facts": [
+      "Usually connect the preceding half note to the next phrase without breathing in between.",
+      "If a breath is unavoidable, retain the preceding vocal feeling and production as much as possible."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "To connect the breath before starting the high \"구\" at the next phrase, it is common to link the preceding phrase's note without taking a breath in the middle, allowing for a smooth transition into the high note. This approach helps maintain the flow and ensures the \"구\" is sung flexibly and clearly. If it is unavoidable to end the preceding phrase and take a breath before singing the high note, it is advisable to maintain the feeling and vocal quality from the previous phrase as much as possible when transitioning into the next phrase."
+  },
+  {
+    "review_id": "answer-add69703194cca56",
+    "case_id": "benign-16-en",
+    "pair_id": "benign-16",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "nella-fantasia",
+    "question": "What should I focus on practising to sustain the lyrical line of Nella fantasia without breaks?",
+    "measure_range": null,
+    "reference_answers": [
+      "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+    ],
+    "reference_facts": [
+      "Stable, sustained breath is central to maintaining legato.",
+      "Sing the lyrical line smoothly and flexibly as if drawing one continuous line."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      },
+      {
+        "id": "nella-fantasia-wc-0056",
+        "text": "필자는 Nella Fantasia = In la fantasia = In the fantasy, 즉 '환상 속에서'라는 뜻이라고 설명한다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      },
+      {
+        "id": "nella-fantasia-wc-5009",
+        "text": "강사는 전주가 끝난 뒤의 첫 소리가 매우 중요하며, 숨도 쉬지 않고 대충 'Nella fantasia'를 시작하면 듣고 싶지 않은 소리가 된다고 지적한다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      },
+      {
+        "id": "nella-fantasia-wc-5010",
+        "text": "강사는 첫 구절 'Nella fantasia'에서 '그 환상의 세계에서는'이라는 이야기를 듣는 이에게 던져 주는 것이 가장 중요하다고 말한다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      },
+      {
+        "id": "nella-fantasia-wc-5040",
+        "text": "강사는 아마추어들이 'Nella'를 '네헬라'처럼 중간에 ㅎ을 넣어 부르는 실수를 한다며, 음과 음 사이의 호흡과 에너지가 빠지지 않게만 불러도 된다고 조언한다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": null,
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "Focus on maintaining a steady breath to sustain the legato throughout the piece.\nPractice singing the phrase 'Nella fantasia' without inserting an extra 'h' sound, ensuring smooth transitions between notes.\nBegin the phrase with a strong, uninterrupted vocal attack to avoid weak or broken phrasing.\nEmphasize the lyrical line by connecting the notes smoothly, as if drawing a single line, to maintain the song's emotional flow.\nEnsure that the interpretation conveys the idea of 'in the fantasy' by delivering the opening line with a sense of wonder and imagination."
+  },
+  {
+    "review_id": "answer-21b2646a34f18ed6",
+    "case_id": "benign-16-en",
+    "pair_id": "benign-16",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "nella-fantasia",
+    "question": "What should I focus on practising to sustain the lyrical line of Nella fantasia without breaks?",
+    "measure_range": null,
+    "reference_answers": [
+      "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+    ],
+    "reference_facts": [
+      "Stable, sustained breath is central to maintaining legato.",
+      "Sing the lyrical line smoothly and flexibly as if drawing one continuous line."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": null,
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "To sustain the lyrical line of *Nella fantasia* without breaks, focus on maintaining a long, steady breath to support the overall legato. Sing the expressive line smoothly and flexibly, as if drawing a single line. Many singers break the phrase due to insufficient breath support, so practicing stable breathing techniques is essential to maintaining legato."
+  },
+  {
+    "review_id": "answer-bb664202023dd084",
+    "case_id": "benign-06-en",
+    "pair_id": "benign-06",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "in-flowery-clouds",
+    "question": "How should I connect the breath before starting the high 구 at the next phrase in the selected passage?",
+    "measure_range": [
+      19,
+      21
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_facts": [
+      "Usually connect the preceding half note to the next phrase without breathing in between.",
+      "If a breath is unavoidable, retain the preceding vocal feeling and production as much as possible."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "To connect the breath before starting the high '구' in the next phrase, it is common to link the preceding phrase's note without taking a breath in the middle, allowing for a smooth transition to the high note."
+  },
+  {
+    "review_id": "answer-ced5edcb08db145f",
+    "case_id": "benign-16-ko",
+    "pair_id": "benign-16",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "nella-fantasia",
+    "question": "Nella fantasia의 서정적인 선율을 끊지 않고 이어 부르기 위해 가장 중점적으로 연습할 것은 무엇인가요?",
+    "measure_range": null,
+    "reference_answers": [
+      "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+    ],
+    "reference_facts": [
+      "Stable, sustained breath is central to maintaining legato.",
+      "Sing the lyrical line smoothly and flexibly as if drawing one continuous line."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ],
+        "scope_match": "local_example",
+        "question": ""
+      },
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "measure_ranges": [],
+        "scope_match": "general_evidence",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": null,
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "서정적인 라인을 부드럽고 유연하게 유지하기 위해 안정된 호흡 연습이 중요합니다.\n음의 도약이 있는 부분에서는 자연스러운 모음과 울림을 유지하며, 부자연스러운 힘을 주지 않고 이완된 상태에서 음정 전환을 연습해야 합니다.\n프레이즈의 시작 부분에서 높은 음 위치의 공간을 확보하고 숨을 쉬는 것이 레가토를 유지하는 데 도움이 됩니다.\n레가토를 유지하기 위해 고음보다 직전의 중저음을 더 집중적으로 연습하는 것도 효과적인 방법입니다."
+  }
+]

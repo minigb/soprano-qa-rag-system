@@ -246,7 +246,7 @@ EXPERT_FINAL_MEASURE_STATUSES = {
     "whole_piece",
     "unspecified",
 }
-CORPUS_SCHEMA_VERSION = 8
+CORPUS_SCHEMA_VERSION = 9
 
 # web_coaching: claims extracted from web pages and lesson/masterclass video
 # transcripts (dataset web_coaching/). The keys are the accepted categories;
@@ -430,6 +430,9 @@ def corpus_input_paths(settings: Dict[str, Any]) -> List[tuple[str, str]]:
             coaching_paths.extend(sorted(glob.glob(os.path.join(root, pattern))))
         for path in coaching_paths:
             paths.append((os.path.relpath(path, dataset_root), path))
+    from soprano_qa import sumijo
+    if sumijo.enabled(settings):
+        paths.extend(sumijo.input_paths(dataset_root))
     override_path = settings["feature_overrides_path"]
     if os.path.exists(override_path):
         paths.append(("project/feature_overrides.json", override_path))
@@ -686,6 +689,9 @@ def validate_release_corpus(records: Any) -> List[Dict[str, Any]]:
         label = "release corpus record %s" % record_id
         if evidence_type == "expert_annotation":
             validate_expert_release_record(record, label=label)
+        elif evidence_type == "sumijo_feedback":
+            from soprano_qa.sumijo import validate_record
+            validate_record(record)
         elif evidence_type == "web_database":
             validate_no_editorial_release_fields(record, label=label)
         elif evidence_type == "web_coaching":
@@ -2223,7 +2229,9 @@ def build_corpus(settings: Dict[str, Any]) -> Dict[str, Any]:
         if web_coaching_enabled(settings)
         else []
     )
-    records = expert_records + web_records + coaching_records
+    from soprano_qa import sumijo
+    sumijo_records = sumijo.build_records(dataset_root) if sumijo.enabled(settings) else []
+    records = sumijo_records + expert_records + web_records + coaching_records
     validate_release_corpus(records)
 
     if corpus_input_fingerprint(settings) != input_fingerprint:

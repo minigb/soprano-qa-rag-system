@@ -1,11 +1,12 @@
 {
-  "corpus_schema_version": 8,
+  "corpus_schema_version": 9,
   "dataset_root": "/home/minhee/soprano-qa-dataset",
-  "input_fingerprint": "350f4ba2a1f83c12978c0d1d92411aac4cab0a2a569784162e8b501cac9faf2e",
-  "corpus_sha256": "6a6ae7eda781a3ff7391f6a0b6a7f4f5c9fee81c3ed49c592e89d3c2bb98a44c",
-  "total_records": 946,
+  "input_fingerprint": "3bca212d397f13664f32564f5ffd8363bdd1c52935f7b58cf7e2de8c1e58a86a",
+  "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+  "total_records": 953,
   "records_by_evidence_type": {
     "expert_annotation": 122,
+    "sumijo_feedback": 7,
     "web_coaching": 723,
     "web_database": 101
   },
@@ -13,13 +14,14 @@
     "die-forelle": 244,
     "in-flowery-clouds": 140,
     "la-capinera": 96,
-    "nella-fantasia": 223,
+    "nella-fantasia": 230,
     "una-voce-poco-fa": 243
   },
   "records_by_measure_scope": {
     "global": 881,
     "local": 38,
-    "multi_range": 27
+    "multi_range": 27,
+    "unspecified": 7
   },
   "expert_records_by_measure_status": {
     "specific": 65,

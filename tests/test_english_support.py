@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-import hashlib
+import json
 import unittest
 from unittest import mock
 
@@ -22,12 +22,9 @@ from soprano_qa.answer import (
     system_prompt,
 )
 from soprano_qa.retrieval import SearchResult
+from soprano_qa.security import SECURITY_SYSTEM_POLICY
 
 
-# SHA-256 of SYSTEM_PROMPT at fef5f66, before English support was added.
-KOREAN_SYSTEM_PROMPT_SHA256 = (
-    "049856cae62b81328ade0a5ad9aee4e30a24d51ce5f98165feba9709fd3ec7e2"
-)
 KOREAN_QUESTION = (
     "이 노래를 부를 때 가창자의 입장에서 유의해야 할 점은 무엇인가?"
 )
@@ -108,11 +105,9 @@ class LanguageValidationTests(unittest.TestCase):
 
 
 class KoreanDefaultUnchangedTests(unittest.TestCase):
-    def test_korean_system_prompt_is_byte_identical(self) -> None:
-        self.assertEqual(
-            hashlib.sha256(SYSTEM_PROMPT.encode("utf-8")).hexdigest(),
-            KOREAN_SYSTEM_PROMPT_SHA256,
-        )
+    def test_korean_system_prompt_retains_domain_and_security_contract(self) -> None:
+        self.assertIn("Answer in Korean using formal-polite 합니다체", SYSTEM_PROMPT)
+        self.assertIn(SECURITY_SYSTEM_POLICY, SYSTEM_PROMPT)
         self.assertIs(system_prompt(), SYSTEM_PROMPT)
         self.assertIs(system_prompt("ko"), SYSTEM_PROMPT)
 
@@ -180,9 +175,8 @@ class EnglishPromptTests(unittest.TestCase):
             language="en",
         )
         self.assertEqual(messages[0]["content"], SYSTEM_PROMPT_EN)
-        self.assertIn("question: %s" % ENGLISH_QUESTION, messages[1]["content"])
-        # The English user prompt is the shared prompt plus one appended
-        # English answer-contract block.
+        self.assertEqual(json.loads(messages[1]["content"])["question"], ENGLISH_QUESTION)
+        # Language instructions stay privileged; both languages share data.
         korean = build_messages(
             "die-forelle",
             "",
@@ -195,7 +189,7 @@ class EnglishPromptTests(unittest.TestCase):
         )
         self.assertEqual(
             messages[1]["content"],
-            korean[1]["content"] + answer_module.ENGLISH_ANSWER_CONTRACT,
+            korean[1]["content"],
         )
 
     def test_english_prompt_keeps_grounding_rules_and_drops_korean_register(
@@ -354,8 +348,8 @@ class TranslationHelperTests(unittest.TestCase):
             translation.QUERY_TRANSLATION_SYSTEM_PROMPT,
         )
         self.assertEqual(
-            messages[1]["content"],
-            "How should I sing the third verse differently?\n/no_think",
+            json.loads(messages[1]["content"]),
+            {"question": "How should I sing the third verse differently?"},
         )
         system = messages[0]["content"]
         self.assertIn("Translate faithfully", system)
@@ -432,9 +426,9 @@ class EnglishServiceTests(unittest.TestCase):
         )
         answer_messages = generate.call_args_list[1].args[1]
         self.assertEqual(answer_messages[0]["content"], SYSTEM_PROMPT_EN)
-        self.assertIn(
-            "question: %s" % ENGLISH_QUESTION,
-            answer_messages[1]["content"],
+        self.assertEqual(
+            json.loads(answer_messages[1]["content"])["question"],
+            ENGLISH_QUESTION,
         )
         self.assertEqual(english["language"], "en")
         self.assertEqual(english["answer_language"], "en")

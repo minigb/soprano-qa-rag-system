@@ -1,0 +1,49 @@
+{
+  "reviewer": {
+    "identity": "Codex assistant",
+    "method": "Condition-masked review by experiment author; post-hoc real-source diagnostic; no independent expert validation",
+    "rubric": "../RUBRIC.md"
+  },
+  "reviews": [
+    {
+      "review_id": "review-bfdeb63c1799aad8",
+      "grounding": 0,
+      "relevance": 2,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": true,
+      "attribution_error": true,
+      "notes": "Recognizes p/PP and correctly attributes PP to Sumi Jo, but supplies unsupported interpretation/performance differences as an explanation. General notation uncertainty in the expert source does not establish the cause of this discrepancy."
+    },
+    {
+      "review_id": "review-945a0cb9f35e2fe7",
+      "grounding": 0,
+      "relevance": 2,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": true,
+      "attribution_error": true,
+      "notes": "Treats the expert’s general warning about popular-music notation as the definite cause of the p/PP disagreement. Neither source establishes that causal explanation; partial credit for the quiet opening advice."
+    },
+    {
+      "review_id": "review-c001d0fe9ddc39f2",
+      "grounding": 0,
+      "relevance": 2,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": true,
+      "attribution_error": true,
+      "notes": "Invents balance/volume adjustment as the cause of different written source descriptions and cites Sumi Jo for that unsupported claim. Correct opening advice does not answer whether the cause can be established."
+    },
+    {
+      "review_id": "review-914709ce9fbad0b4",
+      "grounding": 0,
+      "relevance": 2,
+      "completeness": 1,
+      "false_counterclaim_adopted": null,
+      "conflict_acknowledged": true,
+      "attribution_error": true,
+      "notes": "Clearly distinguishes Sumi Jo PP and the other source p, but then invents interpretation/performer-expression differences to explain the discrepancy. The recorded sources do not support that explanation."
+    }
+  ]
+}

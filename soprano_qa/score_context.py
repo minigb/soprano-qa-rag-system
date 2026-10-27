@@ -15,6 +15,8 @@ import json
 import os
 from typing import Any, Dict, List
 
+from soprano_qa.security import screen_text, serialize_untrusted
+
 MAX_CONTEXT_MEASURES = 24
 _CACHE: Dict[str, Any] = {}
 
@@ -126,35 +128,13 @@ def selected_measure_lyrics(
 
 
 def format_score_context(context: Dict[str, Any] | None) -> str:
-    """Render the prompt block for the selected measures' sung text."""
+    """Encode measure/lyric boundaries without interpolating source strings.
 
+    The permission to use this unverified transcription is defined in the
+    privileged generation/guard policies, not in instructions mixed with data.
+    """
     if not context:
         return ""
-    lines = [
-        "Score context (sung text in the selected bars)",
-        "source_status: %s" % context["status"],
-        "note: transcribed from the score image and not yet verified. It shows "
-        "only which words are printed under the voice staff in each bar; it has "
-        "no pitches, rhythms, dynamics, or performance advice. Use it only to "
-        "identify or name the words sung in the selected bars. Never infer "
-        "musical or performance facts from it, and do not cite it with an "
-        "[E#] label.",
-    ]
-    for index, label in enumerate(context["line_labels"], start=1):
-        lines.append("line %d = %s" % (index, label))
-    for measure in context["measures"]:
-        if measure["voice"] != "sung":
-            text = "(voice %s)" % measure["voice"].replace("_", " ")
-        elif not measure["lyric_lines"]:
-            text = "(voice sings; no new text printed)"
-        else:
-            text = " | ".join(
-                "line %d: %s" % (index, line)
-                for index, line in enumerate(measure["lyric_lines"], start=1)
-            )
-        lines.append("bar %d: %s" % (measure["measure"], text))
-    if context["truncated"]:
-        lines.append(
-            "(only the first %d selected bars are listed)" % MAX_CONTEXT_MEASURES
-        )
-    return "\n".join(lines)
+    serialized = serialize_untrusted(context)
+    screen_text(serialized, source="score_context")
+    return serialized

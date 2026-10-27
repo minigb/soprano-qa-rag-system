@@ -2978,7 +2978,11 @@ def build_retrieval_index(
 
     from soprano_qa.coaching_index import CoachingIndex, split_web_coaching_records
 
+    from soprano_qa.source_priority import wrap_index
+
     retrieval = settings["retrieval"]
+    sumijo_records = [r for r in records if r.get("evidence_type") == "sumijo_feedback"]
+    records = [r for r in records if r.get("evidence_type") != "sumijo_feedback"]
     records, coaching_records = split_web_coaching_records(records)
     mode = _configured_retrieval_mode(settings)
     if mode == "lexical":
@@ -2989,7 +2993,7 @@ def build_retrieval_index(
             dense_weight=float(retrieval.get("dense_weight", 0.65)),
             rrf_k=int(retrieval.get("rrf_k", 60)),
         )
-        return index
+        return wrap_index(index, sumijo_records, settings)
     if embedder is None:
         validate_retrieval_requirements(settings)
 
@@ -3042,7 +3046,7 @@ def build_retrieval_index(
             dense_weight=float(retrieval.get("dense_weight", 0.65)),
             rrf_k=int(retrieval.get("rrf_k", 60)),
         )
-        return index
+        return wrap_index(index, sumijo_records, settings)
     except DenseRetrievalUnavailable:
         raise
 

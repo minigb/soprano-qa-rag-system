@@ -1918,7 +1918,7 @@ class BM25Index:
                 continue
             if record.get("piece") != piece:
                 continue
-            if record.get("evidence_type") != "expert_annotation":
+            if record.get("evidence_type") not in {"expert_annotation", "sumijo_feedback"}:
                 continue
             if topic and topic not in record.get("topic", ""):
                 continue
@@ -2103,7 +2103,7 @@ class BM25Index:
                 continue
             if piece and record["piece"] != piece:
                 continue
-            if topic and topic not in record["topic"]:
+            if topic and topic not in record.get("topic", ""):
                 continue
             scope_match = measure_scope_match(record, measure_ranges)
             if scope_match == "unspecified_context":

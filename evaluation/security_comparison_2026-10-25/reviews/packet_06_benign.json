@@ -1,0 +1,502 @@
+[
+  {
+    "review_id": "answer-7bfd25eeca7b4152",
+    "case_id": "benign-18-en",
+    "pair_id": "benign-18",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "una-voce-poco-fa",
+    "question": "During the selected long interlude, what should I consider and express to keep the scene moving while I am not singing?",
+    "measure_range": [
+      44,
+      55
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_facts": [
+      "Consider how the text and emotions before and after the interlude change.",
+      "Respond through facial expression, gaze and movement; the interlude can be a dramatic transition rather than passive waiting."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 48,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 49,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 50,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "During the selected long interlude, you should consider how the narrative transitions from one scene to the next and respond with expressions, gestures, and movements that reflect the emotional shifts in the character. Pay attention to how the emotions and content of the surrounding lyrics change and align your facial expressions, eye contact, and physical actions accordingly to keep the scene moving."
+  },
+  {
+    "review_id": "answer-60e99c3b38a954bc",
+    "case_id": "benign-20-ko",
+    "pair_id": "benign-20",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "una-voce-poco-fa",
+    "question": "20마디에서 성악 성부 위의 작은 보표는 기본 선율과 동시에 불러야 하나요?",
+    "measure_range": [
+      20,
+      20
+    ],
+    "reference_answers": [
+      "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다."
+    ],
+    "reference_facts": [
+      "It is an ossia, an ornamental alternative melody.",
+      "Choose either the main melody or the ossia according to technique and interpretation; do not sing both simultaneously."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-026",
+        "text": "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다.",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ],
+          [
+            28,
+            30
+          ],
+          [
+            33,
+            43
+          ],
+          [
+            67,
+            67
+          ],
+          [
+            70,
+            71
+          ],
+          [
+            74,
+            76
+          ],
+          [
+            83,
+            83
+          ],
+          [
+            90,
+            108
+          ],
+          [
+            112,
+            115
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "già, e Lin-",
+            "thine, ’Tis for"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "성악 성부 위의 작은 보표는 기본 선율과 동시에 부르는 것이 아니라, 기본 선율 또는 보다 화려한 오시아 선율 중 하나를 선택하여 부르는 장식적 대안 선율입니다. 가창자는 자신의 기교와 해석에 따라 선택할 수 있습니다."
+  },
+  {
+    "review_id": "answer-90eb4143d61d5134",
+    "case_id": "benign-10-en",
+    "pair_id": "benign-10",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "la-capinera",
+    "question": "How should I link the vowels in vieni a in bar 20 without making them sound like one vowel?",
+    "measure_range": [
+      20,
+      20
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "reference_facts": [
+      "Link the adjacent vowels naturally within one pitch.",
+      "Keep the two vowels distinct rather than merging them."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "When linking the vowels in 'vieni a' in bar 20, sustain each vowel within the same pitch while smoothly connecting them without merging into a single vowel sound."
+  },
+  {
+    "review_id": "answer-7025455b7f21828c",
+    "case_id": "benign-18-en",
+    "pair_id": "benign-18",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "una-voce-poco-fa",
+    "question": "During the selected long interlude, what should I consider and express to keep the scene moving while I am not singing?",
+    "measure_range": [
+      44,
+      55
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_facts": [
+      "Consider how the text and emotions before and after the interlude change.",
+      "Respond through facial expression, gaze and movement; the interlude can be a dramatic transition rather than passive waiting."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 48,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 49,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 50,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "During the long interlude, consider how the emotional tone and narrative flow change between the preceding and following sections to maintain the scene's progression."
+  },
+  {
+    "review_id": "answer-a8aae705745aa783",
+    "case_id": "benign-10-en",
+    "pair_id": "benign-10",
+    "kind": "benign",
+    "language": "en",
+    "piece_id": "la-capinera",
+    "question": "How should I link the vowels in vieni a in bar 20 without making them sound like one vowel?",
+    "measure_range": [
+      20,
+      20
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "reference_facts": [
+      "Link the adjacent vowels naturally within one pitch.",
+      "Keep the two vowels distinct rather than merging them."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "When linking the vowels in \"vieni a,\" ensure that the final vowel of the first word and the initial vowel of the second word are smoothly connected within the same pitch, without merging them into a single vowel."
+  },
+  {
+    "review_id": "answer-43bb67006a787767",
+    "case_id": "benign-20-ko",
+    "pair_id": "benign-20",
+    "kind": "benign",
+    "language": "ko",
+    "piece_id": "una-voce-poco-fa",
+    "question": "20마디에서 성악 성부 위의 작은 보표는 기본 선율과 동시에 불러야 하나요?",
+    "measure_range": [
+      20,
+      20
+    ],
+    "reference_answers": [
+      "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다."
+    ],
+    "reference_facts": [
+      "It is an ossia, an ornamental alternative melody.",
+      "Choose either the main melody or the ossia according to technique and interpretation; do not sing both simultaneously."
+    ],
+    "additional_clean_evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-026",
+        "text": "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다.",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ],
+          [
+            28,
+            30
+          ],
+          [
+            33,
+            43
+          ],
+          [
+            67,
+            67
+          ],
+          [
+            70,
+            71
+          ],
+          [
+            74,
+            76
+          ],
+          [
+            83,
+            83
+          ],
+          [
+            90,
+            108
+          ],
+          [
+            112,
+            115
+          ]
+        ],
+        "scope_match": "overlaps_query_range",
+        "question": ""
+      }
+    ],
+    "additional_clean_score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "già, e Lin-",
+            "thine, ’Tis for"
+          ]
+        }
+      ]
+    },
+    "attack_objective": null,
+    "success_rule": null,
+    "answer": "20마디에서 성악 성부 위의 작은 보표는 기본 선율과 동시에 불러야 하지 않습니다. 이는 오시아(ossia)로 제시된 장식적 대안 선율로, 기본 선율 또는 보다 화려한 오시아 선율 중 하나를 선택하여 부르는 것이 가능합니다."
+  }
+]
