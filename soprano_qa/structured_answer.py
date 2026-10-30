@@ -13,18 +13,29 @@ from typing import Any
 from soprano_qa.security import SecurityViolation
 
 
-MAX_SENTENCES = 16
+MAX_SENTENCES = 6
 MAX_SENTENCE_CHARS = 2000
+# Keep this low-level module independent of answer.py, which imports llm.py.
+NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
 
 STRUCTURED_ANSWER_POLICY = """Mandatory structured answer format
 Return exactly one JSON object of this form, with no markdown or extra keys:
-{"sentences":[{"text":"One supported sentence.","evidence":["E1"]}]}
+{"sentences":[{"evidence":["E1"],"text":"One supported sentence."}]}
+Choose the supporting evidence before writing its claim. A label is not a
+reason to use a source: the source must directly support the requested point.
 Write each sentence's prose in text and select all evidence labels that actually
 support that sentence in evidence. Use only non-null citation_label values from
 Retrieved evidence. Every item requires at least one such label when citable
 evidence is supplied. Do not put inline citation labels or record IDs in text:
 the application will render the labels you select. Prefer one sentence per item.
-Use at most 16 items, keeping each text nonempty and at most 2000 characters.
+Usually use 1-4 items. Use up to 6 only when distinct useful details are needed
+to answer the question faithfully. Stop when the supported answer is complete;
+never pad the answer, repeat advice, or add a concluding claim to fill the array.
+Keep each text nonempty and at most 2000 characters, preserving source conditions
+and qualifications even when keeping the answer concise.
+If no supported answer can be given within the task and security boundaries,
+return exactly {"sentences":[]}. This empty array is the only structured no-answer
+form; do not invent a sentence or citation, or place a no-answer sentinel in text.
 If no citable evidence exists and score context is permitted, evidence must be
 an empty array for each item; only identify words sung in the selected bars.
 Preserve the required answer language, factual support, scope, and all security
@@ -80,11 +91,12 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
         "properties": {
             "sentences": {
                 "type": "array",
-                "minItems": 1,
+                "minItems": 0,
                 "maxItems": MAX_SENTENCES,
                 "items": {
                     "type": "object",
                     "properties": {
+                        "evidence": evidence_schema,
                         "text": {
                             "type": "string",
                             "minLength": 1,
@@ -93,7 +105,6 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
                             # complexity limit. Enforce that cap in the parser;
                             # generation remains bounded by max_tokens.
                         },
-                        "evidence": evidence_schema,
                     },
                     "required": ["text", "evidence"],
                     "additionalProperties": False,
@@ -145,6 +156,7 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
     Each item's labels apply to every sentence fragment in its text. This also
     covers a model that puts multiple sentences in one item; the subsequent
     semantic guard must verify support for every rendered claim and citation.
+    An empty array represents an unsupported answer, never a successful response.
     """
     try:
         parsed = json.loads(raw, object_pairs_hook=_unique_object)
@@ -153,9 +165,11 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
     if not isinstance(parsed, dict) or set(parsed) != {"sentences"}:
         raise SecurityViolation()
     sentences = parsed["sentences"]
-    if not isinstance(sentences, list) or not 1 <= len(sentences) <= MAX_SENTENCES:
+    if not isinstance(sentences, list) or len(sentences) > MAX_SENTENCES:
         raise SecurityViolation()
     allowed_labels = set(_allowed_labels(payload))
+    if not sentences:
+        return NO_GROUNDED_ANSWER_SENTINEL
     rendered = []
     for item in sentences:
         if not isinstance(item, dict) or set(item) != {"text", "evidence"}:

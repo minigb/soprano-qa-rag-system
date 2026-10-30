@@ -1,0 +1,613 @@
+{
+  "schema_version": 1,
+  "snapshot_type": "precomputed_sample_answers",
+  "started_at_utc": "2026-10-30T16:56:40.374064+00:00",
+  "completed_at_utc": "2026-10-30T16:59:48.524621+00:00",
+  "request_endpoint": "POST /api/ask",
+  "identity_note": "Model metadata is reported by the server, with local paths reduced to file names. No server source revision, settings identity, or checkpoint hash is inferred from the exporter's local checkout. Loading these files performs no inference.",
+  "exporter_script_sha256": "72d6f79b0721e543050f357f00d769bc6d7365aa16199e810526953220b1a4d8",
+  "frontend_app_sha256": "ef62f295d12d9e52e211f9c26f8a045f73d3a72af909e957684c26e8e695db35",
+  "answers": [
+    {
+      "file": "answers/die-forelle/1.json",
+      "sha256": "9285d4bfb0b2e91ec022a1ed879b7cd53552d8632ffc9a0a8e70b13e13788e14",
+      "received_at_utc": "2026-10-30T16:56:51.757408+00:00",
+      "request": {
+        "piece_id": "die-forelle",
+        "question": "What does the accent on the second beat in the piano part express?",
+        "measure_range": [
+          2,
+          27
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/die-forelle/2.json",
+      "sha256": "6a8e9b12c595d76a78a6e0c6ef82a38db1cd439b9955e5ba71e5f41fa7d1d21e",
+      "received_at_utc": "2026-10-30T16:56:57.437826+00:00",
+      "request": {
+        "piece_id": "die-forelle",
+        "question": "Why is this piece difficult to sing even though its notes are not high?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/die-forelle/3.json",
+      "sha256": "a873ab94aaf3ab4903e96407caae2a815288134377a9f9e9c18a6d578c0e84b0",
+      "received_at_utc": "2026-10-30T16:57:04.454894+00:00",
+      "request": {
+        "piece_id": "die-forelle",
+        "question": "How should a change in the piece's mood be expressed?",
+        "measure_range": [
+          28,
+          40
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/die-forelle/4.json",
+      "sha256": "966f5679decbfe754d8349101ec2d556271db4673930273e4087ad79e7284f7f",
+      "received_at_utc": "2026-10-30T16:57:10.251635+00:00",
+      "request": {
+        "piece_id": "die-forelle",
+        "question": "What should a singer do when German pronunciation is difficult?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/die-forelle/5.json",
+      "sha256": "a1ccbb623f66ce02e1500c57409ecc5be862f11351bf52c34b92bd0009220c22",
+      "received_at_utc": "2026-10-30T16:57:16.499950+00:00",
+      "request": {
+        "piece_id": "die-forelle",
+        "question": "What should a singer do to sing this piece well?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/una-voce-poco-fa/1.json",
+      "sha256": "e662d3a741bdd5336c8297cf37956c3a79c755b2d895b4486e899131ec2b7352",
+      "received_at_utc": "2026-10-30T16:57:25.002588+00:00",
+      "request": {
+        "piece_id": "una-voce-poco-fa",
+        "question": "Why did Rossini use a double-dotted rhythm instead of a standard dotted rhythm?",
+        "measure_range": [
+          21,
+          22
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "unavailable",
+      "answer_basis": "no_corpus_evidence",
+      "unavailable_reason": "security_output_rejected",
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/una-voce-poco-fa/2.json",
+      "sha256": "c40bb213f18cd69fb01f89e0979c1a257e349f8d50c35762e94fd5e7eb4670f8",
+      "received_at_utc": "2026-10-30T16:57:35.721510+00:00",
+      "request": {
+        "piece_id": "una-voce-poco-fa",
+        "question": "How can rapid diction be practiced in passages with many short notes?",
+        "measure_range": [
+          31,
+          34
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/una-voce-poco-fa/3.json",
+      "sha256": "0e8690624a1e8b8a4dc88dddcd723b07fff1757866f01c9476a546a0259055b9",
+      "received_at_utc": "2026-10-30T16:57:42.852527+00:00",
+      "request": {
+        "piece_id": "una-voce-poco-fa",
+        "question": "The interludes in this piece are so long that I don't know what to do during them.",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/una-voce-poco-fa/4.json",
+      "sha256": "9c033384cf536d7a30f3677280e61bdcadee20d9d28019f118390ba314da2b92",
+      "received_at_utc": "2026-10-30T16:57:54.354513+00:00",
+      "request": {
+        "piece_id": "una-voce-poco-fa",
+        "question": "How should one practice coloratura technique effectively?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/una-voce-poco-fa/5.json",
+      "sha256": "3d8c72ef7ffcc5f1b8eddc630bade18f741d7e9ec7ee20b928118a1e9fb64804",
+      "received_at_utc": "2026-10-30T16:58:01.422213+00:00",
+      "request": {
+        "piece_id": "una-voce-poco-fa",
+        "question": "Why does this aria contain so many ornaments?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/la-capinera/1.json",
+      "sha256": "fe08632bc77e9b7d26cc6f1c3866d65cabfb032ae1dfd3cfc7d12f37139524db",
+      "received_at_utc": "2026-10-30T16:58:07.536202+00:00",
+      "request": {
+        "piece_id": "la-capinera",
+        "question": "What musical effect does the contrast between ff and pp express?",
+        "measure_range": [
+          117,
+          124
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/la-capinera/2.json",
+      "sha256": "5a87358e8f93563089a1514b6540770416e16f88a3ea1b4b7f2007116817e239",
+      "received_at_utc": "2026-10-30T16:58:13.031013+00:00",
+      "request": {
+        "piece_id": "la-capinera",
+        "question": "How should a trill be sung?",
+        "measure_range": [
+          137,
+          137
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/la-capinera/3.json",
+      "sha256": "36c1f5317b7ac679e5b378f7a6df72aff0dbfe1a4eb4fc9038d54ef142787187",
+      "received_at_utc": "2026-10-30T16:58:19.084128+00:00",
+      "request": {
+        "piece_id": "la-capinera",
+        "question": "How should the beat and rhythm be maintained in a passage without accompaniment?",
+        "measure_range": [
+          135,
+          137
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/la-capinera/4.json",
+      "sha256": "d88da8c2977dc1eeed9c48e98b5c6b05924ea2be0abb452e8dddca144ee25819",
+      "received_at_utc": "2026-10-30T16:58:24.061834+00:00",
+      "request": {
+        "piece_id": "la-capinera",
+        "question": "How should a slashed ornament be fitted into the rhythm?",
+        "measure_range": [
+          22,
+          22
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/la-capinera/5.json",
+      "sha256": "3626edcbd4d1f1078cf44d941779f66a1e020766e49075b6dee1ae60e282f6da",
+      "received_at_utc": "2026-10-30T16:58:32.636559+00:00",
+      "request": {
+        "piece_id": "la-capinera",
+        "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+        "measure_range": [
+          80,
+          80
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/nella-fantasia/1.json",
+      "sha256": "95f33324d5cc35813fc94d81061ac6b34d9c1ac832a9a30e9ce69467de57bdc6",
+      "received_at_utc": "2026-10-30T16:58:42.577823+00:00",
+      "request": {
+        "piece_id": "nella-fantasia",
+        "question": "How should a sudden upward leap be sung?",
+        "measure_range": [
+          11,
+          17
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/nella-fantasia/2.json",
+      "sha256": "7c267ccec31b901fd61bd7a4160df2fa5aa8c389538d3c4714a4d0a16ddc3619",
+      "received_at_utc": "2026-10-30T16:58:54.192284+00:00",
+      "request": {
+        "piece_id": "nella-fantasia",
+        "question": "What should a singer do when singing is difficult or breath runs short?",
+        "measure_range": [
+          44,
+          52
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/nella-fantasia/3.json",
+      "sha256": "b2525ccb9af639a58c18950d6bdd990cfe493df938070a647af6baee8ba2d41f",
+      "received_at_utc": "2026-10-30T16:58:59.581450+00:00",
+      "request": {
+        "piece_id": "nella-fantasia",
+        "question": "How long should the final note be held?",
+        "measure_range": [
+          34,
+          35
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "unavailable",
+      "answer_basis": "no_corpus_evidence",
+      "unavailable_reason": "security_output_rejected",
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/nella-fantasia/4.json",
+      "sha256": "13e55bc83008a8b49063c0e46c7ecbb041bcb3a7270f148ceeb9e08abe40f8b9",
+      "received_at_utc": "2026-10-30T16:59:08.936509+00:00",
+      "request": {
+        "piece_id": "nella-fantasia",
+        "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/nella-fantasia/5.json",
+      "sha256": "55c91c4119efe31379a361f6319245ef60d58edfdcd5fb4b57ea95a3837adb0d",
+      "received_at_utc": "2026-10-30T16:59:13.785804+00:00",
+      "request": {
+        "piece_id": "nella-fantasia",
+        "question": "With what dynamic should the opening note begin?",
+        "measure_range": [
+          7,
+          8
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/in-flowery-clouds/1.json",
+      "sha256": "5dc53a5582b6a21999460cfd8c62ba22195883cefab3f8c1925fa471e37a4be6",
+      "received_at_utc": "2026-10-30T16:59:23.033610+00:00",
+      "request": {
+        "piece_id": "in-flowery-clouds",
+        "question": "If kkotbaram (\"flower breeze\") is often sung staccato in recordings but has no such marking in the score, what should guide the performance?",
+        "measure_range": [
+          11,
+          12
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/in-flowery-clouds/2.json",
+      "sha256": "9b6183563f26eee8f73d0940385c13285c82ad3b67f5ba665454ddd1db750834",
+      "received_at_utc": "2026-10-30T16:59:30.200057+00:00",
+      "request": {
+        "piece_id": "in-flowery-clouds",
+        "question": "Why does the meter change, and how does the mood of the piece change?",
+        "measure_range": [
+          39,
+          49
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/in-flowery-clouds/3.json",
+      "sha256": "70888235a431c3989844e8e7fd6548c2af580425f0da67a5f136db1a0fd1d467",
+      "received_at_utc": "2026-10-30T16:59:35.797407+00:00",
+      "request": {
+        "piece_id": "in-flowery-clouds",
+        "question": "How slowly should Larghetto be taken?",
+        "measure_range": [
+          74,
+          79
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/in-flowery-clouds/4.json",
+      "sha256": "a900ad40e7672de34d2a93cc7cf22794d016482f5540c3544fa979ece73ca55a",
+      "received_at_utc": "2026-10-30T16:59:41.022808+00:00",
+      "request": {
+        "piece_id": "in-flowery-clouds",
+        "question": "If this song is too high, may I adjust or arrange it?",
+        "measure_range": null,
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    },
+    {
+      "file": "answers/in-flowery-clouds/5.json",
+      "sha256": "d444a0607b79ea12e64edcd67681c3545bf17983620210e540b9ecf3cdef731b",
+      "received_at_utc": "2026-10-30T16:59:48.520784+00:00",
+      "request": {
+        "piece_id": "in-flowery-clouds",
+        "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+        "measure_range": [
+          19,
+          21
+        ],
+        "generate": true,
+        "language": "en"
+      },
+      "server_reported_model": {
+        "path": "Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "pipeline": "soprano_qa",
+      "generation_mode": "llm",
+      "answer_basis": "retrieved_evidence",
+      "unavailable_reason": null,
+      "generation_validation_warning": null
+    }
+  ]
+}

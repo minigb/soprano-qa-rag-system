@@ -5,6 +5,26 @@ Run every command in this document from the repository root with the
 pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
 voce poco fa.
 
+## Quality refinement (2026-10-31)
+
+The [refinement report](quality_refinement_2026-10-31/report.md) compares the
+current secured baseline `29fe3e2` with Candidate F on 120 bilingual cases
+(240 requests). It includes all delivered-answer reviews, false refusals,
+attack success, latency, individual regressions and a separate 25-request
+static-demo audit. The frozen inventory is developer-authored, not held out.
+The raw labels `original` and `hardened` refer to this comparison's two systems,
+not to the older October 25 revisions below.
+
+Reproduce scores and paired details from the saved raw responses and reviews:
+
+```bash
+python evaluation/summarize_refinement.py evaluation/quality_refinement_2026-10-31
+```
+
+The report links source/model hashes, manifests, development attempts and
+limitations. Private rejected drafts and local model/cache directories are
+excluded from Git. No fresh inference is needed to reproduce the summary.
+
 ## Bilingual security comparison (2026-10-25)
 
 The [comparison report](security_comparison_2026-10-25/report.md) evaluates

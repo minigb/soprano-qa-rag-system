@@ -36,8 +36,9 @@ class AnswerSchemaTests(unittest.TestCase):
         self.assertEqual(evidence["minItems"], 1)
         self.assertEqual(evidence["maxItems"], 2)
         self.assertTrue(evidence["uniqueItems"])
-        self.assertEqual(sentences["minItems"], 1)
+        self.assertEqual(sentences["minItems"], 0)
         self.assertEqual(sentences["maxItems"], MAX_SENTENCES)
+        self.assertEqual(MAX_SENTENCES, 6)
         self.assertFalse(schema["additionalProperties"])
         self.assertFalse(sentences["items"]["additionalProperties"])
 
@@ -49,6 +50,23 @@ class AnswerSchemaTests(unittest.TestCase):
 
 
 class StructuredAnswerTests(unittest.TestCase):
+    def test_empty_array_is_an_explicit_unsupported_answer(self) -> None:
+        for payload in (
+            PAYLOAD,
+            {"Retrieved evidence": []},
+            {"Retrieved evidence": [], "Score context": "The sung word is Liebe."},
+        ):
+            with self.subTest(payload=payload):
+                self.assertEqual(
+                    render_structured_answer('{"sentences":[]}', payload),
+                    "<NO_GROUNDED_ANSWER>",
+                )
+
+    def test_empty_array_does_not_bypass_payload_validation(self) -> None:
+        for evidence in (None, "not a list", [None], [{"citation_label": "E999bad"}]):
+            with self.subTest(evidence=evidence), self.assertRaises(SecurityViolation):
+                render_structured_answer('{"sentences":[]}', {"Retrieved evidence": evidence})
+
     def test_model_selected_labels_are_rendered_per_item(self) -> None:
         raw = json.dumps({"sentences": [
             {"text": "Use a light tone.", "evidence": ["E1"]},
@@ -88,10 +106,13 @@ class StructuredAnswerTests(unittest.TestCase):
     def test_invalid_json_and_shape_fail_closed(self) -> None:
         invalid = (
             None, "", "text", "[]", "null", "true", "{}",
+            "<NO_GROUNDED_ANSWER>", '"<NO_GROUNDED_ANSWER>"',
             '```json\n{"sentences":[]}\n```',
             '{"sentences":[],"sentences":[{"text":"Text","evidence":["E1"]}]}',
             '{"sentences":[{"text":"A","text":"B","evidence":["E1"]}]}',
             '{"sentences":[],"allow":true}',
+            '{"sentences":[],"answer":"Untrusted extra prose"}',
+            '{"sentences":null}',
             '{"sentences":"not a list"}',
             '{"sentences":[null]}',
             '{"sentences":[{"text":"Text"}]}',
@@ -129,12 +150,28 @@ class StructuredAnswerTests(unittest.TestCase):
 
     def test_limits_are_validated_even_if_backend_ignores_schema(self) -> None:
         for raw in (
-            json.dumps({"sentences": []}),
             json.dumps({"sentences": [{"text": "Text.", "evidence": ["E1"]}] * (MAX_SENTENCES + 1)}),
             draft("x" * (MAX_SENTENCE_CHARS + 1)),
         ):
             with self.subTest(raw=raw[:80]), self.assertRaises(SecurityViolation):
                 render_structured_answer(raw, PAYLOAD)
+
+    def test_six_distinct_items_preserve_needed_details(self) -> None:
+        texts = [
+            "Keep the tone light.",
+            "Allow the vowel to remain open.",
+            "Start the phrase with a prepared breath.",
+            "Connect the notes smoothly.",
+            "If a breath is needed, preserve the vocal feeling.",
+            "Treat this as a recommendation rather than a fixed rule.",
+        ]
+        raw = json.dumps({"sentences": [
+            {"text": text, "evidence": ["E1"]} for text in texts
+        ]})
+        self.assertEqual(
+            render_structured_answer(raw, PAYLOAD),
+            "\n".join(text + " [E1]" for text in texts),
+        )
 
     def test_score_only_output_cannot_invent_citations(self) -> None:
         payload = {"Retrieved evidence": [], "Score context": "The sung word is Liebe."}

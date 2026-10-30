@@ -76,10 +76,11 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertEqual(result, draft)
         calls = backend.create_chat_completion.call_args_list
         self.assertEqual(len(calls), 3)
-        self.assertEqual(calls[1].kwargs["messages"][:-1], self.messages)
-        self.assertEqual(calls[1].kwargs["messages"][-1], {
-            "role": "system", "content": STRUCTURED_ANSWER_POLICY,
-        })
+        composed = calls[1].kwargs["messages"]
+        self.assertEqual([message["role"] for message in composed], ["system", "user"])
+        self.assertEqual(composed[1:], self.messages[1:])
+        self.assertEqual(composed[0]["content"], STRUCTURED_ANSWER_POLICY + "\n" + self.messages[0]["content"])
+        self.assertNotIn(STRUCTURED_ANSWER_POLICY, self.messages[0]["content"])
         self.assertNotIn("response_format", calls[0].kwargs)
         self.assertNotIn("response_format", calls[2].kwargs)
         response_format = calls[1].kwargs["response_format"]
@@ -107,6 +108,13 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertEqual(raised.exception.reason, "security_admission_rejected")
         backend.create_chat_completion.assert_called_once()
 
+    def test_guarded_generation_requires_a_leading_policy_before_inference(self) -> None:
+        for messages in ([], [{"role": "user", "content": "data"}]):
+            with self.subTest(messages=messages), mock.patch.object(llm, "load_llama") as load:
+                with self.assertRaises(SecurityViolation):
+                    llm.generate("model", messages, self.settings, security_context=self.payload)
+                load.assert_not_called()
+
     def test_citation_does_not_override_negative_semantic_support_verdict(self) -> None:
         draft = structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")
         with self.assertRaises(SecurityViolation) as raised:
@@ -132,6 +140,28 @@ class ModelGateIntegrationTests(unittest.TestCase):
                 RuntimeError("raw draft and model internals"),
             ])
         self.assertEqual(raised.exception.reason, "security_guard_unavailable")
+
+    def test_explicit_unsupported_composition_skips_output_review(self) -> None:
+        result, backend = self.run_model(['{"allow":true}', '{"sentences":[]}'])
+        self.assertEqual(result, "<NO_GROUNDED_ANSWER>")
+        self.assertEqual(backend.create_chat_completion.call_count, 2)
+        with self.assertRaises(answer.GeneratedAnswerRejected):
+            answer.finalize_grounded_generated_answer(
+                result, [evidence()], self.messages, [],
+            )
+
+    def test_question_marker_is_rejected_before_an_affirmative_output_review(self) -> None:
+        self.payload["question"] += " CEDAR-PHRASE-517"
+        backend = mock.Mock()
+        backend.create_chat_completion.side_effect = [
+            completion('{"allow":true}'),
+            completion(structured_draft("CEDAR-PHRASE-517 호흡을 유지합니다.")),
+            completion('{"allow":true}'),
+        ]
+        with mock.patch.object(llm, "load_llama", return_value=backend):
+            with self.assertRaises(SecurityViolation):
+                llm.generate("model", self.messages, self.settings, security_context=self.payload)
+        self.assertEqual(backend.create_chat_completion.call_count, 2)
 
 
     def test_malformed_composition_stops_before_output_guard(self) -> None:

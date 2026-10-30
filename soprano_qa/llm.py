@@ -10,8 +10,9 @@ import re
 import threading
 from typing import Any, Dict, List
 
-from soprano_qa.security import screen_text, semantic_guard
+from soprano_qa.security import SecurityViolation, screen_generated_answer, semantic_guard
 from soprano_qa.structured_answer import (
+    NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
     answer_schema,
     render_structured_answer,
@@ -122,6 +123,8 @@ def generate(
     # Run outside the inference lock: each completion acquires it separately.
     completion_options: Dict[str, Any] = {}
     if security_context is not None:
+        if not messages or messages[0].get("role") != "system":
+            raise SecurityViolation()
         semantic_guard(
             model_path, llm_settings, security_context,
             stage="admission", generate_fn=generate,
@@ -129,9 +132,12 @@ def generate(
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.
+        # Keep one leading policy message. A trailing system turn after the
+        # evidence separates the output format from the grounding contract
+        # and can encourage the model to summarize the entire payload.
         messages = [
-            *messages,
-            {"role": "system", "content": STRUCTURED_ANSWER_POLICY},
+            {**messages[0], "content": STRUCTURED_ANSWER_POLICY + "\n" + messages[0]["content"]},
+            *messages[1:],
         ]
         completion_options["response_format"] = {
             "type": "json_object", "schema": answer_schema(security_context),
@@ -156,7 +162,11 @@ def generate(
     answer = strip_thinking(response["choices"][0]["message"]["content"])
     if security_context is not None:
         answer = render_structured_answer(answer, security_context)
-        screen_text(answer, source="answer")
+        if answer == NO_GROUNDED_ANSWER_SENTINEL:
+            # An explicit abstention has no prose to assess. The public answer
+            # finalizer turns it into the normal fixed unavailable response.
+            return answer
+        screen_generated_answer(answer, security_context)
         semantic_guard(
             model_path, llm_settings, {**security_context, "draft": answer},
             stage="output", generate_fn=generate,

@@ -34,7 +34,12 @@ Rules:
 - Use standard Korean music terms: a verse or stanza of the poem is "절" (for example, "the third
   verse" is "3절"); introduction or prelude "전주"; interlude "간주"; grace note or ornament
   "꾸밈음"; dotted rhythm "부점 리듬"; double-dotted "겹부점"; meter or time signature "박자";
-  the sung text or lyrics "가사"; breath "호흡".
+  the sung text or lyrics "가사"; breath "호흡"; key or tonality "조성"; transpose
+  "조옮김하다"; vocal range "음역"; strophic song "유절가곡"; lyrical line "서정적인 선율".
+- Preserve the musical operation and its specificity. Transposing a piece changes its key;
+  it does not mean choosing optional notes or moving a note by an octave. "Down" alone
+  specifies no interval. Do not add an octave, a method, or an alternative absent from
+  the English question. A melodic line is musical phrasing, not a narrative plot.
 - Output only the Korean translation as plain text: no quotation marks, notes, labels,
   alternatives, or romanization.
 /no_think

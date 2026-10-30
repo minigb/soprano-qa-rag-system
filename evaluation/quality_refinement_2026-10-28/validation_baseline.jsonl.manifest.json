@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-10-28T03:59:35.219095Z",
+  "contract_id": "01559c497aa492cf8c6332827fd24173d0e61d55cbc46fa5e0dba1f8f05b3a89",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "7db33cd14b171b7fd14d61924369d43047b0afddc1edd95647fddf7762949b5b",
+    "helper_sha256": "a2655e1d73599802b2959b3750915a59443f77962639d07461de889dfd732483",
+    "source_sha256": "39a9fafa887d4fd1500cf5f983c61defd1a05d57fa6d7df259e38ed9d5ece5da",
+    "settings_sha256": "6314b51b6000cec3dbc63f3212f8b877ebf11e3e1890edd3dd6f5cd87bbbf17a",
+    "cases_sha256": "017d38684ccff70ff40e342399ad9ed9759687df36af6e4a7febcea8af4da879",
+    "variant": "original",
+    "warmup_case": "benign-03-ko",
+    "usage_rollout": "/home/minhee/.codex/sessions/2026/10/25/rollout-2026-10-25T11-54-50-01a17132-6472-7672-888d-3f2666e24d71.jsonl"
+  },
+  "sessions": [
+    {
+      "started_at": "2026-10-28T03:59:35.219274Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/validation_baseline.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/baseline/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/baseline/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/config/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+          "model_filename": "Qwen3-14B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/baseline/embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 14B Instruct"
+      },
+      "status": "usage_stopped",
+      "stop_reason": "Usage reset observed (resets_at increased) in primary",
+      "finished_at": "2026-10-28T04:06:17.774489Z"
+    }
+  ]
+}

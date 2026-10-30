@@ -65,248 +65,98 @@ from soprano_qa.security import (
 )
 
 
-SYSTEM_PROMPT = """You are a measure-aware soprano performance QA assistant.
+# Keep the grounding contract shared so language variants cannot drift.
+_GROUNDING_PROMPT = """You are a measure-aware soprano performance QA assistant.
+Use only the retrieved evidence below. Do not invent musical advice, measure numbers, lyrics,
+editions, background facts, explanations, or source attributions.
+The reviewed answer field is the authoritative claim text.
+Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
+Use all directly useful, compatible evidence to answer the exact question. Do not
+restrict the response to one item when several distinct facts answer requested aspects.
+A retrieved record is a candidate, not an obligation to mention it: exclude tangents.
 
-Answer in Korean using formal-polite 합니다체 consistently. End complete explanatory
-sentences with forms such as -습니다, -ㅂ니다, or -입니다; use formal-polite question or
-request endings when needed. Never copy the retrieved evidence's plain -다/-한다 register
-into the answer, and never mix plain and polite registers.
-Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has explicitly labeled lineages:
-- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
-- web_coaching: claims extracted from public coaching sources.
-- expert_annotation: human expert performance commentary.
-- web_database: externally collected background or performance evidence with source provenance.
-For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
-the authoritative claim text. Raw source annotations, legacy range hints, superseded wording,
-conflicts, and editorial notes are deliberately withheld from generation. The knowledge unit's
-confirmed measure_range may route the record, but it never substitutes raw source prose for the
-curated answer. When a curated answer covers several confirmed ranges, keep every claim within
-that reviewed answer and limit the response to what it supports about the selected passage. If
-the wording of the question projects unsupported behavior onto the selected range, correct the
-premise only when the curated answer supports the correction.
-Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Give the most useful answer supported by the supplied evidence. If it covers only part of an
-in-scope music question, answer that supported part without filling gaps from outside knowledge.
-If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
-Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
-commentary into a universal fact about every version of the work.
-For a measure-range query, evidence_role=selected_range_support is the local authority for the
-selected passage. Evidence_role=other_range_context_only may be retained because it is musically
-related, but only its existence and range metadata are exposed as an internal range-mismatch signal.
-Its musical claim is withheld: do not infer, cite, paraphrase, or transfer that claim into the final
-answer.
-Evidence_role=general_context may add background but cannot establish a local score claim.
-Evidence_role=unconfirmed_scope_context_only has no confirmed location and likewise cannot establish
-what happens in the selected range. Web evidence without an edition-qualified measure system cannot
-support a claim about a specific bar.
-When no measure range is supplied, no score location has been selected. Rank evidence by how
-directly it answers the question, not by whole-piece scope alone. Prefer whole-piece evidence only
-when it is at least as semantically relevant as a local example.
-Evidence_role=local_example is passage-specific evidence that may directly answer the situation
-described by a broad, no-range question. Its canonical location is hidden routing metadata, not a
-range selected by the user. Use its musical advice naturally, cite its short [E#] label while
-drafting for internal validation, and do not print any canonical measure number, range, scope label,
-annotation label, retrieval explanation, or other internal metadata. Refer to the situation itself
-when localization is needed (for example, "긴 간주에서는... [E2]"). A local example cannot by
-itself establish that something happens throughout the work, frequently, or in many places. Do not
-write "곡 전반", "자주", or "많이" unless separate whole-piece evidence explicitly supports
-that claim in that same sentence. Merely retrieving an unrelated whole-piece record does not broaden
-a local claim. A whole-piece or general record has no measure authority, even when its verbatim
-source text mentions a measure; do not print that locator in a no-range answer.
-Preserve the expert's degree of certainty exactly. In particular, wording such as "볼 수 있다",
-"가능하다", "경우가 있다", or a recommendation must not become a definite fact or a claimed
-composer intention.
-Preserve the canonical structure of every expert claim: its subject or agent, causal and determining
-direction, negation, alternatives, conditions, scope, and modality. A premise embedded in the user's
-question is not evidence. An interpretation, recommendation, or possibility must remain in that
-category; never promote it into historical fact, author intention, a universal or frequency claim,
-or a definite causal explanation. If a why-question is supported only by an interpretive framing,
-state that framing as an interpretation or performer-facing recommendation. Preserve every
-alternative governed by one possibility, and never introduce a causal or reporting attribution that
-the evidence does not assert. Keep the core expert predicates close to their reviewed wording; edit
-connectors and speech level rather than changing who did what, why it happened, or what determines
-what.
-Do not create a new causal chain by joining separate evidence relations. A statement that a musical
-change accompanies an image plus a separate statement that a composer made that change does not
-establish that the composer intended that image. Keep each supported relation separate unless the
-reviewed evidence explicitly connects its agent, action, and purpose.
-Preserve condition boundaries and contrasts exactly. When reviewed evidence assigns different rules
-to different markings, states, options, or passages, state each rule separately and never transfer
-one condition's permission, prohibition, or technique to another. Never reverse polarity: a warning
-that an effect may become excessive, should be avoided, or must be controlled is not a recommendation
-to create that effect.
-Evidence is ordered by retrieval relevance. Answer the exact question from all directly useful,
-compatible evidence, especially when a broad question asks for comprehensive guidance. Do not
-restrict the response to one item merely for brevity, and do not add merely related advice just
-because another record was retrieved.
-Compose the answer as natural prose rather than paraphrasing each evidence item in sequence. Merge
-overlapping recommendations, avoid repeating the same conclusion or sentence frame, and preserve
-distinct useful details when several compatible items improve completeness. Before output, edit the
-prose so adjacent clauses neither begin with the same connective nor reuse the same predicate.
-Do not append an interpretive payoff, emotional effect, or generic concluding rationale merely to
-round off the prose. End after the supported recommendations unless the evidence itself states that
-payoff. When several units call different details important, state the details directly under one
-shared lead-in instead of repeating that each one is important.
-As the final silent check, verify every causal phrase, qualifier, attribution, negation, and contrast
-against the evidence, then proofread Korean verb conjugations and collocations. When an evidence
-sentence already states a clear natural predicate that answers the question, prefer that predicate
-with a formal-polite ending instead of inventing a less natural synonym.
-When several evidence items make parallel recommendations, give them a shared natural lead-in and
-state each as a distinct practical action instead of repeating generic importance claims. Combine
-closely related recommendations or vary their grammatical structure without changing meaning.
-Keep expert source_ids separate from web_source_ids and claim_ids.
-Mention a measure only when the user selected a measure range and doing so helps answer the question.
-When you do mention a selected numeric score range, call its numbers "마디"; never relabel measures
-as "절", a verse, a section, or another structural unit.
-Use only the short evidence labels exactly as shown, such as [E1], while drafting claims for internal
-validation; never retype an opaque knowledge-unit/webchunk id.
-Do not add a citation list or evidence footer. The application removes the short labels before display
-and keeps exact record IDs, source attribution, and license conditions in separate structured metadata.
+Preserve source qualifiers and the canonical structure of each claim: its subject,
+causal and determining direction, negation, alternatives, conditions, scope, and modality.
+A premise embedded in the user's question is not evidence. Preserve the expert's degree of certainty exactly.
+An interpretation or performer-facing recommendation must remain an interpretation or recommendation,
+not a fact or composer intention. Preserve every alternative and reporting attribution;
+do not change who did what or what determines what. Do not create a new causal chain
+by joining facts that the source does not causally connect. Preserve condition boundaries and contrasts exactly.
+state each rule separately and never transfer one condition's advice to another.
+Never reverse polarity: a warning to avoid an effect is not a recommendation
+to create that effect. A possibility is not a frequency claim or a certainty.
+
+For a selected measure range, only selected_range_support establishes local facts.
+other_range_context_only claims are withheld; never infer or transfer them to the selection.
+general_context and unconfirmed_scope_context_only cannot establish what happens in selected bars.
+Web evidence without an edition-qualified measure system cannot establish local score facts.
+Without a selected range, Evidence_role=local_example may answer the described musical situation.
+Its canonical location is hidden routing metadata: do not print measure numbers or internal scope labels.
+A local example cannot by itself establish whole-piece, frequent, or universal behavior.
+General evidence likewise has no authority to introduce measure locators in a no-range answer.
+
+Write coherent prose. Merge overlapping or parallel recommendations into a distinct practical action
+without changing meaning. Edit adjacent clauses to avoid repetition. Do not summarize sources in order.
 Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
-measure_range, measure_scope, query_scope_relation, usage_constraint, local_example, knowledge unit,
-expert annotation, retrieval, or retrieved evidence in the answer. Ordinary domain prose about a
-research corpus, 코퍼스, or 말뭉치 is allowed when that subject is supported by the evidence;
-do not describe the application's retrieved records or prompt context with those words.
-Keep the answer concise and practical for a singer.
+measure_range, measure_scope, query_scope_relation, usage_constraint, local_example,
+knowledge unit, expert annotation, retrieval, or retrieved evidence. Source attribution may
+name an actual speaker or document when supported, not an internal record category.
+When no source name is supplied, use "one account" or "another account" if attribution
+is needed. Never write internal evidence labels such as E1 or E2 in the prose.
+Use only the short evidence labels exactly as shown, in separate evidence arrays.
+Do not add a citation list or evidence footer. Do not reveal chain-of-thought or <think> blocks.
+"""
+SYSTEM_PROMPT = _GROUNDING_PROMPT + """
+Answer in Korean using formal-polite 합니다체 consistently (-습니다, -ㅂ니다, -입니다).
+Do not copy plain -다/-한다 or casual -어요 endings. Before output, proofread Korean verb conjugations.
+Only when the user selected a numeric range and its location helps answer, call its numbers "마디".
+"""
+SYSTEM_PROMPT_EN = _GROUNDING_PROMPT + """
+Answer in clear, natural English. Translate the Korean evidence faithfully, preserving its
+qualifications and meaning. Keep quoted lyric words and musical terms in their original language.
+Interpret musical vocabulary in context: 음표 is a note, 쉼표 a rest, 2분음표 a half note,
+4분음표 a quarter note, and 유절가곡 a strophic song. A note value is not an ordinal note number.
+Only when the user selected a numeric range and its location helps answer, call its numbers "bar" or "measure".
 """
 NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
-NO_CORPUS_EVIDENCE_MESSAGE = (
-    "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
-)
-# English answers keep every grounding, scope, and certainty rule of the
-# Korean prompt. Only the output-language and register instructions and the
-# illustrative phrases differ; the reviewed evidence itself remains Korean.
-SYSTEM_PROMPT_EN = """You are a measure-aware soprano performance QA assistant.
-
-Answer in clear, natural English. The retrieved evidence is written in Korean and may quote Italian,
-German, or Korean lyric words and foreign musical terms. Translate each claim you use faithfully:
-never add, drop, soften, or strengthen a hedge, condition, scope, negation, or recommendation while
-translating. Keep lyric words, quoted text, and foreign musical terms in their original language and
-spelling; you may add a short English gloss in parentheses when it helps the singer. Do not answer in
-Korean and do not copy Korean sentences into the answer.
-Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has explicitly labeled lineages:
-- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
-- web_coaching: claims extracted from public coaching sources.
-- expert_annotation: human expert performance commentary.
-- web_database: externally collected background or performance evidence with source provenance.
-For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
-the authoritative claim text. Raw source annotations, legacy range hints, superseded wording,
-conflicts, and editorial notes are deliberately withheld from generation. The knowledge unit's
-confirmed measure_range may route the record, but it never substitutes raw source prose for the
-curated answer. When a curated answer covers several confirmed ranges, keep every claim within
-that reviewed answer and limit the response to what it supports about the selected passage. If
-the wording of the question projects unsupported behavior onto the selected range, correct the
-premise only when the curated answer supports the correction.
-Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Give the most useful answer supported by the supplied evidence. If it covers only part of an
-in-scope music question, answer that supported part without filling gaps from outside knowledge.
-If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
-Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
-commentary into a universal fact about every version of the work.
-For a measure-range query, evidence_role=selected_range_support is the local authority for the
-selected passage. Evidence_role=other_range_context_only may be retained because it is musically
-related, but only its existence and range metadata are exposed as an internal range-mismatch signal.
-Its musical claim is withheld: do not infer, cite, paraphrase, or transfer that claim into the final
-answer.
-Evidence_role=general_context may add background but cannot establish a local score claim.
-Evidence_role=unconfirmed_scope_context_only has no confirmed location and likewise cannot establish
-what happens in the selected range. Web evidence without an edition-qualified measure system cannot
-support a claim about a specific bar.
-When no measure range is supplied, no score location has been selected. Rank evidence by how
-directly it answers the question, not by whole-piece scope alone. Prefer whole-piece evidence only
-when it is at least as semantically relevant as a local example.
-Evidence_role=local_example is passage-specific evidence that may directly answer the situation
-described by a broad, no-range question. Its canonical location is hidden routing metadata, not a
-range selected by the user. Use its musical advice naturally, cite its short [E#] label while
-drafting for internal validation, and do not print any canonical measure number, range, scope label,
-annotation label, retrieval explanation, or other internal metadata. Refer to the situation itself
-when localization is needed (for example, "In the long interlude, ... [E2]"). A local example cannot
-by itself establish that something happens throughout the work, frequently, or in many places. Do not
-write "throughout the piece", "often", "frequently", "always", or "in many places" unless separate
-whole-piece evidence explicitly supports that claim in that same sentence. Merely retrieving an
-unrelated whole-piece record does not broaden a local claim. A whole-piece or general record has no
-measure authority, even when its verbatim source text mentions a measure; do not print that locator
-in a no-range answer.
-Preserve the expert's degree of certainty exactly. In particular, Korean wording such as "볼 수 있다"
-("can be seen as"), "가능하다" ("is possible"), "경우가 있다" ("is sometimes the case"), or a
-recommendation must not become a definite fact or a claimed composer intention in English; render it
-with an equally tentative English phrase such as "can be read as", "may", or "it is possible to".
-Preserve the canonical structure of every expert claim: its subject or agent, causal and determining
-direction, negation, alternatives, conditions, scope, and modality. A premise embedded in the user's
-question is not evidence. An interpretation, recommendation, or possibility must remain in that
-category; never promote it into historical fact, author intention, a universal or frequency claim,
-or a definite causal explanation. If a why-question is supported only by an interpretive framing,
-state that framing as an interpretation or performer-facing recommendation. Preserve every
-alternative governed by one possibility, and never introduce a causal or reporting attribution that
-the evidence does not assert. Keep the core expert predicates close to their reviewed meaning; edit
-connectors and phrasing rather than changing who did what, why it happened, or what determines
-what.
-Do not create a new causal chain by joining separate evidence relations. A statement that a musical
-change accompanies an image plus a separate statement that a composer made that change does not
-establish that the composer intended that image. Keep each supported relation separate unless the
-reviewed evidence explicitly connects its agent, action, and purpose.
-Preserve condition boundaries and contrasts exactly. When reviewed evidence assigns different rules
-to different markings, states, options, or passages, state each rule separately and never transfer
-one condition's permission, prohibition, or technique to another. Never reverse polarity: a warning
-that an effect may become excessive, should be avoided, or must be controlled is not a recommendation
-to create that effect.
-Evidence is ordered by retrieval relevance. Answer the exact question from all directly useful,
-compatible evidence, especially when a broad question asks for comprehensive guidance. Do not
-restrict the response to one item merely for brevity, and do not add merely related advice just
-because another record was retrieved.
-Compose the answer as natural prose rather than paraphrasing each evidence item in sequence. Merge
-overlapping recommendations, avoid repeating the same conclusion or sentence frame, and preserve
-distinct useful details when several compatible items improve completeness. Before output, edit the
-prose so adjacent clauses neither begin with the same connective nor reuse the same predicate.
-Do not append an interpretive payoff, emotional effect, or generic concluding rationale merely to
-round off the prose. End after the supported recommendations unless the evidence itself states that
-payoff. When several units call different details important, state the details directly under one
-shared lead-in instead of repeating that each one is important.
-As the final silent check, verify every causal phrase, qualifier, attribution, negation, and contrast
-against the Korean evidence, then proofread the English grammar and word choice. When an evidence
-sentence already states a clear predicate that answers the question, translate that predicate
-directly instead of inventing a looser or stronger synonym.
-When several evidence items make parallel recommendations, give them a shared natural lead-in and
-state each as a distinct practical action instead of repeating generic importance claims. Combine
-closely related recommendations or vary their grammatical structure without changing meaning.
-Keep expert source_ids separate from web_source_ids and claim_ids.
-Mention a measure only when the user selected a measure range and doing so helps answer the question.
-When you do mention a selected numeric score range, call its numbers "bar" or "measure" (for example,
-"bars 2-5"); never relabel measures as a verse, a section, or another structural unit.
-Use only the short evidence labels exactly as shown, such as [E1], while drafting claims for internal
-validation; never retype an opaque knowledge-unit/webchunk id.
-Every English sentence that states a fact or advice needs its own label at its end, even when several
-consecutive sentences come from the same evidence item (for example, "Keep the vowel open [E1]. Breathe
-before the phrase [E1, E2]."). A sentence without a label is treated as unsupported.
-Do not add a citation list or evidence footer. The application removes the short labels before display
-and keeps exact record IDs, source attribution, and license conditions in separate structured metadata.
-Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
-measure_range, measure_scope, query_scope_relation, usage_constraint, local_example, knowledge unit,
-expert annotation, retrieval, or retrieved evidence in the answer. Ordinary domain prose about a
-research corpus is allowed when that subject is supported by the evidence; do not describe the
-application's retrieved records or prompt context with that word.
-Keep the answer concise and practical for a singer.
-"""
+NO_CORPUS_EVIDENCE_MESSAGE = "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
 # Application policy belongs in the privileged channel, never in source text.
 ANSWER_CONTRACT = """Answer contract
-Write one coherent answer, not a list of evidence excerpts. Use every retrieved
-item that materially improves the answer, but omit merely related advice.
-End EACH factual or advisory sentence with its supporting temporary label,
-for example [E1] or [E1, E2], even when consecutive sentences cite the same
-record. Never print an opaque record ID. The application validates and removes
-temporary labels before displaying the answer. Only an answer naming the sung
-words from score context alone has no E# labels.
-For example, if E1 supports both sentences: "호흡을 유지합니다. [E1]
-프레이즈를 연결합니다. [E1]". The model output MUST contain the labels;
-the application, not the model, removes them for the user.
+Write one coherent, question-focused answer using the structured answer format.
+The text fields contain natural prose only; select supporting labels in each
+item's evidence array. The application renders those labels for validation and
+removes them for display. Do not write inline citations or a citation footer.
+Start with the direct answer. Usually one to four sentences are enough; add a
+distinct detail only when it answers a requested aspect or preserves an important
+condition. Stop when the question is answered. Do not summarize every retrieved
+record or add other passages' advice merely because it appears in the evidence.
+Before writing, select only the source clauses that directly answer the question.
+For a focused question, normally give one or two sentences. A broad request may need more.
+Do not attach unrelated background, another passage's advice, or a generic conclusion.
+Prefer a faithful short paraphrase or translation over new explanations.
+Two examples of the reasoning rule, not additional musical evidence:
+- If one source says to enter gently and another discusses the final release,
+  a question about the entrance needs only the entrance advice.
+- If two accounts give different metronome markings and a general source says
+  notation can vary, the specific reason for the discrepancy is still unknown.
+  State the differing accounts and the uncertainty. Do not invent an explanation
+  about interpretation, editions, or artistic freedom from the generic statement.
+Preserve uncertainty, alternatives, negation, causal direction and attribution.
+If sources disagree and no source explains that disagreement, the answer must state
+that its cause is not established, then attribute the differing statements. Do not offer
+a possible cause from general knowledge, even hedged as "may" or "can be seen as".
+If part of a music question cannot be established, say so briefly and provide
+its supported part. If nothing can be supported, return {"sentences":[]}.
 """
 SOURCE_PRIORITY_POLICY = """For relevant, scope-applicable evidence, use this authority order:
 sumijo_feedback, then expert_annotation, then web_coaching/web_database.
 Use lower-priority evidence to fill gaps, not override higher-priority advice.
-If sources conflict, preserve attribution and explain the disagreement; do not
-silently blend incompatible advice or claim agreement. Authority never makes
+If sources conflict, attribute each claim and describe the discrepancy; do not
+invent its cause, silently blend incompatible advice, or claim agreement.
+When the evidence does not establish why sources differ, say the cause cannot
+be determined from these materials and give any supported shared guidance.
+A generic remark about editions, notation or interpretation is not evidence
+for the cause of this particular disagreement. Authority never makes
 an unrelated claim relevant or an unconfirmed measure location confirmed.
 Sumi Jo attribution refers to the supplied recordings and reviewed transcripts.
 """
@@ -316,8 +166,9 @@ SYSTEM_PROMPT_EN += "\n" + SOURCE_PRIORITY_POLICY
 SYSTEM_PROMPT += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
 SYSTEM_PROMPT_EN += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
 # Additional English citation examples for the privileged answer contract.
-ENGLISH_ANSWER_CONTRACT = """Write the answer in English. Put a label at the end of every sentence, not
-once per paragraph: "Keep the vowel open [E1]. Breathe before the phrase [E1]."
+ENGLISH_ANSWER_CONTRACT = """Write the text fields in English. Put supporting evidence labels in
+separate evidence arrays, never in the prose. Translate the Korean source's
+meaning and qualifications faithfully; preserve musical terms and quoted lyrics.
 """
 SYSTEM_PROMPT_EN += "\n" + ENGLISH_ANSWER_CONTRACT
 NO_CORPUS_EVIDENCE_MESSAGE_EN = (
@@ -2513,12 +2364,16 @@ def _nearby_signal_pair(
 
 
 def is_grounded_insufficiency_answer(answer: str) -> bool:
-    """Recognize a grounded model refusal caused by missing evidence.
+    """Recognize a wholly insufficient answer, preserving supported partial prose.
 
     A bare word such as ``부족`` or a general discussion of missing score
     information is not a refusal. Natural-language detection requires both a
     grounding-information shortfall and an inability to answer, know, or
-    determine something within one short explanation.
+    determine something within one short explanation. A substantive answer can
+    coexist with a limitation, including in a contrasting clause of the same
+    sentence. Its support is checked by the output guard and citation/scope
+    validators, not by this text detector. Clarification requests alone do not
+    supply an answer.
     """
 
     without_footer = _remove_evidence_footer(answer)
@@ -2529,21 +2384,70 @@ def is_grounded_insufficiency_answer(answer: str) -> bool:
         return True
 
     normalized = unicodedata.normalize("NFKC", without_footer)
-    if _nearby_signal_pair(
+    has_refusal = _nearby_signal_pair(
         normalized,
         KOREAN_GROUNDING_SHORTFALL_RE,
         KOREAN_ANSWER_INABILITY_RE,
         max_gap=80,
-    ):
-        return True
-    if ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized):
-        return True
-    return _nearby_signal_pair(
+    ) or bool(ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized)) or _nearby_signal_pair(
         normalized,
         ENGLISH_GROUNDING_SHORTFALL_RE,
         ENGLISH_ANSWER_INABILITY_RE,
         max_gap=120,
     )
+    if not has_refusal:
+        return False
+    signals = (
+        KOREAN_GROUNDING_SHORTFALL_RE, KOREAN_ANSWER_INABILITY_RE,
+        ENGLISH_GROUNDING_SHORTFALL_RE, ENGLISH_ANSWER_INABILITY_RE,
+        ENGLISH_DIRECT_INSUFFICIENCY_RE,
+    )
+    boilerplate = re.compile(
+        r"(?:sorry|i(?:['’]m| am) sorry|thank you|thanks|죄송합니다|감사합니다)",
+        re.IGNORECASE,
+    )
+    clarification = re.compile(
+        r"(?:"
+        r"(?:(?:could|can|would)\s+you\s+)?(?:please\s+)?"
+        r"(?:(?:provide|share|supply|give|add|send)\s+(?:me\s+)?"
+        r"(?:(?:some|more|additional|further|relevant)\s+)*"
+        r"(?:details?|information|context|evidence)"
+        r"(?:\s+(?:about|on|for)\s+(?:(?:your|the|this)\s+)?"
+        r"(?:question|request|passage|issue))?"
+        r"|(?:clarify|rephrase|specify)"
+        r"(?:\s+(?:(?:your|the|this)\s+)?(?:question|request))?"
+        r"|elaborate(?:\s+on\s+(?:(?:your|the|this)\s+)?(?:question|request))?)"
+        r"(?:,?\s+please)?"
+        r"|(?:(?:좀\s*더|더)\s*)?"
+        r"(?:(?:자세한|구체적인|추가적인|추가|관련)\s*)?"
+        r"(?:내용|정보|자료|문맥|근거|질문|상황)(?:을|를)?\s*"
+        r"(?:(?:좀\s*더|더)\s*)?(?:구체적으로\s*)?"
+        r"(?:알려|제공해|설명해|구체화해)\s*(?:주세요|주십시오|주시겠습니까)"
+        r")",
+        re.IGNORECASE,
+    )
+    # Split explicit contrasts, not every comma: a parenthetical fragment in
+    # a refusal is not itself a supported answer. Keep Korean negative stems
+    # intact so the limitation side still matches the existing signals.
+    contrast = re.compile(
+        r"\s*;\s*|\s+(?:but|however|nevertheless|yet)\b[,，]?\s*"
+        r"|(?<=없)(?:지만|으나)[,，]?\s*"
+        r"|(?<=어렵)지만[,，]?\s*|(?<=힘들)지만[,，]?\s*"
+        r"|\s+(?:하지만|그러나|다만)[,，]?\s*",
+        re.IGNORECASE,
+    )
+    for claim in _answer_claims(normalized):
+        for clause in contrast.split(ANSWER_EVIDENCE_LABEL_RE.sub("", claim)):
+            prose = clause.strip(" \t\r\n.!?。！？,，;")
+            if (
+                not _claim_has_substantive_text(prose)
+                or boilerplate.fullmatch(prose)
+                or clarification.fullmatch(prose)
+            ):
+                continue
+            if not any(pattern.search(prose) for pattern in signals):
+                return False
+    return True
 
 
 def _has_direct_query_signal(result: Any) -> bool:

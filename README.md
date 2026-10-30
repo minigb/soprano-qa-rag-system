@@ -3,8 +3,9 @@
 Local, measure-aware hybrid retrieval and grounded answer generation for five
 soprano works. Grounded generation sends the complete selected, reviewed
 knowledge-unit answer texts to local Qwen3-14B. Separate local-model checks
-assess scope and answerability before composition and support for the draft
-before release. Rejected answers are withheld. Retrieval confidence changes
+assess task safety before composition and support for the draft before release.
+Admission does not reject a music question solely because its evidence is
+partial or conflicting. Rejected answers are withheld. Retrieval confidence changes
 which evidence is supplied without selecting a different answer renderer.
 
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
@@ -153,7 +154,8 @@ evidence text (`answer_language: "ko"`). English adds one translation call;
 Korean does not require translation. A completed generated answer normally
 uses three local-model calls: admission assessment, composition, and output
 assessment. English generation uses four including translation. Requests
-that are rejected early use fewer calls.
+that are rejected early use fewer calls. An explicit empty composition skips
+output assessment and becomes an unavailable response.
 
 `ask()` returns a `dict`. The fields to branch on:
 
@@ -268,16 +270,26 @@ into a JSON payload with separate evidence records and structured score
 measures. Source text cannot create a new record or measure by inserting fake
 field names or newlines. Application instructions stay in the system role;
 the question, retrieved text, and score context have no authority to change
-those instructions. Qwen3-14B first assesses scope and answerability, then
-composes sentence objects with text and model-selected evidence labels under
-a JSON schema. The application renders those labels into the draft and the
-output guard assesses the rendered prose against the supplied evidence.
+those instructions. Qwen3-14B first assesses whether every requested task stays
+within the music service and respects its instruction boundary. Evidence
+coverage is left to retrieval, composition, and output review. It then composes
+objects with text and model-selected evidence labels under a JSON schema.
+The application renders those labels into the draft and the output guard
+assesses the rendered prose against the supplied evidence.
 The guards accept only a strict JSON boolean approval. There is one composition
 attempt and no repair, alternate-model, extractive, or internal-knowledge
 fallback. Retrieval ambiguity, rejected drafts, and failed guards produce
 `unavailable` / `no_corpus_evidence`.
 
-The composition schema permits only the supplied primary-evidence labels.
+The composition schema permits zero to six items and only the supplied
+primary-evidence labels, selected before each item's prose. A single leading
+system message contains both format and grounding rules. These ordering choices
+do not prove factual support. One to four concise items are normally requested;
+additional items must add distinct useful details, preserving source qualifiers
+and conditions. The model may answer the supported part of a music question
+and briefly state what cannot be established. If nothing can be supported, it
+returns `{"sentences":[]}`. The application converts that explicit abstention
+into the normal unavailable response without another model call.
 Score-context-only answers use empty citation arrays and remain limited to
 identifying sung words. Structured output prevents omitted or malformed inline
 labels without adding another model call; it does not prove that a sentence
@@ -287,13 +299,21 @@ English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
 Korean-calibrated retrieval and gating, while measure mentions are still read
 from the English question. The same frozen evidence bundle is then answered
-with an English variant of the system prompt that keeps every grounding,
-scope, and certainty rule, translates the Korean evidence faithfully, and keeps
-lyric words and foreign terms in their original language.
+using a compact shared grounding prompt plus Korean or English language
+instructions. Both languages preserve scope, uncertainty, attribution and
+conditions. English translates the Korean evidence faithfully and keeps lyric
+words and foreign terms in their original language. The composition contract
+puts citations in evidence arrays, never in the generated prose. Source
+disagreement may be described with attribution; an unsupported explanation for
+the disagreement must not be invented, even with tentative wording.
 
 Normalized screening checks the original question before translation or model
 loading, and checks the translation, admitted evidence, score context, and
-draft for known control instructions. Retrieval-only requests receive screening
+draft for known control instructions. A narrow output check also rejects
+question-only opaque markers absent from the supplied sources. Ordinary
+two-part catalogue identifiers and conventional pitch spellings are left to
+semantic support review rather than treated as arbitrary markers.
+Retrieval-only requests receive screening
 but do not run the semantic admission or output assessments. These are layered
 mitigations: JSON boundaries, pattern screening, and a judge using the same
 model do not guarantee resistance to adaptive prompt injection. Valid citation
@@ -311,6 +331,15 @@ contains 400 measured requests comparing the original and hardened systems on
 Korean/English attacks and answerable music questions. It reports attack success,
 false refusals, blinded answer quality and warm latency, including a repeatable
 remaining bypass and the hardening's usability costs.
+Those findings concern the earlier frozen snapshots.
+
+The [2026-10-31 quality refinement](evaluation/quality_refinement_2026-10-31/report.md)
+compares the current secured baseline with the refined pipeline on 120 bilingual
+cases (240 requests). False refusals fall from 6/50 to 1/50 and direct attack
+success from 3/36 to 0/36; effective rubric quality rises from 78.0 to 93.4/100.
+Two refined answers still contain material support errors. The report includes
+language breakdowns, latency, regressions, review limitations and a separate
+audit of the static demo samples. This authored suite is not a security guarantee.
 
 ```bash
 conda run -n soprano-qa python evaluation/run_qualitative.py

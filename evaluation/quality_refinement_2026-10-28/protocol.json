@@ -1,0 +1,24 @@
+{
+  "date": "2026-10-28",
+  "baseline_ref": "29fe3e2",
+  "candidate_selection": "18 known-failure diagnostics before final candidate; preserve every candidate attempt",
+  "evaluation_inventory_sha256": "017d38684ccff70ff40e342399ad9ed9759687df36af6e4a7febcea8af4da879",
+  "cases": 120,
+  "languages": {
+    "ko": 60,
+    "en": 60
+  },
+  "cohorts": {
+    "benign": 50,
+    "direct": 36,
+    "indirect": 22,
+    "out_of_scope": 12
+  },
+  "design": "One repetition per variant, serial workers, baseline then refined; same local model/corpus/settings and untimed warmup. Existing live demo may contend for hardware; latency is local observed performance, not a throughput claim.",
+  "baseline_note": "Current security-enabled pipeline with Sumi Jo source ranking, not the pre-security f307470 from Oct25.",
+  "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+  "metrics": "Frozen Oct25 security_eval_rubric scoring, current baseline instead. Report delivered answers only; quality review independent of Qwen guard; false abstention includes unsupported drafts rejected for answerable questions.",
+  "limit": "Developer-authored regression, not independent heldout. Fresh20 authored with known prior failures in mind. Forced post-retrieval injection, not natural poisoning.",
+  "latency": "Normal service_request includes retrieval and usage checks; retain usage_check_seconds_in_request. Fixed_evidence_generation diagnostics exclude retrieval and must not pool into service latency.",
+  "usage_stop": "Before every completion and case: stop at >=95% or reset observation; keep persistent original-window state. Never auto-resume after terminal stop."
+}
