@@ -43,6 +43,31 @@ compromised model checkpoint.
 
 ## Research and implications
 
+The October 31 background-knowledge experiment separates permission to answer
+music questions from whether a particular passage supports a claim. Its results
+and frozen metric protocol are recorded in
+[the experiment directory](../evaluation/ku_background_2026-10-31/protocol.md).
+Relevant additions, checked against primary sources on October 31:
+
+- [Self-RAG (ICLR 2024)](https://arxiv.org/abs/2310.11511) motivates assessing
+  retrieval need and passage relevance instead of incorporating a fixed bundle
+  indiscriminately. The paper trains reflection tokens; our prompted relevance
+  selector is an engineering hypothesis, not a reproduction of Self-RAG.
+- [FaithfulRAG (ACL 2025)](https://arxiv.org/abs/2506.08938) explicitly models
+  conflicts between retrieved and parametric knowledge. Its authors report
+  limitations of forcibly suppressing internal knowledge. Here, general music
+  explanations are permitted, while changed source conditions, false expert
+  attribution and invented local facts remain errors. The paper's results do
+  not establish the effectiveness of our local implementation.
+- [BERTScore (ICLR 2020)](https://arxiv.org/abs/1904.09675) compares contextual
+  token representations. It measures reference similarity, not factual accuracy
+  or injection resistance. The [official implementation](https://github.com/Tiiiger/bert_score)
+  supports encoder/layer selection and IDF weighting, records a configuration
+  hash and distinguishes baseline rescaling. We freeze expert references,
+  choose settings on development questions, and report the exact configuration.
+  Raw scores from different encoders must not be interpreted as the same
+  calibrated quality scale. An independent meaning review remains necessary.
+
 | Work | Finding relevant to this service | Design implication and qualification |
 | --- | --- | --- |
 | Hines et al., *Defending Against Indirect Prompt Injection Attacks With Spotlighting*, March 2024. [Paper](https://arxiv.org/abs/2403.14720) | Explicit provenance signals help models distinguish untrusted content from instructions. | Label and delimit question/evidence data and keep the application contract in the system role. Structured serialization applies the boundary principle; it is not a reproduction of every spotlighting transformation or evidence that the paper's results transfer to Qwen. |

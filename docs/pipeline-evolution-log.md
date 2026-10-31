@@ -42,6 +42,18 @@ protocol, rather than the old source-only release checklist below, governs
 general-knowledge evaluation and legitimate refusals of unknown local facts.
 No experiment here changes the live service or published demo answer files.
 
+Next development hypothesis E: D's early general-concept answers still attach
+related but non-answering passages (for example, legato advice to a fermata
+definition). A semantic selection step will be evaluated for bundles containing
+multiple primary sources. It can only retain existing primary citation labels
+or return an empty list; it cannot write new facts or promote context-only
+records. It runs after task admission and source screening, before composition.
+The generator may then use marked general knowledge when nothing directly
+answers the question. A malformed selection fails closed. This is prompted
+relevance filtering, not a trained Self-RAG implementation or a security proof.
+Whether its extra inference cost and possible selection omissions are worth it
+must be decided on the same frozen development questions before validation.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical

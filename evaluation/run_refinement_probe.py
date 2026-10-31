@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Persistent local development probes with private drafts and a usage stop.
+"""Persistent local development probes with private drafts and frozen inputs.
 
 Normal cases use the public service. Fixed-context cases supply ``fixed_evidence``
 or ``selected_pool`` (ordered {record, relevance, scope} entries), or a matched
@@ -7,10 +7,10 @@ experiment ``pool`` with explicit ``condition`` and ``budget``. Fixed runs bypas
 retrieval, so their latency is deliberately labelled separately. No answer is
 reused across cases. Every attempted failure is checkpointed.
 
-Pass the SAME --usage-state to successive probes to retain usage provenance.
-Only fresh rollout token_count events qualify. The user's October31 instruction
-removes reset-based stops; only the95% cap and unavailable usage observations
-stop the run. This script never starts an app-server or notifier.
+Normal evaluation omits --usage-rollout and has no usage/reset stop condition.
+The optional legacy monitor remains for reproducing older interrupted audits;
+only explicitly supplied monitoring arguments enable it. This script never
+starts an app-server or notifier.
 """
 from __future__ import annotations
 

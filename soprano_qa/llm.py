@@ -10,7 +10,10 @@ import re
 import threading
 from typing import Any, Dict, List
 
-from soprano_qa.security import SecurityViolation, screen_generated_answer, semantic_guard
+from soprano_qa.security import (
+    SecurityViolation, screen_generated_answer, semantic_guard,
+    select_question_evidence, serialize_untrusted,
+)
 from soprano_qa.structured_answer import (
     NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
@@ -129,6 +132,12 @@ def generate(
             model_path, llm_settings, security_context,
             stage="admission", generate_fn=generate,
         )
+        selected_context = select_question_evidence(
+            model_path, llm_settings, security_context, generate_fn=generate,
+        )
+        if selected_context is not security_context:
+            security_context = selected_context
+            messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.
