@@ -59,8 +59,22 @@ may identify only the supplied sung words, without making performance claims.
 Give a concise coherent answer in one to three items, without unrelated advice.
 Use the requested answer_language. For Korean use formal-polite 합니다체;
 for English use natural English and preserve quoted lyric words as supplied.
-The application labels background; do not add a heading yourself. If even a
-useful general answer is impossible, return {"sentences":[]}.
+The application labels background; do not add a heading yourself. If a useful
+general answer is impossible, state the missing information briefly. A statement
+of that limitation is a valid background item; never invent a fact to fill one.
+/no_think
+"""
+
+GENERAL_MUSIC_FORMAT_POLICY = """Return one JSON object, no markdown or extra keys:
+{"sentences":[{"kind":"background","evidence":[],"text":"Your answer in the requested language."}]}
+Write one to three concise items. Use background for general musical knowledge
+or an explicit statement of what cannot be established. evidence must be [].
+When actual score context is supplied, score_lyrics may identify only its words.
+Keep kinds separate. Do not print labels, IDs, headings or kind names in prose.
+Each text must be nonempty and at most 2000 characters. Do not pad or repeat.
+For an unanswerable local fact, state the limitation; do not guess it. A
+required text item is not a requirement to make a factual claim. Task, source
+and security boundaries still apply to every item.
 /no_think
 """
 
@@ -141,7 +155,10 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
         "properties": {
             "sentences": {
                 "type": "array",
-                "minItems": 0,
+                # Empty-bundle generations otherwise collapsed to [] even for
+                # elementary theory questions. Require an explanation OR an
+                # explicit limitation; the semantic guard still checks both.
+                "minItems": 0 if labels else 1,
                 "maxItems": MAX_SENTENCES,
                 "items": {
                     "type": "object",

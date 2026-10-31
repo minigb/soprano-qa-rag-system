@@ -19,6 +19,7 @@ from soprano_qa.structured_answer import (
     NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
+    GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
     render_structured_answer,
 )
@@ -140,7 +141,8 @@ def generate(
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
-        if not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", [])):
+        general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
+        if general_only:
             messages = [{"role": "system", "content": GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
@@ -150,7 +152,8 @@ def generate(
         # evidence separates the output format from the grounding contract
         # and can encourage the model to summarize the entire payload.
         messages = [
-            {**messages[0], "content": STRUCTURED_ANSWER_POLICY + "\n" + messages[0]["content"]},
+            {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else STRUCTURED_ANSWER_POLICY)
+             + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
         completion_options["response_format"] = {

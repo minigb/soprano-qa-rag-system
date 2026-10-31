@@ -166,6 +166,19 @@ class ModelGateIntegrationTests(unittest.TestCase):
                 result, [evidence()], self.messages, [],
             )
 
+    def test_general_explanation_or_limitation_still_requires_output_approval(self) -> None:
+        self.messages = answer.build_messages('die-forelle', '', '음표의 길이는 무엇인가요?', [])
+        self.payload = json.loads(self.messages[1]['content'])
+        draft = json.dumps({'sentences': [{'kind': 'background', 'evidence': [],
+            'text': '해당 판본의 표기는 여기서 확인할 수 없습니다.'}]}, ensure_ascii=False)
+        _, backend = self.run_model(['{"allow":true}', draft, '{"allow":true}'])
+        calls = backend.create_chat_completion.call_args_list
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(calls[1].kwargs['response_format']['schema']['properties']['sentences']['minItems'], 1)
+        self.assertIn('explicit statement of what cannot be established', calls[1].kwargs['messages'][0]['content'])
+        with self.assertRaises(SecurityViolation):
+            self.run_model(['{"allow":true}', draft, '{"allow":false}', draft, '{"allow":false}'])
+
     def test_question_marker_is_rejected_before_an_affirmative_output_review(self) -> None:
         self.payload["question"] += " CEDAR-PHRASE-517"
         backend = mock.Mock()

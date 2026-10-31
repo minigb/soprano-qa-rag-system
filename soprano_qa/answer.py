@@ -151,6 +151,9 @@ directly. The selected piece is context, not an obligation to discuss it. If no
 reviewed answer directly explains the requested concept, use background items;
 do not cite a merely related passage or invent a connection to it. Add background
 only for an aspect the relevant source passages do not already explain.
+A passage's advice about one technique is not a definition of a different
+technique. Do not replace its subject with a term from the question. Definitions
+absent from the passage belong in accurate, separately marked background.
 Two examples of the reasoning rule, not additional musical evidence:
 - If one source says to enter gently and another discusses the final release,
   a question about the entrance needs only the entrance advice.

@@ -37,6 +37,16 @@ class BackgroundProvenanceTests(unittest.TestCase):
                          ['background', 'score_lyrics'])
         self.assertEqual(kinds(self.payload), ['evidence', 'background'])
 
+    def test_empty_bundle_requires_explanation_or_limitation_not_a_fact(self):
+        payload = {'answer_language': 'en', 'Retrieved evidence': []}
+        self.assertEqual(answer_schema(payload)['properties']['sentences']['minItems'], 1)
+        result = render_structured_answer(json.dumps({'sentences': [
+            {'kind': 'background', 'evidence': [],
+             'text': 'The notation in that edition cannot be established here.'},
+        ]}), payload)
+        self.assertEqual(result.answer_basis, 'general_music_knowledge')
+        self.assertNotIn('[E', result)
+
     def test_background_cannot_borrow_source_labels(self):
         with self.assertRaises(SecurityViolation):
             self.render('background', ['E1'])

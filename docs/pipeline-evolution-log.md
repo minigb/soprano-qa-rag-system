@@ -62,6 +62,17 @@ unknown-score limits, requested language and typed output; it does not ask a
 general explanation to satisfy irrelevant KU synthesis instructions. Limit the
 schema's kind choices to those actually possible for the supplied bundle.
 
+E3 hypothesis, before running it: E2 still returned empty arrays for elementary
+note-value/glossary questions. An isolated development diagnostic compared the
+current grammar, a required item, a background example and unconstrained JSON.
+Only the required item produced the correct substantive answer. In the general
+path require an explanation **or an explicit limitation**, using a matching
+format prompt; unknown local facts must still be withheld and output review
+remains mandatory. No minimum factual claim is required. Also make explicit
+that replacing a source's technique with another term is not a faithful
+definition, and that omitting a condition can widen a permission. These changes
+are hypotheses to evaluate, not grounds to dismiss earlier failed cases.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical
