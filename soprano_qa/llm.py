@@ -21,11 +21,13 @@ from soprano_qa.structured_answer import (
     NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
     SOURCE_PRESERVATION_POLICY,
+    SOURCE_SELECTION_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
     GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
     render_structured_answer,
 )
+from soprano_qa.source_translation import translate_source_parts
 
 
 _INFERENCE_LOCK = threading.Lock()
@@ -126,11 +128,17 @@ def generate(
     llm_settings: Dict[str, Any],
     *,
     security_context: Dict[str, Any] | None = None,
+    response_schema: Dict[str, Any] | None = None,
 ) -> str:
     # Public answer paths supply the frozen question/evidence bundle. Guard
     # calls omit this argument, so they cannot recursively invoke themselves.
     # Run outside the inference lock: each completion acquires it separately.
     completion_options: Dict[str, Any] = {}
+    if response_schema is not None:
+        if security_context is not None:
+            raise ValueError("A guarded answer must use its own application schema")
+        completion_options["response_format"] = {"type": "json_object", "schema": response_schema}
+    separate_translation = False
     if security_context is not None:
         if not messages or messages[0].get("role") != "system":
             raise SecurityViolation()
@@ -158,6 +166,10 @@ def generate(
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
         if preserve_sources:
             security_context = {**security_context, "source_preservation": True}
+            separate_translation = (security_context.get("answer_language") == "en"
+                                    and llm_settings.get("evidence_translation") == "segmented")
+            if separate_translation:
+                security_context["separate_source_translation"] = True
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
         general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
         if general_only:
@@ -171,6 +183,7 @@ def generate(
         # and can encourage the model to summarize the entire payload.
         messages = [
             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
+                                       SOURCE_SELECTION_POLICY if separate_translation else
                                        SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
              + "\n" + messages[0]["content"]},
             *messages[1:],
@@ -205,6 +218,9 @@ def generate(
             # An explicit abstention has no prose to assess. The public answer
             # finalizer turns it into the normal fixed unavailable response.
             return answer
+        if separate_translation:
+            answer = translate_source_parts(answer, model_path=model_path,
+                                            llm_settings=llm_settings, generate_fn=generate)
         screen_generated_answer(answer, security_context)
         try:
             semantic_guard(

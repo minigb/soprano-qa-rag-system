@@ -76,6 +76,23 @@ authorized answer is possible. Never print labels or headings in item text.
 
 SOURCE_PRESERVATION_POLICY += "\n" + MUSIC_TERMINOLOGY
 
+SOURCE_SELECTION_POLICY = """Return one JSON object with sentences/kind/evidence/text fields.
+Select complete reviewed answers that directly help answer the question.
+For EVERY evidence item choose exactly one supplied citation label and set
+text to the EMPTY STRING. Never select a label twice. Do not translate or
+paraphrase a source here: the application translates selected sources separately.
+Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
+Preserve useful complementary sources without selecting unrelated passages.
+Background items may provide accurate general music knowledge or explicitly
+optional practice suggestions in English, only when they answer a useful aspect
+left open by the sources. Their evidence must be [], and text must be nonempty.
+Never invent a local fact, cause or expert attribution, or contradict supplied
+advice. score_lyrics items are limited to supplied sung words, with evidence=[].
+Use as few items as needed, at most six. Return {"sentences":[]} if no useful
+authorized answer is possible. All safety and output-review requirements apply.
+/no_think
+""" + MUSIC_TERMINOLOGY
+
 
 class PreservedSourceAnswer(str):
     """Visible source quotations already identity-checked by the finalizer.
@@ -224,7 +241,7 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
                         "evidence": evidence_schema,
                         "text": {
                             "type": "string",
-                            "minLength": 0 if labels and payload.get("source_preservation") and payload.get("answer_language", "ko") == "ko" else 1,
+                            "minLength": 0 if labels and payload.get("source_preservation") and (payload.get("answer_language", "ko") == "ko" or payload.get("separate_source_translation")) else 1,
                             # llama.cpp expands bounded string repetition;
                             # a 2000-character schema bound exceeds its grammar
                             # complexity limit. Enforce that cap in the parser;
@@ -240,7 +257,7 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
         "additionalProperties": False,
     }
     if payload.get("source_preservation") is True and labels:
-        native = payload.get("answer_language", "ko") == "ko"
+        native = payload.get("answer_language", "ko") == "ko" or payload.get("separate_source_translation") is True
         def item(kind, source=False):
             return {
                 "type": "object",
@@ -326,7 +343,8 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
         kind = item.get("kind", "evidence" if allowed_labels else "score_lyrics")
         if kind not in {"evidence", "background", "score_lyrics"}:
             raise SecurityViolation()
-        native_quote = preserve and kind == "evidence" and payload.get("answer_language", "ko") == "ko"
+        native_quote = preserve and kind == "evidence" and (
+            payload.get("answer_language", "ko") == "ko" or payload.get("separate_source_translation") is True)
         if (
             not isinstance(text, str)
             or (not text.strip() and not native_quote)

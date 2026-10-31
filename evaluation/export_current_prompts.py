@@ -19,8 +19,9 @@ from soprano_qa.security import (
 )
 from soprano_qa.structured_answer import (
     STRUCTURED_ANSWER_POLICY, GENERAL_MUSIC_FORMAT_POLICY,
-    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, answer_schema,
+    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, SOURCE_SELECTION_POLICY, answer_schema,
 )
+from soprano_qa.source_translation import SOURCE_TRANSLATION_POLICY
 from soprano_qa.translation import QUERY_TRANSLATION_SYSTEM_PROMPT
 
 
@@ -39,6 +40,8 @@ def main():
         'answer-en.txt': STRUCTURED_ANSWER_POLICY + '\n' + system_prompt('en'),
         'answer-preserve-ko.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('ko'),
         'answer-preserve-en.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('en'),
+        'answer-select-for-translation-en.txt': SOURCE_SELECTION_POLICY + '\n' + system_prompt('en'),
+        'source-translation-en.txt': SOURCE_TRANSLATION_POLICY,
         'answer-general.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_MUSIC_SYSTEM_PROMPT
                               + '\n' + SECURITY_SYSTEM_POLICY,
         'guard-admission.txt': _GUARD_SYSTEM + _ADMISSION_RULES,
@@ -50,7 +53,8 @@ def main():
     hashes = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
               for name in ('soprano_qa/answer.py', 'soprano_qa/security.py',
                            'soprano_qa/translation.py', 'soprano_qa/llm.py',
-                           'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py')}
+                           'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py',
+                           'soprano_qa/source_translation.py')}
     metadata = {
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'source_sha256': hashes,
@@ -71,6 +75,9 @@ def main():
                           ('schema-preserve-ko.json', {'source_preservation': True, 'answer_language': 'ko',
                                                        'Retrieved evidence': [{'citation_label': 'E1'}]}),
                           ('schema-preserve-en.json', {'source_preservation': True, 'answer_language': 'en',
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-select-for-translation-en.json', {'source_preservation': True, 'answer_language': 'en',
+                                                       'separate_source_translation': True,
                                                        'Retrieved evidence': [{'citation_label': 'E1'}]})]:
         prompts[name] = json.dumps(answer_schema(payload), ensure_ascii=False, indent=2) + '\n'
     if not args.check:
@@ -84,7 +91,7 @@ def main():
             if path.exists() and path.read_text() != value:
                 raise ValueError('Refusing to replace frozen prompt: ' + str(path))
             path.write_text(value)
-    print(('Checked' if args.check else 'Exported'), 'ten policies, four schema examples and manifest')
+    print(('Checked' if args.check else 'Exported'), 'twelve policies, five schema examples and manifest')
 
 
 if __name__ == '__main__':

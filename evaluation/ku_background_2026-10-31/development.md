@@ -157,3 +157,24 @@ test set. The encoder/layer/IDF setting remains the original development-B
 selection throughout; no reference, denominator or metric was adjusted to
 raise the validation result. A new independently annotated test set would be
 needed for an unbiased estimate of generalization after this refinement.
+
+## E13 outcome and E14 source-translation separation
+
+E13 retained development F1 0.972074 and answered all ten general development
+questions, but Claude and manual inspection still found two material English
+meaning errors among the nine known targeted English examples. Prohibiting
+romanization in a prompt did not stop invented spellings; an unsupported causal
+connection also remained. E13 is not selected as the final implementation.
+
+E14 separates source selection from translation, supplies original source
+sentences to a question-free translation call, and protects quoted Korean
+literals in application code. Source coverage and literal identity are checked;
+semantic output review still compares the translated answer with the original
+source. The extra call and its 1536-token cap must be counted in latency and
+configuration comparisons. English translation fidelity is not guaranteed by
+these structural checks.
+
+The user clarified that **0.90 is a sufficient BERTScore threshold, not a
+maximization target**. Final selection must consider meaning, usefulness,
+naturalness, false refusals and latency. High scores obtained through full KU
+quotation are not evidence that overall RAG quality is maintained.
