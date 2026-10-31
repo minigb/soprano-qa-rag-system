@@ -130,6 +130,20 @@ old broadening pattern: it caught `자주 나타나는` but missed `자주 나�
 Both forms are now covered; only a source-matching relative clause receives
 the narrow exception described above.
 
+E8 hypothesis: E7's combined intent/relevance call let triplet and legato
+passages redefine an abstract fermata-duration question. Separate question
+routing from passage selection. The router sees only the raw question and
+selected range, after task admission; it never sees a piece title, source or
+lyric that could supply an irrelevant interpretation. Only explicit abstract
+definitions/comparisons/general theory rules route to the general composer.
+Performance/history/interpretation questions and uncertainty default to
+evidence. Multi-passage relevance selection then retains its original label-only
+contract. This adds a bounded question-only call for nonempty bundles.
+Also request one coherent general paragraph (two items only when separate
+score lyrics are needed); longer multi-item defaults had encouraged unrequested
+and sometimes false notation examples. The source composer still allows six
+items. Both changes require fresh development measurement before validation.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical

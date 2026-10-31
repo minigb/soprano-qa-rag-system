@@ -245,7 +245,7 @@ EVIDENCE_FOOTER_LABEL_RE = re.compile(
 
 
 class GeneratedAnswerRejected(RuntimeError):
-    """Raised when the sole generated draft fails grounding/safety checks."""
+    """Raised when a generated draft fails grounding or presentation checks."""
 
 
 PIPELINE_TOKEN_SEPARATOR_PATTERN = r"[\s*_~`–—-]*"
@@ -3940,7 +3940,7 @@ def finalize_grounded_generated_answer(
     *,
     language: str = "ko",
 ) -> str:
-    """Validate the sole model draft without repair or substitution."""
+    """Validate the reviewed draft without repairing or substituting its claims."""
 
     screen_text(answer, source="answer")
     if not answer.strip() or is_grounded_insufficiency_answer(answer):

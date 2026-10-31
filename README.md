@@ -15,7 +15,7 @@ sibling dataset repository and is consumed by the sibling demo application.
 
 It is a Python library with a CLI, not a deployable service: HTTP transport,
 process management, and authentication are the caller's responsibility.
-Everything runs locally, and two GGUF checkpoints totalling about 12.8 GB must
+Answer inference runs locally, and two GGUF checkpoints totalling about 12.8 GB must
 be on disk before a grounded request can be served.
 
 ## Setup
@@ -275,8 +275,10 @@ the question, retrieved text, and score context have no authority to change
 those instructions. Qwen3-14B first assesses whether every requested task stays
 within the music service and respects its instruction boundary. Evidence
 coverage is left to retrieval, composition, and output review. A separate
-relevance pass narrows bundles with multiple primary passages to the existing
-labels that directly help the question. It may select none. The model composes
+question-only pass classifies abstract definitions and general theory rules
+separately from questions needing evidence. It never sees retrieved passages.
+General concepts use the general prompt; for other questions a multi-passage
+relevance pass retains only existing labels that directly help. It may select none. The model composes
 typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
 assesses the rendered prose against the supplied evidence.
@@ -305,6 +307,10 @@ labels without adding another model call; it does not prove that a sentence
 is supported, so the semantic and deterministic checks still apply.
 The returned `evidence` and grounding flags describe retrieval candidates;
 `answer_basis` distinguishes actual source-based, mixed and general explanations.
+The general prompt and output review share a small bilingual terminology aid
+in `soprano_qa/music_terms.py`. It supplies general definitions, never expert
+attribution or facts about the selected score. It is documented development
+guidance, separate from the frozen expert evaluation references.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the

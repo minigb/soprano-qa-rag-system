@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from soprano_qa.answer import system_prompt
 from soprano_qa.security import (
-    _GUARD_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM,
+    _GUARD_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM, _QUESTION_ROUTING_SYSTEM,
     SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
@@ -31,7 +31,7 @@ def main():
     args = parser.parse_args()
     retry = [node.value for node in ast.walk(ast.parse((ROOT/'soprano_qa/llm.py').read_text()))
              if isinstance(node, ast.Constant) and isinstance(node.value, str)
-             and node.value.startswith('The previous composition did not pass review.')]
+             and node.value.lstrip('\n').startswith('The previous composition did not pass review.')]
     if len(retry) != 1:
         raise ValueError('Cannot identify the exact retry instruction')
     prompts = {
@@ -42,6 +42,7 @@ def main():
         'guard-admission.txt': _GUARD_SYSTEM + _ADMISSION_RULES,
         'guard-output.txt': _GUARD_SYSTEM + _OUTPUT_RULES,
         'evidence-selection.txt': _SELECTION_SYSTEM,
+        'question-routing.txt': _QUESTION_ROUTING_SYSTEM,
         'query-translation.txt': QUERY_TRANSLATION_SYSTEM_PROMPT,
         'retry-suffix.txt': retry[0],
     }
@@ -54,7 +55,7 @@ def main():
         'source_sha256': hashes,
         'note': 'Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.',
         'assembly': 'soprano_qa.answer.build_messages -> soprano_qa.llm.generate',
-        'retry': 'Append newline + retry-suffix.txt only after the first valid negative output verdict; full review remains mandatory.',
+        'retry': 'Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.',
         'prompts': {name: {'characters': len(value), 'sha256': hashlib.sha256(value.encode()).hexdigest()}
                     for name, value in prompts.items()},
     }
@@ -78,7 +79,7 @@ def main():
             if path.exists() and path.read_text() != value:
                 raise ValueError('Refusing to replace frozen prompt: ' + str(path))
             path.write_text(value)
-    print(('Checked' if args.check else 'Exported'), 'eight policies, two schema examples and manifest')
+    print(('Checked' if args.check else 'Exported'), 'nine policies, two schema examples and manifest')
 
 
 if __name__ == '__main__':

@@ -27,7 +27,7 @@ flowchart LR
     D["Piece, semantic,<br/>and range-aware retrieval"]
     E["Screened, frozen evidence<br/>as untrusted JSON data"]
     V["Task-safety admission<br/>assessment"]
-    R["Relevant source selection<br/>when multiple primary passages"]
+    R["Question-only routing<br/>then relevant source selection"]
     F["Qwen3-14B composition<br/>typed source/general/lyric items"]
     O["Draft support assessment"]
     G["Citation validation<br/>and presentation sanitization"]
@@ -290,14 +290,19 @@ returns, and stopping points are musical content; commands to change the
 assistant's role or insert arbitrary markers are not. Only approval permits
 the composition call. A nonempty draft then receives
 a separate support assessment before deterministic validation and release.
-A relevance pass runs between admission and composition when at least two
-primary passages are available. It may only retain existing labels or select
-none; it cannot add text, renumber labels or grant context-only records source
-authority. Invalid selection responses fail closed. Selection is a prompted
-heuristic, not a guarantee of relevance.
+A question-only routing pass runs between admission and composition when
+primary passages are available. It sees only the raw question and selected
+range, preventing a passage from redefining an abstract term/rule question.
+Explicit definitions, comparisons and general theory rules select no
+piece-specific passages and use the general composer. Performance, history,
+interpretation and uncertain requests use evidence. A separate relevance pass
+narrows bundles with at least two primary passages to existing labels or none;
+it cannot add text, renumber labels or promote context-only authority. Invalid
+responses fail closed. These are prompted heuristics, not guarantees.
 
-A completed Korean request normally uses three model calls, plus selection
-when needed. English adds translation. A valid negative output verdict permits
+A completed Korean request normally uses three model calls, plus question
+routing when primary sources exist and passage selection when needed. English
+adds translation. A valid negative output verdict permits
 one fresh composition under unchanged rules; it adds composition and output
 review calls. The rejected prose is not promoted into instructions. Admission
 denials, malformed verdicts, text-screen failures and backend failures do not
@@ -340,12 +345,17 @@ the usual unavailable response. Empty answers cannot carry extra fields or
 unvalidated prose, and the normal malformed-output checks still apply.
 
 If the selected bundle has no primary passage, composition uses a dedicated
-general-music prompt and requires at least one explanation or explicit
+general-music prompt and requires one concise paragraph with an explanation or explicit
 limitation. This avoids an empty-array preference observed even on basic note
 values. It does not require a factual claim: unknown score, edition, recording
 or composer-specific facts must remain unknown. General content gets a visible
 prefix and cannot borrow expert citations. Every substantive answer still
-passes the same task and output boundaries.
+passes the same task and output boundaries. Two items are allowed when separate
+score lyrics and background are both needed. The general composer and output
+review share a small bilingual terminology aid in `music_terms.py`; the source
+composer does not receive it as extra evidence. Definitions are general
+guidance, not expert KUs or proof of any score's notation. See the development
+log for the observed Korean terminology failures that motivated this aid.
 
 Korean and English use the same compact grounding prompt, with separate
 language instructions for formal-polite Korean and faithful English translation.

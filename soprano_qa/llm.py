@@ -12,7 +12,7 @@ from typing import Any, Dict, List
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
-    select_question_evidence, serialize_untrusted,
+    select_question_evidence, question_uses_general_music, serialize_untrusted,
     SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
@@ -74,8 +74,8 @@ def validate_generation_requirements(
 ) -> None:
     """Eagerly validate the sole configured generation backend and model.
 
-    A generation request must not begin corpus work and then silently switch
-    to extraction or internal model knowledge. Loading here also catches a
+    A generation request requires this backend before corpus work. Authorized
+    general explanations use the same model, not a backend fallback. Loading catches a
     broken native llama.cpp installation and an unreadable/incompatible GGUF,
     not merely a missing Python module or path.
     """
@@ -135,9 +135,13 @@ def generate(
             model_path, llm_settings, security_context,
             stage="admission", generate_fn=generate,
         )
-        selected_context = select_question_evidence(
-            model_path, llm_settings, security_context, generate_fn=generate,
-        )
+        if (any(r.get('citation_label') for r in security_context.get('Retrieved evidence', []))
+                and question_uses_general_music(model_path, llm_settings, security_context, generate_fn=generate)):
+            selected_context = {**security_context, 'Retrieved evidence': []}
+        else:
+            selected_context = select_question_evidence(
+                model_path, llm_settings, security_context, generate_fn=generate,
+            )
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]

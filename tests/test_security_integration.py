@@ -55,6 +55,9 @@ class ModelGateIntegrationTests(unittest.TestCase):
             side_effect=lambda _path, _settings, payload, **_: payload)
         selector.start()
         self.addCleanup(selector.stop)
+        router = mock.patch.object(llm, 'question_uses_general_music', return_value=False)
+        router.start()
+        self.addCleanup(router.stop)
         self.messages = answer.build_messages(
             "die-forelle", "", "호흡을 어떻게 유지하나요?", [evidence()]
         )
@@ -237,7 +240,7 @@ class DefinitionRoutingIntegrationTests(unittest.TestCase):
         payload = json.loads(messages[1]['content'])
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [completion(text) for text in (
-            '{"allow":true}', '{"mode":"general_definition","labels":[]}',
+            '{"allow":true}', '{"mode":"general"}',
             '{"sentences":[{"kind":"background","evidence":[],"text":"레가토는 음을 매끄럽게 연결합니다."}]}',
             '{"allow":true}',
         )]
@@ -245,6 +248,8 @@ class DefinitionRoutingIntegrationTests(unittest.TestCase):
             result = llm.generate('fake', messages, {}, security_context=payload)
         calls = backend.create_chat_completion.call_args_list
         self.assertEqual(len(calls), 4)
+        self.assertEqual(set(json.loads(calls[1].kwargs['messages'][1]['content'])),
+                         {'question', 'measure_range'})
         composed = calls[2].kwargs['messages']
         self.assertEqual(json.loads(composed[1]['content'])['Retrieved evidence'], [])
         self.assertIn('No directly answering reviewed source', composed[0]['content'])
@@ -376,7 +381,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [
             completion('{"allow":true}'),
-            completion('{"mode":"evidence","labels":["E1"]}'),
+            completion('{"mode":"evidence"}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
             completion('{"allow":false}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),

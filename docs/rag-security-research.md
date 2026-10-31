@@ -67,6 +67,13 @@ Relevant additions, checked against primary sources on October 31:
   choose settings on development questions, and report the exact configuration.
   Raw scores from different encoders must not be interpreted as the same
   calibrated quality scale. An independent meaning review remains necessary.
+- The general-knowledge development probes also tested greedy constrained,
+  sampled constrained, and thinking-mode generation following the original
+  [Qwen3 recommendations](https://qwen.readthedocs.io/en/latest/getting_started/quickstart.html#transformers).
+  Thinking and sampling did not eliminate the observed Korean terminology
+  errors, so neither was adopted on that evidence. A small explicit terminology
+  aid was checked against [Brian Blood's articulation lesson](https://www.dolmetsch.com/musictheory21.htm).
+  These are development decisions, not a research result or proof of factuality.
 
 | Work | Finding relevant to this service | Design implication and qualification |
 | --- | --- | --- |

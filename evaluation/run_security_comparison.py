@@ -251,6 +251,8 @@ class CallCounter:
                     kind = "translation"
                 elif "You select relevant passages for a music question" in system:
                     kind = "evidence_selection"
+                elif "classify a music question's answer strategy" in system:
+                    kind = "question_routing"
                 elif "security gate for a soprano" in system:
                     kind = "output_guard" if "candidate answer addresses" in system else "admission_guard"
                 else:

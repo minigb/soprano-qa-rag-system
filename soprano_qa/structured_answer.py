@@ -57,7 +57,7 @@ cause from general knowledge. Practice suggestions must be optional, not persona
 diagnoses or guaranteed outcomes. When score context is present, kind=score_lyrics
 may identify only the supplied sung words, without making performance claims.
 
-Give a concise coherent answer in one to three items, without unrelated advice.
+Give one concise, coherent paragraph that directly answers the question.
 Include only details needed to answer the question. Avoid assumed tempos,
 numerical demonstrations or extra illustrations unless the question requires
 them. Check units and proportions before stating a quantitative relationship.
@@ -71,10 +71,11 @@ of that limitation is a valid background item; never invent a fact to fill one.
 
 GENERAL_MUSIC_FORMAT_POLICY = """Return one JSON object, no markdown or extra keys:
 {"sentences":[{"kind":"background","evidence":[],"text":"Your answer in the requested language."}]}
-Write one to three concise items. Use background for general musical knowledge
+Write one concise background item for general musical knowledge
 or an explicit statement of what cannot be established. evidence must be [].
 When actual score context is supplied, score_lyrics may identify only its words.
-Keep kinds separate. Do not print labels, IDs, headings or kind names in prose.
+Only that mixed lyric/explanation case may need two items; keep kinds separate.
+Do not print labels, IDs, headings or kind names in prose.
 Each text must be nonempty and at most 2000 characters. Do not pad or repeat.
 For an unanswerable local fact, state the limitation; do not guess it. A
 required text item is not a requirement to make a factual claim. Task, source
@@ -166,7 +167,7 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
                 # elementary theory questions. Require an explanation OR an
                 # explicit limitation; the semantic guard still checks both.
                 "minItems": 0 if labels else 1,
-                "maxItems": MAX_SENTENCES,
+                "maxItems": MAX_SENTENCES if labels else (2 if payload.get('Score context') else 1),
                 "items": {
                     "type": "object",
                     "properties": {
