@@ -75,6 +75,18 @@ Relevant additions, checked against primary sources on October 31:
   aid was checked against [Brian Blood's articulation lesson](https://www.dolmetsch.com/musictheory21.htm).
   These are development decisions, not a research result or proof of factuality.
 
+The later E10/E11 engineering refinement preserves Korean source claims as
+complete quotations selected by the model and verified by the application;
+English claims use complete single-source translations. Generated general
+knowledge remains separate. This directly removes one opportunity for a
+paraphrase to change conditions or negation, but it does not establish source
+truth, selection relevance, complete coverage, translation fidelity or attack
+resistance. It is not an implementation of a new research method claimed here.
+Literal overlap with expert-KU references also increases BERTScore, so the
+evaluation must disclose the extractive architecture and retain independent
+meaning and factuality checks. The stored diagnostic examples show that a
+high BERTScore alone can coexist with material meaning errors.
+
 | Work | Finding relevant to this service | Design implication and qualification |
 | --- | --- | --- |
 | Hines et al., *Defending Against Indirect Prompt Injection Attacks With Spotlighting*, March 2024. [Paper](https://arxiv.org/abs/2403.14720) | Explicit provenance signals help models distinguish untrusted content from instructions. | Label and delimit question/evidence data and keep the application contract in the system role. Structured serialization applies the boundary principle; it is not a reproduction of every spotlighting transformation or evidence that the paper's results transfer to Qwen. |

@@ -277,8 +277,11 @@ within the music service and respects its instruction boundary. Evidence
 coverage is left to retrieval, composition, and output review. A multi-passage
 relevance pass retains existing labels that directly help, based on the
 question and actual source text. It may select none, enabling the general
-prompt. Short questions retain the selected work's context; an abstract-intent
-classifier does not discard their sources. The model composes
+prompt. Short questions retain the selected work's context. With source
+preservation enabled, only explicit general definitions, comparisons or
+universal-rule questions without a local/causal referent or selected range
+take the general path directly. This conservative rule runs after admission;
+it never grants permission for an unrelated task. The model composes
 typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
 assesses the rendered prose against the supplied evidence.
@@ -311,6 +314,27 @@ The general prompt and output review share a small bilingual terminology aid
 in `soprano_qa/music_terms.py`. It supplies general definitions, never expert
 attribution or facts about the selected score. It is documented development
 guidance, separate from the frozen expert evaluation references.
+
+The selected configuration sets `llm.source_preservation` to
+`verbatim_or_translation`. For Korean source claims, the model selects one
+source label per item and leaves its text empty. Application code quotes the
+complete actual retrieved answer, verifies its identity, and labels it
+`참고 자료의 원문입니다.`. It preserves the author's conditions, qualifications,
+lyric spellings and register. For English, the model translates each selected
+source's complete answer; translation remains fallible and receives output
+review. General explanations remain generated, separately labelled, and
+allowed when they help answer the question. This mode does not skip source,
+citation, scope or security checks. It may still choose an irrelevant or
+incomplete set of sources, and quoted source text itself may be inaccurate.
+
+Current policy code is in `soprano_qa/structured_answer.py`, assembled by
+`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The exact selected
+Korean, English and general policies are exported under
+`evaluation/ku_background_2026-10-31/prompts-e11/`; the conservative general
+intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
+is `config/bertscore.json`, with the development choices and limitations in
+`evaluation/ku_background_2026-10-31/development.md`. High reference similarity
+from literal source quotations is not proof of unrestricted generation quality.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
