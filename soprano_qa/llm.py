@@ -168,7 +168,8 @@ def generate(
             return answer
         screen_generated_answer(answer, security_context)
         semantic_guard(
-            model_path, llm_settings, {**security_context, "draft": answer},
+            model_path, llm_settings, {**security_context, "draft": str(answer),
+                                      "composition": list(getattr(answer, "parts", ()))},
             stage="output", generate_fn=generate,
         )
     return answer

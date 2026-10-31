@@ -87,7 +87,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertEqual(response_format["type"], "json_object")
         evidence_schema = response_format["schema"]["properties"]["sentences"]["items"]["properties"]["evidence"]
         self.assertEqual(evidence_schema["items"]["enum"], ["E1"])
-        self.assertEqual(evidence_schema["minItems"], 1)
+        self.assertEqual(evidence_schema["minItems"], 0)
         self.assertEqual(json.loads(calls[0].kwargs["messages"][1]["content"]), self.payload)
         output_payload = json.loads(calls[2].kwargs["messages"][1]["content"])
         self.assertEqual(output_payload["draft"], draft)

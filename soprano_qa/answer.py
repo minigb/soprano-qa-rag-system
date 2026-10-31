@@ -56,6 +56,7 @@ from soprano_qa.retrieval import (
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.structured_answer import RenderedAnswer
 from soprano_qa.security import (
     SECURITY_SYSTEM_POLICY,
     SecurityViolation,
@@ -67,8 +68,11 @@ from soprano_qa.security import (
 
 # Keep the grounding contract shared so language variants cannot drift.
 _GROUNDING_PROMPT = """You are a measure-aware soprano performance QA assistant.
-Use only the retrieved evidence below. Do not invent musical advice, measure numbers, lyrics,
-editions, background facts, explanations, or source attributions.
+Use the reviewed answers as the primary evidence about the selected piece.
+You may use general music knowledge to explain terms or offer an optional practice
+suggestion when it helps the question. Keep such background separate from source claims.
+Do not invent score facts, measure numbers, lyrics, editions, expert attributions,
+composer intentions, or reasons why particular sources disagree.
 The reviewed answer field is the authoritative claim text.
 Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
 Use all directly useful, compatible evidence to answer the exact question. Do not
@@ -133,7 +137,10 @@ record or add other passages' advice merely because it appears in the evidence.
 Before writing, select only the source clauses that directly answer the question.
 For a focused question, normally give one or two sentences. A broad request may need more.
 Do not attach unrelated background, another passage's advice, or a generic conclusion.
-Prefer a faithful short paraphrase or translation over new explanations.
+Keep the source's wording when it already answers the question; change only what
+is needed for clarity, the answer language, and polite grammar. Preserve useful
+conditions and alternatives. Add general explanation only when it helps an aspect
+the sources do not cover; never add it just to make the answer longer.
 Two examples of the reasoning rule, not additional musical evidence:
 - If one source says to enter gently and another discusses the final release,
   a question about the entrance needs only the entrance advice.
@@ -146,7 +153,9 @@ If sources disagree and no source explains that disagreement, the answer must st
 that its cause is not established, then attribute the differing statements. Do not offer
 a possible cause from general knowledge, even hedged as "may" or "can be seen as".
 If part of a music question cannot be established, say so briefly and provide
-its supported part. If nothing can be supported, return {"sentences":[]}.
+its supported part. A general music explanation may help even without a relevant
+source, but must not pretend to establish the requested local score fact.
+If neither a source-based nor useful general answer is possible, return {"sentences":[]}.
 """
 SOURCE_PRIORITY_POLICY = """For relevant, scope-applicable evidence, use this authority order:
 sumijo_feedback, then expert_annotation, then web_coaching/web_database.
@@ -2198,6 +2207,7 @@ def build_messages(
         # of pseudo-fields or instructions inside that excerpt.
         score_data = score_context
     payload = {
+        "answer_language": language,
         "piece": piece or "(not specified)",
         "measure_range": measures or "(none selected)",
         "question": question,
@@ -3860,6 +3870,22 @@ def finalize_grounded_generated_answer(
             "Generated answer contains unsupported tokens: %s"
             % ", ".join(suspicious)
         )
+    if isinstance(answer, RenderedAnswer) and answer.background_text:
+        # Provenance comes from validated structured output, not a guessed
+        # heading in model prose. Source claims retain all existing checks.
+        source = (
+            finalize_grounded_generated_answer(
+                answer.grounded_text, results, messages, measure_ranges,
+                language=language,
+            ) if answer.grounded_text else ""
+        )
+        background = finalize_user_visible_answer(
+            answer.background_text, results, language=language,
+        )
+        if background == no_corpus_evidence_message(language):
+            raise GeneratedAnswerRejected("Invalid general explanation")
+        prefix = "General explanation: " if language == "en" else "일반적인 음악 설명입니다.\n"
+        return "\n\n".join(part for part in (source, prefix + background) if part)
     if answer_references_secondary_evidence(answer, results):
         raise GeneratedAnswerRejected(
             "Generated answer cites context-only evidence"
@@ -4031,31 +4057,20 @@ def _run_cli(args: argparse.Namespace) -> None:
             topic=args.topic,
             top_k=args.top_k,
         )
-        if not results or (
-            args.measure_ranges and not has_primary_grounding(results)
-        ):
-            answer = NO_CORPUS_EVIDENCE_MESSAGE
-            generation_mode = "unavailable"
-            answer_basis = "no_corpus_evidence"
-            unavailable_reason = _retrieval_unavailable_reason(
-                index,
-                question=args.question,
-                piece=args.piece,
-                measure_ranges=args.measure_ranges,
-                results=results,
-            )
-        else:
-            raw_answer = generate(
-                settings["model_path"],
-                messages,
-                settings["llm"],
-                security_context=json.loads(messages[1]["content"]),
-            )
-            answer = finalize_grounded_generated_answer(
-                raw_answer, results, messages, args.measure_ranges,
-            )
-            generation_mode = "llm"
-            answer_basis = "retrieved_evidence"
+        grounded = bool(results) and (not args.measure_ranges or has_primary_grounding(results))
+        generation_results = results if grounded else []
+        if not grounded:
+            messages = build_messages(args.piece, args.measures, args.question, [])
+        raw_answer = generate(
+            settings["model_path"], messages, settings["llm"],
+            security_context=json.loads(messages[1]["content"]),
+        )
+        answer = finalize_grounded_generated_answer(
+            raw_answer, generation_results, messages, args.measure_ranges,
+        )
+        generation_mode = "llm"
+        answer_basis = getattr(raw_answer, "answer_basis",
+                               "retrieved_evidence" if grounded else "general_music_knowledge")
 
     answer = finalize_user_visible_answer(answer, results)
     if (

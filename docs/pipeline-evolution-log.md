@@ -10,6 +10,18 @@ The stable method description remains in
 [`rag-llm-pipeline-method.md`](rag-llm-pipeline-method.md). This file is the
 chronological engineering record, including unsuccessful approaches.
 
+## Active experiment: bounded general knowledge (2026-10-31)
+
+The user authorized general musical knowledge as a supplement to curated KU
+answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
+on expert-annotation questions. This explicitly supersedes the historical
+internal-knowledge prohibition below for this experiment. The baseline remains
+preserved at `302f8d1`; work is isolated on `codex/ku-background-knowledge` under
+`/home/minhee/.codex/worktrees/rag-background-knowledge/`. The
+[protocol](../evaluation/ku_background_2026-10-31/protocol.md) fixes provenance,
+development/validation separation, metric settings and quality/security checks.
+Results are pending; no claim of improvement or promotion is made yet.
+
 ## Latest meaning-fidelity diagnostic (2026-10-31)
 
 The security refinement branch `codex/refine-rag-quality` at `79cbd7b` was

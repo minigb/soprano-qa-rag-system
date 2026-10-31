@@ -33,7 +33,7 @@ class AnswerSchemaTests(unittest.TestCase):
         sentences = schema["properties"]["sentences"]
         evidence = sentences["items"]["properties"]["evidence"]
         self.assertEqual(evidence["items"]["enum"], ["E1", "E3"])
-        self.assertEqual(evidence["minItems"], 1)
+        self.assertEqual(evidence["minItems"], 0)
         self.assertEqual(evidence["maxItems"], 2)
         self.assertTrue(evidence["uniqueItems"])
         self.assertEqual(sentences["minItems"], 0)

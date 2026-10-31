@@ -9,6 +9,8 @@ import unittest
 from unittest import mock
 
 from soprano_qa import service as qa
+from soprano_qa.structured_answer import render_structured_answer
+
 from soprano_qa.answer import (
     GeneratedAnswerRejected,
     NO_CORPUS_EVIDENCE_MESSAGE,
@@ -636,7 +638,10 @@ class ServicePipelineTests(unittest.TestCase):
                 return_value=SecondaryOnlyIndex(),
             ),
             mock.patch.dict(qa.SETTINGS, {"score_context": {"lyrics": False}}),
-            mock.patch.object(qa, "generate_llm") as generate,
+            mock.patch.object(qa, "generate_llm", return_value=render_structured_answer(
+                '{"sentences":[{"kind":"background","evidence":[],"text":"일반적인 연습에서는 느린 속도로 먼저 확인할 수 있습니다."}]}',
+                {"Retrieved evidence": []},
+            )) as generate,
         ):
             result = qa.ask(
                 piece_id="die-forelle",
@@ -645,16 +650,17 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        generate.assert_not_called()
+        generate.assert_called_once()
+        self.assertEqual(generate.call_args.kwargs["security_context"]["Retrieved evidence"], [])
         self.assertFalse(result["has_primary_grounding"])
         self.assertFalse(result["has_selected_range_grounding"])
         self.assertEqual(
             result["answer_basis"],
-            "no_corpus_evidence",
+            "general_music_knowledge",
         )
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["unavailable_reason"], "no_corpus_evidence")
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertEqual(result["generation_mode"], "llm")
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertIn("일반적인 음악 설명입니다.", result["answer"])
         self.assertEqual(
             result["evidence"][0]["generation_role"],
             "other_range_context_only",
@@ -693,7 +699,7 @@ class ServicePipelineTests(unittest.TestCase):
         self.assertNotIn("die-forelle-ku-010", result["answer"])
         self.assert_public_answer_contract(result)
 
-    def test_ambiguous_dense_range_returns_explicit_unavailable_reason(
+    def test_ambiguous_dense_range_keeps_scope_when_explaining_generally(
         self,
     ) -> None:
         class AmbiguousIndex:
@@ -728,7 +734,10 @@ class ServicePipelineTests(unittest.TestCase):
                 "_get_index",
                 return_value=AmbiguousIndex(),
             ),
-            mock.patch.object(qa, "generate_llm") as generate,
+            mock.patch.object(qa, "generate_llm", return_value=render_structured_answer(
+                '{"sentences":[{"kind":"background","evidence":[],"text":"일반적인 연습에서는 느린 속도로 먼저 확인할 수 있습니다."}]}',
+                {"Retrieved evidence": []},
+            )) as generate,
         ):
             result = qa.ask(
                 piece_id="nella-fantasia",
@@ -740,14 +749,12 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        generate.assert_not_called()
+        generate.assert_called_once()
+        self.assertEqual(generate.call_args.kwargs["security_context"]["Retrieved evidence"], [])
         self.generation_preflight.assert_called_once()
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(
-            result["unavailable_reason"],
-            "ambiguous_dense_grounding",
-        )
+        self.assertEqual(result["generation_mode"], "llm")
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertIsNone(result["unavailable_reason"])
         self.assertEqual(result["evidence"], [])
         self.assertEqual(
             result["retrieval"]["route_reason"],
@@ -757,10 +764,10 @@ class ServicePipelineTests(unittest.TestCase):
             [item["id"] for item in result["retrieval"]["ambiguous_candidates"]],
             ["nella-fantasia-ku-008", "nella-fantasia-ku-006"],
         )
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertIn("일반적인 음악 설명입니다.", result["answer"])
         self.assert_public_answer_contract(result)
 
-    def test_missing_scoped_causal_authority_returns_explicit_reason(
+    def test_missing_scoped_causal_authority_does_not_license_a_local_claim(
         self,
     ) -> None:
         class MissingCausalAuthorityIndex:
@@ -780,7 +787,10 @@ class ServicePipelineTests(unittest.TestCase):
         index = MissingCausalAuthorityIndex()
         with (
             mock.patch.object(qa, "_get_index", return_value=index),
-            mock.patch.object(qa, "generate_llm") as generate,
+            mock.patch.object(qa, "generate_llm", return_value=render_structured_answer(
+                '{"sentences":[{"kind":"background","evidence":[],"text":"일반적인 연습에서는 느린 속도로 먼저 확인할 수 있습니다."}]}',
+                {"Retrieved evidence": []},
+            )) as generate,
         ):
             result = qa.ask(
                 piece_id="una-voce-poco-fa",
@@ -792,16 +802,14 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        generate.assert_not_called()
+        generate.assert_called_once()
+        self.assertEqual(generate.call_args.kwargs["security_context"]["Retrieved evidence"], [])
         self.generation_preflight.assert_called_once()
         self.assertEqual(index.search_calls[0]["measure_ranges"], [[63, 63]])
         self.assertEqual(result["measure_range"], [14, 63])
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(
-            result["unavailable_reason"],
-            "missing_scoped_causal_authority",
-        )
+        self.assertEqual(result["generation_mode"], "llm")
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertIsNone(result["unavailable_reason"])
         self.assertEqual(result["evidence"], [])
         self.assertEqual(
             result["retrieval"]["route_reason"],
@@ -809,7 +817,7 @@ class ServicePipelineTests(unittest.TestCase):
         )
         self.assert_public_answer_contract(result)
 
-    def test_underspecified_range_returns_explicit_unavailable_reason(
+    def test_underspecified_range_keeps_scope_when_explaining_generally(
         self,
     ) -> None:
         class EmptyIndex:
@@ -825,7 +833,10 @@ class ServicePipelineTests(unittest.TestCase):
 
         with (
             mock.patch.object(qa, "_get_index", return_value=EmptyIndex()),
-            mock.patch.object(qa, "generate_llm") as generate,
+            mock.patch.object(qa, "generate_llm", return_value=render_structured_answer(
+                '{"sentences":[{"kind":"background","evidence":[],"text":"일반적인 연습에서는 느린 속도로 먼저 확인할 수 있습니다."}]}',
+                {"Retrieved evidence": []},
+            )) as generate,
         ):
             result = qa.ask(
                 piece_id="nella-fantasia",
@@ -834,16 +845,14 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        generate.assert_not_called()
+        generate.assert_called_once()
+        self.assertEqual(generate.call_args.kwargs["security_context"]["Retrieved evidence"], [])
         self.generation_preflight.assert_called_once()
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(
-            result["unavailable_reason"],
-            "underspecified_ranged_question",
-        )
+        self.assertEqual(result["generation_mode"], "llm")
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertIsNone(result["unavailable_reason"])
         self.assertEqual(result["evidence"], [])
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
+        self.assertIn("일반적인 음악 설명입니다.", result["answer"])
         self.assert_public_answer_contract(result)
 
     @staticmethod

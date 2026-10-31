@@ -343,48 +343,25 @@ def _ask(
         use_score_context = bool(score_context) and (
             ungrounded_reason == "no_corpus_evidence"
         )
-        if not grounded and not use_score_context:
-            answer = no_corpus_evidence_message(language)
-            generation_mode = "unavailable"
-            answer_basis = "no_corpus_evidence"
-            unavailable_reason = ungrounded_reason
-        else:
-            # Without grounding evidence for the selected bars, only the
-            # labelled score context may inform the answer; non-grounding
-            # records stay out of the prompt.
-            generation_results = results if grounded else []
-            if not grounded:
-                messages = build_messages(
-                    piece_id,
-                    measures,
-                    question,
-                    [],
-                    score_context=score_block,
-                    language=language,
-                )
-            raw_answer = generate_llm(
-                SETTINGS["model_path"],
-                messages,
-                SETTINGS["llm"],
-                security_context=json.loads(messages[1]["content"]),
+        # Missing local evidence limits piece-specific claims, but does not
+        # prevent a separately identified general music explanation.
+        generation_results = results if grounded else []
+        if not grounded:
+            messages = build_messages(
+                piece_id, measures, question, [],
+                score_context=score_block if use_score_context else "", language=language,
             )
-            answer = finalize_grounded_generated_answer(
-                raw_answer,
-                generation_results,
-                messages,
-                measure_ranges,
-                language=language,
-            )
-            if grounded:
-                generation_mode = "llm"
-                answer_basis = "retrieved_evidence"
-            elif answer == no_corpus_evidence_message(language):
-                generation_mode = "unavailable"
-                answer_basis = "no_corpus_evidence"
-                unavailable_reason = "score_context_insufficient"
-            else:
-                generation_mode = "llm"
-                answer_basis = "score_context"
+        raw_answer = generate_llm(
+            SETTINGS["model_path"], messages, SETTINGS["llm"],
+            security_context=json.loads(messages[1]["content"]),
+        )
+        answer = finalize_grounded_generated_answer(
+            raw_answer, generation_results, messages, measure_ranges, language=language,
+        )
+        generation_mode = "llm"
+        answer_basis = getattr(raw_answer, "answer_basis",
+                               "retrieved_evidence" if grounded else "score_context")
+
     else:
         results = index.search(
             query=retrieval_query,

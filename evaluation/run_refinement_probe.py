@@ -252,8 +252,10 @@ def import_pipeline(root: Path, settings: Path) -> tuple[Any, ...]:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    for option in ("system-root", "settings", "cases", "output", "usage-rollout"):
+    for option in ("system-root", "settings", "cases", "output"):
         parser.add_argument("--" + option, type=Path, required=True)
+    parser.add_argument("--usage-rollout", type=Path,
+                        help="Optional legacy usage monitor; omitted for uninterrupted local evaluation")
     parser.add_argument("--usage-state", type=Path, help="Share across all probes in the same original allowance")
     parser.add_argument("--variant", default="hardened", help="Use original/hardened for existing analyzer compatibility")
     parser.add_argument("--warmup-case", help="Optional case ID for one untimed warmup, stored only in private traces")
@@ -267,7 +269,8 @@ def main() -> int:
                 "source_sha256": common.source_sha256(args.system_root),
                 "settings_sha256": common.file_sha256(args.settings),
                 "cases_sha256": common.file_sha256(args.cases), "variant": args.variant,
-                "warmup_case": args.warmup_case, "usage_rollout": str(args.usage_rollout.resolve())}
+                "warmup_case": args.warmup_case,
+                "usage_rollout": str(args.usage_rollout.resolve()) if args.usage_rollout else None}
     contract_id = hashlib.sha256(json.dumps(contract, sort_keys=True).encode()).hexdigest()
     manifest_path = args.output.with_name(args.output.name + ".manifest.json")
     if manifest_path.exists():
@@ -285,7 +288,12 @@ def main() -> int:
     trace_path = args.output.with_name(args.output.name + ".private-traces.jsonl")
     usage_state = args.usage_state or args.output.with_name(args.output.name + ".usage-state.json")
     usage_state.parent.mkdir(parents=True, exist_ok=True)
-    guard = UsageGuard(args.usage_rollout, usage_state, args.output.with_name(args.output.name + ".usage-checks.jsonl"))
+    class Unmonitored:
+        def check(self):
+            return {}
+
+    guard = (UsageGuard(args.usage_rollout, usage_state, args.output.with_name(args.output.name + ".usage-checks.jsonl"))
+             if args.usage_rollout else Unmonitored())
     session = {"started_at": common.utc_now(), "private_trace_file": str(trace_path.resolve())}
     manifest["sessions"].append(session)
     common.write_json(manifest_path, manifest)
