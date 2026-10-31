@@ -1,0 +1,29 @@
+{
+  "recorded_at": "2026-10-31T14:46:45.883255+00:00",
+  "checkpoint_rag_commit": "70681d5",
+  "checkpoint_lab_commit": "09020cd",
+  "candidate_source_commit": "759511c",
+  "rag_tests": {
+    "passed": 596,
+    "seconds": 23.413
+  },
+  "lab_rag_tests": {
+    "passed": 596,
+    "seconds": 23.283,
+    "log_sha256": "6f96bd188e83bf4d7c4dd2dc256c90947a24cbcb95059a0e2c03dcc509c4c7e4"
+  },
+  "demo_tests": {
+    "passed": 44,
+    "seconds": 4.554,
+    "log_sha256": "c8b7f3016d34906f1a24606ba1262285b6c66905416e30daef63754077d15aa1"
+  },
+  "judge_rubric_regression_tests": 6,
+  "prompt_export_check": "passed",
+  "resume_file_hashes": "all passed",
+  "rag_lab_production_source_identity": "all Python files matched",
+  "main_and_dataset_head_status": "unchanged from resume-state.json",
+  "active_evaluation_workers": 0,
+  "gpu_processes": "Only pre-existing live PID 272050, 14578 MiB; not stopped or modified.",
+  "goal_achieved": false,
+  "pending": "Independent E14 judgment, remaining translation/concision/refusal issues, full four-system evaluation, final metric and overall-quality acceptance."
+}
