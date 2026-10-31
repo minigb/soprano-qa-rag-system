@@ -2,33 +2,7 @@
 import unittest
 from unittest.mock import Mock
 
-from soprano_qa.security import SecurityViolation, select_question_evidence, question_uses_general_music
-
-
-class QuestionRoutingTests(unittest.TestCase):
-    def test_route_uses_only_question_and_selected_range(self):
-        payload = {'question': 'Is a fermata always three times as long?', 'measure_range': '(none selected)',
-                   'piece': 'selected work', 'Retrieved evidence': [{'answer': 'Unrelated triplet advice.'}],
-                   'Score context': 'private lyric context'}
-        generate = Mock(return_value='{"mode":"general"}')
-        self.assertTrue(question_uses_general_music('model', {}, payload, generate_fn=generate))
-        import json
-        actual = json.loads(generate.call_args.args[1][1]['content'])
-        self.assertEqual(actual, {k: payload[k] for k in ('question', 'measure_range')})
-
-    def test_evidence_route_does_not_authorize_or_rewrite_any_source(self):
-        generate = Mock(return_value='{"mode":"evidence"}')
-        self.assertFalse(question_uses_general_music('model', {}, {'question': 'How should I sing this phrase?'},
-                                                    generate_fn=generate))
-
-    def test_failed_or_ambiguous_route_is_not_a_general_knowledge_fallback(self):
-        for raw in ('{}', '{"mode":"general","allow":true}', '{"mode":false}',
-                    '{"mode":"general","mode":"evidence"}', '[]', 'null', 'general'):
-            with self.subTest(raw=raw), self.assertRaises(SecurityViolation):
-                question_uses_general_music('model', {}, {}, generate_fn=Mock(return_value=raw))
-        with self.assertRaises(SecurityViolation) as error:
-            question_uses_general_music('model', {}, {}, generate_fn=Mock(side_effect=RuntimeError('private')))
-        self.assertEqual(error.exception.reason, 'security_guard_unavailable')
+from soprano_qa.security import SecurityViolation, select_question_evidence
 
 
 class SelectionTests(unittest.TestCase):

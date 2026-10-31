@@ -55,9 +55,6 @@ class ModelGateIntegrationTests(unittest.TestCase):
             side_effect=lambda _path, _settings, payload, **_: payload)
         selector.start()
         self.addCleanup(selector.stop)
-        router = mock.patch.object(llm, 'question_uses_general_music', return_value=False)
-        router.start()
-        self.addCleanup(router.stop)
         self.messages = answer.build_messages(
             "die-forelle", "", "호흡을 어떻게 유지하나요?", [evidence()]
         )
@@ -234,28 +231,28 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertIsNone(self.payload["Retrieved evidence"][1]["citation_label"])
 
 
-class DefinitionRoutingIntegrationTests(unittest.TestCase):
-    def test_definition_routing_removes_piece_advice_and_keeps_output_guard(self):
-        messages = answer.build_messages('die-forelle', '', '레가토는 무슨 뜻인가요?', [evidence()])
+class ShortQuestionEvidenceIntegrationTests(unittest.TestCase):
+    def test_short_notation_question_keeps_its_source_and_output_guard(self):
+        source = evidence('악보의 작은 음표는 가창자가 선택할 수 있는 낮은 음의 선택지입니다.')
+        messages = answer.build_messages('in-flowery-clouds', '', '작은 음표들은 무엇일까?', [source])
         payload = json.loads(messages[1]['content'])
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [completion(text) for text in (
-            '{"allow":true}', '{"mode":"general"}',
-            '{"sentences":[{"kind":"background","evidence":[],"text":"레가토는 음을 매끄럽게 연결합니다."}]}',
+            '{"allow":true}',
+            '{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"작은 음표는 가창자가 선택할 수 있는 낮은 음의 선택지입니다."}]}',
             '{"allow":true}',
         )]
         with mock.patch.object(llm, 'load_llama', return_value=backend):
             result = llm.generate('fake', messages, {}, security_context=payload)
         calls = backend.create_chat_completion.call_args_list
-        self.assertEqual(len(calls), 4)
-        self.assertEqual(set(json.loads(calls[1].kwargs['messages'][1]['content'])),
-                         {'question', 'measure_range'})
-        composed = calls[2].kwargs['messages']
-        self.assertEqual(json.loads(composed[1]['content'])['Retrieved evidence'], [])
-        self.assertIn('No directly answering reviewed source', composed[0]['content'])
-        self.assertEqual(result.answer_basis, 'general_music_knowledge')
+        self.assertEqual(len(calls), 3)
+        composed = calls[1].kwargs['messages']
+        actual = json.loads(composed[1]['content'])
+        self.assertEqual(actual['Retrieved evidence'], payload['Retrieved evidence'])
+        self.assertIn('선택지', actual['Retrieved evidence'][0]['answer'])
+        self.assertEqual(result.answer_basis, 'retrieved_evidence')
         self.assertEqual(payload['Retrieved evidence'][0]['citation_label'], 'E1')
-        self.assertIn('draft', json.loads(calls[3].kwargs['messages'][1]['content']))
+        self.assertIn('draft', json.loads(calls[2].kwargs['messages'][1]['content']))
 
 
 class ServiceSecurityIntegrationTests(unittest.TestCase):
@@ -381,7 +378,6 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [
             completion('{"allow":true}'),
-            completion('{"mode":"evidence"}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
             completion('{"allow":false}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
@@ -390,7 +386,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         with mock.patch.object(llm, "load_llama", return_value=backend):
             result = self.ask()
         self.assert_closed(result, "security_output_rejected")
-        self.assertEqual(backend.create_chat_completion.call_count, 6)
+        self.assertEqual(backend.create_chat_completion.call_count, 5)
 
 
 class CliSecurityIntegrationTests(unittest.TestCase):

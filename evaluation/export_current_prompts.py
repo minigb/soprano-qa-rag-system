@@ -14,7 +14,7 @@ sys.path.insert(0, str(ROOT))
 
 from soprano_qa.answer import system_prompt
 from soprano_qa.security import (
-    _GUARD_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM, _QUESTION_ROUTING_SYSTEM,
+    _GUARD_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM,
     SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
@@ -42,7 +42,6 @@ def main():
         'guard-admission.txt': _GUARD_SYSTEM + _ADMISSION_RULES,
         'guard-output.txt': _GUARD_SYSTEM + _OUTPUT_RULES,
         'evidence-selection.txt': _SELECTION_SYSTEM,
-        'question-routing.txt': _QUESTION_ROUTING_SYSTEM,
         'query-translation.txt': QUERY_TRANSLATION_SYSTEM_PROMPT,
         'retry-suffix.txt': retry[0],
     }
@@ -79,7 +78,7 @@ def main():
             if path.exists() and path.read_text() != value:
                 raise ValueError('Refusing to replace frozen prompt: ' + str(path))
             path.write_text(value)
-    print(('Checked' if args.check else 'Exported'), 'nine policies, two schema examples and manifest')
+    print(('Checked' if args.check else 'Exported'), 'eight policies, two schema examples and manifest')
 
 
 if __name__ == '__main__':

@@ -12,7 +12,7 @@ from typing import Any, Dict, List
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
-    select_question_evidence, question_uses_general_music, serialize_untrusted,
+    select_question_evidence, serialize_untrusted,
     SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
@@ -135,13 +135,14 @@ def generate(
             model_path, llm_settings, security_context,
             stage="admission", generate_fn=generate,
         )
-        if (any(r.get('citation_label') for r in security_context.get('Retrieved evidence', []))
-                and question_uses_general_music(model_path, llm_settings, security_context, generate_fn=generate)):
-            selected_context = {**security_context, 'Retrieved evidence': []}
-        else:
-            selected_context = select_question_evidence(
-                model_path, llm_settings, security_context, generate_fn=generate,
-            )
+        # Short questions inherit the selected work's context. A question-only
+        # intent classifier cannot establish that all reviewed answers are
+        # irrelevant: it misrouted score and performance questions as abstract
+        # theory. Judge relevance using the actual passages before discarding
+        # them, and permit background in either composition path.
+        selected_context = select_question_evidence(
+            model_path, llm_settings, security_context, generate_fn=generate,
+        )
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]

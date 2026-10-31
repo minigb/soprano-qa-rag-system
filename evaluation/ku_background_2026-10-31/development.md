@@ -21,6 +21,7 @@ accuracy percentages.
 | E3 | 41 | 0.912330 | 9 | Require a general explanation or explicit limitation when no primary passage is selected. More answers exposed general factual errors. |
 | E5 | 41 | 0.913376 | 10 | Checked bilingual terminology and a dedicated general explanation prompt. Remaining unrelated-source attribution and conditional-scope issues. |
 | E7 | 40 | 0.889482 | 9 | Joint intent/label selection regressed: an invalid mixed result refused a diction question; retrieved context still contaminated a general fermata answer. Rejected. |
+| E8 | 42 | 0.905950 | 10 | Question-only routing passed the numeric target but discarded relevant sources for short score/performance questions. Wrong grace-note and small-note explanations were found by inspecting answers. Rejected before validation. |
 
 A was an earlier 24-request pilot, not the full development cohort. E4 compared
 generation modes in isolated diagnostics, not a complete service run; E6's scope
@@ -36,6 +37,12 @@ scope fix uses the actual previously rejected answer as a regression case;
 semantic review is still required and no source text is rewritten. E8 source
 is frozen at `654a86d68176bef7b22fb3d4b3f9307e9e68b59e` in
 `provenance/e8-final/`; the exact policies are in `prompts-e8-final/`.
+
+Despite passing the development metric, E8 was rejected on meaning and factual
+quality. Its prepared `comparison-e8-not-run.config.json` was never executed.
+E9 removes the destructive question-only routing pass, retaining actual-passage
+relevance selection, concise general explanations and the conditional-scope
+fix. It does not special-case evaluation questions or copy reference answers.
 
 Independent Claude judgments vary. Earlier B/C used the first rubric; D onward
 include actual lyric context in the second rubric. Development judgments were

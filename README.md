@@ -274,11 +274,11 @@ field names or newlines. Application instructions stay in the system role;
 the question, retrieved text, and score context have no authority to change
 those instructions. Qwen3-14B first assesses whether every requested task stays
 within the music service and respects its instruction boundary. Evidence
-coverage is left to retrieval, composition, and output review. A separate
-question-only pass classifies abstract definitions and general theory rules
-separately from questions needing evidence. It never sees retrieved passages.
-General concepts use the general prompt; for other questions a multi-passage
-relevance pass retains only existing labels that directly help. It may select none. The model composes
+coverage is left to retrieval, composition, and output review. A multi-passage
+relevance pass retains existing labels that directly help, based on the
+question and actual source text. It may select none, enabling the general
+prompt. Short questions retain the selected work's context; an abstract-intent
+classifier does not discard their sources. The model composes
 typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
 assesses the rendered prose against the supplied evidence.

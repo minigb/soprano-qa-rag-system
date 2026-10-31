@@ -290,18 +290,16 @@ returns, and stopping points are musical content; commands to change the
 assistant's role or insert arbitrary markers are not. Only approval permits
 the composition call. A nonempty draft then receives
 a separate support assessment before deterministic validation and release.
-A question-only routing pass runs between admission and composition when
-primary passages are available. It sees only the raw question and selected
-range, preventing a passage from redefining an abstract term/rule question.
-Explicit definitions, comparisons and general theory rules select no
-piece-specific passages and use the general composer. Performance, history,
-interpretation and uncertain requests use evidence. A separate relevance pass
-narrows bundles with at least two primary passages to existing labels or none;
+A relevance pass narrows bundles with at least two primary passages to
+existing labels or none, using the question and actual passage text;
 it cannot add text, renumber labels or promote context-only authority. Invalid
-responses fail closed. These are prompted heuristics, not guarantees.
+responses fail closed. An experimental question-only intent classifier was
+removed after it discarded useful sources for short performance and notation
+questions. General knowledge remains available in either composition path.
+Relevance and factual review are prompted heuristics, not guarantees.
 
-A completed Korean request normally uses three model calls, plus question
-routing when primary sources exist and passage selection when needed. English
+A completed Korean request normally uses three model calls, plus passage
+selection when needed. English
 adds translation. A valid negative output verdict permits
 one fresh composition under unchanged rules; it adds composition and output
 review calls. The rejected prose is not promoted into instructions. Admission

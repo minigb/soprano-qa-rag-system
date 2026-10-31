@@ -871,6 +871,24 @@ Available behind `language="en"`; the Korean path is unchanged. Risks:
   requests still load the 14B model for translation.
 - `scripts/ask.py` and the `answer.py` CLI have no language option.
 
+## October 31: reject the destructive intent router (E9)
+
+E8 passed effective development BERTScore (0.905950, 42/43 delivered) but
+failed semantic review: Claude marked four expert answers with material drift
+and three with substantial factual errors. Manual review confirmed that
+question-only routing discarded useful KUs for short local questions, then
+invented explanations of grace notes and small notation. A high BERTScore did
+not justify retaining that design. E8 never entered validation or deployment.
+
+E9 removes that routing call. It retains passage-based relevance selection,
+explicitly marked general knowledge, the checked bilingual terminology aid,
+one concise general paragraph, and the conditional-scope correction. A
+regression test verifies that a short notation question keeps its reviewed
+source through composition and output review. No reference or question list
+is embedded in the production routing code. Frozen experiment artifacts and
+all earlier unsuccessful candidates remain in the background-evaluation
+folder; the current candidate still requires a fresh complete comparison.
+
 ## Evaluation and promotion checklist
 
 For each new approach, record all of the following here before calling it
