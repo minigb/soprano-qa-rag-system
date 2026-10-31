@@ -1,8 +1,12 @@
 """General explanation must not acquire a source's citation or scope authority."""
 import json
 import unittest
+from types import SimpleNamespace
 
-from soprano_qa.answer import GeneratedAnswerRejected, finalize_grounded_generated_answer
+from soprano_qa.answer import (
+    GeneratedAnswerRejected, finalize_grounded_generated_answer,
+    _copies_scoped_source_sentence,
+)
 from soprano_qa.security import SecurityViolation
 from soprano_qa.structured_answer import RenderedAnswer, render_structured_answer
 
@@ -58,6 +62,19 @@ class BackgroundProvenanceTests(unittest.TestCase):
         self.assertEqual(result.answer_basis, 'retrieved_evidence_with_background')
         self.assertEqual(result.grounded_text, 'Practice without consonants. [E1]')
         self.assertNotIn('[E1]', result.background_text)
+
+    def test_frequency_screen_preserves_complete_scoped_source_sentences(self):
+        sentence = '꾸밈음이 자주 나타나는 프레이즈에서는 가벼운 소리를 유지한다.'
+        results = [SimpleNamespace(record={'answer': sentence})]
+        self.assertTrue(_copies_scoped_source_sentence(
+            '꾸밈음이 자주 나타나는 프레이즈에서는 가벼운 소리를 유지합니다. [E1]', results, {0}))
+        self.assertFalse(_copies_scoped_source_sentence(
+            '이 곡에는 꾸밈음이 자주 나타납니다. [E1]', results, {0}))
+        self.assertFalse(_copies_scoped_source_sentence(
+            '꾸밈음이 자주 나타나는 프레이즈에서는 가벼운 소리를 유지합니다. [E2]', results, set()))
+        results[0].record['answer'] = '곡 전체에서 항상 가볍게 부른다.'
+        self.assertFalse(_copies_scoped_source_sentence(
+            '곡 전체에서 항상 가볍게 부릅니다. [E1]', results, {0}))
 
 
 if __name__ == '__main__':

@@ -130,17 +130,19 @@ Write one coherent, question-focused answer using the structured answer format.
 The text fields contain natural prose only; select supporting labels in each
 item's evidence array. The application renders those labels for validation and
 removes them for display. Do not write inline citations or a citation footer.
-Start with the direct answer. Usually one to four sentences are enough; add a
-distinct detail only when it answers a requested aspect or preserves an important
-condition. Stop when the question is answered. Do not summarize every retrieved
-record or add other passages' advice merely because it appears in the evidence.
-Before writing, select only the source clauses that directly answer the question.
-For a focused question, normally give one or two sentences. A broad request may need more.
-Do not attach unrelated background, another passage's advice, or a generic conclusion.
+Start with the direct answer. Select the source passages that answer the question,
+then retain their relevant explanation, conditions and alternatives. Do not shorten
+away why or how the recommendation works, or the situation to which it applies.
 Keep the source's wording when it already answers the question; change only what
-is needed for clarity, the answer language, and polite grammar. Preserve useful
-conditions and alternatives. Add general explanation only when it helps an aspect
-the sources do not cover; never add it just to make the answer longer.
+is needed for the answer language and polite grammar. Do not paraphrase just for
+variety. A complete relevant paragraph is preferable to a compressed restatement
+that loses qualifications. Do not summarize every retrieved record or add another
+passage's advice merely because it appears in the evidence.
+For a general definition or comparison of musical concepts, explain those concepts
+directly. The selected piece is context, not an obligation to discuss it. If no
+reviewed answer directly explains the requested concept, use background items;
+do not cite a merely related passage or invent a connection to it. Add background
+only for an aspect the relevant source passages do not already explain.
 Two examples of the reasoning rule, not additional musical evidence:
 - If one source says to enter gently and another discusses the final release,
   a question about the entrance needs only the entrance advice.
@@ -1344,6 +1346,7 @@ def answer_overgeneralizes_local_examples(
         if (
             _claim_has_piece_wide_generalization(claim)
             and not cited & general_indices
+            and not _copies_scoped_source_sentence(claim, results, cited_local)
         ):
             return True
 
@@ -1353,6 +1356,39 @@ def answer_overgeneralizes_local_examples(
     if local_indices and body_claims and not body_citations:
         return True
     return False
+
+
+def _copies_scoped_source_sentence(
+    claim: str, results: List[Any], cited_local: set[int],
+) -> bool:
+    """A verbatim scoped sentence does not create a new frequency assertion.
+
+    The coarse frequency screen also catches faithful source sentences such as
+    "ornaments often appear in this phrase". Allow only a complete matching
+    sentence, with deterministic Korean register normalization; a paraphrase,
+    dropped condition or whole-piece assertion does not receive this exception.
+    Semantic output review still applies.
+    """
+    if re.search(
+        r"(?:곡|노래|작품)\s*(?:전체|전반)|(?:전체적|전반적)으로|항상|언제나|곳곳"
+        r"|전\s*(?:곡|노래|작품|구간|마디|부분|대목)"
+        r"|(?:모든|대부분(?:의)?)\s*(?:구간|마디|부분|대목|곡|노래|작품)"
+        r"|\b(?:throughout|always|everywhere)\b"
+        r"|\b(?:across|all\s+through)\s+(?:the\s+)?(?:piece|work|song)\b",
+        claim, flags=re.IGNORECASE,
+    ):
+        return False
+
+    def normalize(text: str) -> str:
+        text = re.sub(r"\[E[0-9]+(?:\s*,\s*E[0-9]+)*\]", "", text)
+        return re.sub(r"\s+", " ", formalize_korean_answer(text)).strip()
+
+    expected = normalize(claim)
+    return any(
+        expected == normalize(sentence)
+        for index in cited_local
+        for sentence in _answer_claims(str(results[index].record.get("answer", "")))
+    )
 
 
 def suspicious_generation_tokens(

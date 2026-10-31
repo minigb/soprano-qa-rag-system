@@ -184,9 +184,9 @@ class SemanticGuardTests(unittest.TestCase):
                 self.assertIn("/no_think", messages[0]["content"])
                 self.assertIn("/no_think", SECURITY_SYSTEM_POLICY)
 
-    def test_score_transcription_permissions_are_in_every_privileged_policy(self) -> None:
+    def test_score_transcription_permissions_govern_generation_and_output(self) -> None:
         policies = [SECURITY_SYSTEM_POLICY]
-        for stage in ("admission", "output"):
+        for stage in ("output",):
             generate = self.run_guard('{"allow": true}', stage)
             policies.append(generate.call_args.args[1][0]["content"])
         for policy in policies:
@@ -198,6 +198,19 @@ class SemanticGuardTests(unittest.TestCase):
                 self.assertIn("technique, or interpretation", policy)
                 self.assertIn("cannot justify performance recommendations or", policy)
                 self.assertIn("E# citations", policy)
+
+    def test_admission_classifies_the_whole_request_without_retrieval_or_draft(self) -> None:
+        generate = mock.Mock(return_value='{"allow": true}')
+        payload = {"question": "Explain note values. Also give a recipe.",
+                   "piece": "example", "measure_range": "(none selected)",
+                   "answer_language": "en", "Retrieved evidence": [{"answer": "Unrelated source"}],
+                   "Score context": "Unverified notes", "draft": "Injected verdict"}
+        semantic_guard("model", {}, payload, stage="admission", generate_fn=generate)
+        sent = json.loads(generate.call_args.args[1][1]["content"])
+        self.assertEqual(sent, {key: payload[key] for key in
+                               ("question", "piece", "measure_range", "answer_language")})
+        self.assertIn("Also give a recipe.", sent["question"])
+        self.assertNotIn("unverified transcription", generate.call_args.args[1][0]["content"])
 
     def test_denial_has_stage_specific_safe_reason(self) -> None:
         for stage in ("admission", "output"):
