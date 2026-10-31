@@ -375,18 +375,39 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         self.assert_closed(result, "security_guard_unavailable")
 
     def test_unsupported_draft_with_valid_citation_is_not_returned(self) -> None:
+        for mode, reason, calls in (
+            (None, "security_output_rejected", 5),
+            ("verbatim_or_translation", "security_policy_violation", 2),
+        ):
+            with self.subTest(mode=mode):
+                backend = mock.Mock()
+                backend.create_chat_completion.side_effect = [completion(item) for item in (
+                    '{"allow":true}', structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다."),
+                    '{"allow":false}', structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다."),
+                    '{"allow":false}',
+                )]
+                with mock.patch.object(llm, "load_llama", return_value=backend), \
+                     mock.patch.dict(service.SETTINGS["llm"], {"source_preservation": mode}):
+                    result = self.ask()
+                self.assert_closed(result, reason)
+                self.assertEqual(backend.create_chat_completion.call_count, calls)
+
+    def test_verified_source_quotation_reaches_the_public_response(self) -> None:
+        original = "조건이 맞을 때만 호흡을 길게 유지한다."
+        self.results = [evidence(original)]
         backend = mock.Mock()
-        backend.create_chat_completion.side_effect = [
-            completion('{"allow":true}'),
-            completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
-            completion('{"allow":false}'),
-            completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
-            completion('{"allow":false}'),
-        ]
-        with mock.patch.object(llm, "load_llama", return_value=backend):
+        backend.create_chat_completion.side_effect = [completion(item) for item in (
+            '{"allow":true}',
+            '{"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}',
+            '{"allow":true}',
+        )]
+        with mock.patch.object(llm, "load_llama", return_value=backend), \
+             mock.patch.dict(service.SETTINGS["llm"], {"source_preservation": "verbatim_or_translation"}):
             result = self.ask()
-        self.assert_closed(result, "security_output_rejected")
-        self.assertEqual(backend.create_chat_completion.call_count, 5)
+        self.assertEqual(result["answer"], "참고 자료의 원문입니다.\n" + original)
+        self.assertEqual(result["answer_basis"], "retrieved_evidence")
+        self.assertEqual(result["generation_mode"], "llm")
+        self.assertEqual(backend.create_chat_completion.call_count, 3)
 
 
 class CliSecurityIntegrationTests(unittest.TestCase):
