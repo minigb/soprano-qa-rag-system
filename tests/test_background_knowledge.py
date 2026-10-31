@@ -107,7 +107,9 @@ class BackgroundProvenanceTests(unittest.TestCase):
 
     def test_source_relative_frequency_does_not_assert_a_whole_piece_pattern(self):
         from soprano_qa.retrieval import SearchResult
-        source = '새소리를 연상시키는 꾸밈음이 자주 나타나는 프레이즈에서는 가볍고 정확하게 표현한다.'
+        source = ('leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, '
+                  '이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 '
+                  '밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.')
         result = SearchResult({'id': 'example', 'answer': source,
                                'evidence_type': 'expert_annotation'}, 1, 1, 0, 1, 'local_example')
         faithful = '이는 새소리를 연상시키는 꾸밈음이 자주 나타나는 프레이즈에서 특히 중요합니다. [E1]'
@@ -115,7 +117,7 @@ class BackgroundProvenanceTests(unittest.TestCase):
         for broader in (
             '이 곡에는 꾸밈음이 자주 나타납니다. [E1]',
             '꾸밈음이 자주 나타나는 프레이즈에서는 가볍게, 곡 전체에서도 항상 가볍게 부릅니다. [E1]',
-            '빠른 리듬이 자주 나타나는 프레이즈에서는 가볍게 부릅니다. [E1]',
+            '꾸밈음이 자주 나타나는 프레이즈에서는 곡 전체의 어느 곳에서나 가볍게 부릅니다. [E1]',
         ):
             with self.subTest(broader=broader):
                 self.assertTrue(answer_overgeneralizes_local_examples(broader, [result]))

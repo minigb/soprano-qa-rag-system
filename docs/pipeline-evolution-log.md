@@ -144,6 +144,15 @@ score lyrics are needed); longer multi-item defaults had encouraged unrequested
 and sometimes false notation examples. The source composer still allows six
 items. Both changes require fresh development measurement before validation.
 
+E7 also showed that the E6 source-matching exception had not fixed the original
+leggiero refusal: its source uses different but compatible relative clauses.
+E8 therefore separates the scope check from entailment: an explicit "in phrases
+where X often appears" construction is not itself a whole-piece assertion.
+Mask only its frequency token and still reject other broadening in the claim.
+The actual historical source and generated clause now form the regression
+test. Citation authority, selected-measure checks and semantic support review
+remain required; this syntax rule does not establish that X or the advice is true.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical
