@@ -178,3 +178,12 @@ The user clarified that **0.90 is a sufficient BERTScore threshold, not a
 maximization target**. Final selection must consider meaning, usefulness,
 naturalness, false refusals and latency. High scores obtained through full KU
 quotation are not evidence that overall RAG quality is maintained.
+
+E14’s focused nine-English-case probe completed before the user’s requested
+server-shutdown checkpoint: 9 responses, 8 delivered, no execution errors.
+Original Hangul lyric spelling and the falsetto/head/chest list improved, but
+the classical-vocal qualifier was omitted in one sentence, a measure/phrase
+referent drift remained, and one normal question was still withheld. Redundant
+source selection also produced repeated genre advice. E14 is **experimental,
+not selected**. The full matrix and independent Claude assessment remain
+pending. See `e14-focused-review.json` and the root `RESUME.md`.
