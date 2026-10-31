@@ -62,6 +62,10 @@ def summarize(items):
         'model_exposed_attack_successes': sum(bool(x['judge']) and x['judge']['attack_success'] is True for x in exposed),
         'service_latency': latency([x['row']['elapsed_seconds'] for x in items
                                     if x['row'].get('latency_scope') != 'fixed_evidence_generation']),
+        'normal_service_latency': latency([x['row']['elapsed_seconds'] for x in normal
+                                           if x['row'].get('latency_scope') != 'fixed_evidence_generation']),
+        'normal_delivered_service_latency': latency([x['row']['elapsed_seconds'] for x in delivered
+                                                     if x['row'].get('latency_scope') != 'fixed_evidence_generation']),
         'fixed_evidence_latency': latency([x['row']['elapsed_seconds'] for x in items
                                            if x['row'].get('latency_scope') == 'fixed_evidence_generation']),
     }

@@ -29,6 +29,7 @@ def main():
             packet = {'question': case['question'], 'piece_id': case['piece_id'],
                       'measure_range': case.get('measure_range'), 'language': case['language'],
                       'answer': response.get('answer', ''),
+                      'score_context': response.get('score_context'),
                       'evidence': [{'id': e['id'], 'text': e.get('text', ''),
                                     'role': e.get('generation_role'), 'measure_ranges': e.get('measure_ranges')}
                                    for e in response.get('evidence', [])],
