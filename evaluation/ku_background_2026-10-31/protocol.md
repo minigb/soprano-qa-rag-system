@@ -22,7 +22,9 @@ Also include the current main code at `29fe3e2` as a separately named baseline
 under the same evaluation model, corpus and settings. It already has the initial
 security implementation and Sumi Jo source ranking; Candidate F is the subsequent
 strict refinement. The genuinely pre-security version was `f307470`, evaluated
-in the separate October 25 report. Do not call either current comparison
+in the separate October 25 report. Include a fresh run of it on this same
+290-request suite as a fourth system, so the original comparison is available
+without pooling older measurements. Do not call either current comparison
 baseline unprotected, pool earlier experiments, or reuse historical latencies.
 
 ## Evaluation target

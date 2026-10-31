@@ -200,6 +200,34 @@ def run_fixed_case(qa: Any, answer: Any, llm: Any, retrieval: Any, priority: dic
     response, error, results = None, None, []
     ranges = case.get("measure_ranges") or ([case["measure_range"]] if case.get("measure_range") else [])
     measures = ",".join(f"{a}-{b}" for a, b in ranges)
+    if not hasattr(qa, "SecurityViolation"):
+        # The pre-security baseline has no guarded generate() API and releases
+        # some rejected drafts with warnings. Exercise its own public service,
+        # replacing only retrieval with the frozen context; do not backport
+        # newer security/finalization behavior into that baseline.
+        if len(ranges) > 1 or case.get("score_context"):
+            raise ValueError("Legacy fixed-context adapter supports one range and no injected lyrics")
+        original_retrieve = qa.retrieve_generation_evidence
+        try:
+            results = fixed_results(case, retrieval, priority)
+            def frozen_retrieve(_index, **kwargs):
+                return results, answer.build_messages(
+                    kwargs["piece"], kwargs["measures"], kwargs["query"], results,
+                    score_context=kwargs.get("score_context", ""),
+                )
+            qa.retrieve_generation_evidence = frozen_retrieve
+            response = qa.ask(piece_id=case["piece_id"], question=case["question"],
+                              measure_range=tuple(ranges[0]) if ranges else None,
+                              generate=True, top_k=case.get("top_k", 6), language=case["language"])
+        except Exception as exc:
+            error = {"type": type(exc).__name__, "message": str(exc)}
+        finally:
+            qa.retrieve_generation_evidence = original_retrieve
+        return {"status": "exception" if error else "response", "response": response, "exception": error,
+                "elapsed_seconds": time.perf_counter() - started, "latency_scope": "fixed_evidence_generation",
+                "llm_call_count": len(counter.calls), "llm_calls": deepcopy(counter.calls),
+                "fixed_selected_ids": [r.record["id"] for r in results],
+                "fixed_adapter": "native_presecurity_service_with_frozen_retrieval"}
     try:
         results = fixed_results(case, retrieval, priority)
         qa.screen_question(case["question"])

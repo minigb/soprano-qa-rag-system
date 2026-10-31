@@ -76,6 +76,25 @@ class UsageTests(unittest.TestCase):
 
 
 class ProbeTests(unittest.TestCase):
+    def test_presecurity_fixed_context_keeps_native_service_warning_policy(self):
+        retrieval = SimpleNamespace(SearchResult=lambda record, *a: SimpleNamespace(record=record))
+        original = lambda *a, **k: self.fail('Native retrieval used in fixed-context test')
+        qa = SimpleNamespace(retrieve_generation_evidence=original)
+        def native_ask(**kwargs):
+            sources, messages = qa.retrieve_generation_evidence(None, piece=kwargs['piece_id'],
+                measures='', query=kwargs['question'], score_context='')
+            self.assertEqual(sources[0].record['id'], 'fixed')
+            return {'answer': 'native draft', 'generation_validation_warning': 'native warning'}
+        qa.ask = native_ask
+        answer = SimpleNamespace(build_messages=lambda *a, **k: [])
+        counter = probe.TraceCounter(SimpleNamespace(check=lambda: None))
+        case = {'piece_id': 'p', 'question': 'q', 'language': 'ko',
+                'selected_pool': [{'record': {'id': 'fixed'}}]}
+        result = probe.run_fixed_case(qa, answer, None, retrieval, {}, counter, case)
+        self.assertEqual(result['response']['generation_validation_warning'], 'native warning')
+        self.assertEqual(result['latency_scope'], 'fixed_evidence_generation')
+        self.assertIs(qa.retrieve_generation_evidence, original)
+
     def test_selected_context_preserves_order_and_copies_records(self):
         entries = [{"record": {"id": "web", "evidence_type": "web_coaching"}, "relevance": .8, "scope": "general_evidence"},
                    {"record": {"id": "expert", "evidence_type": "expert_annotation"}, "relevance": .6, "scope": "local_example"}]
