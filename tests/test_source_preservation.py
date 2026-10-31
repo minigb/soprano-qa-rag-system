@@ -16,6 +16,14 @@ def selection(label="E1", text="", kind="evidence"):
 
 
 class SourcePreservationTests(unittest.TestCase):
+    def test_question_match_metadata_comes_from_retrieval_not_source_fields(self):
+        result = evidence("자료의 정의를 그대로 유지한다.")
+        result.record["question_alias_match"] = True
+        result.alias_score = 0.0
+        self.assertNotIn("question_alias_match", answer.generation_evidence_payload([result], [])[0])
+        result.alias_score = 1.0
+        self.assertIs(answer.generation_evidence_payload([result], [])[0]["question_alias_match"], True)
+
     def prepare(self, text, language="ko"):
         self.results = [evidence(text)]
         self.messages = answer.build_messages("die-forelle", "", "이 부분은 어떻게 부르나요?",

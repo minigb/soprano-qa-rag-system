@@ -36,4 +36,10 @@ def is_explicit_general_question(payload: dict[str, Any]) -> bool:
     selected_range = payload.get("measure_range")
     if not isinstance(question, str) or (selected_range and selected_range != "(none selected)"):
         return False
+    # General wording does not make a directly answering KU irrelevant. This
+    # flag comes from the retriever's complete source-question concept match;
+    # it changes only routing, never admission, claim authority or output review.
+    if any(isinstance(r, dict) and r.get("citation_label") and r.get("question_alias_match") is True
+           for r in payload.get("Retrieved evidence", [])):
+        return False
     return not _LOCAL.search(question) and bool(_GENERAL.search(question))

@@ -1,0 +1,39 @@
+{
+  "verified_at": "2026-10-31T13:48:34.895460+00:00",
+  "source_sha256": "08ddf8fd5b3d60e291566d8d36d2e354da9fb59779b0d78141dcc09beeded548",
+  "rag_commit": "3431f3fb04fff0a25f0bd1600d7b1b70a39c3990",
+  "lab_commit": "e9937dad56c8e2dac82680881e0a5ec59f06d41c",
+  "production_modules_match_frozen_candidate_and_lab": true,
+  "current_algorithm_and_inference_settings_match_frozen_candidate": true,
+  "exact_prompt_export_check": "passed",
+  "checks": [
+    {
+      "name": "standalone_rag",
+      "cwd": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system",
+      "tests": 585,
+      "status": "passed",
+      "command": "python -m unittest discover -q",
+      "interpreter": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+      "log_sha256": "28836cac7b341b65d779c8e480b3d2a1205fe90e4c971a786b8f0404d9a994d3"
+    },
+    {
+      "name": "lab_rag",
+      "cwd": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/rag",
+      "tests": 585,
+      "status": "passed",
+      "command": "python -m unittest discover -q",
+      "interpreter": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+      "log_sha256": "0f756e5a5d95796d8422503eddc48c8da15694413002b42b63d42699764d5056"
+    },
+    {
+      "name": "lab_demo",
+      "cwd": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/demo",
+      "tests": 44,
+      "status": "passed",
+      "command": "python -m unittest discover -s tests -q",
+      "interpreter": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+      "log_sha256": "46878ffd48759b9159377d7f5c847a2a10c656f369b1982838b04a85efee3bc6"
+    }
+  ],
+  "timing_caveat": "Some CPU regression checks ran concurrently with early candidate inference on the shared host; the measured latency comparison is descriptive, single-run, not a controlled speedup experiment."
+}

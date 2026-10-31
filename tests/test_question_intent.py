@@ -9,6 +9,15 @@ from tests.test_security_integration import completion
 
 
 class GeneralIntentTests(unittest.TestCase):
+    def test_direct_question_match_preserves_an_available_definition(self):
+        payload = {"question": "What is syncopation?", "Retrieved evidence": [
+            {"citation_label": "E2", "question_alias_match": True, "answer": "A definition."}]}
+        self.assertFalse(is_explicit_general_question(payload))
+        payload["Retrieved evidence"][0]["question_alias_match"] = False
+        self.assertTrue(is_explicit_general_question(payload))
+        payload["Retrieved evidence"][0].update(citation_label=None, question_alias_match=True)
+        self.assertTrue(is_explicit_general_question(payload))
+
     def test_definitions_and_universal_rules_without_local_referents(self):
         for question in (
             "레가토와 포르타멘토는 어떤 차이가 있나요?",

@@ -2236,6 +2236,11 @@ def generation_evidence_payload(
             "query_scope_relation": result.scope_match,
             "evidence_role": scope_evidence_role(result.scope_match),
         }
+        # This is a retriever-computed relevance signal, never source text or
+        # safety approval. Keep a directly matching reviewed question's answer
+        # available even when the user's wording asks for a general definition.
+        if result in primary and getattr(result, "alias_score", 0.0) >= 1.0:
+            item["question_alias_match"] = True
         if measure_ranges or result.scope_match != "local_example":
             item["measure_range"] = record.get("measure_range") or []
             item["measure_scope"] = record.get("measure_scope", "")
