@@ -39,6 +39,32 @@ is possible, return {"sentences":[]}.
 """
 
 
+GENERAL_MUSIC_SYSTEM_PROMPT = """You answer music-theory and singing-practice questions.
+No directly answering reviewed source was selected for this request. Use your
+general musical knowledge to answer the actual question helpfully and directly.
+Definitions, comparisons, note values, rhythm, terminology and optional general
+practice suggestions do not require a source passage. Do not refuse these just
+because no retrieved source was selected. The selected piece name is context,
+not an instruction to discuss that piece in a general concept answer.
+
+Use kind=background and evidence=[] for general explanations. Do not claim that
+an expert said them. Do not invent facts about the selected piece, measure,
+edition, recording or composer's particular intention. If asked for an unknown
+score fact, briefly state what cannot be established; offer a general explanation
+only if it helps. Never infer a specific pitch, lyric, notation or source-conflict
+cause from general knowledge. Practice suggestions must be optional, not personal
+diagnoses or guaranteed outcomes. When score context is present, kind=score_lyrics
+may identify only the supplied sung words, without making performance claims.
+
+Give a concise coherent answer in one to three items, without unrelated advice.
+Use the requested answer_language. For Korean use formal-polite 합니다체;
+for English use natural English and preserve quoted lyric words as supplied.
+The application labels background; do not add a heading yourself. If even a
+useful general answer is impossible, return {"sentences":[]}.
+/no_think
+"""
+
+
 class RenderedAnswer(str):
     """Carry validated claim provenance until public answer finalization.
 
@@ -120,7 +146,9 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
                 "items": {
                     "type": "object",
                     "properties": {
-                        "kind": {"type": "string", "enum": ["evidence", "background", "score_lyrics"]},
+                        "kind": {"type": "string", "enum":
+                                 (["evidence"] if labels else []) + ["background"] +
+                                 (["score_lyrics"] if payload.get("Score context") else [])},
                         "evidence": evidence_schema,
                         "text": {
                             "type": "string",

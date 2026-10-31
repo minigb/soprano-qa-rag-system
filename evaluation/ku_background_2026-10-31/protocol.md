@@ -18,11 +18,12 @@ advice to an expert. The application labels general explanations for readers.
 Missing relevant KUs may permit a general answer; they do not establish local
 facts. This is a generation change, not a retrieval or checkpoint change.
 
-Also include the pre-security code at `29fe3e2` as a separately named historical
-baseline under the same evaluation model, corpus and settings. This directly
-addresses the user's original-system comparison without mislabeling Candidate F
-as the unprotected system. Do not pool these two baselines or reuse historical
-latencies as measurements of the new evaluation run.
+Also include the current main code at `29fe3e2` as a separately named baseline
+under the same evaluation model, corpus and settings. It already has the initial
+security implementation and Sumi Jo source ranking; Candidate F is the subsequent
+strict refinement. The genuinely pre-security version was `f307470`, evaluated
+in the separate October 25 report. Do not call either current comparison
+baseline unprotected, pool earlier experiments, or reuse historical latencies.
 
 ## Evaluation target
 

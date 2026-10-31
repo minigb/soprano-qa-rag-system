@@ -1,0 +1,16 @@
+{
+  "cases_sha256": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
+  "results_sha256": "07c29c4ded1515fa57feb1789d75fd9be84c142fe165c093a6f1b72def05ed9a",
+  "runner_sha256": "dbcbc903ab0d8c4364de1e3cda3695216c8b83883d825776b4900c39672bb8c7",
+  "selected_settings_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "split": "development",
+  "cases": 43,
+  "references": "one concatenation of frozen applicable expert KUs per question",
+  "candidate": "complete displayed answer; errors/refusals zero in effective metrics",
+  "idf_reference_sha256": "57353b16558c8fcdacfc20a74bae74180e9db59b5be4ccdae903409508af8cab",
+  "packages": {
+    "bert-score": "0.3.13",
+    "transformers": "5.10.2",
+    "torch": "2.7.1+cu128"
+  }
+}

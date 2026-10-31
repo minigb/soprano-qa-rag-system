@@ -79,6 +79,8 @@ def score(args):
             references = [c['reference_answers'][0] for c in delivered]
             maximum = scorer._tokenizer.model_max_length
             lengths = [len(scorer._tokenizer.encode(text, truncation=False)) for text in candidates + references]
+            if selected_settings and any(n > maximum for n in lengths):
+                raise ValueError('Frozen setting would truncate an answer/reference; full-answer score is unavailable')
             raw = scorer.score(candidates, references, batch_size=16) if delivered else ([], [], [])
             metrics = {c['id']: {'precision': float(raw[0][i]), 'recall': float(raw[1][i]),
                                  'f1': float(raw[2][i])} for i, c in enumerate(delivered)}

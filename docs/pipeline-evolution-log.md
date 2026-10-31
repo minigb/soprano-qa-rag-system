@@ -54,6 +54,14 @@ relevance filtering, not a trained Self-RAG implementation or a security proof.
 Whether its extra inference cost and possible selection omissions are worth it
 must be decided on the same frozen development questions before validation.
 
+E2 hypothesis, before running it: E's selector correctly returned no passages
+for note-value definitions, but the source-oriented composer then returned an
+empty answer. Use a dedicated general-music system prompt when the selected
+bundle has no primary source. It retains the task/injection boundary, explicit
+unknown-score limits, requested language and typed output; it does not ask a
+general explanation to satisfy irrelevant KU synthesis instructions. Limit the
+schema's kind choices to those actually possible for the supplied bundle.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical

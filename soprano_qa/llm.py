@@ -13,10 +13,12 @@ from typing import Any, Dict, List
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
     select_question_evidence, serialize_untrusted,
+    SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
     NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
+    GENERAL_MUSIC_SYSTEM_PROMPT,
     answer_schema,
     render_structured_answer,
 )
@@ -138,6 +140,9 @@ def generate(
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
+        if not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", [])):
+            messages = [{"role": "system", "content": GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
+                        *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.

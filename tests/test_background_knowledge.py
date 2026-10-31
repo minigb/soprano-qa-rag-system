@@ -9,7 +9,7 @@ from soprano_qa.answer import (
     finalize_user_visible_answer, _validate_primary_citation_per_claim,
 )
 from soprano_qa.security import SecurityViolation
-from soprano_qa.structured_answer import RenderedAnswer, render_structured_answer
+from soprano_qa.structured_answer import RenderedAnswer, render_structured_answer, answer_schema
 
 
 class BackgroundProvenanceTests(unittest.TestCase):
@@ -28,6 +28,14 @@ class BackgroundProvenanceTests(unittest.TestCase):
         self.assertEqual(result, 'General explanation: A half note is twice a quarter note.')
         self.assertEqual(result.answer_basis, 'general_music_knowledge')
         self.assertEqual(result.grounded_text, '')
+
+    def test_empty_bundle_schema_can_only_generate_general_knowledge(self):
+        def kinds(payload):
+            return answer_schema(payload)['properties']['sentences']['items']['properties']['kind']['enum']
+        self.assertEqual(kinds({'Retrieved evidence': []}), ['background'])
+        self.assertEqual(kinds({'Retrieved evidence': [], 'Score context': 'la la'}),
+                         ['background', 'score_lyrics'])
+        self.assertEqual(kinds(self.payload), ['evidence', 'background'])
 
     def test_background_cannot_borrow_source_labels(self):
         with self.assertRaises(SecurityViolation):
