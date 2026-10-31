@@ -23,19 +23,21 @@ Development checkpoints on `codex/ku-background-knowledge`:
   BERTScore settings was XLM-R large layer 18 without IDF: 0.838086 effective
   F1, 0.948361 conditional on delivered answers. No validation answers were
   used to choose this setting. B is not a successful release.
-- C (`9c30037`, development run in progress): admission sees the original
+- C (`9c30037`, 55 development requests): admission sees the original
   request rather than retrieval/score contents, and generation preserves
   complete relevant explanations. Literal scoped source sentences can pass
   the coarse frequency screen without authorizing new whole-piece claims.
-  Early results also show that lyric diction needs explicit admission context.
-- D (prepared, not yet evaluated): fix Unicode ellipsis citation boundaries
+  Expert delivery 37/43 and effective F1 0.823354: it did not improve B.
+  Lyric diction needed explicit admission context.
+- D (`a9fee80`, 55 development requests): fix Unicode ellipsis citation boundaries
   and colon-in-parentheses register checks; normalize only unambiguous
   `있어요`/`없어요` endings. Clarify music diction admission and narrative
   source scope. An output-review denial may trigger at most one fresh draft
   with the same frozen evidence, schema and policies; the replacement needs a
   new affirmative output verdict. Admission failures, malformed verdicts,
   input/output text screening and backend failures never use this retry.
-  This is a measured quality hypothesis, not permission to bypass a guard.
+  Expert delivery 41/43 and effective F1 0.909693 under B's frozen metric.
+  Claude v2 found 2 material expert drifts; general delivery was only 6/10.
 
 The 555 system tests pass for the prepared D source. The experiment's frozen
 protocol, rather than the old source-only release checklist below, governs
@@ -53,6 +55,11 @@ answers the question. A malformed selection fails closed. This is prompted
 relevance filtering, not a trained Self-RAG implementation or a security proof.
 Whether its extra inference cost and possible selection omissions are worth it
 must be decided on the same frozen development questions before validation.
+E (`5f75039`) delivered 41/43 expert answers, F1 0.912229, with one material
+expert drift and one material general drift under Claude v2. E2 (`35d47af`)
+had the same delivery and metric, two material expert judgments and one
+material general judgment. Separate judge calls have variance, so the final
+comparison will deduplicate identical packets and judge them only once.
 
 E2 hypothesis, before running it: E's selector correctly returned no passages
 for note-value definitions, but the source-oriented composer then returned an
@@ -72,6 +79,13 @@ remains mandatory. No minimum factual claim is required. Also make explicit
 that replacing a source's technique with another term is not a faithful
 definition, and that omitting a condition can widen a permission. These changes
 are hypotheses to evaluate, not grounds to dismiss earlier failed cases.
+
+E4 development hypothesis: E3 now answers both note-value questions, but its
+English answer added an unrequested, false 60-BPM example. Restrict general
+explanations to requested details and ask for units/proportions to be checked.
+Do not add assumed numerical demonstrations unless needed. This changes only
+the general prompt; it is not a special answer rule for a benchmark case.
+Record the E3 error and evaluate E4 rather than silently replacing its output.
 
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90

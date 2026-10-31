@@ -4,6 +4,8 @@ Local, measure-aware hybrid retrieval and grounded answer generation for five
 soprano works. Grounded generation sends the complete selected, reviewed
 knowledge-unit answer texts to local Qwen3-14B. Separate local-model checks
 assess task safety before composition and support for the draft before release.
+Answers may include clearly marked general music explanations. These cannot
+establish unknown score facts or borrow a knowledge unit's attribution.
 Admission does not reject a music question solely because its evidence is
 partial or conflicting. Rejected answers are withheld. Retrieval confidence changes
 which evidence is supplied without selecting a different answer renderer.
@@ -272,28 +274,37 @@ field names or newlines. Application instructions stay in the system role;
 the question, retrieved text, and score context have no authority to change
 those instructions. Qwen3-14B first assesses whether every requested task stays
 within the music service and respects its instruction boundary. Evidence
-coverage is left to retrieval, composition, and output review. It then composes
-objects with text and model-selected evidence labels under a JSON schema.
+coverage is left to retrieval, composition, and output review. A separate
+relevance pass narrows bundles with multiple primary passages to the existing
+labels that directly help the question. It may select none. The model composes
+typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
 assesses the rendered prose against the supplied evidence.
-The guards accept only a strict JSON boolean approval. There is one composition
-attempt and no repair, alternate-model, extractive, or internal-knowledge
-fallback. Retrieval ambiguity, rejected drafts, and failed guards produce
-`unavailable` / `no_corpus_evidence`.
+The guards accept only a strict JSON boolean approval. A valid negative output
+verdict permits one fresh composition under the same rules, followed by another
+full check. Admission denials, malformed verdicts, text-screen failures and
+backend failures do not trigger this retry. Persistently rejected drafts and
+failed guards produce `unavailable` / `no_corpus_evidence`.
 
-The composition schema permits zero to six items and only the supplied
-primary-evidence labels, selected before each item's prose. A single leading
+Each item has a kind: `evidence`, `background`, or (when available) `score_lyrics`.
+Only evidence items use supplied primary labels. General explanations use an
+empty citation array and receive a visible general-knowledge prefix. The
+schema permits up to six items, with kind and labels selected before prose. A single leading
 system message contains both format and grounding rules. These ordering choices
 do not prove factual support. One to four concise items are normally requested;
 additional items must add distinct useful details, preserving source qualifiers
 and conditions. The model may answer the supported part of a music question
-and briefly state what cannot be established. If nothing can be supported, it
-returns `{"sentences":[]}`. The application converts that explicit abstention
-into the normal unavailable response without another model call.
+and briefly state what cannot be established. A source-based composition can
+return `{"sentences":[]}` for an explicit abstention. When no primary passage is
+selected, a dedicated general-music prompt requests an explanation or an
+explicit limitation in at least one item. It never requires a factual claim
+about an unknown piece, bar or edition. Both paths retain output review.
 Score-context-only answers use empty citation arrays and remain limited to
 identifying sung words. Structured output prevents omitted or malformed inline
 labels without adding another model call; it does not prove that a sentence
 is supported, so the semantic and deterministic checks still apply.
+The returned `evidence` and grounding flags describe retrieval candidates;
+`answer_basis` distinguishes actual source-based, mixed and general explanations.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
