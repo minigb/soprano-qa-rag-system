@@ -27,6 +27,7 @@ from pathlib import Path
 import sys
 import time
 from typing import Any
+from types import SimpleNamespace
 import uuid
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -272,10 +273,19 @@ def import_pipeline(root: Path, settings: Path) -> tuple[Any, ...]:
     sys.path[:] = [str(root.resolve())] + [item for item in sys.path
         if not (Path(item or os.getcwd()).resolve() / "soprano_qa").is_dir()]
     modules = tuple(importlib.import_module("soprano_qa." + name)
-                    for name in ("service", "answer", "llm", "retrieval", "source_priority"))
+                    for name in ("service", "answer", "llm", "retrieval"))
     if any(not Path(module.__file__).resolve().is_relative_to(root.resolve()) for module in modules):
         raise RuntimeError("Imported a different pipeline checkout")
-    return modules
+    # Pre-security versions have no source-priority module. Ordered fixed
+    # contexts do not use priority; a priority-sorting experiment still fails
+    # explicitly if it asks that version for a policy it never implemented.
+    if (root / "soprano_qa/source_priority.py").is_file():
+        priority = importlib.import_module("soprano_qa.source_priority")
+        if not Path(priority.__file__).resolve().is_relative_to(root.resolve()):
+            raise RuntimeError("Imported a different source-priority checkout")
+    else:
+        priority = SimpleNamespace(SOURCE_PRIORITY={})
+    return (*modules, priority)
 
 
 def main() -> int:

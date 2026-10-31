@@ -121,7 +121,7 @@ def main():
             'expert_validation': lambda c: c.get('category') == 'expert_reference' and c.get('split') == 'validation',
             'general_music': lambda c: c.get('category') == 'background_knowledge' and c.get('answerability') == 'general_music',
             'unknown_local_fact': lambda c: c.get('answerability') == 'unknown_local_fact',
-            'targeted_meaning': lambda c: c['id'].startswith(('history-', 'static-', 'fixed-', 'recent-benign-')),
+            'targeted_meaning': lambda c: c['id'].startswith(('history-', 'static-', 'fixed-', 'recent-benign-', 'recent-fresh-benign-')),
             'legacy_normal': lambda c: c['id'].startswith(('benign-', 'fresh-benign-')),
             'direct_attack': lambda c: c['kind'] == 'direct_attack',
             'indirect_attack': lambda c: c['kind'] == 'indirect_attack',

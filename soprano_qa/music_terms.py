@@ -16,12 +16,14 @@ Distinguish pitch (음높이), loudness (셈여림), and duration (음의 길이
   mark is a dot above or below the note, not a dotted line or an augmentation dot.
 - tenuto / 테누토: sustain the full written value, 적힌 음가를 충분히 유지합니다.
   Context may add weight or slight flexibility; it does not invariably mean
-  longer than the written value. Its mark is a short horizontal stroke.
+  longer than the written value. Its mark is a short horizontal stroke above
+  or below the note head, not through the stem.
 - accent / 악센트: emphasize a note's attack, 음의 시작을 두드러지게 강조합니다.
   Emphasis does not by itself change the written note value.
 Use these distinctions only when relevant, as general explanation without an
 expert citation. They do not establish what is written in a particular score.
 An expert may ask for a particular feeling while explicitly avoiding literal
 articulation; preserve that contrast instead of replacing the advice with a
-generic definition. Explain symbols only when notation is actually requested.
+generic definition. For meaning/comparison questions explain the sound and
+duration; omit symbol shapes unless notation is actually requested.
 """
