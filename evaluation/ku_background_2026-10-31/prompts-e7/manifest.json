@@ -1,0 +1,48 @@
+{
+  "source_commit": "b6da36eb62d21906c390033c853aa3256b6cc93f",
+  "source_sha256": {
+    "soprano_qa/answer.py": "49a07a0297d05103e90f94de2acc12c540eba274d4b0c16669bdc07789cc325c",
+    "soprano_qa/security.py": "fa6ed75ce6a2ce13c849a09ff87785e418efca58698b0d91ba9737afb8fe3df2",
+    "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d",
+    "soprano_qa/llm.py": "07c5b774fc7b4085cb370b3efeba83e82d6dea56c065637869363d194cfe6a9f",
+    "soprano_qa/structured_answer.py": "ad5faca05b0d6a99a7bb2540578040c6f9ce746c819bfb663249ce9b90a3829a",
+    "soprano_qa/music_terms.py": "b9528a41c3adeccbb2df1e297456263c1cd2c277fbb69719340423f8aac7077a"
+  },
+  "note": "Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.",
+  "assembly": "soprano_qa.answer.build_messages -> soprano_qa.llm.generate",
+  "retry": "Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.",
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 11416,
+      "sha256": "fe0148f7eaf537bbf58057e46fafe0fb679fe16cdbe77b5e835350b9af4ca270"
+    },
+    "answer-en.txt": {
+      "characters": 11846,
+      "sha256": "665bf7617f3ff562a6f910b83f4b3094fece137b718f87f531ddc69b2939b0bb"
+    },
+    "answer-general.txt": {
+      "characters": 6023,
+      "sha256": "e94dedc8e4ea48b7ddfe663c1209729f8a4b6f77d52a8bec6230f18367f0889b"
+    },
+    "guard-admission.txt": {
+      "characters": 2655,
+      "sha256": "855733aa6dfd67a6711035e97525934f19f6830f8a9cde42adb7e940fe1ecf85"
+    },
+    "guard-output.txt": {
+      "characters": 5729,
+      "sha256": "7f1a23a1c567eb963b3b35572ded2246ea9ab5aeb5b41b138e89368f648b4df9"
+    },
+    "evidence-selection.txt": {
+      "characters": 2024,
+      "sha256": "2e06a4293f0acf0d3f3a9cb1c659e14ba637ac0e716c6bd7215789dec0b8b658"
+    },
+    "query-translation.txt": {
+      "characters": 1998,
+      "sha256": "4ed18dac9e862f26651bceb32414b8b1b404a7ab9011efe4723ef01eeb7b1a3b"
+    },
+    "retry-suffix.txt": {
+      "characters": 456,
+      "sha256": "1c2180fb0746de5b4513648bbca1bdea472c5c63d3b2e0bb5aa550acf768c672"
+    }
+  }
+}
