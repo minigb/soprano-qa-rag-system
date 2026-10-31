@@ -76,7 +76,10 @@ _REDUNDANT_CITATION_RE = re.compile(r"\[(E[1-9][0-9]*(?:\s*,\s*E[1-9][0-9]*)*)\]
 # and abbreviation-internal dots have no following whitespace and stay intact.
 # An abbreviation ending before whitespace is conservatively cited as well;
 # its original characters are preserved and display-time stripping restores it.
-_SENTENCE_END_RE = re.compile(r"[.!?。！？]+[\"'”’」』】)]*(?=\s|$|[가-힣])")
+# The downstream validator applies NFKC, which turns … into ... and fullwidth
+# punctuation into ASCII. Cite these boundaries too, while preserving the
+# original lyric typography in displayed text.
+_SENTENCE_END_RE = re.compile(r"[.!?。！？…﹒．｡]+[\"'”’」』】)）]*(?=\s|$|[가-힣])")
 
 
 def _allowed_labels(payload: dict[str, Any]) -> list[str]:

@@ -68,6 +68,9 @@ from soprano_qa.security import (
 
 # Keep the grounding contract shared so language variants cannot drift.
 _GROUNDING_PROMPT = """You are a measure-aware soprano performance QA assistant.
+Answer the actual question first. A general music definition or comparison should
+receive a direct general explanation, not a summary of the selected piece. Use
+background items when no supplied passage directly answers that concept question.
 Use the reviewed answers as the primary evidence about the selected piece.
 You may use general music knowledge to explain terms or offer an optional practice
 suggestion when it helps the question. Keep such background separate from source claims.
@@ -96,6 +99,9 @@ general_context and unconfirmed_scope_context_only cannot establish what happens
 Web evidence without an edition-qualified measure system cannot establish local score facts.
 Without a selected range, Evidence_role=local_example may answer the described musical situation.
 Its canonical location is hidden routing metadata: do not print measure numbers or internal scope labels.
+Keep narrative scope already stated in source prose, such as "at the opening",
+"in an unaccompanied passage" or "when a breath is unavoidable". Hiding routing
+metadata never means deleting these conditions from the actual musical claim.
 A local example cannot by itself establish whole-piece, frequent, or universal behavior.
 General evidence likewise has no authority to introduce measure locators in a no-range answer.
 
@@ -644,16 +650,16 @@ HANGUL_JONGSEONG_BIEUP = 17
 PLAIN_DECLARATIVE_ENDING_RE = re.compile(
     r"(?P<word>[가-힣]+다)"
     r"(?=(?:"
-    r"[.!?;:。！？；：][\"'”’」』】)]*"
-    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"[.!?;。！？；][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;。！？；]"
     r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
     r"))"
 )
 KOREAN_SENTENCE_FINAL_WORD_RE = re.compile(
     r"(?P<word>[가-힣]+)"
     r"(?=(?:"
-    r"[.!?;:。！？；：][\"'”’」』】)]*"
-    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"[.!?;。！？；][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;。！？；]"
     r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
     r"))"
 )
@@ -745,6 +751,13 @@ def _formalize_korean_declarative_word(word: str) -> str:
 def formalize_korean_answer(answer: str) -> str:
     """Deterministically normalize sentence-final plain Korean to 합니다체."""
 
+    # These two common polite endings have unambiguous formal equivalents.
+    # Avoid general stemming of -아요/-어요, whose irregular verbs can change
+    # meaning or become ungrammatical under a mechanical replacement.
+    answer = re.sub(
+        r"(있|없)어요(?=[.!?。！？]|\s*$)", r"\1습니다", answer,
+        flags=re.MULTILINE,
+    )
     formalized = PLAIN_DECLARATIVE_ENDING_RE.sub(
         lambda match: _formalize_korean_declarative_word(match.group("word")),
         answer,

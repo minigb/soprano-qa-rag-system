@@ -142,34 +142,54 @@ def generate(
         completion_options["response_format"] = {
             "type": "json_object", "schema": answer_schema(security_context),
         }
-    # Consumers may serve requests concurrently, while llama.cpp completions
-    # are not reentrant. Keep lazy model loading and inference within one
-    # process-wide critical section.
-    with _INFERENCE_LOCK:
-        llm = load_llama(
-            model_path=model_path,
-            n_ctx=int(llm_settings.get("n_ctx", 8192)),
-            n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
-            chat_format=_configured_chat_format(llm_settings),
-        )
-        response = llm.create_chat_completion(
-            messages=messages,
-            temperature=float(llm_settings.get("temperature", 0.0)),
-            top_p=float(llm_settings.get("top_p", 0.8)),
-            max_tokens=int(llm_settings.get("max_tokens", 768)),
-            **completion_options,
-        )
-    answer = strip_thinking(response["choices"][0]["message"]["content"])
-    if security_context is not None:
+    # A denied output may receive one new composition under the same policy.
+    # Admission denials, malformed verdicts, unsafe text and backend failures
+    # never enter this path. A replacement still needs every normal check.
+    for attempt in range(2 if security_context is not None else 1):
+        # llama.cpp completions are not reentrant.
+        with _INFERENCE_LOCK:
+            llm = load_llama(
+                model_path=model_path,
+                n_ctx=int(llm_settings.get("n_ctx", 8192)),
+                n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
+                chat_format=_configured_chat_format(llm_settings),
+            )
+            response = llm.create_chat_completion(
+                messages=messages,
+                temperature=float(llm_settings.get("temperature", 0.0)),
+                top_p=float(llm_settings.get("top_p", 0.8)),
+                max_tokens=int(llm_settings.get("max_tokens", 768)),
+                **completion_options,
+            )
+        answer = strip_thinking(response["choices"][0]["message"]["content"])
+        if security_context is None:
+            return answer
         answer = render_structured_answer(answer, security_context)
         if answer == NO_GROUNDED_ANSWER_SENTINEL:
             # An explicit abstention has no prose to assess. The public answer
             # finalizer turns it into the normal fixed unavailable response.
             return answer
         screen_generated_answer(answer, security_context)
-        semantic_guard(
-            model_path, llm_settings, {**security_context, "draft": str(answer),
-                                      "composition": list(getattr(answer, "parts", ()))},
-            stage="output", generate_fn=generate,
-        )
-    return answer
+        try:
+            semantic_guard(
+                model_path, llm_settings, {**security_context, "draft": str(answer),
+                                          "composition": list(getattr(answer, "parts", ()))},
+                stage="output", generate_fn=generate,
+            )
+        except SecurityViolation as exc:
+            if exc.reason != "security_output_rejected" or attempt:
+                raise
+            messages = [
+                {**messages[0], "content": messages[0]["content"] + "\n"
+                 "The previous composition did not pass review. Compose a new answer "
+                 "under the same rules. Answer only the actual question. For general "
+                 "music concepts, use accurate background without unrelated source "
+                 "summaries. For source-based advice retain the original actor, "
+                 "location, conditions, alternatives and certainty. If a requested "
+                 "piece fact is unknown, state that limit; do not invent it. All "
+                 "security, language and structured-output requirements still apply."},
+                *messages[1:],
+            ]
+            continue
+        return answer
+    raise AssertionError("Composition loop ended without a verdict")

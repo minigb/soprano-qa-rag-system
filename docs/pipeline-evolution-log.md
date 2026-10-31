@@ -12,6 +12,36 @@ chronological engineering record, including unsuccessful approaches.
 
 ## Active experiment: bounded general knowledge (2026-10-31)
 
+Development checkpoints on `codex/ku-background-knowledge`:
+
+- A (24-question pilot): typed source/background/lyric parts, but general
+  concept questions were often rejected and related KUs were used as if they
+  answered a different concept. Preserved under `ku_background_2026-10-31`.
+- B (`6420d2c`, 55 development requests): explicit general-music admission
+  wording. Expert answers: 38/43 delivered; Claude found 3 material and 14 minor
+  source drifts. General answerable questions: 4/10 delivered. The best of 18
+  BERTScore settings was XLM-R large layer 18 without IDF: 0.838086 effective
+  F1, 0.948361 conditional on delivered answers. No validation answers were
+  used to choose this setting. B is not a successful release.
+- C (`9c30037`, development run in progress): admission sees the original
+  request rather than retrieval/score contents, and generation preserves
+  complete relevant explanations. Literal scoped source sentences can pass
+  the coarse frequency screen without authorizing new whole-piece claims.
+  Early results also show that lyric diction needs explicit admission context.
+- D (prepared, not yet evaluated): fix Unicode ellipsis citation boundaries
+  and colon-in-parentheses register checks; normalize only unambiguous
+  `있어요`/`없어요` endings. Clarify music diction admission and narrative
+  source scope. An output-review denial may trigger at most one fresh draft
+  with the same frozen evidence, schema and policies; the replacement needs a
+  new affirmative output verdict. Admission failures, malformed verdicts,
+  input/output text screening and backend failures never use this retry.
+  This is a measured quality hypothesis, not permission to bypass a guard.
+
+The 555 system tests pass for the prepared D source. The experiment's frozen
+protocol, rather than the old source-only release checklist below, governs
+general-knowledge evaluation and legitimate refusals of unknown local facts.
+No experiment here changes the live service or published demo answer files.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical

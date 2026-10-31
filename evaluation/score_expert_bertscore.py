@@ -34,8 +34,9 @@ def score(args):
     if any(c['id'] not in indexed for c in chosen):
         raise ValueError('Incomplete expert cohort; missing answers cannot be excluded')
     idf_references = [c['reference_answers'][0] for c in cases if c['split'] == 'development']
-    if args.settings:
-        configs = [json.loads(args.settings.read_text())['settings']]
+    selected_settings = json.loads(args.settings.read_text()) if args.settings else None
+    if selected_settings:
+        configs = [selected_settings['settings']]
     else:
         if args.split != 'development':
             raise ValueError('Select settings on development data before validation')
@@ -47,6 +48,8 @@ def score(args):
                    for layer in layers for idf in [False, True]]
     args.output.mkdir(parents=True, exist_ok=True)
     contract = {'cases_sha256': digest(args.cases), 'results_sha256': digest(args.results),
+                'runner_sha256': digest(Path(__file__)),
+                'selected_settings_sha256': digest(args.settings) if args.settings else None,
                 'split': args.split, 'cases': len(chosen),
                 'references': 'one concatenation of frozen applicable expert KUs per question',
                 'candidate': 'complete displayed answer; errors/refusals zero in effective metrics',
@@ -69,6 +72,9 @@ def score(args):
         try:
             scorer = BERTScorer(**config, device=args.device, batch_size=16,
                                 idf_sents=idf_references if config['idf'] else None)
+            revision = getattr(scorer._model.config, '_commit_hash', None)
+            if selected_settings and revision != selected_settings.get('model_revision'):
+                raise ValueError('Encoder revision differs from the frozen development selection')
             candidates = [indexed[c['id']]['response']['answer'] for c in delivered]
             references = [c['reference_answers'][0] for c in delivered]
             maximum = scorer._tokenizer.model_max_length
@@ -83,7 +89,7 @@ def score(args):
             # official release. Never substitute an English or invented baseline.
             baseline = Path(bert_score.__file__).parent / 'rescale_baseline' / config['lang'] / (config['model_type'] + '.tsv')
             summary = {'config_id': key, 'settings': config, 'scorer_hash': scorer.hash,
-                       'model_revision': getattr(scorer._model.config, '_commit_hash', None),
+                       'model_revision': revision,
                        'count': len(chosen), 'delivered': len(delivered),
                        'truncated_texts': sum(n > maximum for n in lengths),
                        'max_input_tokens': max(lengths, default=0),
