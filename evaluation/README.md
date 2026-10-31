@@ -5,6 +5,22 @@ Run every command in this document from the repository root with the
 pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
 voce poco fa.
 
+## Meaning fidelity (2026-10-31 follow-up)
+
+The [targeted audit](meaning_fidelity_2026-10-31/report.md) compares 41 cases per
+system, including exact historical questions and English demo examples. It
+finds ten new material regressions; the earlier average quality improvement
+does not establish meaning preservation. Inspect the [interactive comparison](meaning_fidelity_2026-10-31/review.html)
+for actual answers, evidence and explicit editorial alternatives.
+
+```bash
+python evaluation/meaning_fidelity_2026-10-31/review.py summarize
+python evaluation/meaning_fidelity_2026-10-31/export_prompts.py --check
+```
+
+These commands validate frozen reviews/prompts without fresh inference. This
+audit is purposively selected and unblinded; its counts are not production accuracy.
+
 ## Quality refinement (2026-10-31)
 
 The [refinement report](quality_refinement_2026-10-31/report.md) compares the

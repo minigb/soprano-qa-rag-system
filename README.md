@@ -341,6 +341,14 @@ Two refined answers still contain material support errors. The report includes
 language breakdowns, latency, regressions, review limitations and a separate
 audit of the static demo samples. This authored suite is not a security guarantee.
 
+The subsequent [meaning-fidelity audit](evaluation/meaning_fidelity_2026-10-31/report.md)
+found ten new material regressions on targeted historical and demo questions,
+despite unchanged returned evidence. Material errors increased from 14 to 19
+across its 39 music requests. The refinement has not established meaning
+preservation; see the [side-by-side answers](evaluation/meaning_fidelity_2026-10-31/review.html)
+and exported [Korean](evaluation/meaning_fidelity_2026-10-31/prompts/answer-ko.txt)/[English](evaluation/meaning_fidelity_2026-10-31/prompts/answer-en.txt)
+system prompts. This difficult regression set is not a production accuracy estimate.
+
 ```bash
 conda run -n soprano-qa python evaluation/run_qualitative.py
 conda run -n soprano-qa python evaluation/run_synthesized_questions.py

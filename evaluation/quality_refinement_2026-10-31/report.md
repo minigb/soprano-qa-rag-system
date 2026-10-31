@@ -1,5 +1,11 @@
 # RAG quality refinement — 2026-10-31
 
+**Follow-up meaning audit:** The [41-case targeted comparison](../meaning_fidelity_2026-10-31/report.md)
+found ten new material regressions with the same returned evidence. Material
+errors on its 39 music requests increased from 14 to 19. Candidate F therefore
+has not demonstrated meaning preservation. The numbers below remain results
+for this earlier 120-case suite; they are not an overall accuracy or release claim.
+
 The refined pipeline improves the measured security/quality tradeoff: false
 refusals fall from 6/50 to 1/50, direct attack successes from 3/36 to 0/36, and
 effective benign quality rises from 78.0 to 93.4/100. All 240 requests completed

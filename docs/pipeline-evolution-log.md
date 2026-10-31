@@ -10,7 +10,30 @@ The stable method description remains in
 [`rag-llm-pipeline-method.md`](rag-llm-pipeline-method.md). This file is the
 chronological engineering record, including unsuccessful approaches.
 
-## Current status (2026-08-04)
+## Latest meaning-fidelity diagnostic (2026-10-31)
+
+The security refinement branch `codex/refine-rag-quality` at `79cbd7b` was
+compared with the secured pre-refinement baseline `29fe3e2` on 41 targeted
+cases per system. The [report](../evaluation/meaning_fidelity_2026-10-31/report.md)
+and [side-by-side answers](../evaluation/meaning_fidelity_2026-10-31/review.html)
+record 75 delivered-answer reviews and seven abstentions. On the 39 service
+requests per variant, material meaning errors increased from 14 to 19; the two
+fixed-evidence conflict probes are reported separately. Ten new material
+regressions received the same evidence text, order and scope in both systems.
+
+Reproduced failures include consonant omission becoming emphasis, the
+one-consonant qualifier being negated, invented vowel connections, and a
+duration instruction becoming `2~3배로 끌어내리는`. The output guard passed all
+20 materially wrong current answers across the 41-case inventory. Some older
+problems improved, but the current candidate is not validated for meaning
+preservation. Earlier aggregate quality scores do not override this finding.
+
+This is a frozen diagnostic, not a new generation approach or a full rerun of
+the 460 historical cases. No generator, main branch, running service, or
+published static answer was changed by the audit. Prompt exports include the
+structured-format prefix that `llm.generate()` prepends to `system_prompt()`.
+
+## Historical status (2026-08-04)
 
 - Active `main` work remains the answer-required one-pass baseline, with
   pipeline, evaluation, viewer, corpus, documentation, and test changes in

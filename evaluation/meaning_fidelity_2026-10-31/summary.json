@@ -1,0 +1,183 @@
+{
+  "requests": 82,
+  "cases_per_variant": 41,
+  "method": "Direct Codex review, targeted authored diagnostics; not independent musical expert review or a general accuracy estimate.",
+  "variants": {
+    "original": {
+      "meaning": {
+        "faithful": 17,
+        "material_drift": 16,
+        "minor_drift": 5,
+        "abstained": 3
+      },
+      "coverage": {
+        "partial": 15,
+        "adequate": 23,
+        "no_answer": 3
+      },
+      "by_language": {
+        "ko": {
+          "faithful": 13,
+          "material_drift": 14,
+          "minor_drift": 3,
+          "abstained": 2
+        },
+        "en": {
+          "material_drift": 2,
+          "faithful": 4,
+          "minor_drift": 2,
+          "abstained": 1
+        }
+      },
+      "by_path": {
+        "fixed_evidence_generation": {
+          "material_drift": 2
+        },
+        "service_request": {
+          "faithful": 17,
+          "material_drift": 14,
+          "minor_drift": 5,
+          "abstained": 3
+        }
+      },
+      "latency_seconds_by_path": {
+        "fixed_evidence_generation": {
+          "count": 2,
+          "median": 12.19195299805142,
+          "mean": 12.19195299805142
+        },
+        "service_request": {
+          "count": 39,
+          "median": 6.866674896329641,
+          "mean": 8.106581462511363
+        }
+      }
+    },
+    "hardened": {
+      "meaning": {
+        "faithful": 12,
+        "abstained": 4,
+        "material_drift": 20,
+        "minor_drift": 5
+      },
+      "coverage": {
+        "adequate": 34,
+        "no_answer": 4,
+        "partial": 3
+      },
+      "by_language": {
+        "ko": {
+          "faithful": 10,
+          "abstained": 3,
+          "material_drift": 16,
+          "minor_drift": 3
+        },
+        "en": {
+          "faithful": 2,
+          "material_drift": 4,
+          "minor_drift": 2,
+          "abstained": 1
+        }
+      },
+      "by_path": {
+        "fixed_evidence_generation": {
+          "abstained": 1,
+          "material_drift": 1
+        },
+        "service_request": {
+          "faithful": 12,
+          "material_drift": 19,
+          "minor_drift": 5,
+          "abstained": 3
+        }
+      },
+      "latency_seconds_by_path": {
+        "fixed_evidence_generation": {
+          "count": 2,
+          "median": 8.43586603505537,
+          "mean": 8.43586603505537
+        },
+        "service_request": {
+          "count": 39,
+          "median": 6.886518425773829,
+          "mean": 7.667225902123998
+        }
+      }
+    }
+  },
+  "paired_transitions": {
+    "faithful -> faithful": 8,
+    "material_drift -> abstained": 1,
+    "faithful -> material_drift": 9,
+    "material_drift -> faithful": 4,
+    "minor_drift -> minor_drift": 4,
+    "abstained -> abstained": 3,
+    "material_drift -> material_drift": 10,
+    "minor_drift -> material_drift": 1,
+    "material_drift -> minor_drift": 1
+  },
+  "material_regressions": [
+    "recent-benign-14-ko",
+    "static-07-en",
+    "history-kim-in-flowery-clouds-09__m67-69",
+    "static-21-en",
+    "history-kim-la-capinera-11__no-range",
+    "static-11-en",
+    "history-kim-la-capinera-13__m80-80",
+    "static-15-en",
+    "history-kim-in-flowery-clouds-02__m11-12",
+    "history-kim-la-capinera-14__m83-85"
+  ],
+  "material_regression_inputs": [
+    {
+      "case_id": "recent-benign-14-ko",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "static-07-en",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-09__m67-69",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "static-21-en",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "history-kim-la-capinera-11__no-range",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "static-11-en",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "history-kim-la-capinera-13__m80-80",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "static-15-en",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-02__m11-12",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    },
+    {
+      "case_id": "history-kim-la-capinera-14__m83-85",
+      "same_evidence_text_order_and_scope": true,
+      "same_evidence_text_set_and_scope": true
+    }
+  ]
+}
