@@ -111,3 +111,49 @@ policy. The original failed contract is retained, and subsequent comparisons
 use new output directories. The reporting predicate also now includes all 41
 meaning cases; the earlier predicate omitted `recent-fresh-benign-05-ko` from
 that subgroup, though it remained in overall metrics.
+
+## E11 validation, E12 routing repair and E13 translation repair
+
+E11’s full 290-request candidate run completed before its orchestrator was
+terminated at the candidate boundary. No baseline request was made in that run.
+Expert validation F1 was **0.892643** (57/62 delivered, zero truncation), below
+target. It also produced a serious D.S. al Coda definition error: the general
+intent route discarded the directly answering KU and the model invented an
+incorrect explanation. E11 was rejected rather than accepted on its passing
+development score. Its raw answers, metric artifacts and interruption record
+remain in `comparison-e11/`.
+
+Manual source comparison of all 41 known meaning cases found 36 faithful, one
+minor drift, two material English drifts and two withheld answers. The two
+material drifts were invented lyric romanization and substituting mixed voice
+for the source’s falsetto term. This manual audit is separate from Claude’s
+scores; it is not a human-expert annotation. E9’s corresponding manual audit
+had 11 material drifts, 13 minor drifts, 15 faithful, one withheld and one
+uncertain. These diagnostic cohorts do not estimate production prevalence.
+
+E12 (`6953b13`) retains primary evidence when the existing retriever reports a
+complete source-question concept match. The signal changes only composition
+routing, never safety approval. It also clarifies that singing breath/effort
+and pitch/key/tempo comparisons across performances are musical tasks. The
+55 development requests plus six explicitly reused failed expert-validation
+requests form `e12_probe_cases.json`. Development F1 remains 0.972074 with
+43/43 expert answers; all ten general questions are answered. Five of the six
+known failures are answered correctly in the probe; the no-range accent
+question remains withheld. Claude finds no material drift or substantial
+factual error in this probe.
+
+E13 (`ab5d591`) additionally prohibits invented romanization/transliteration and
+asks translations to preserve each source-listed technique. The lexical
+translation 가성 = falsetto was checked against the Korean Speech-Language &
+Hearing Association dictionary; register terminology varies across traditions,
+so no universal physiological classification is asserted. The E13 probe adds
+all nine previously known English meaning cases to the E12 probe (70 total).
+The original 43 development expert requests alone determine development F1.
+
+**Validation-use disclosure:** E12/E13 were refined after inspecting E11
+validation failures. The 43/62 question-group split and all references remain
+unchanged, but later validation is reused internal evaluation, not an untouched
+test set. The encoder/layer/IDF setting remains the original development-B
+selection throughout; no reference, denominator or metric was adjusted to
+raise the validation result. A new independently annotated test set would be
+needed for an unbiased estimate of generalization after this refinement.

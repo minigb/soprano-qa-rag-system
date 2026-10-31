@@ -1,0 +1,22 @@
+{
+  "created_at": "2026-10-31T13:25:16.940848Z",
+  "contract_id": "2c7718bf3da6b338fde47dd14e4c54b4130baa5644ea84f73e2f24f2e85b1c97",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "2b99cd406c31fe4378d380ef45126f36a743ca3348a7981c094fe9f246457761",
+    "helper_sha256": "271890735ea22725a888db58fbe4d28f5444eeac803733d51fcecd5b22c399eb",
+    "source_sha256": "3f8345874cd79c727e9a021abdd28f2d0fa4553f19cd20ec7e1cfbce569dca14",
+    "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329",
+    "cases_sha256": "5eb700b073f2bd74b2f25c823327a1b17b320b59ce9a1732660584ec536675eb",
+    "variant": "original",
+    "warmup_case": "expert-kim-die-forelle-03__no-range",
+    "usage_rollout": null
+  },
+  "sessions": [
+    {
+      "started_at": "2026-10-31T13:25:16.940920Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/comparison-e9/pre-security.jsonl.private-traces.jsonl",
+      "finished_at": "2026-10-31T13:25:17.059059Z"
+    }
+  ]
+}
