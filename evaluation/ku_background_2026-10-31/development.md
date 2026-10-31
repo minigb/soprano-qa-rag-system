@@ -22,6 +22,7 @@ accuracy percentages.
 | E5 | 41 | 0.913376 | 10 | Checked bilingual terminology and a dedicated general explanation prompt. Remaining unrelated-source attribution and conditional-scope issues. |
 | E7 | 40 | 0.889482 | 9 | Joint intent/label selection regressed: an invalid mixed result refused a diction question; retrieved context still contaminated a general fermata answer. Rejected. |
 | E8 | 42 | 0.905950 | 10 | Question-only routing passed the numeric target but discarded relevant sources for short score/performance questions. Wrong grace-note and small-note explanations were found by inspecting answers. Rejected before validation. |
+| E9 | 42 | 0.934070 | 8 | Removed question-only routing; the three confirmed notation/definition errors returned to source-grounded explanations. Two general questions remain withheld. Independent review is saved in `judge-e9/`. |
 
 A was an earlier 24-request pilot, not the full development cohort. E4 compared
 generation modes in isolated diagnostics, not a complete service run; E6's scope
