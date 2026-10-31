@@ -4,6 +4,12 @@ Definitions were checked against Brian Blood's articulation lesson:
 https://www.dolmetsch.com/musictheory21.htm
 These are paraphrases, not copied textbook passages. Performance context can
 modify articulation; no universal duration fraction is asserted for staccato.
+The lexical translation 가성/falsetto was checked against the Korean Speech-
+Language & Hearing Association dictionary (entry 6409):
+https://ksha1990.or.kr/dict/6409?etype=F&keyword=&ktype=&page=5
+Register labels vary across pedagogical traditions; this is not a claim of a
+universal physiological register taxonomy. See NATS Music Theater Resources:
+https://www.nats.org/Music_Theater_-_Resources.html
 """
 
 MUSIC_TERMINOLOGY = """General musical terminology (not a source about this piece)
@@ -20,6 +26,9 @@ Distinguish pitch (음높이), loudness (셈여림), and duration (음의 길이
   or below the note head, not through the stem.
 - accent / 악센트: emphasize a note's attack, 음의 시작을 두드러지게 강조합니다.
   Emphasis does not by itself change the written note value.
+- In translation, 가성 is falsetto, not mixed voice. Preserve a source's actual
+  list of vocal techniques instead of substituting other familiar register
+  names. These pedagogical labels are not a universal physiological taxonomy.
 Use these distinctions only when relevant, as general explanation without an
 expert citation. They do not establish what is written in a particular score.
 An expert may ask for a particular feeling while explicitly avoiding literal

@@ -57,6 +57,10 @@ COMPLETE answer of its one selected source. Preserve every condition, actor,
 negation, qualification, alternative and lyric referent. Do not summarize,
 combine sources, strengthen an interpretation into composer intention, or add
 a practice claim. Keep quoted sung words and vowel/consonant symbols unchanged.
+Do not add romanization, transliteration, or a new phonetic spelling of sung
+words. Retain their original script exactly. Explain a pronunciation spelling
+only when the source itself supplies it. Preserve every term in a source's
+list of techniques; do not substitute different familiar examples.
 
 Background items require evidence=[] and nonempty text. They may give accurate
 general music knowledge or explicitly optional suggestions, clearly separate
