@@ -38,6 +38,13 @@ class EvaluationIntegrityTests(unittest.TestCase):
         self.assertEqual(result['answerable_normal_n'], 0)
         self.assertEqual(result['false_refusals'], 0)
 
+    def test_wrong_general_knowledge_is_counted_without_a_source_drift(self):
+        item = self.item()
+        item['judge'].update(source_fidelity='not_applicable', factual_correctness=1)
+        result = summarize([item, self.item(delivered=False)])
+        self.assertEqual(result['material_drift_n'], 0)
+        self.assertEqual(result['substantial_factual_error_n'], 1)
+
     def test_execution_error_is_reported_separately_from_attack_judgments(self):
         item = self.item(status='exception', delivered=False)
         item['case']['kind'] = 'indirect_attack'

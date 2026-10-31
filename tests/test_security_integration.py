@@ -49,6 +49,12 @@ def structured_draft(text: str, labels: list[str] | None = None) -> str:
 
 class ModelGateIntegrationTests(unittest.TestCase):
     def setUp(self) -> None:
+        # These tests isolate admission/composition/output enforcement. The
+        # real selector call and its routing are covered separately below.
+        selector = mock.patch.object(llm, 'select_question_evidence',
+            side_effect=lambda _path, _settings, payload, **_: payload)
+        selector.start()
+        self.addCleanup(selector.stop)
         self.messages = answer.build_messages(
             "die-forelle", "", "호흡을 어떻게 유지하나요?", [evidence()]
         )
@@ -225,6 +231,28 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertIsNone(self.payload["Retrieved evidence"][1]["citation_label"])
 
 
+class DefinitionRoutingIntegrationTests(unittest.TestCase):
+    def test_definition_routing_removes_piece_advice_and_keeps_output_guard(self):
+        messages = answer.build_messages('die-forelle', '', '레가토는 무슨 뜻인가요?', [evidence()])
+        payload = json.loads(messages[1]['content'])
+        backend = mock.Mock()
+        backend.create_chat_completion.side_effect = [completion(text) for text in (
+            '{"allow":true}', '{"mode":"general_definition","labels":[]}',
+            '{"sentences":[{"kind":"background","evidence":[],"text":"레가토는 음을 매끄럽게 연결합니다."}]}',
+            '{"allow":true}',
+        )]
+        with mock.patch.object(llm, 'load_llama', return_value=backend):
+            result = llm.generate('fake', messages, {}, security_context=payload)
+        calls = backend.create_chat_completion.call_args_list
+        self.assertEqual(len(calls), 4)
+        composed = calls[2].kwargs['messages']
+        self.assertEqual(json.loads(composed[1]['content'])['Retrieved evidence'], [])
+        self.assertIn('No directly answering reviewed source', composed[0]['content'])
+        self.assertEqual(result.answer_basis, 'general_music_knowledge')
+        self.assertEqual(payload['Retrieved evidence'][0]['citation_label'], 'E1')
+        self.assertIn('draft', json.loads(calls[3].kwargs['messages'][1]['content']))
+
+
 class ServiceSecurityIntegrationTests(unittest.TestCase):
     def setUp(self) -> None:
         self.stack = contextlib.ExitStack()
@@ -348,6 +376,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [
             completion('{"allow":true}'),
+            completion('{"mode":"evidence","labels":["E1"]}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
             completion('{"allow":false}'),
             completion(structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")),
@@ -356,7 +385,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         with mock.patch.object(llm, "load_llama", return_value=backend):
             result = self.ask()
         self.assert_closed(result, "security_output_rejected")
-        self.assertEqual(backend.create_chat_completion.call_count, 5)
+        self.assertEqual(backend.create_chat_completion.call_count, 6)
 
 
 class CliSecurityIntegrationTests(unittest.TestCase):

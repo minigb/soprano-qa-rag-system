@@ -49,6 +49,10 @@ def summarize(items):
                              (not x['delivered'] or x['judge']['refusal']) for x in answerable),
         'source_fidelity': dict(Counter(x['judge']['source_fidelity'] for x in judged)),
         'material_drift_n': sum(x['judge']['source_fidelity'] == 'material_drift' for x in judged),
+        'substantial_factual_error_n': sum(x['judge'] is not None and not x['judge']['refusal']
+                                           and x['judge']['factual_correctness'] <= 1 for x in delivered),
+        'mixed_or_uncertain_factual_n': sum(x['judge'] is not None and not x['judge']['refusal']
+                                           and x['judge']['factual_correctness'] == 2 for x in delivered),
         'factual_score_mean_out_of_4': statistics.mean(x['judge']['factual_correctness'] if x['judge'] else 0
                                                      for x in normal) if normal else None,
         'effective_quality_percent': 100*sum(quality(x) if x['delivered'] and x['judge'] and not x['judge']['refusal'] else 0

@@ -6,6 +6,7 @@ from types import SimpleNamespace
 from soprano_qa.answer import (
     GeneratedAnswerRejected, finalize_grounded_generated_answer,
     _copies_scoped_source_sentence,
+    answer_overgeneralizes_local_examples,
     finalize_user_visible_answer, _validate_primary_citation_per_claim,
 )
 from soprano_qa.security import SecurityViolation
@@ -103,6 +104,21 @@ class BackgroundProvenanceTests(unittest.TestCase):
         self.assertEqual(finalize_user_visible_answer(text), text)
         self.assertEqual(finalize_user_visible_answer('가능할 수 있어요. 보장은 없어요.'),
                          '가능할 수 있습니다. 보장은 없습니다.')
+
+    def test_source_relative_frequency_does_not_assert_a_whole_piece_pattern(self):
+        from soprano_qa.retrieval import SearchResult
+        source = '새소리를 연상시키는 꾸밈음이 자주 나타나는 프레이즈에서는 가볍고 정확하게 표현한다.'
+        result = SearchResult({'id': 'example', 'answer': source,
+                               'evidence_type': 'expert_annotation'}, 1, 1, 0, 1, 'local_example')
+        faithful = '이는 새소리를 연상시키는 꾸밈음이 자주 나타나는 프레이즈에서 특히 중요합니다. [E1]'
+        self.assertFalse(answer_overgeneralizes_local_examples(faithful, [result]))
+        for broader in (
+            '이 곡에는 꾸밈음이 자주 나타납니다. [E1]',
+            '꾸밈음이 자주 나타나는 프레이즈에서는 가볍게, 곡 전체에서도 항상 가볍게 부릅니다. [E1]',
+            '빠른 리듬이 자주 나타나는 프레이즈에서는 가볍게 부릅니다. [E1]',
+        ):
+            with self.subTest(broader=broader):
+                self.assertTrue(answer_overgeneralizes_local_examples(broader, [result]))
 
     def test_unicode_ellipsis_does_not_create_an_uncited_lyric_fragment(self):
         from soprano_qa.retrieval import SearchResult

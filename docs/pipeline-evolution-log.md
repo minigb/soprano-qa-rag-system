@@ -104,6 +104,32 @@ The frozen expert references and BERTScore setting are unchanged. This is
 development-informed domain guidance; no claim of unseen glossary performance
 is warranted from these development questions alone.
 
+E6 deterministic scope correction, identified from an E3 withheld draft before
+validation: a faithful "in phrases where ornaments often appear" clause was
+misread as a new whole-piece frequency assertion. Permit only a source-matching
+relative clause with the same subject, frequency and predicate; mask just its
+frequency word and continue screening the rest of the claim. Broader claims,
+changed subjects and unrequested measure numbers remain rejected. This does
+not change generation prompts or model settings, and does not weaken semantic
+review. The separate mixed-register Nella fantasia draft remains withheld;
+it also contains questionable generalization, so fixing its register alone
+would not establish a correct answer.
+
+E7 routing hypothesis: E5 fixed the basic definitions, but some mixed drafts
+cited piece-specific legato advice as if it defined portamento. Put the
+terminology aid only in the general composer (and output reviewer). Extend
+relevance selection to every nonempty primary bundle and require an explicit
+general-definition versus evidence mode. Abstract definitions use an empty
+bundle and the general prompt; performance/history/local-score questions retain
+relevant sources. This is semantic routing, not a list of benchmark questions.
+The generator cannot cite a discarded source. Full development evaluation
+must check that expert questions are not incorrectly routed away from their KUs.
+
+The E6 scope regression test also exposed missing formal verb forms in the
+old broadening pattern: it caught `자주 나타나는` but missed `자주 나타납니다`.
+Both forms are now covered; only a source-matching relative clause receives
+the narrow exception described above.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical

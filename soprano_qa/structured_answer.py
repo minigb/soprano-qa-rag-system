@@ -83,7 +83,6 @@ and security boundaries still apply to every item.
 """
 
 
-STRUCTURED_ANSWER_POLICY += "\n" + MUSIC_TERMINOLOGY
 GENERAL_MUSIC_FORMAT_POLICY += "\n" + MUSIC_TERMINOLOGY
 
 

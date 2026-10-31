@@ -887,10 +887,10 @@ LOCAL_SCOPE_GENERALIZATION_RE = re.compile(
     r"(?:구간|마디|부분|대목|곡|노래|작품)(?:에서|에|이|가)?"
     r"|(?:여러|많은)\s*(?:마디|곳|부분|대목)(?:에서|에|이|가)?"
     r"|(?:경우|부분|대목|음|고음|저음|도약음|현상)"
-    r"(?:이|가|은|는)?\s*많이\s*(?:나오|등장|발생|나타나|있)"
+    r"(?:이|가|은|는)?\s*많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
     r"|(?:경우|부분|대목)(?:이|가|은|는)?\s*많"
-    r"|자주\s*(?:나오|등장|발생|나타나|보이|있)"
-    r"|많이\s*(?:나오|등장|발생|나타나|있)"
+    r"|자주\s*(?:나오|나옵|등장|발생|나타나|나타납|보이|보입|있)"
+    r"|많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
     r"|\b(?:throughout|always|frequently|often|everywhere)\b"
     r"|\b(?:across|all\s+through)\s+(?:the\s+)?"
     r"(?:piece|work|song)\b"
@@ -1365,6 +1365,7 @@ def answer_overgeneralizes_local_examples(
             _claim_has_piece_wide_generalization(claim)
             and not cited & general_indices
             and not _copies_scoped_source_sentence(claim, results, cited_local)
+            and not _preserves_scoped_frequency_clause(claim, results, cited_local)
         ):
             return True
 
@@ -1398,6 +1399,43 @@ def _copies_scoped_source_sentence(
         for index in cited_local
         for sentence in _answer_claims(str(results[index].record.get("answer", "")))
     )
+
+
+_SCOPED_FREQUENCY_CLAUSE = re.compile(
+    r"(?P<scope>[가-힣A-Za-z·]+[이가]\s+(?P<frequency>자주|흔히|빈번하게)\s+"
+    r"(?:나타나|등장하|반복되|사용되)는\s+(?:프레이즈|구간|부분|대목))"
+    r"(?:에서는|에서)(?=\s|[,.;!?])"
+)
+
+
+def _preserves_scoped_frequency_clause(
+    claim: str, results: List[Any], cited_local: set[int],
+) -> bool:
+    """An unchanged source-relative clause is not a whole-piece assertion.
+
+    For example, "in phrases where ornaments often appear" scopes advice to
+    those phrases. Require the same subject, frequency and relative predicate
+    in cited source text. Mask only that frequency token, then check the rest
+    of the claim for any remaining broadening. The semantic guard still checks
+    the recommendation and its relation to this condition.
+    """
+    normalize = lambda value: re.sub(r"\s+", " ", value).strip()
+    source_scopes = {
+        normalize(match.group("scope"))
+        for index in cited_local
+        for match in _SCOPED_FREQUENCY_CLAUSE.finditer(str(results[index].record.get("answer", "")))
+    }
+    changed = False
+    def mask(match: re.Match[str]) -> str:
+        nonlocal changed
+        if normalize(match.group("scope")) not in source_scopes:
+            return match.group()
+        changed = True
+        start = match.start("frequency") - match.start()
+        end = match.end("frequency") - match.start()
+        return match.group()[:start] + match.group()[end:]
+    masked = _SCOPED_FREQUENCY_CLAUSE.sub(mask, claim)
+    return changed and not _claim_has_piece_wide_generalization(masked)
 
 
 def suspicious_generation_tokens(
