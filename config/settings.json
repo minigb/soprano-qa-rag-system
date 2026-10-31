@@ -36,7 +36,8 @@
     "n_gpu_layers": -1,
     "temperature": 0.0,
     "top_p": 0.8,
-    "max_tokens": 768
+    "max_tokens": 768,
+    "source_preservation": "verbatim_or_translation"
   },
   "web_coaching": {
     "enabled": true,

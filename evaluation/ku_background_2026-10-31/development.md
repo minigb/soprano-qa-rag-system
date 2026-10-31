@@ -1,6 +1,9 @@
 # Development record
 
-All choices below preceded the final validation comparison. The development
+Metric selection used development B only. E9 was selected before its validation
+run; subsequent E10/E11 refinement used development outputs and the previously
+known targeted meaning cases. E9 validation metric files existed by E11, but
+their values were not consulted for E10/E11 selection. The development
 cohort has 43 expert-reference requests, ten answerable general-music requests,
 and two questions about unavailable local facts. Refusals remain in the expert
 BERTScore denominator with a score of zero. Complete answers are scored.
@@ -22,7 +25,9 @@ accuracy percentages.
 | E5 | 41 | 0.913376 | 10 | Checked bilingual terminology and a dedicated general explanation prompt. Remaining unrelated-source attribution and conditional-scope issues. |
 | E7 | 40 | 0.889482 | 9 | Joint intent/label selection regressed: an invalid mixed result refused a diction question; retrieved context still contaminated a general fermata answer. Rejected. |
 | E8 | 42 | 0.905950 | 10 | Question-only routing passed the numeric target but discarded relevant sources for short score/performance questions. Wrong grace-note and small-note explanations were found by inspecting answers. Rejected before validation. |
-| E9 | 42 | 0.934070 | 8 | Removed question-only routing; the three confirmed notation/definition errors returned to source-grounded explanations. Two general questions remain withheld. Independent review is saved in `judge-e9/`. |
+| E9 | 42 | 0.934070 | 8 | Removed question-only routing; expert development review found no material drift, but manual inspection of the known meaning cohort later found 11 material drifts / 41. |
+| E10 | 43 | 0.972074 | 7 | Complete native-language source quotations; full English source translations. All 43 expert development answers judged faithful, but unrelated local advice still contaminated general questions. |
+| E11 | 43 | 0.972074 | 10 | Conservative explicit-general routing; no expert development text changes from E10. Claude: zero material drift, zero substantial factual errors, zero false refusals on 55 development requests. Selected before E11 validation. |
 
 A was an earlier 24-request pilot, not the full development cohort. E4 compared
 generation modes in isolated diagnostics, not a complete service run; E6's scope
@@ -69,3 +74,40 @@ settings, and one GPU generation worker. Source/model/corpus hashes in the
 snapshot provenance remain applicable. The runtime directory called
 `presecurity` contains **main `29fe3e2` with initial security**; the actual
 pre-security baseline is `f307470` in `baseline-pre-security`.
+
+## Source-preservation refinement
+
+E10 (`9d9ac23`) changes the answer architecture, not the expert references or
+metric scale. The model selects relevant retrieved source labels; for Korean,
+the application copies each selected source's complete answer, checks its
+identity, and visibly labels it as source text. This avoids paraphrase errors
+in negation, scope, vowels and interpretive qualifications. English evidence
+items translate one complete source. Optional general explanations remain
+generated and separately labelled. Admission, source screening, semantic
+output review, citations and scope checks still apply.
+
+This is an extractive/translation approach for source claims. Its higher
+BERTScore partly reflects literal overlap with expert KUs that also supply
+the references. It is not evidence of improved unrestricted generation or
+generalization to new works. Selection, relevance, source errors and English
+translation can still fail. The candidate never reads the frozen evaluation
+reference file during a request.
+
+E10's independent judge missed an unrelated fermata answer and an English
+notation error found by manual inspection. LLM judgments are therefore
+reported with their calibration and manual checks, not treated as truth.
+E11 (`4788793`) tests a conservative deterministic general-intent check after
+admission: explicit definitions/comparisons/universal rules, no local or causal
+referent and no selected range. Ambiguous short questions keep the KUs. Eight
+general development questions satisfy this check; none of the 43 expert
+development requests does. The rule has no case IDs, piece-name list or
+music-term whitelist. The test suite passes 582 tests.
+
+The E9 full run completed 290 requests. Its baseline stage failed at import
+because the pre-security source has no `source_priority` module. No baseline
+response was measured by that failed attempt. E11's runner imports that module
+only when present; ordered fixed contexts do not require a synthetic priority
+policy. The original failed contract is retained, and subsequent comparisons
+use new output directories. The reporting predicate also now includes all 41
+meaning cases; the earlier predicate omitted `recent-fresh-benign-05-ko` from
+that subgroup, though it remained in overall metrics.
