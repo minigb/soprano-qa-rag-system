@@ -102,7 +102,9 @@ Its canonical location is hidden routing metadata: do not print measure numbers 
 Keep narrative scope already stated in source prose, such as "at the opening",
 "in an unaccompanied passage" or "when a breath is unavoidable". Hiding routing
 metadata never means deleting these conditions from the actual musical claim.
-A local example cannot by itself establish whole-piece, frequent, or universal behavior.
+A local example cannot by itself create a new whole-piece, frequent, or universal claim.
+If the reviewed answer itself explicitly states a broader pattern, preserve its
+exact scope and conditions; do not strengthen or expand that pattern.
 General evidence likewise has no authority to introduce measure locators in a no-range answer.
 
 Write coherent prose. Merge overlapping or parallel recommendations into a distinct practical action
@@ -1378,20 +1380,11 @@ def _copies_scoped_source_sentence(
 
     The coarse frequency screen also catches faithful source sentences such as
     "ornaments often appear in this phrase". Allow only a complete matching
-    sentence, with deterministic Korean register normalization; a paraphrase,
-    dropped condition or whole-piece assertion does not receive this exception.
-    Semantic output review still applies.
+    sentence, with deterministic Korean register normalization. A broader scope
+    explicitly present in that same reviewed sentence is not a new model
+    generalization. Paraphrases and dropped conditions receive no exception;
+    semantic output review and selected-measure authority still apply.
     """
-    if re.search(
-        r"(?:곡|노래|작품)\s*(?:전체|전반)|(?:전체적|전반적)으로|항상|언제나|곳곳"
-        r"|전\s*(?:곡|노래|작품|구간|마디|부분|대목)"
-        r"|(?:모든|대부분(?:의)?)\s*(?:구간|마디|부분|대목|곡|노래|작품)"
-        r"|\b(?:throughout|always|everywhere)\b"
-        r"|\b(?:across|all\s+through)\s+(?:the\s+)?(?:piece|work|song)\b",
-        claim, flags=re.IGNORECASE,
-    ):
-        return False
-
     def normalize(text: str) -> str:
         text = re.sub(r"\[E[0-9]+(?:\s*,\s*E[0-9]+)*\]", "", text)
         return re.sub(r"\s+", " ", formalize_korean_answer(text)).strip()

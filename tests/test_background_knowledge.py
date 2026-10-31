@@ -74,8 +74,11 @@ class BackgroundProvenanceTests(unittest.TestCase):
         self.assertFalse(_copies_scoped_source_sentence(
             '꾸밈음이 자주 나타나는 프레이즈에서는 가벼운 소리를 유지합니다. [E2]', results, set()))
         results[0].record['answer'] = '곡 전체에서 항상 가볍게 부른다.'
-        self.assertFalse(_copies_scoped_source_sentence(
+        self.assertTrue(_copies_scoped_source_sentence(
             '곡 전체에서 항상 가볍게 부릅니다. [E1]', results, {0}))
+        results[0].record['answer'] = '재현부에서는 곡 전체에서 쓰인 음형이 자주 나타난다.'
+        self.assertFalse(_copies_scoped_source_sentence(
+            '곡 전체에서 쓰인 음형이 자주 나타납니다. [E1]', results, {0}))
 
     def test_parenthetical_example_is_not_a_sentence_ending(self):
         text = '음의 길이는 속도(예: 4분음표 기준 분당 60박)에 따라 달라집니다.'
