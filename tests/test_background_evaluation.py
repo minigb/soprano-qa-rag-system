@@ -2,7 +2,8 @@
 import unittest
 from copy import deepcopy
 
-from evaluation.run_claude_judge import validate
+from evaluation.run_claude_judge import validate, sha
+from evaluation.run_joint_claude_judge import validate_coverage
 from evaluation.summarize_background_eval import summarize
 
 
@@ -62,6 +63,16 @@ class EvaluationIntegrityTests(unittest.TestCase):
         for missing_or_duplicate in ([], [deepcopy(valid), deepcopy(valid)]):
             with self.assertRaises(ValueError):
                 validate(missing_or_duplicate, [packet])
+
+    def test_sharded_judging_rejects_incomplete_stale_or_different_model_rows(self):
+        packet = {'id': 'opaque', 'answer': 'An answer.', 'evidence': []}
+        row = {'id': 'opaque', 'status': 'ok', 'model': 'claude-opus-5-5',
+               'packet_hash': sha(packet), 'assessment': self.assessment()}
+        validate_coverage([packet], [row], 'claude-opus-5-5')
+        for rows in ([], [row, row], [{**row, 'model': 'other'}],
+                     [{**row, 'packet_hash': 'stale'}], [{**row, 'status': 'failed'}]):
+            with self.subTest(rows=rows), self.assertRaises(ValueError):
+                validate_coverage([packet], rows, 'claude-opus-5-5')
 
 
 if __name__ == '__main__':

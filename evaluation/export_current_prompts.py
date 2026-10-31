@@ -48,7 +48,7 @@ def main():
     hashes = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
               for name in ('soprano_qa/answer.py', 'soprano_qa/security.py',
                            'soprano_qa/translation.py', 'soprano_qa/llm.py',
-                           'soprano_qa/structured_answer.py')}
+                           'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py')}
     metadata = {
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'source_sha256': hashes,

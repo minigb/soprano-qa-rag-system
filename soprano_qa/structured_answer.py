@@ -11,6 +11,7 @@ import re
 from typing import Any
 
 from soprano_qa.security import SecurityViolation
+from soprano_qa.music_terms import MUSIC_TERMINOLOGY
 
 
 MAX_SENTENCES = 6
@@ -80,6 +81,10 @@ required text item is not a requirement to make a factual claim. Task, source
 and security boundaries still apply to every item.
 /no_think
 """
+
+
+STRUCTURED_ANSWER_POLICY += "\n" + MUSIC_TERMINOLOGY
+GENERAL_MUSIC_FORMAT_POLICY += "\n" + MUSIC_TERMINOLOGY
 
 
 class RenderedAnswer(str):

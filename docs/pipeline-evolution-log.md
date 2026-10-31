@@ -87,6 +87,23 @@ Do not add assumed numerical demonstrations unless needed. This changes only
 the general prompt; it is not a special answer rule for a benchmark case.
 Record the E3 error and evaluate E4 rather than silently replacing its output.
 
+E3 completed 55 requests: 41/43 expert answers, effective F1 0.912330. Its
+general answers still confused Korean articulation terminology. E4 was tested
+in isolated empty-bundle development diagnostics, not a full service run.
+Greedy constrained generation, the Qwen-recommended sampled settings, and
+parsed thinking-mode JSON all retained serious Korean glossary errors. Adding
+original Italian term names helped portamento but did not reliably fix tenuto
+or notation. These diagnostics are not held-out measurements.
+
+E5 hypothesis before evaluation: keep the current structured generation and
+add a short bilingual terminology aid, checked against a published music
+theory lesson, to composition and output review. This is explicit general
+reference guidance, not new expert KUs or references for BERTScore. It cannot
+establish local score facts or overwrite source-specific performance advice.
+The frozen expert references and BERTScore setting are unchanged. This is
+development-informed domain guidance; no claim of unseen glossary performance
+is warranted from these development questions alone.
+
 The user authorized general musical knowledge as a supplement to curated KU
 answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
 on expert-annotation questions. This explicitly supersedes the historical
