@@ -19,7 +19,7 @@ from soprano_qa.security import (
 )
 from soprano_qa.structured_answer import (
     STRUCTURED_ANSWER_POLICY, GENERAL_MUSIC_FORMAT_POLICY,
-    GENERAL_MUSIC_SYSTEM_PROMPT, answer_schema,
+    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, answer_schema,
 )
 from soprano_qa.translation import QUERY_TRANSLATION_SYSTEM_PROMPT
 
@@ -37,6 +37,8 @@ def main():
     prompts = {
         'answer-ko.txt': STRUCTURED_ANSWER_POLICY + '\n' + system_prompt('ko'),
         'answer-en.txt': STRUCTURED_ANSWER_POLICY + '\n' + system_prompt('en'),
+        'answer-preserve-ko.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('ko'),
+        'answer-preserve-en.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('en'),
         'answer-general.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_MUSIC_SYSTEM_PROMPT
                               + '\n' + SECURITY_SYSTEM_POLICY,
         'guard-admission.txt': _GUARD_SYSTEM + _ADMISSION_RULES,
@@ -65,7 +67,11 @@ def main():
         metadata['source_commit'] = json.loads(manifest_path.read_text())['source_commit']
     prompts['manifest.json'] = json.dumps(metadata, ensure_ascii=False, indent=2) + '\n'
     for name, payload in [('schema-general.json', {'Retrieved evidence': []}),
-                          ('schema-example-source.json', {'Retrieved evidence': [{'citation_label': 'E1'}]})]:
+                          ('schema-example-source.json', {'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-preserve-ko.json', {'source_preservation': True, 'answer_language': 'ko',
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-preserve-en.json', {'source_preservation': True, 'answer_language': 'en',
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]})]:
         prompts[name] = json.dumps(answer_schema(payload), ensure_ascii=False, indent=2) + '\n'
     if not args.check:
         args.output.mkdir(parents=True, exist_ok=True)
@@ -78,7 +84,7 @@ def main():
             if path.exists() and path.read_text() != value:
                 raise ValueError('Refusing to replace frozen prompt: ' + str(path))
             path.write_text(value)
-    print(('Checked' if args.check else 'Exported'), 'eight policies, two schema examples and manifest')
+    print(('Checked' if args.check else 'Exported'), 'ten policies, four schema examples and manifest')
 
 
 if __name__ == '__main__':

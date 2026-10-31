@@ -56,7 +56,7 @@ from soprano_qa.retrieval import (
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
-from soprano_qa.structured_answer import RenderedAnswer
+from soprano_qa.structured_answer import RenderedAnswer, PreservedSourceAnswer
 from soprano_qa.security import (
     SECURITY_SYSTEM_POLICY,
     SecurityViolation,
@@ -805,6 +805,13 @@ def finalize_user_visible_answer(
     prose is predominantly Hangul. Both share the artifact checks.
     """
 
+    if isinstance(answer, PreservedSourceAnswer):
+        # Only the identity-checked quotation path creates this internal type.
+        # Rewriting a quoted author's register would stop preserving the
+        # source. Generated additions were already finalized independently.
+        if language != "ko" or not answer.strip() or has_forbidden_user_visible_artifact(answer, results):
+            return no_corpus_evidence_message(language)
+        return PreservedSourceAnswer(str(answer).strip())
     cleaned = strip_user_visible_evidence_references(answer, results)
     # Corpus excerpts and generated prose can contain duplicated horizontal
     # whitespace.  Keep paragraph boundaries intact, but never expose those
@@ -3930,6 +3937,39 @@ def finalize_grounded_generated_answer(
             "Generated answer contains unsupported tokens: %s"
             % ", ".join(suspicious)
         )
+    if isinstance(answer, RenderedAnswer) and any(p.get("source_quotation") for p in answer.parts):
+        if language != "ko":
+            raise GeneratedAnswerRejected("Native source quotation has the wrong language")
+        quotations = []
+        remaining = []
+        primary = primary_grounding_results(results)
+        for part in answer.parts:
+            if not part.get("source_quotation"):
+                remaining.append(part)
+                continue
+            labels = part["evidence"]
+            if len(labels) != 1 or not re.fullmatch(r"E[1-9][0-9]*", labels[0]):
+                raise GeneratedAnswerRejected("Invalid quotation attribution")
+            index = int(labels[0][1:]) - 1
+            if (not 0 <= index < len(results) or results[index] not in primary
+                    or part["text"] != results[index].record.get("answer")):
+                raise GeneratedAnswerRejected("Quotation differs from its complete primary source")
+            if has_forbidden_user_visible_artifact(part["text"], results):
+                raise GeneratedAnswerRejected("Quotation contains forbidden presentation data")
+            quotations.append(part["text"])
+        # Quoted prose still receives the ordinary citation and scope checks.
+        # Only grammatical rewriting of the already verified source is skipped.
+        quote_parts = [p for p in answer.parts if p.get("source_quotation")]
+        cited = RenderedAnswer(quote_parts, language).grounded_text
+        if (answer_references_secondary_evidence(cited, results)
+                or answer_overgeneralizes_local_examples(cited, results, measure_ranges)):
+            raise GeneratedAnswerRejected("Invalid source quotation scope")
+        _validate_primary_citation_per_claim(cited, results)
+        addition = finalize_grounded_generated_answer(
+            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
+        ) if remaining else ""
+        quoted = "참고 자료의 원문입니다.\n" + "\n\n".join(quotations)
+        return PreservedSourceAnswer("\n\n".join(x for x in (quoted, addition) if x))
     if isinstance(answer, RenderedAnswer) and answer.background_text:
         # Provenance comes from validated structured output, not a guessed
         # heading in model prose. Source claims retain all existing checks.

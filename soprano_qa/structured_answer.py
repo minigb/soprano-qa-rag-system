@@ -40,6 +40,47 @@ is possible, return {"sentences":[]}.
 """
 
 
+SOURCE_PRESERVATION_POLICY = """Return one JSON object with the existing sentences/kind/evidence/text fields.
+Select only passages that directly answer the actual question, preserving useful
+complementary advice. An evidence item must select exactly ONE citation label;
+never select the same label twice. Select complete reviewed answers, not isolated
+clauses whose conditions could be lost. Do not merge conflicting passages into
+one new claim or invent a reason for their disagreement.
+
+For Korean answers, every evidence item's text MUST be the empty string "".
+Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
+The application will quote that selected source's complete answer verbatim,
+including its conditions, uncertainty, lyric referents and original register.
+Do not rewrite it or add an explanation inside an evidence item.
+For English answers, an evidence item's text MUST faithfully translate the
+COMPLETE answer of its one selected source. Preserve every condition, actor,
+negation, qualification, alternative and lyric referent. Do not summarize,
+combine sources, strengthen an interpretation into composer intention, or add
+a practice claim. Keep quoted sung words and vowel/consonant symbols unchanged.
+
+Background items require evidence=[] and nonempty text. They may give accurate
+general music knowledge or explicitly optional suggestions, clearly separate
+from the selected source. Add them only when the source alone leaves a useful
+part of the question unanswered. Do not repeat, contradict, or invent a cause
+for the source. Unknown local facts must remain unknown. score_lyrics items
+remain limited to supplied sung words and require evidence=[]. All application
+scope, safety and output-review requirements still apply to every item.
+Use as few items as needed, at most six. Return {"sentences":[]} if no useful
+authorized answer is possible. Never print labels or headings in item text.
+/no_think
+"""
+
+SOURCE_PRESERVATION_POLICY += "\n" + MUSIC_TERMINOLOGY
+
+
+class PreservedSourceAnswer(str):
+    """Visible source quotations already identity-checked by the finalizer.
+
+    This internal type preserves a quoted author's register through the final
+    display pass. Plain model prose and a prose heading cannot create it.
+    """
+
+
 GENERAL_MUSIC_SYSTEM_PROMPT = """You answer music-theory and singing-practice questions.
 No directly answering reviewed source was selected for this request. Use your
 general musical knowledge to answer the actual question helpfully and directly.
@@ -100,6 +141,8 @@ class RenderedAnswer(str):
         background = "\n".join(p["text"] for p in parts if p["kind"] == "background")
         prefix = "General explanation: " if language == "en" else "일반적인 음악 설명입니다.\n"
         visible = "\n\n".join(x for x in (grounded, prefix + background if background else "") if x)
+        if any(p.get("source_quotation") for p in parts):
+            visible = "참고 자료의 원문입니다.\n" + visible
         value = super().__new__(cls, visible)
         value.parts = tuple(parts)
         value.grounded_text = grounded
@@ -158,7 +201,7 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
         "maxItems": len(labels),
         "uniqueItems": True,
     }
-    return {
+    schema = {
         "type": "object",
         "properties": {
             "sentences": {
@@ -177,7 +220,7 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
                         "evidence": evidence_schema,
                         "text": {
                             "type": "string",
-                            "minLength": 1,
+                            "minLength": 0 if labels and payload.get("source_preservation") and payload.get("answer_language", "ko") == "ko" else 1,
                             # llama.cpp expands bounded string repetition;
                             # a 2000-character schema bound exceeds its grammar
                             # complexity limit. Enforce that cap in the parser;
@@ -192,6 +235,24 @@ def answer_schema(payload: dict[str, Any]) -> dict[str, Any]:
         "required": ["sentences"],
         "additionalProperties": False,
     }
+    if payload.get("source_preservation") is True and labels:
+        native = payload.get("answer_language", "ko") == "ko"
+        def item(kind, source=False):
+            return {
+                "type": "object",
+                "properties": {
+                    "kind": {"const": kind},
+                    "evidence": {"type": "array", "items": {"type": "string", "enum": labels},
+                                 "minItems": 1 if source else 0, "maxItems": 1 if source else 0},
+                    "text": {"const": ""} if source and native else {"type": "string", "minLength": 1},
+                },
+                "required": ["kind", "evidence", "text"], "additionalProperties": False,
+            }
+        alternatives = [item("evidence", True), item("background")]
+        if payload.get("Score context"):
+            alternatives.append(item("score_lyrics"))
+        schema["properties"]["sentences"]["items"] = {"oneOf": alternatives}
+    return schema
 
 
 def _unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
@@ -249,6 +310,9 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
     if not sentences:
         return NO_GROUNDED_ANSWER_SENTINEL
     rendered = []
+    selected_quotes: set[str] = set()
+    preserve = payload.get("source_preservation") is True
+    source_by_label = {r.get("citation_label"): r for r in payload.get("Retrieved evidence", [])}
     for item in sentences:
         if not isinstance(item, dict) or set(item) not in ({"text", "evidence"}, {"kind", "text", "evidence"}):
             raise SecurityViolation()
@@ -258,9 +322,10 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
         kind = item.get("kind", "evidence" if allowed_labels else "score_lyrics")
         if kind not in {"evidence", "background", "score_lyrics"}:
             raise SecurityViolation()
+        native_quote = preserve and kind == "evidence" and payload.get("answer_language", "ko") == "ko"
         if (
             not isinstance(text, str)
-            or not text.strip()
+            or (not text.strip() and not native_quote)
             or len(text) > MAX_SENTENCE_CHARS
             or not isinstance(labels, list)
             or any(not isinstance(label, str) for label in labels)
@@ -274,6 +339,23 @@ def render_structured_answer(raw: str, payload: dict[str, Any]) -> str:
             or (kind == "score_lyrics" and not payload.get("Score context"))
         ):
             raise SecurityViolation()
+        if preserve and kind == "evidence":
+            if len(labels) != 1 or labels[0] in selected_quotes:
+                raise SecurityViolation()
+            selected_quotes.add(labels[0])
+        if native_quote:
+            if text != "":
+                raise SecurityViolation()
+            source = source_by_label[labels[0]].get("answer")
+            if (not isinstance(source, str) or not source.strip()
+                    or len(source) > MAX_SENTENCE_CHARS or _INLINE_CITATION_RE.search(source)):
+                raise SecurityViolation()
+            # Text comes from the frozen primary record, never a model quote.
+            # Existing security screening and semantic output review still
+            # inspect this complete rendered text before it can be released.
+            rendered.append({"kind": kind, "text": source, "evidence": labels,
+                             "source_quotation": True})
+            continue
         # Some models repeat a selected label in prose despite the schema
         # instruction. Remove only redundant labels already selected for this
         # item; an unknown, context-only or different label still fails closed.
