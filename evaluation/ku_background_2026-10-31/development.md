@@ -219,3 +219,36 @@ use the same frozen 290 cases and unchanged B-selected BERTScore configuration.
 Measured baseline rows will be retained exactly; old historical timings are
 not pooled into this campaign. Candidate selection remains subject to overall
 quality, not maximizing BERTScore beyond 0.90.
+
+## E15 rejection and E16 source preparation
+
+E15 completed all 70 fixed diagnostic requests without execution errors;
+69 were delivered, with the no-range accent question still withheld.
+Development BERTScore remained 0.972074 (43/43). Despite that passing score,
+Claude identified three material errors among the nine known English meaning
+examples: pronunciation advice reversed, a musical rest became a comma, and
+each measure became each phrase. E15 was rejected. Its complete outputs,
+judgments and `e15-rejection.json` remain available.
+
+E16 (`2ec416d`) uses maintained English translations for every curated expert
+or performer source in the corpus: 129 answers across all five works. Codex
+authored and checked these translations, and Claude Opus 5.5 independently
+assessed their fidelity to the Korean original. The first review found 124
+faithful and five minor drifts, with no material drift; five actual text edits
+were then assessed again and all were judged faithful. Unchanged translations
+retain their first reviews. This is not a selection among scores for the same
+translation, and it is not human-expert annotation.
+
+Runtime lookup uses exact source-text SHA256, never evaluation questions or
+case IDs. The source selector, admission, screening, citation and output review
+remain active; new/changed sources fall back to guarded segmented translation.
+General explanations are generated separately. Offline source preparation and
+review are added resources, excluded from per-request latency and disclosed in
+the comparison. Korean references, all cases and the B-selected scorer are
+unchanged. The catalog review also identifies three original-source factual
+issues; a faithful translation does not make those original claims correct.
+
+The 605-test suite passes, including exact-hash reuse, changed-source fallback,
+mixed-source ordering, screening and rejection of catalog output by the normal
+guard. The full RAG candidate is still subject to the 70-case diagnostic probe,
+then the four-system comparison. Catalog fidelity alone is not acceptance.

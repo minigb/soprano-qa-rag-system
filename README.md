@@ -341,10 +341,24 @@ translation budget is separately configurable (default 1536 tokens), and its
 extra inference time belongs in end-to-end latency. This option is not enabled
 in the branch default until its quality comparison is accepted.
 
+The E16 experiment adds `llm.evidence_translation="reviewed_catalog"`.
+All 129 curated expert/performer source answers have versioned English
+translations authored by Codex and assessed separately by Claude Opus 5.5.
+These are not human-expert English annotations. The application matches the
+exact SHA256 of the selected Korean source text, not a question, case ID or
+source ID. Changed or new sources use the segmented translation path; a matching
+translation still undergoes the normal security, citation, scope and output
+checks. General explanations remain generated. Source preparation and review
+are extra offline work and are excluded from request latency. The original
+Korean expert evaluation references remain unchanged. See
+`evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
+full fidelity review and the separately flagged original-source factual errors.
+This experiment is awaiting the complete RAG comparison before adoption.
+
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
 `soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
 Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e15/`; the conservative general
+`evaluation/ku_background_2026-10-31/prompts-e16/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity

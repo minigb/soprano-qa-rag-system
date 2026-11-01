@@ -95,6 +95,19 @@ literal spelling and structural coverage, not all semantic relationships. Known
 residual translation and redundancy errors are retained in the experiment
 artifacts. No cited paper establishes that this engineering change is sufficient.
 
+E15 passed the development similarity threshold but still introduced material
+English translation errors, so it was rejected. E16 prepares English versions
+of all 129 curated source answers, separately reviewed against the Korean
+originals, and binds runtime reuse to the exact source-text hash. This is an
+engineering choice for a small curated corpus, not a question-answer cache or
+an implementation of one of the cited research methods. Unmatched sources use
+guarded model translation. Source screening and final output review still run.
+Offline source preparation is an added resource in the candidate comparison;
+the translations are machine authored and model reviewed, not human-expert
+English references. The review found source-level factual issues as well as
+translation issues, reinforcing the distinction between source fidelity and
+truth. Full service results remain necessary before adoption.
+
 The user’s acceptance target is BERTScore F1 at least 0.90 **with overall answer
 quality preserved**, not maximum reference similarity. Evaluations must retain
 normal-question availability, general-knowledge usefulness, source meaning,
