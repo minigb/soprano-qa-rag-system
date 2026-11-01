@@ -29,7 +29,7 @@ in the separate October 25 report. Include a fresh run of it on this same
 without pooling older measurements. Do not call either current comparison
 baseline unprotected, pool earlier experiments, or reuse historical latencies.
 
-The current full-comparison candidate E24 (`ec9534c`) uses complete Korean
+The current full-comparison candidate E25 (`a93b108`) uses complete Korean
 source quotation and 129 reviewed English source translations. A translation is
 selected only by exact original-text hash; new/changed sources use guarded model
 translation with a separate 1536-token limit. The translations are machine
@@ -37,7 +37,7 @@ authored and separately model reviewed, not human-expert English references.
 This offline source preparation is an extra resource excluded from request
 latency. The four-way comparison evaluates the complete engineering package;
 it does not isolate a security prompt's effect under equal source-preparation
-cost. E24 also calculates conventional beat units for a narrow basic meter
+cost. E25 also retains calculation of conventional beat units for a narrow basic meter
 question, retaining admission/output review and declaring
 `llm_guarded_calculation` in response metadata; these are not LLM-composed paragraphs. All versions use the original, unchanged Korean corpus and expert targets.
 
