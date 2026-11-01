@@ -270,3 +270,32 @@ purely redundant passages while preserving distinct qualifications/conflicts.
 General quantitative examples must state the BPM beat unit. The general-intent
 route, source texts, reviewed English catalog, evaluation questions/references
 and frozen metric remain unchanged. Regression tests: 606 passed.
+
+
+## E17 result and E18 bounded practice routing
+
+E17 completed 70 requests: 69 delivered, one no-range accent refusal, no
+execution errors. Development F1 remains 0.972074. Independent Claude judged
+59 source answers faithful and 11 not applicable, with zero material drift or
+substantial factual error. Manual comparison also found all nine known English
+examples faithful. The aggregate rubric score was 95.45/100; this is not factual
+accuracy. Remaining redundancy and the two slow-practice questions were scored
+as partial relevance/completeness. First-person source wording in English also
+needed visible attribution. See `e17-quality-review.json`.
+
+E18 (`7cbf004`) adds a narrow explicit practice-scenario branch after admission.
+A generic mention of lyrics alone need not make this scenario local. Selected
+ranges, local/causal references, complete original-question matches and names
+of the actual selected work retain evidence. Work names are read from the
+bundle, not a hardcoded list. On the fixed290 question-only audit, only the two
+known slow-practice questions change routing. Eight additional general/local
+paraphrases are therefore included in the diagnostic probe to check behavior
+beyond those two phrasings; these are not expert metric targets or an independent
+human-annotated test. The original70 and full290 remain unchanged.
+
+English source translations are now visibly labelled `Translated reference
+text:` so a source's first-person statement does not become the assistant's
+own opinion. This application-created metadata cannot be supplied through model
+JSON and grants no security, citation, scope or output-review exemption. The
+609-test suite passes. E18 is still awaiting its 78-case probe and final full
+comparison; no passing final validation result is claimed yet.

@@ -280,10 +280,11 @@ coverage is left to retrieval, composition, and output review. A multi-passage
 relevance pass retains existing labels that directly help, based on the
 question and actual source text. It may select none, enabling the general
 prompt. Short questions retain the selected work's context. With source
-preservation enabled, only explicit general definitions, comparisons or
-universal-rule questions without a local/causal referent or selected range
-take the general path directly, unless the retriever found a complete primary
-source-question concept match. This conservative rule runs after admission;
+preservation enabled, explicit general definitions, comparisons, universal-rule
+questions and narrowly recognized general practice scenarios without a local/causal
+referent or selected range can take the general path directly, unless the retriever
+found a complete primary source-question concept match. Practice scenarios that
+name the selected work retain evidence. This conservative rule runs after admission;
 it never grants permission for an unrelated task. The model composes
 typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
@@ -353,12 +354,16 @@ are extra offline work and are excluded from request latency. The original
 Korean expert evaluation references remain unchanged. See
 `evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
 full fidelity review and the separately flagged original-source factual errors.
-This experiment is awaiting the complete RAG comparison before adoption.
+English source translations are visibly labelled as translated reference text,
+including first-person statements inherited from the source. E18 also tests a
+narrow route for explicit general practice scenarios without a local referent;
+selected ranges, directly matching source questions and selected-work names
+retain evidence. This experiment awaits the complete comparison before adoption.
 
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
 `soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
 Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e17/`; the conservative general
+`evaluation/ku_background_2026-10-31/prompts-e18/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity
