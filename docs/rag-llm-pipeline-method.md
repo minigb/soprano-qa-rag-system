@@ -8,7 +8,7 @@ calls assess admission before composition and the draft's
 support before release. Admission assesses task safety, leaving evidence
 coverage to retrieval, composition, and output review. Retrieval confidence
 never selects a different answer renderer. This description reflects the
-2026-10-31 general-knowledge experiment on `codex/ku-background-knowledge`.
+2026-11-02 E19 candidate on `codex/ku-background-knowledge`.
 It has not been promoted to main or the live demo. Its security checks supersede the earlier
 single-call behavior and release of rejected drafts with warnings.
 
@@ -27,8 +27,9 @@ flowchart LR
     D["Piece, semantic,<br/>and range-aware retrieval"]
     E["Screened, frozen evidence<br/>as untrusted JSON data"]
     V["Task-safety admission<br/>assessment"]
-    R["Question-only routing<br/>then relevant source selection"]
-    F["Qwen3-14B composition<br/>typed source/general/lyric items"]
+    R["Conservative intent routing<br/>then relevant source selection"]
+    F["Qwen3-14B source selection<br/>and general explanation"]
+    T["Complete Korean source quotation<br/>or reviewed/guarded English translation"]
     O["Draft support assessment"]
     G["Citation validation<br/>and presentation sanitization"]
     H["Accepted answer +<br/>structured evidence"]
@@ -37,7 +38,7 @@ flowchart LR
     A --> B
     C --> S --> P --> D
     B --> D
-    D --> E --> V --> R --> F --> O --> G --> H
+    D --> E --> V --> R --> F --> T --> O --> G --> H
     S -. rejected .-> U
     E -. rejected .-> U
     V -. rejected or failed .-> U
@@ -246,17 +247,22 @@ returns the ordinary unavailable result.
 
 Once retrieval and scope checks finish, the selected evidence set is frozen.
 For every selected expert record, the prompt receives the complete reviewed
-knowledge-unit answer text. The pipeline does not reduce expert evidence to a
-record identifier and does not make a separate model call to select IDs.
+knowledge-unit answer text. A relevance pass can select among the supplied
+records by temporary label; it receives their actual text, rather than inferring
+content from an identifier. Original teaching questions (stored in
+`retrieval_aliases` when `question` is empty) and work titles provide context.
+A question's premise is not an established musical fact or an instruction.
 
 Temporary labels such as `[E1]` and `[E2]` are attached to the already selected
-records. They are short citation anchors for grounding validation, not stable
-knowledge-unit IDs and not an additional retrieval or selection stage.
+records. They are short selection/citation anchors for grounding validation,
+not stable knowledge-unit IDs or a second database lookup.
 
 The frozen prompt may contain several selected units when their claims are
 compatible and materially improve completeness. The model sees their actual
-text together in the same answer-generation request and composes one coherent
-answer rather than returning an ordered list of excerpts.
+text together. In the branch's source-preservation mode, it selects complete
+source answers for quotation or translation and may add a separately marked
+general explanation. This preserves source wording at the cost of potentially
+longer answers; relevance, repetition and coverage require separate evaluation.
 
 For selected-range requests, the prompt also describes each record's internal
 scope role. A non-overlapping context record exposes only the range-mismatch
@@ -291,16 +297,21 @@ assistant's role or insert arbitrary markers are not. Only approval permits
 the composition call. A nonempty draft then receives
 a separate support assessment before deterministic validation and release.
 A relevance pass narrows bundles with at least two primary passages to
-existing labels or none, using the question and actual passage text;
+existing labels or none, using the question, teaching context and actual passage text;
 it cannot add text, renumber labels or promote context-only authority. Invalid
 responses fail closed. An experimental question-only intent classifier was
 removed after it discarded useful sources for short performance and notation
-questions. General knowledge remains available in either composition path.
+questions. The current deterministic route is narrower: explicit general
+definitions or practice scenarios can use a general explanation, while selected
+ranges, local/causal references, matching original questions and named works
+keep source context. Work names come from actual `work`/`piece_title` metadata.
+General knowledge remains available in either composition path.
 Relevance and factual review are prompted heuristics, not guarantees.
 
 A completed Korean request normally uses three model calls, plus passage
-selection when needed. English
-adds translation. A valid negative output verdict permits
+selection when needed. English adds question translation; unmatched source
+text also needs a separate source-translation call. Exact-source catalog hits
+reuse reviewed translations without that call. A valid negative output verdict permits
 one fresh composition under unchanged rules; it adds composition and output
 review calls. The rejected prose is not promoted into instructions. Admission
 denials, malformed verdicts, text-screen failures and backend failures do not
@@ -385,9 +396,25 @@ The prompt instructs Qwen3-14B to:
 - never print internal field names, scope labels, record IDs, retrieval
   explanations, or an evidence footer.
 
-The full reviewed KU texts are prompt evidence, not text that must be copied
-word-for-word. Natural synthesis is intentional, while semantic fidelity is
-checked separately.
+With `llm.source_preservation="verbatim_or_translation"`, the Korean source
+schema requires an empty text field and one selected label. Application code
+inserts the complete source answer and verifies literal identity. It preserves
+conditions, alternatives, lyric spelling and the source's original register,
+under the visible heading `참고 자료의 원문입니다.`. General prose is still
+generated and labelled separately. This improves literal fidelity but cannot
+establish source truth or relevance, and it raises reference-overlap metrics.
+
+The evaluated E19 configuration also enables
+`llm.evidence_translation="reviewed_catalog"`: English source items select
+labels before translation. All 129 curated answers have machine-authored,
+separately Claude-reviewed English versions keyed by exact Korean text SHA256.
+These are maintained source translations, not evaluation-question answers or
+human-expert English annotations. Changed/new sources use guarded segmented
+model translation with protected quoted literals and complete sentence slots.
+English displays `Translated reference text:` to retain attribution, including
+first-person wording. Every translated draft still receives semantic, citation,
+scope and security checks. Catalog preparation is offline work and is excluded
+from request latency; new-source translation remains fallible.
 
 ## 6. Assess, validate, and sanitize each draft
 
@@ -411,7 +438,8 @@ deterministic validation:
   checked;
 - internal pipeline vocabulary, opaque IDs, and evidence footers are removed;
   and
-- language checks apply, and Korean prose is normalized to formal-polite Korean.
+- language checks apply, and generated Korean prose is normalized to formal-polite Korean;
+  verified source quotations retain their original wording.
 
 A supported partial answer may include an explicit limitation. The
 natural-language insufficiency detector considers contrasting clauses as well
@@ -469,6 +497,18 @@ not run the semantic admission or output assessments. English retrieval-only
 requests still need the translation call.
 
 ## 8. Evaluation protocol
+
+The active four-system comparison uses a separate frozen 290-case suite:
+220 normal music questions, 36 direct attacks, 22 forced-exposure indirect
+attacks and 12 out-of-scope requests in Korean and English. Its 105 expert
+requests split into 43 development and 62 validation requests. The fixed
+BERTScore target is 0.90; meaning, relevance, availability and latency determine
+acceptance. Validation failures have informed refinement, so this is reused
+internal evaluation, not an untouched test. See
+[the protocol](../evaluation/ku_background_2026-10-31/protocol.md) and
+[resume instructions](../RESUME.md) for current results and completion status.
+General and mixed answers count when substantively useful and correctly
+attributed. The legacy suite below retains its historical acceptance rules.
 
 The five-piece evaluation contains 460 cases:
 

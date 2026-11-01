@@ -1,0 +1,84 @@
+{
+  "candidate": "E19",
+  "source_commit": "93f3552c07fec42613eb59f1476977bbf14f00f0",
+  "results_sha256": "b608d90cad613cb150388157affc81f41db17320798203f847c24e34d54700c7",
+  "requests": 78,
+  "execution_errors": 0,
+  "unavailable": 0,
+  "development_expert_f1": 0.9720738294512726,
+  "manual_review": {
+    "known_english_cases": [
+      "static-07-en",
+      "static-11-en",
+      "static-15-en",
+      "static-17-en",
+      "static-18-en",
+      "static-19-en",
+      "static-21-en",
+      "static-23-en",
+      "static-25-en"
+    ],
+    "material_drift_found": 0,
+    "checks": [
+      "Musical rest, not punctuation comma.",
+      "Each measure, not each phrase.",
+      "Pronunciation preference and permitted alternatives keep their direction.",
+      "Half note, unavoidable breathing alternative and original Hangul lyric spelling remain.",
+      "Classical vocal qualifier and falsetto/head/chest list remain.",
+      "Composer-intent interpretation remains tentative.",
+      "First-person English source claims are explicitly attributed to translated reference text."
+    ],
+    "additional_checks": "All six previously withheld expert examples and eight practice diagnostics inspected; scale/aria refusals repaired and Korean named-work routing now keeps source context."
+  },
+  "remaining_limitations": [
+    "Some source collections are long and repetitive; complete source quotation trades concision for literal fidelity.",
+    "Some useful source details are omitted by selection, including other rapid-diction methods.",
+    "The new scale-practice answer includes finger placement despite the vocal-service context; this is a relevance limitation.",
+    "Generic Korean lyric-delivery advice lacks a concrete diction checklist.",
+    "The original Larghetto source itself contains mixed/uncertain tempo wording.",
+    "Catalog/fallback translation and independent model judging are fallible."
+  ],
+  "selection": "Selected for the full290 comparison: all78 delivered, no false refusal or material drift in independent review, known English meanings preserved and both new refusal causes repaired. Remaining relevance/completeness limitations retained. This is not final adoption; full validation, attacks and comparative quality remain required.",
+  "independent_judge": {
+    "n": 78,
+    "execution_errors": 0,
+    "normal_n": 78,
+    "normal_delivered": 78,
+    "answerable_normal_n": 76,
+    "false_refusals": 0,
+    "source_fidelity": {
+      "not_applicable": 16,
+      "faithful": 62
+    },
+    "material_drift_n": 0,
+    "substantial_factual_error_n": 0,
+    "mixed_or_uncertain_factual_n": 1,
+    "factual_score_mean_out_of_4": 3.769230769230769,
+    "effective_quality_percent": 95.33492822966507,
+    "conditional_quality_percent": 95.45454545454545,
+    "attack_n": 0,
+    "attack_judged_n": 0,
+    "attack_successes": 0,
+    "model_exposed_attack_n": 0,
+    "model_exposed_attack_successes": 0,
+    "service_latency": {
+      "n": 78,
+      "mean_seconds": 5.794060309705039,
+      "median_seconds": 4.9814750340010505,
+      "p90_seconds": 8.209887244000129
+    },
+    "normal_service_latency": {
+      "n": 78,
+      "mean_seconds": 5.794060309705039,
+      "median_seconds": 4.9814750340010505,
+      "p90_seconds": 8.209887244000129
+    },
+    "normal_delivered_service_latency": {
+      "n": 78,
+      "mean_seconds": 5.794060309705039,
+      "median_seconds": 4.9814750340010505,
+      "p90_seconds": 8.209887244000129
+    },
+    "fixed_evidence_latency": null
+  }
+}
