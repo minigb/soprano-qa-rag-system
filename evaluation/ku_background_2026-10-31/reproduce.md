@@ -2,7 +2,7 @@
 
 The November 1 resume supersedes the October 31 shutdown checkpoint. Read the
 root `RESUME.md` for live progress. E15 was rejected for English meaning errors
-despite passing development BERTScore. E18 source is `7cbf004`, using reviewed
+despite passing development BERTScore. E19 source is `93f3552`, using reviewed
 source translations plus a teaching-context relevance repair. It is experimental
 until the complete comparison is accepted. The fixed target is BERTScore F1
 at least 0.90 with meaning and overall quality preserved, not maximized F1.
@@ -21,7 +21,7 @@ Generation and tests use `/home/minhee/miniconda3/envs/soprano-qa/bin/python`
 `/home/minhee/.cache/soprano-rag-eval-venv/bin/python`
 (bert-score 0.3.13, transformers 5.10.2, torch 2.7.1+cu128).
 Models are Qwen3-14B Q6_K and Qwen3-Embedding-0.6B Q8_0; checkpoint/corpus/source
-hashes are in `e18-provenance.json`. Runtime snapshots and private
+hashes are in `e19-provenance.json`. Runtime snapshots and private
 traces are local and ignored by Git. Public outputs, manifests, frozen cases
 and provenance are committed.
 
@@ -49,32 +49,32 @@ changed/new source text uses guarded segmented translation. Offline preparation
 and review are added resources excluded from request latency. Source fidelity,
 source factuality and question relevance must be evaluated separately.
 
-## E18 diagnostic probe
+## E19 diagnostic probe
 
-Use the frozen E18 snapshot and the original 70 diagnostic cases plus eight practice-routing paraphrases/local counterexamples. Six are
+Use the frozen E19 snapshot and the original 70 diagnostic cases plus eight practice-routing paraphrases/local counterexamples. Six are
 explicitly reused earlier validation failures; this is a diagnostic cohort.
 Never start another GPU job while an existing worker is running.
 
 ```bash
 /home/minhee/miniconda3/envs/soprano-qa/bin/python -u \
   evaluation/run_refinement_probe.py \
-  --system-root evaluation/ku_background_2026-10-31/runtime/probe-e18/snapshots/hardened \
-  --settings evaluation/ku_background_2026-10-31/runtime/probe-e18/snapshots/hardened/settings.json \
+  --system-root evaluation/ku_background_2026-10-31/runtime/probe-e19/snapshots/hardened \
+  --settings evaluation/ku_background_2026-10-31/runtime/probe-e19/snapshots/hardened/settings.json \
   --cases evaluation/ku_background_2026-10-31/e18_probe_cases.json \
-  --output evaluation/ku_background_2026-10-31/probe-e18.jsonl \
+  --output evaluation/ku_background_2026-10-31/probe-e19.jsonl \
   --variant hardened --warmup-case expert-kim-die-forelle-03__no-range
 python3 evaluation/prepare_judge_packets.py \
   --cases evaluation/ku_background_2026-10-31/e18_probe_cases.json \
-  --results evaluation/ku_background_2026-10-31/probe-e18.jsonl \
-  --output evaluation/ku_background_2026-10-31/judge-e18
+  --results evaluation/ku_background_2026-10-31/probe-e19.jsonl \
+  --output evaluation/ku_background_2026-10-31/judge-e19
 python3 evaluation/run_joint_claude_judge.py \
-  --directory evaluation/ku_background_2026-10-31/judge-e18 \
+  --directory evaluation/ku_background_2026-10-31/judge-e19 \
   --workers 3 --model claude-opus-5-5
 python3 evaluation/summarize_background_eval.py \
   --cases evaluation/ku_background_2026-10-31/e18_probe_cases.json \
-  --results evaluation/ku_background_2026-10-31/probe-e18.jsonl \
-  --judge-directory evaluation/ku_background_2026-10-31/judge-e18 \
-  --output evaluation/ku_background_2026-10-31/review-e18
+  --results evaluation/ku_background_2026-10-31/probe-e19.jsonl \
+  --judge-directory evaluation/ku_background_2026-10-31/judge-e19 \
+  --output evaluation/ku_background_2026-10-31/review-e19
 ```
 
 The judge records the actual returned model, CLI version and input/rubric hashes;
@@ -86,13 +86,14 @@ Prior completed reviews retain their original contracts and are not replaced.
 ## Full comparison after candidate review
 
 The fresh campaign output is `comparison-2026-11-01/`. Pre-security `f307470`
-and main `29fe3e2` precede the candidate diagnostic probe; strict `302f8d1` follows.
-`comparison-e18.config.json` reuses those completed frozen baseline rows
-and run 290 candidate requests, then jointly blind/deduplicate all four systems
+and main `29fe3e2` preceded the E17 diagnostic probe; strict `302f8d1` followed.
+E18 and E19 diagnostic probes then completed before final candidate generation.
+`comparison-e19.config.json` reuses those completed frozen baseline rows
+and runs 290 candidate requests, then jointly blind/deduplicate all four systems
 for Claude assessment. The historical `comparison-e14.config.json` was never
 started and must not be used as the final candidate configuration.
 
-Use `python3 -u evaluation/run_background_comparison.py --config evaluation/ku_background_2026-10-31/comparison-e18.config.json`
+Use `python3 -u evaluation/run_background_comparison.py --config evaluation/ku_background_2026-10-31/comparison-e19.config.json`
 only after the selected candidate and its config are recorded. Each system has
 one untimed warmup and one measured run. The driver scores development and
 validation after generation exits, then writes a complete JSON summary and
@@ -116,7 +117,7 @@ After committing a new candidate, use a **fresh** output directory:
   --output evaluation/ku_background_2026-10-31/runtime/NEW_CANDIDATE
 ```
 
-Use its `snapshots/hardened` as the candidate. E18 needs these settings overrides
+Use its `snapshots/hardened` as the candidate. E19 needs these settings overrides
 before any request is run: `llm.evidence_translation="reviewed_catalog"` and
 `llm.evidence_translation_max_tokens=1536`. The default repository configuration
 has not enabled them. Record overrides and settings hashes in provenance, copy
@@ -161,7 +162,7 @@ meaning and general-knowledge usefulness before accepting a high score.
 ```bash
 /home/minhee/miniconda3/envs/soprano-qa/bin/python -m unittest discover -q
 python3 evaluation/export_current_prompts.py \
-  --output evaluation/ku_background_2026-10-31/prompts-e18 --check
+  --output evaluation/ku_background_2026-10-31/prompts-e19 --check
 ```
 
 Run equivalent tests from the lab worktree's `rag/`, and run

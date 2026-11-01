@@ -11,7 +11,9 @@ remain. Separate branches: `codex/ku-background-knowledge`, based on RAG
 ## Candidate and baseline
 
 The baseline is the secured Candidate F source at `302f8d1`. Both variants use
-the same retrieval corpus, checkpoints and settings. The candidate uses typed
+the same retrieval corpus, checkpoints and shared inference settings. Candidate
+algorithm flags and any additional resources are recorded separately below.
+The candidate uses typed
 source, background and score-lyric parts. Background cannot borrow source
 citations, invent local score facts, reverse a source claim, or attribute new
 advice to an expert. The application labels general explanations for readers.
@@ -26,6 +28,16 @@ in the separate October 25 report. Include a fresh run of it on this same
 290-request suite as a fourth system, so the original comparison is available
 without pooling older measurements. Do not call either current comparison
 baseline unprotected, pool earlier experiments, or reuse historical latencies.
+
+The final-comparison candidate E19 (`93f3552`) additionally uses complete Korean
+source quotation and 129 reviewed English source translations. A translation is
+selected only by exact original-text hash; new/changed sources use guarded model
+translation with a separate 1536-token limit. The translations are machine
+authored and separately model reviewed, not human-expert English references.
+This offline source preparation is an extra resource excluded from request
+latency. The four-way comparison evaluates the complete engineering package;
+it does not isolate a security prompt's effect under equal source-preparation
+cost. All versions use the original, unchanged Korean corpus and expert targets.
 
 ## Evaluation target
 

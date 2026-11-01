@@ -1,0 +1,509 @@
+{
+  "results_sha256": "b608d90cad613cb150388157affc81f41db17320798203f847c24e34d54700c7",
+  "script_sha256": "88d0440824931a4a80347bd76a986998a0092415c019052869c74250f726e715",
+  "catalog_sha256": "9a0b16e1a44e6f4c93c749c453dbe0ff4d7a1c06499ca8aabea9be7cabd40ab5",
+  "limitations": "Verify displayed English source text against exact-source reviewed translations.\n\nThis is a text-identity audit, not another semantic judge. It cannot establish\nsource truth, translation correctness, relevance or completeness of selection.\nUnmatched text may be a legitimate fallback translation and needs separate review.\n",
+  "rows": 78,
+  "translation_answers": 11,
+  "verified_translation_answers": 11,
+  "cases": [
+    {
+      "case_id": "background-duration-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-03__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-duration-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-die-forelle-04__m28-40",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-15__m86-88",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-05__m20-20",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-10__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-fermata-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-12__m68-69",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-12__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__m1-2",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-legato-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-nella-fantasia-07__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-why_unknown-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-fermata-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-glossary-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-16__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-02__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-12__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__m44-55",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-04__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-legato-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-11__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-01__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-06__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-18__m137-137",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-die-forelle-04__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-07__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-09__m41-43",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-16__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-02__m41-54",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-14__m67-67",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__reported-no-range-01",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-11__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-02__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-12__m135-137",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-slow_practice-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-10__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-05__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-07__m28-35",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-glossary-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-11__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-12__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-slow_practice-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-18__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "background-why_unknown-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-18__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-11__m74-79",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-10__m34-35",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-18__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-09__m44-52",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-12__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-17__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-15__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-09__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-17__no-range",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "static-21-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "in-flowery-clouds-ku-002",
+          "source_sha256": "731e61142e2ea104282cf70882b3540375639be208f35664a16b242957753378"
+        },
+        {
+          "source_id": "in-flowery-clouds-ku-004",
+          "source_sha256": "b4b11883ba428eec46a3d082dc4351cc20abbe0bcba02aad6ef111882d4e909d"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-17-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "nella-fantasia-ku-008",
+          "source_sha256": "b6508cf179b3608a3a36a0118c4a4dd15863fa20128f0b717d6c4659806b3e93"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-15-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "la-capinera-ku-007",
+          "source_sha256": "9d6debe8ccb47e57c9bfa312a2846c8bb6e517a691e6114a7d898e484c03e408"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-11-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "la-capinera-ku-018",
+          "source_sha256": "fbbcce63b614f179efe4b87b2fd6247596c4aefdb6e9dcf832b7b1a5318aadb4"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-23-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "in-flowery-clouds-ku-012",
+          "source_sha256": "4069720441ccb6ec1f97f8ff4bfd973f3491efdadfb788b30f94894b098cdfc0"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-18-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "nella-fantasia-ku-010",
+          "source_sha256": "57a87478b39400a4cefcd6d3ced6e5419b87b1a7ade18813aa83b372a164cd93"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-07-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "una-voce-poco-fa-ku-012",
+          "source_sha256": "05489b4d5685a2293a6ecd1e280ce93374b6d86fd4c495d791c3d1d073b173fb"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-19-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "nella-fantasia-ku-004",
+          "source_sha256": "82c0a3c9feb550f71a7d6a25b2a152e71dd6f3b91bdbfd5511a8d0ca1455e192"
+        },
+        {
+          "source_id": "nella-fantasia-ku-014",
+          "source_sha256": "d4a265d20709a96dbbc538bca289e02664aefcd7cc93ecb7dfb05b81a08a544b"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "static-25-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "in-flowery-clouds-ku-006",
+          "source_sha256": "97c1d1735bcd2735d04b9021d875f7ae6f37ba1a8e6069f8d89e241f1399354c"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "practice-probe-01-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "practice-probe-02-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "practice-probe-03-en",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "practice-probe-04-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "practice-probe-05-ko",
+      "status": "response",
+      "translation_quotation": false
+    },
+    {
+      "case_id": "practice-probe-06-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "una-voce-poco-fa-ku-018",
+          "source_sha256": "2fdd20ce3a0a08a956e45aefa3f20656a2575c2de08115aaae0297226a0ea446"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "practice-probe-07-en",
+      "status": "response",
+      "translation_quotation": true,
+      "verified": true,
+      "matched_sources": [
+        {
+          "source_id": "nella-fantasia-ku-015",
+          "source_sha256": "04bb7a7b9e1d5c43ed6e9141a53a99532b6ddfb8439ed534dfa547bbb8a2c5de"
+        },
+        {
+          "source_id": "nella-fantasia-ku-004",
+          "source_sha256": "82c0a3c9feb550f71a7d6a25b2a152e71dd6f3b91bdbfd5511a8d0ca1455e192"
+        },
+        {
+          "source_id": "nella-fantasia-ku-009",
+          "source_sha256": "7605eb0dec48dd2459bf8815f7db34c539f054cd59e1c39ea8a6a9e9dfe90e2e"
+        },
+        {
+          "source_id": "nella-fantasia-ku-008",
+          "source_sha256": "b6508cf179b3608a3a36a0118c4a4dd15863fa20128f0b717d6c4659806b3e93"
+        }
+      ],
+      "separate_background": false
+    },
+    {
+      "case_id": "practice-probe-08-ko",
+      "status": "response",
+      "translation_quotation": false
+    }
+  ]
+}

@@ -1,10 +1,10 @@
 {
-  "recorded_at": "2026-11-01T16:42:38.050894+00:00",
+  "recorded_at": "2026-11-01T16:51:43.747820+00:00",
   "reason": "Active resumed-work checkpoint. Evaluation continues; not a shutdown or usage-based stop.",
   "goal_achieved": false,
   "candidate_source_commit": "93f3552c07fec42613eb59f1476977bbf14f00f0",
   "branch": "codex/ku-background-knowledge",
-  "candidate_status": "E19 frozen; same78 diagnostic probe running after E18 failed two new normal questions. Not yet adopted.",
+  "candidate_status": "E19 selected after completed78 diagnostic review; full frozen290 candidate comparison running.",
   "tests": {
     "rag_unittest": {
       "passed": 611,
@@ -49,14 +49,14 @@
     "human_expert_english_annotations": false,
     "original_source_fact_findings": 3
   },
-  "next": "Finish E19 probe and independent meaning review. If acceptable, freeze comparison-e19.config.json; reuse complete fresh baselines and run candidate290 plus joint four-system judging. Then semantic audit, branch integration and documentation.",
+  "next": "Finish full candidate290 + dev/validation metric + joint four-system Claude review. Inspect all41 meaning cases and severe flags, run quotation audit and language/paired-latency supplement, decide adoption from whole quality, then sync lab branch/tests/docs/commits.",
   "files_sha256": {
     "config/bertscore.json": "5dbeef02714156a3624b016d52b6930439499bb07a00ec729cba6f1de245c129",
     "config/settings.json": "94303f0c6d53666af4b7e9970b89c205ca3a2621b46394846b0d7905c8e65a51",
     "evaluation/ku_background_2026-10-31/all_cases.json": "5eb700b073f2bd74b2f25c823327a1b17b320b59ce9a1732660584ec536675eb",
     "evaluation/ku_background_2026-10-31/expert_cases.json": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
     "evaluation/ku_background_2026-10-31/e18_probe_cases.json": "c261426d3af45ac71bb40a947227c975b361cba30ae84fb7041b5b33d5d6e03b",
-    "evaluation/ku_background_2026-10-31/comparison-e18.config.json": "6f57026772d3dc42d52240d0d347f59398bf62f2f4fa11651dad06f9345b286a",
+    "evaluation/ku_background_2026-10-31/comparison-e19.config.json": "1d43438c1eb2d2577bc953ab1947d0529c6b0cc72d62ed638bec82e9b6a451b8",
     "evaluation/ku_background_2026-10-31/runtime/probe-e19/snapshots/hardened/settings.json": "6f87df62a925beb62638f692615651ba00cab5347b3a154a95e118d45e57f549",
     "soprano_qa/__init__.py": "09861dc8855d3ccff8f9e63922f676591b3e67eb1e3941f29b6ab47ae0cfdd1f",
     "soprano_qa/answer.py": "00742e7bc443acb687400d4f435ac0b7aa9f09e9bed8ec8d36d243b9b722fee0",
@@ -101,7 +101,7 @@
     }
   },
   "gpu_processes_at_checkpoint": [
-    "110582, 14576 MiB"
+    "129376, 14556 MiB"
   ],
   "e18_probe": {
     "requests": 78,
@@ -111,5 +111,23 @@
     "judge_material_drift": 0,
     "judge_substantial_factual_error": 0,
     "effective_rubric_percent": 92.22488038277511
+  },
+  "e19_probe": {
+    "requests": 78,
+    "delivered": 78,
+    "false_refusals": 0,
+    "development_f1": 0.9720738294512726,
+    "judge_material_drift": 0,
+    "judge_substantial_factual_error": 0,
+    "effective_rubric_percent": 95.33492822966507,
+    "quotation_identity": {
+      "verified": 51,
+      "total": 51
+    }
+  },
+  "active_controller": {
+    "session_id": 71497,
+    "log": "evaluation/ku_background_2026-10-31/final-comparison-controller.log",
+    "command": "python3 -u evaluation/run_background_comparison.py --config evaluation/ku_background_2026-10-31/comparison-e19.config.json"
   }
 }

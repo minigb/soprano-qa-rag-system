@@ -68,14 +68,20 @@ PID는 종료 후 재사용될 수 있으므로 명령행을 확인하지 않고
 거절되어 채택하지 않았다. E19는 실제 KU 질문/곡명 메타데이터 연결과
 음악 연습 질문 입장 판정, 검토된 영어 표기의 오탐을 수정한다.
 
-E19 큐 `e19-probe-controller.log`, `runtime/run_e19_probe.py`가 같은 78개
-probe → 개발 metric → 독립 Claude 판정 → 요약을 실행 중이다.
-스냅샷은 `runtime/probe-e19/snapshots/hardened`, 공개 `e19-provenance.json`.
-GPU 작업은 겹치지 않는다. 큐가 완료되면:
+E19 78개 진단/Claude 평가도 완료했다. 전부 응답, 오거절 0, 중대한 의미 왜곡 0,
+종합 rubric 95.33/100, 개발 F1 0.972074. 한국어 원문 인용 51/51 동일성을 확인했다.
+반복/누락과 일부 일반 연습 설명의 관련성 한계는 `e19-quality-review.json`에 남겼다.
 
-1. E19 probe/Claude에서 기존 영어 오류 9개, 일반 질문, 새 진단 8개와 거절을 확인한다.
-2. 후보 선택 사유를 기록한 뒤 `comparison-e19.config.json`을 생성하여 전체 비교한다.
-   완료된 세 baseline을 같은 계약으로 재사용하고 후보 290개와 네 버전 공동 판정.
+현재 `comparison-e19.config.json`으로 전체 비교를 실행 중이다.
+컨트롤러 로그 `final-comparison-controller.log`, exec session `71497`.
+완료된 baseline 출력은 재사용하고 후보 290개 → dev/validation metric → 네 시스템 공동
+Claude 판정 → HTML/JSON 보고서를 생성한다. 소스/설정/runner를 변경하지 않는다.
+스냅샷은 `runtime/probe-e19/snapshots/hardened`, 공개 `e19-provenance.json`.
+GPU 작업은 겹치지 않는다. 전체 비교가 완료되면:
+
+1. controller 완료와 모든 290개/4시스템/Claude 판정의 포함 여부를 확인한다.
+2. `supplement_background_comparison.py --config .../comparison-e19.config.json`으로
+   언어별 결과와 같은 질문 응답끼리의 지연을 보고한다.
 3. 41개 알려진 의미 사례와 모든 중대한 판정을 직접 확인하고 한국어 원문
    동일성 audit을 실행한다. 숫자만으로 채택하지 않는다.
 4. 기준과 품질 비교를 실제 완료했을 때만 기본 설정·문서·최종 보고서를 확정한다.
