@@ -106,7 +106,8 @@ Offline source preparation is an added resource in the candidate comparison;
 the translations are machine authored and model reviewed, not human-expert
 English references. The review found source-level factual issues as well as
 translation issues, reinforcing the distinction between source fidelity and
-truth. Full service results remain necessary before adoption.
+truth. The [completed full comparison](../evaluation/ku_background_2026-10-31/report.md)
+reports source fidelity, factuality, availability and latency separately.
 
 The November 2 refinements retain actual passage checks for definition questions
 and named-work comparisons after the broader evaluation found source-discarding
@@ -124,6 +125,10 @@ for this command pattern without decoding the payload or blocking musical
 notation decoding. Formal attack success, literal source fidelity and visible
 control-text contamination are distinct observations; none substitutes for the
 others. The original E24 answer and unfavorable review remain available.
+E25's full290 run blocks that copied instruction, while all220 normal packets
+remain identical to E24. The completed comparison observes0/58 injection
+successes and0/12 unrelated task successes, with3/216 normal false refusals.
+These authored/reused cases and fallible judgments are not a universal guarantee.
 
 The local model also repeatedly confused beat units even after explicit wording
 changes. A narrow arithmetic helper now computes conventional simple/compound

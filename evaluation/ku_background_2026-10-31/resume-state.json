@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-11-01T18:48:45.423397+00:00",
+  "recorded_at": "2026-11-01T19:21:11.318993+00:00",
   "reason": "Explicitly resumed work; final E25 comparison active. No usage/reset stop.",
   "goal_achieved": false,
   "candidate_source_commit": "a93b10894371a3039cb0ad34ee60a045638fee90",
@@ -8,12 +8,7 @@
     "rag": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system",
     "lab": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab"
   },
-  "active_controller": {
-    "exec_session": 67465,
-    "config": "comparison-e25.config.json",
-    "output": "comparison-2026-11-02-e25",
-    "log": "e25-full-comparison-controller.log"
-  },
+  "active_controller": null,
   "e24_completed": {
     "validation_effective_f1": 0.9734575238920027,
     "validation_delivered": 62,
@@ -65,11 +60,13 @@
   "tests": {
     "e25_security_tests_passed": 49,
     "full_suite_expected": 637,
-    "full_e25_not_run_yet": true,
+    "full_e25_not_run_yet": false,
     "last_lab_rag_passed": 633,
     "last_lab_demo_passed": 44,
     "clean_corpus_screened": 953,
-    "clean_corpus_blocked": 0
+    "clean_corpus_blocked": 0,
+    "rag_full_passed": 637,
+    "rag_full_seconds": 23.299
   },
   "catalog": {
     "sources": 129,
@@ -97,7 +94,7 @@
       ]
     }
   },
-  "next": "Complete E25 full comparison; run supplement/audits, compare known41 and all flagged/attack answers. Accept only after whole quality review. Set default reviewed_catalog/1536 if accepted, commit report/results, sync Lab, run637RAG tests in both and44demo tests, verify main/dataset unchanged, then mark goal complete.",
+  "next": "Commit full results/default settings/report, sync Lab, run637RAG+44demo tests and final hash/main checks, record verification and clean commits; then complete goal.",
   "remaining_known_limitations": [
     "Three answerable false refusals: transpositionEN, breathEN and RosinaKO",
     "p/PP source disagreement and hedge/attribution presentation problems",
@@ -107,7 +104,7 @@
   ],
   "files_sha256": {
     "config/bertscore.json": "5dbeef02714156a3624b016d52b6930439499bb07a00ec729cba6f1de245c129",
-    "config/settings.json": "94303f0c6d53666af4b7e9970b89c205ca3a2621b46394846b0d7905c8e65a51",
+    "config/settings.json": "0d29d01f676a71020a369afcbd5a5e297de217fecff4e6d66c397c72a4540f85",
     "evaluation/ku_background_2026-10-31/all_cases.json": "5eb700b073f2bd74b2f25c823327a1b17b320b59ce9a1732660584ec536675eb",
     "evaluation/ku_background_2026-10-31/expert_cases.json": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
     "evaluation/ku_background_2026-10-31/comparison-e25.config.json": "cd394f8a93bca9700a991df10c3506da374f5cd8a3b3f29d17ba731d2a9ae1c5",
@@ -135,5 +132,18 @@
     "soprano_qa/structured_answer.py": "cabf21267e7b63683bb35ef8a4678064c43ac7adf0fffe24e710ebb5579a8191",
     "soprano_qa/sumijo.py": "771826981c584e868f4b7e6ddc69ae2d93de355430a74f0cf64cb73d01015685",
     "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d"
+  },
+  "lab_sync": {
+    "rag_commit": "4729623",
+    "lab_head": "04cf3a4c211b1e13b6e012f3bf535f5c6744bd87",
+    "pending": "Final E25 results and adopted default configuration, then tests"
+  },
+  "candidate_status": "Full290/metric/judge/direct review complete; quality accepted. Default llm settings match the evaluated snapshot. Root637tests pass; Lab final sync/tests pending.",
+  "e25_completed": {
+    "validation_f1": 0.9734575238920027,
+    "normal_packets_identical_to_e24": 220,
+    "changed_case_ids": [
+      "indirect-10-ko"
+    ]
   }
 }

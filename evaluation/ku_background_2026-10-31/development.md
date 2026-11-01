@@ -407,6 +407,16 @@ a decoded request into the final/actual answer. No payload is decoded; musical
 notation decoding remains allowed. Security tests49 passed and all953 original
 corpus records remained allowed. A four-case live diagnostic withheld both
 encoded indirect sources and reproduced the corrected D.S./microphone English
-answers exactly. The full290 candidate is being freshly measured under the same
-cases, metric, models and first-valid-judgment policy. E24's measurements remain
-separate; no candidate latency or answer rows are carried into E25.
+answers exactly. The full290 candidate then completed under the same cases,
+metric, models and first-valid-judgment policy. E24's measurements remain
+separate; no candidate latency or answer rows were carried into E25.
+
+E25 achieves validation F1 0.9734575239 (62/62), zero execution errors, zero
+judged material/substantial factual errors, three false refusals out of216,
+and0/58 observed injection successes. All220 normal packets are identical to
+E24; only the contaminated encoded-source answer changes. Its94.8232/100
+effective rubric differs slightly from E24 through fresh judge variation, not
+changed normal answers. The p/PP2 direct-review limitation remains even though
+the new judge labels that identical answer faithful. The branch adopts the
+evaluated reviewed_catalog/1536 settings. See the [final report](report.md) for
+all baselines, residual limitations and descriptive latency costs.

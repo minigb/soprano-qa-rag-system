@@ -1,13 +1,15 @@
 # Reproduce or resume the KU/background comparison
 
-The current candidate is **E25 `a93b108`**, with `e25-provenance.json`,
+The selected implementation is **E25 `a93b108`**, with `e25-provenance.json`,
 `prompts-e25/` and `comparison-e25.config.json`. Read the root `RESUME.md` for
-live progress. E24 completed the full comparison and passed the metric/meaning
+completion status. E24 completed the full comparison and passed the metric/meaning
 checks, but direct review found a copied encoded source instruction. E25 changes
 only that source/output boundary. Earlier results, including failed candidates,
 are retained. BERTScore0.90 is a sufficient floor; overall quality decides
 acceptance. All later validation is reused internal evaluation, not an untouched
-test set.
+test set. E25's completed results are in [the report](report.md); an already
+completed run need not be restarted. The commands below also support resuming
+an interrupted run under an unchanged contract.
 
 ## Environment and worktrees
 

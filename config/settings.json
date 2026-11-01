@@ -37,7 +37,9 @@
     "temperature": 0.0,
     "top_p": 0.8,
     "max_tokens": 768,
-    "source_preservation": "verbatim_or_translation"
+    "source_preservation": "verbatim_or_translation",
+    "evidence_translation": "reviewed_catalog",
+    "evidence_translation_max_tokens": 1536
   },
   "web_coaching": {
     "enabled": true,

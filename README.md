@@ -324,9 +324,9 @@ The branch configuration sets `llm.source_preservation` to
 source label per item and leaves its text empty. Application code quotes the
 complete actual retrieved answer, verifies its identity, and labels it
 `참고 자료의 원문입니다.`. It preserves the author's conditions, qualifications,
-lyric spellings and register. For English, the model translates each selected
-source's complete answer; translation remains fallible and receives output
-review. General explanations remain generated, separately labelled, and
+lyric spellings and register. English uses an exact-source reviewed translation
+when available, or guarded model translation of the selected complete answer;
+translation remains fallible and receives output review. General explanations remain generated, separately labelled, and
 allowed when they help answer the question. This mode does not skip source,
 citation, scope or security checks. It may still choose an irrelevant or
 incomplete set of sources, and quoted source text itself may be inaccurate.
@@ -339,10 +339,10 @@ restores the original quoted spelling. The translation must still pass output
 review against the original sources. Slot coverage and literal identity do not
 prove that every relationship or musical term was translated correctly. The
 translation budget is separately configurable (default 1536 tokens), and its
-extra inference time belongs in end-to-end latency. This option is not enabled
-in the branch default until its quality comparison is accepted.
+extra inference time belongs in end-to-end latency. It is also the fallback
+for new or changed sources under the branch's default reviewed-catalog mode.
 
-The E16 experiment adds `llm.evidence_translation="reviewed_catalog"`.
+The branch default uses `llm.evidence_translation="reviewed_catalog"`.
 All 129 curated expert/performer source answers have versioned English
 translations authored by Codex and assessed separately by Claude Opus 5.5.
 These are not human-expert English annotations. The application matches the
@@ -366,10 +366,11 @@ checks and are reported as `llm_guarded_calculation`, not model-composed prose.
 Score facts, alternate groupings and performance interpretations do not use this
 shortcut. E25 also screens source/output instructions that promote a decoded
 request into the final answer, while permitting ordinary musical notation
-decoding. Its complete comparison is in progress.
+decoding. Its [completed comparison](evaluation/ku_background_2026-10-31/report.md)
+passes the fixed metric target and checks meaning, security, usefulness and latency.
 
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
-`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
+`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current
 Korean, English, translation and general policies are exported under
 `evaluation/ku_background_2026-10-31/prompts-e25/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
@@ -378,7 +379,9 @@ is `config/bertscore.json`, with the development choices and limitations in
 from literal source quotations is not proof of unrestricted generation quality.
 BERTScore 0.90 is a sufficient acceptance floor, not a score-maximization
 objective. Meaning, useful coverage, naturalness, refusals and latency determine
-whether a candidate is acceptable; the full comparison is still in progress.
+whether a candidate is acceptable. E25 is selected on this branch; the report
+retains three normal false refusals, remaining source/presentation issues and
+the latency cost relative to the original system.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
@@ -410,6 +413,15 @@ and [the security research review](docs/rag-security-research.md) for the threat
 model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
 
 ## Evaluation
+
+The [2026-11-02 final comparison](evaluation/ku_background_2026-10-31/report.md)
+covers 290 Korean/English normal and adversarial requests per system. Expert
+validation BERTScore F1 is 0.973458 (62/62 answers), with 0/58 observed injection
+successes, no judged material meaning drift, and 3/216 normal false refusals.
+The cases were reused during refinement; literal KU quotations raise reference
+overlap, and the score is not factual accuracy. The report includes the original,
+initial-security and strict baselines, independent Claude judgments, direct
+meaning checks and paired latency.
 
 The [2026-10-25 bilingual security comparison](evaluation/security_comparison_2026-10-25/report.md)
 contains 400 measured requests comparing the original and hardened systems on
