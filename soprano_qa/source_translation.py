@@ -8,10 +8,12 @@ from __future__ import annotations
 
 import json
 import re
+import hashlib
 from typing import Any, Callable
 
 from soprano_qa.security import SecurityViolation, screen_text, serialize_untrusted
 from soprano_qa.structured_answer import MAX_SENTENCE_CHARS, RenderedAnswer
+from soprano_qa.source_translation_catalog import TRANSLATIONS_EN
 
 
 SOURCE_TRANSLATION_POLICY = """Translate each supplied Korean source segment faithfully into English.
@@ -99,7 +101,9 @@ def translate_source_parts(
 ) -> RenderedAnswer:
     """Translate only application-verified source parts, without the question.
 
-    No cross-request cache or answer reuse is used. Background stays separate.
+    A maintained source translation may be used only for an exact source-text
+    hash match. This is source preparation, not a cache of question answers.
+    Unmatched sources use the model; background stays separately generated.
     All selected sentence slots and protected literals must be returned exactly;
     malformed, missing, duplicated or foreign slots fail closed.
     """
@@ -108,8 +112,18 @@ def translate_source_parts(
         return answer
     segments = {}
     plans = []
+    restored = {}
     for number, part in enumerate(sources, start=1):
         screen_text(part["text"], source="evidence")
+        if llm_settings.get("evidence_translation") == "reviewed_catalog":
+            source_hash = hashlib.sha256(part["text"].encode("utf-8")).hexdigest()
+            maintained = TRANSLATIONS_EN.get(source_hash)
+            if maintained is not None:
+                if not isinstance(maintained, str) or not maintained.strip() or len(maintained) > MAX_SENTENCE_CHARS:
+                    raise SecurityViolation("unsafe_translation")
+                screen_text(maintained, source="translation")
+                restored[part["evidence"][0]] = maintained
+                continue
         pieces, literals = prepare_source(part["text"], number)
         ids = []
         for index, text in enumerate(pieces, start=1):
@@ -121,16 +135,17 @@ def translate_source_parts(
         key: {"type": "string", "minLength": 1} for key in segments
     }, "required": list(segments), "additionalProperties": False}
     try:
-        raw = generate_fn(model_path, [
-            {"role": "system", "content": SOURCE_TRANSLATION_POLICY},
-            {"role": "user", "content": serialize_untrusted({"segments": segments})},
-        ], {**llm_settings, "temperature": 0.0, "top_p": 1.0,
-            "max_tokens": int(llm_settings.get("evidence_translation_max_tokens", 1536))},
-            response_schema=schema)
-        translated = json.loads(raw, object_pairs_hook=_unique)
+        translated = {}
+        if segments:
+            raw = generate_fn(model_path, [
+                {"role": "system", "content": SOURCE_TRANSLATION_POLICY},
+                {"role": "user", "content": serialize_untrusted({"segments": segments})},
+            ], {**llm_settings, "temperature": 0.0, "top_p": 1.0,
+                "max_tokens": int(llm_settings.get("evidence_translation_max_tokens", 1536))},
+                response_schema=schema)
+            translated = json.loads(raw, object_pairs_hook=_unique)
         if not isinstance(translated, dict) or set(translated) != set(segments):
             raise ValueError("Missing or foreign translation slot")
-        restored = {}
         for part, ids, literals in plans:
             texts = []
             for key in ids:

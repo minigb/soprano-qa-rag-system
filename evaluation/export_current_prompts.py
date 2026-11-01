@@ -54,7 +54,7 @@ def main():
               for name in ('soprano_qa/answer.py', 'soprano_qa/security.py',
                            'soprano_qa/translation.py', 'soprano_qa/llm.py',
                            'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py',
-                           'soprano_qa/source_translation.py')}
+                           'soprano_qa/source_translation.py', 'soprano_qa/source_translation_catalog.py')}
     metadata = {
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'source_sha256': hashes,

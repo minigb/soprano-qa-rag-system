@@ -167,7 +167,7 @@ def generate(
         if preserve_sources:
             security_context = {**security_context, "source_preservation": True}
             separate_translation = (security_context.get("answer_language") == "en"
-                                    and llm_settings.get("evidence_translation") == "segmented")
+                                    and llm_settings.get("evidence_translation") in {"segmented", "reviewed_catalog"})
             if separate_translation:
                 security_context["separate_source_translation"] = True
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]

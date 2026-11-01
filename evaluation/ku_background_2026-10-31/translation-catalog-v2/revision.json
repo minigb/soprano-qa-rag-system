@@ -1,0 +1,14 @@
+{
+  "created_at": "2026-11-01T15:23:15.154549+00:00",
+  "parent": "translation-catalog-v1",
+  "changed_sources": [
+    "la-capinera-ku-007",
+    "una-voce-poco-fa-ku-010",
+    "in-flowery-clouds-ku-014",
+    "la-capinera-ku-005",
+    "die-forelle-ku-017"
+  ],
+  "reason": "Repair five minor fidelity findings: conditions, recommendation strength, causal relation and explicit diction terminology. Remaining 124 translations unchanged; retain their first valid v1 reviews. Source-level factual errors are preserved and separately flagged, not silently rewritten.",
+  "review_policy": "Judge all five changed translations once with the same blinded rubric. No score-based reruns.",
+  "original_records_sha256": "3169169026e7196b1875c031e2ecc899ea1a0e93b3dfbe10e1c5ff5d6ada1536"
+}
