@@ -1,0 +1,7 @@
+{
+  "started_at": "2026-11-01T14:30:00.902748+00:00",
+  "reason": "Resume after server restart; begin immutable pre-security baseline while candidate quality fixes are reviewed. All full comparisons in this campaign use fresh measured requests, not historical latencies.",
+  "measurement_order": "Pre-security first; candidate and remaining baselines sequentially after candidate freeze. One GPU evaluation process at a time.",
+  "gpu_at_start": "",
+  "target": "BERTScore >=0.90 is a floor; source meaning and overall quality take priority."
+}
