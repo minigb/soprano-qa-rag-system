@@ -252,3 +252,21 @@ The 605-test suite passes, including exact-hash reuse, changed-source fallback,
 mixed-source ordering, screening and rejection of catalog output by the normal
 guard. The full RAG candidate is still subject to the 70-case diagnostic probe,
 then the four-system comparison. Catalog fidelity alone is not acceptance.
+
+## E17 teaching-context relevance repair before the next probe
+
+Before running E16's prepared probe, manual inspection of E15's general-practice
+answers identified a separate inherited defect: the slow-practice questions
+received repetitive source collections rather than the requested practice
+checks. Claude had also assigned partial relevance/completeness to those
+answers. E16's Korean generation was unchanged, so E17 incorporates the repair
+before the next 70-case diagnostic run; no E16 runtime responses are claimed.
+
+E17 (`ba65680`) supplies each source's original teaching question alongside its
+answer to the existing relevance selector, within the same untrusted JSON data
+boundary. The selector must match the requested task, not just the musical
+subject. Korean composition also receives the existing instruction to omit
+purely redundant passages while preserving distinct qualifications/conflicts.
+General quantitative examples must state the BPM beat unit. The general-intent
+route, source texts, reviewed English catalog, evaluation questions/references
+and frozen metric remain unchanged. Regression tests: 606 passed.

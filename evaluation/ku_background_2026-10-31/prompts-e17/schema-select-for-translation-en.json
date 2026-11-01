@@ -1,0 +1,75 @@
+{
+  "type": "object",
+  "properties": {
+    "sentences": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 6,
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "evidence"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "E1"
+                  ]
+                },
+                "minItems": 1,
+                "maxItems": 1
+              },
+              "text": {
+                "const": ""
+              }
+            },
+            "required": [
+              "kind",
+              "evidence",
+              "text"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "const": "background"
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "E1"
+                  ]
+                },
+                "minItems": 0,
+                "maxItems": 0
+              },
+              "text": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "kind",
+              "evidence",
+              "text"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    }
+  },
+  "required": [
+    "sentences"
+  ],
+  "additionalProperties": false
+}

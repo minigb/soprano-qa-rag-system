@@ -358,7 +358,7 @@ This experiment is awaiting the complete RAG comparison before adoption.
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
 `soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
 Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e16/`; the conservative general
+`evaluation/ku_background_2026-10-31/prompts-e17/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity
