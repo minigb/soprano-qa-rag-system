@@ -355,7 +355,7 @@ Korean expert evaluation references remain unchanged. See
 `evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
 full fidelity review and the separately flagged original-source factual errors.
 English source translations are visibly labelled as translated reference text,
-including first-person statements inherited from the source. E24 retains a
+including first-person statements inherited from the source. E25 retains a
 narrow route for explicit general practice scenarios without a local referent;
 selected ranges, directly matching source questions and selected-work names
 retain evidence. Explicit definition/comparison questions assess actual source
@@ -364,12 +364,14 @@ is retained. E23 also calculates basic explicit beat-unit questions using conven
 simple/compound meter arithmetic. These answers retain both model security
 checks and are reported as `llm_guarded_calculation`, not model-composed prose.
 Score facts, alternate groupings and performance interpretations do not use this
-shortcut. This experiment awaits the complete comparison before adoption.
+shortcut. E25 also screens source/output instructions that promote a decoded
+request into the final answer, while permitting ordinary musical notation
+decoding. Its complete comparison is in progress.
 
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
 `soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
 Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e24/`; the conservative general
+`evaluation/ku_background_2026-10-31/prompts-e25/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity

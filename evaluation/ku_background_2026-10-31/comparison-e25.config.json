@@ -1,0 +1,66 @@
+{
+  "output": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25",
+  "generation_python": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "metric_python": "/home/minhee/.cache/soprano-rag-eval-venv/bin/python",
+  "cases": "evaluation/ku_background_2026-10-31/all_cases.json",
+  "expert_cases": "evaluation/ku_background_2026-10-31/expert_cases.json",
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "warmup_case": "expert-kim-die-forelle-03__no-range",
+  "systems": [
+    {
+      "name": "pre-security",
+      "root": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329"
+    },
+    {
+      "name": "main-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+      "settings_sha256": "fdbe2cdfef553abc2165fff89a8bd1633c7cb6028bb5f4a562e73a70f21a7945"
+    },
+    {
+      "name": "strict-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "302f8d1afe08e9965a9ba3009a5da2c0f03af49c",
+      "settings_sha256": "68ba9d53530848f1c36e30591cd39719e65ccdc122b1e9a45593de5a97fce98b"
+    },
+    {
+      "name": "candidate",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e25/snapshots/hardened",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e25/snapshots/hardened/settings.json",
+      "variant": "hardened",
+      "source_commit": "a93b10894371a3039cb0ad34ee60a045638fee90",
+      "settings_sha256": "b8e252a1058637f4eef02a399b0c8ad69c6c911dbddb22c9351a70698f9eb976"
+    }
+  ],
+  "protocol": {
+    "repetitions": 1,
+    "ordering": "Original fresh baseline measurements retained; full E24 and its direct contamination review precede E25 four-case diagnostic and full290. Single GPU worker.",
+    "metric_selection": "development B only; unchanged for all subsequent candidates and validation",
+    "indirect_attacks": "forced model exposure after clean retrieval; not retrieval poisoning",
+    "case_count_per_system": 290,
+    "validation_expert_requests": 62,
+    "no_candidate_changes_during_comparison": true,
+    "candidate_algorithm_setting": {
+      "source_preservation": "verbatim_or_translation",
+      "evidence_translation": "reviewed_catalog",
+      "evidence_translation_max_tokens": 1536
+    },
+    "validation_status": "Reused internal evaluation informed by observed E19-E24 failures; not an untouched holdout.",
+    "selection_priority": "BERTScore >=0.90 is a sufficient floor, not a maximization target. Compare meaning, usefulness, normal false refusals and latency before accepting this candidate.",
+    "candidate_status": "Frozen E25 a93b108; full launch follows encoded-source/meaning diagnostic.",
+    "additional_candidate_resource": "129 curated-source English translations, machine-authored/Codex checked and separately Claude-reviewed. Exact original-source hash lookup. Offline preparation/review excluded from request latency; not human-expert English references.",
+    "latency_environment": "Fresh campaign after reboot, initially no live GPU model. Single-run descriptive timing; separate service and fixed-evidence scopes. Not a statistically established speedup.",
+    "baseline_reuse": "Byte-identical measured baseline rows and metric artifacts copied from comparison-2026-11-01; see baseline-reuse.json. No old historical latency pooling or replacement.",
+    "judge_reuse": "Completed E19 first valid assessment reused only for identical full packet and identical model/rubric/schema/runner; preserve original contract, including unfavorable scores. Changed packets assessed freshly. Do not select among probe judgments.",
+    "additional_generation_method": "Basic explicit conventional meter arithmetic, including terse comparisons in music context, is calculated with Fraction and still admission/output checked. generation_mode=llm_guarded_calculation, not LLM-composed prose."
+  },
+  "judge_reuse_directory": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/judge"
+}

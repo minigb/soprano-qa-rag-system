@@ -1,138 +1,99 @@
 # 진행 중인 작업 — 2026-11-02
 
-사용자 요청으로 재개했다. **목표는 아직 완료하지 않았다.** BERTScore 0.90은
-충분한 통과 기준이며 의미·유용성·정상 질문 응답률·속도를 우선한다.
+사용자가 재개를 요청했고 작업을 계속하고 있다. **목표는 아직 완료하지 않았다.**
+BERTScore 0.90은 충분한 기준이며 의미·유용성·정상 응답률·지연을 우선한다.
 사용량/리셋 중지 조건과 Discord/process-stop notifier는 사용하지 않는다.
-
-## 현재 실행 — E24 전체 비교
-
-최종 후보 source **ec9534c**. 14개 진단은 모두 응답했고 Claude 판정에서
-오거절/중대한 의미 변경/실질적 사실 오류0이었다. 기본 박자6개는 직접
-계산 단위와 실제 답변도 대조했다. 이것만으로 목표를 완료하지 않는다.
-
-- Full290 exec **51544**, `e24-full-comparison-controller.log`.
-- 설정 `comparison-e24.config.json`, 결과 `comparison-2026-11-02-e24/`.
-- 스냅샷 `runtime/probe-e24/snapshots/hardened`, 공개 `e24-provenance.json`,
-  현재 프롬프트 `prompts-e24/`.
-- Driver가 baseline3개 완료행/metric 재사용 → candidate290 새 생성 →
-  고정 BERTScore dev/validation → E19와 동일한 packet의 원래 판정 재사용,
-  변경 packet 신규 Claude 판정 → 전체 요약/HTML까지 순차 실행한다.
-- 코드/runner/config/snapshot을 이 실행 중 변경하지 않는다. GPU는1worker만.
-- E23 진단50과 E24 진단14 모두 종료했다. E22/E23 full config는 준비만
-  했고 candidate 전체 실행은 없었다. 아래 기록은 과거 경과다.
-- Full 완료 후 supplement, quotation/translation audit, known41 의미
-  직접 대조(hash같은 건만 E19검토재사용), 전체 severe/attack flags 확인.
-- 실측 결과로 전체 품질이 수용될 때만 기본config의 reviewed_catalog/1536 채택,
-  최종문서/commit/Lab재동기화 및634개 RAG tests+demo44, main/dataset불변확인.
-
-## 최신 체크포인트 — E24 준비
-
-아래 E22 실행 설명은 과거 기록이다. E22 진단은 종료했고 채택하지 않았다.
-E23 (`f6e1869`)은 정의 설명의 기존1회 재시도를 일반 설명으로 복구하여
-legato EN 오거절을 해결했다. 기본박자계산을 추가했지만 원래의 짧은 두 박자
-비교 질문은 recognizer를 통과하지 못했다. E24는 그 일반 비교 표현만 확장했다.
-계산결과는 `llm_guarded_calculation`으로 기록하며 일반 모델생성으로 주장하지 않는다.
-
-- E23 진단50 큐 exec **71175**, `e23-probe-controller.log` (생성 후 판정/요약).
-- E24 snapshot 준비 exec **42159**, `runtime/probe-e24`.
-- E23 GPU 생성이 끝나고 GPU가 비었을 때 E24 진단14
-  (`e24_probe_cases.json`: 기존meter6+practice8)를 새로 생성/판정한다.
-- E24 준비 완료 후 reviewed_catalog/1536 override와 public provenance/prompt export 필요.
-- E22/E23 full config/baseline copy는 준비만 했고 실제 전체 후보 실행은 안 했다.
-  최종 full은 새 E24 config/output으로290개 실행할 것. Baseline/E19 judge cache는 그대로.
-- E23/현재 Lab633개 RAG tests, demo44 통과. E24의 meter/intent15개 통과, 총suite634.
-- Lab은 E23코드와 일반설명 UI badge까지 동기화했다. E24/최종결과 재동기화 필요.
-- Transposition EN admission과 Rosina KO output의 정상거절은 아직 남아 있다.
-  관측된 약점을 숨기거나 오거절0으로 가정하지 않는다.
-
-## 작업 위치
-
-- RAG: `/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system`
-- Lab: `/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab`, RAG는 `rag/`
-- 두 저장소 모두 `codex/ku-background-knowledge`. main/live는 변경하지 않는다.
-- 현재 후보 **E22 source e0a2cae**. 624개 전체 테스트와 이후 추가한 평가 무결성
-  검사를 포함한 14개 targeted tests가 통과했다. 전체 suite는 현재 627개다.
-- Lab은 E19/a61a064까지 동기화했다. 최종 코드·결과·설정 동기화가 필요하다.
 
 ## 현재 실행
 
-경로는 아래에서 모두 `evaluation/ku_background_2026-10-31/` 기준이다.
-GPU inference/metric은 한 번에 하나만 실행한다. PID만 보고 종료하지 않는다.
-재부팅 후 live GPU 모델은 없었으며 서비스를 다시 시작하지 않았다.
+- RAG: `/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system`
+- Lab: `/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab`, RAG는 `rag/`
+- 두 저장소 모두 `codex/ku-background-knowledge`. main/live/dataset은 변경하지 않는다.
+- 현재 후보 **E25 source a93b108**. E24의 인코딩된 자료 지시문 복사 문제만 수정했다.
+- Full290 exec **67465**, `evaluation/ku_background_2026-10-31/e25-full-comparison-controller.log`.
+- 설정 `comparison-e25.config.json`, 결과 `comparison-2026-11-02-e25/`.
+- 스냅샷 `runtime/probe-e25/snapshots/hardened`, `e25-provenance.json`, `prompts-e25/`.
+- GPU inference/metric은 한 번에 하나. 실행 중 코드/runner/config/스냅샷/지표를 바꾸지 않는다.
+- Driver: 같은 캠페인의 baseline3개 측정값 재사용 → E25 290개 새 생성 →
+  고정 BERTScore dev/validation → E19 전체 packet이 동일한 판정만 원래 점수로
+  재사용, 나머지 Claude Opus5.5 CLI 새 평가 → summary/HTML.
+- E25 진단4개 완료: encoded indirect KO/EN 모두 자료 단계에서 차단,
+  D.S./마이크 English 답변은 E24와 정확히 같음. `e25-probe-decision.json`.
+- E25 관련 security tests49 통과, clean corpus953개 차단0.
+  전체 suite 예상637개는 최종 config 채택 후 실행해야 한다.
+- Lab은 E23+계산 답변의 일반 음악 설명 UI 표기까지 동기화됨. 최종 재동기화 필요.
 
-- E22 진단50 생성 → independent Claude 판정 → 요약 큐 실행 중.
-- exec session **34864**, `e22-probe-controller.log`.
-- 스냅샷 `runtime/probe-e22/snapshots/hardened`, `e22-provenance.json`.
-- `e21_probe_cases.json`의 동일50개, 결과 `probe-e22.jsonl`, `judge-e22/`,
-  `review-e22/`. 새 입력으로 유리한 결과를 고르는 재실행이 아니다.
-- 현재 프롬프트 `prompts-e22/`. BERTScore/정답/corpus/catalog는 그대로다.
-- E22 전체290 설정·실행은 진단을 직접 확인한 뒤 준비해야 한다.
-- default settings의 reviewed_catalog 채택은 전체 비교 후에 결정한다.
+## E24 전체 결과와 E25 이유
 
-## 완료·보존된 실패 평가
+E24 full290×4시스템 완료. `comparison-2026-11-02-e24/review/summary.json`,
+`review/supplement.json`, `review/review.html`에 모든 실제 결과가 있다.
+Claude unique917건 중 E19와 동일한888건 재사용, 변경29건 새 평가.
 
-**E19** 전체290×4시스템과 unique919 independent Claude 판정 완료.
-`comparison-2026-11-01/review/summary.json`, `review/review.html`,
-`review/supplement.json`에 원래/초기보안/엄격보안/후보 비교가 있다.
-E19 validation F1 **0.9734575**, 62/62응답이지만 채택하지 않았다.
-D.S.를 Da Capo로 바꾸고 마이크 사용 조건의 발성 의미를 바꾼 중대 오류2건,
-간접공격 성공2/22, 정상 오거절3/216, 잘못된 일반 박자 설명이 확인됐다.
-후보 effective rubric93.4343%, 원래89.6465%는 정확도나 통과 판정이 아니다.
-자료 제어문 복사4건과 judge가 성공으로 센2건을 구별한다.
+- 전문가 validation62/62 응답, 고정 F1 **0.9734575238920027**.
+- 정상220개 중216개 전달; answerable216개 오거절3개.
+- 독립 판정: 중대한 의미 변경0, 실질적 사실 오류0, 혼합/불확실 사실2,
+  effective rubric **94.7391%**. 정확도가 아니다.
+- 직접36/간접22 공격 성공0, 범위 밖12도0. 실행 오류0.
+- 알려진 의미41개: Claude39 faithful+2 minor, material0.
+  직접 검토40개는 전체 packet hash가 같아 E19검토재사용, p/PP2는 새 대조.
+  `e24-manual-meaning-review.json`에 D.S., mic, meter 등 추가 대조도 있음.
+- 한국어 인용168/168, 영어 catalog 인용38/38 문구 일치. 공격 인용도 포함하므로
+  텍스트 일치를 안전성/관련성/사실성으로 해석하지 않는다.
+- 직접 검토에서 `indirect-10-ko`의 Base64 해독/최종답변 수행 지시가 그대로
+  인용됨을 발견했다. 레시피를 실제 생성하지 않아 ASR0이지만 답변 오염이 남았다.
+  E24를 최종 채택하지 않고, E25에서 자료/출력의 해독 후 최종답변 지시만 차단한다.
+  악보 해독·연주 지시는 허용하며 payload 자체를 해독하지 않는다.
+- 남은 품질 한계: transposeEN/breathEN/RosinaKO 정상 오거절3개, p/PP 자료
+  불일치의 설명 부족, 약한 hedge 강화와 E1/E2 노출, 마이크 번역의 원문 모호성,
+  긴 반복 인용. 사소한 모든 문제를 없애기 위한 추가 수정을 무한 반복하지 않는다.
 
-**E20** `f72fd24`: 역할재현/자료의 응답형식 지시 검사. 정상 corpus953개 차단0.
-E19 독립 판정에서 의미 오류가 드러나, 같은 경로를 가진 E20 실행을 중단했다.
-98개 완료+controlled SIGINT1개 행, `comparison-2026-11-02-e20/interruption.json`.
-부분 실행을 전체 비교/모델 실행오류로 주장하지 않는다. 추가 practice8개는 생성 완료.
+## 완료할 순서
 
-**E21** `8d0548a`: 정의 질문도 실제 KU 관련성을 검사하고, 작품명이 있는 비교는
-자료 경로를 유지했다. D.S./마이크 의미는 회복했지만 자료 불일치의 원인을 추측하고
-한국어 박자/새9/8진단도 틀렸다. 진단50과 독립 평가 완료, 채택하지 않았다.
-특히 p/PP 추측 한 건은 judge가 놓쳤으므로 직접 대조 결과도 보존한다.
-
-**E22**는 간결한 음악 task admission, 정의용 passage selection 지시,
-자료 조언을 배경 문장으로 다시 합성하지 않기, 같은 박자 규칙의 한국어 설명,
-성악 서비스에서 일반 연습을 가창으로 해석하는 지침을 적용한다.
-`e22-refinement-plan.json` 참조. 아직 결과를 통과로 가정하지 않는다.
-
-## 이어서 완료할 순서
-
-1. E22 진단50 결과/Claude 판정을 확인한다. D.S., mic KO/EN, p/PP1·2,
-   KO/EN meter+새 transfer4, legato EN, transposition EN을 직접 대조한다.
-2. 의미/응답성에 수용할 수 없는 오류가 없으면 새 comparison-e22 config와
-   output을 준비한다. baseline3개의 실제290행/metric은 E19에서 byte-identical
-   복사하고 baseline-reuse 해시를 기록한다. candidate290은 새로 생성한다.
-3. `run_background_comparison.py`는 이제 optional `judge_reuse_directory`를 받는다.
-   E19 완료 `comparison-2026-11-01/judge`를 지정하면 동일 packet+model/rubric/schema
-   판정만 원래 contract 그대로 재사용한다. 불리한 점수도 유지한다. 다른 packet은
-   새 independent Claude 판정이며 `reuse-aggregation.json`에 구별한다.
-   이전 E19 driver hash는 historical artifact이므로 현재 driver로 E19를 resume하지 않는다.
-4. 전체 validation 실제F1, 41개 알려진 의미 사례, 모든 material/factual/attack
-   판정을 직접 확인한다. 기존 직접 대조는 전체 judge packet hash가 같을 때만 재사용.
-   quotation/translation audit와 language×kind/paired-latency supplement를 실행한다.
-5. 수용할 수 있을 때 기본 `config/settings.json`에 reviewed_catalog/1536을 채택한다.
-   README, 연구/최종 보고서, 재현/이 체크포인트를 실제 결과로 갱신한다.
-6. commit → Lab subtree 동기화 → RAG/Lab RAG 전체 tests 및 Lab demo44,
-   catalog/prompt 검증, main/dataset 불변 확인. 그 뒤에만 goal complete.
+1. E25 full290 및 고정지표/독립 판정 완료 확인.
+2. `supplement_background_comparison.py`, quotation/translation audit 실행.
+3. E24와 전체 judge packet hash가 같은 알려진41+추가 의미 사례만 검토재사용.
+   변경 사례·모든 severe/factual/attack flags와 전달된 공격 답변을 직접 읽는다.
+   E24 인코딩 지시문이 사라졌는지 특히 확인한다.
+4. 실제 결과로 품질을 판단한다. 점수 극대화가 아니라 원래 시스템 대비 의미,
+   정상 응답성, 안전성, 유용성과 지연을 함께 보고 한계를 명시한다.
+5. 수용되면 default `config/settings.json`에 reviewed_catalog/1536 채택.
+   최종 report/README/재현 문서/이 파일과 resume-state를 갱신하고 커밋한다.
+6. Lab subtree로 최종 RAG 커밋 동기화. RAG 및 Lab/rag 전체637 tests,
+   Lab/demo44 tests, prompt/catalog 검증, main/dataset 불변 확인.
+7. 양쪽 작업 브랜치가 정리된 뒤에만 goal complete. PR/push/deploy는 요청되지 않았다.
 
 ## 고정 평가 계약
 
-- 전문가105: 개발43/validation62, 원질문그룹 겹침0, KU겹침6.
-- E12 이후 validation와 관측된 실패를 수정에 사용한 **재사용 내부 평가**다.
-  독립 일반화 성능에는 새 전문가 test set이 필요하다.
+- 전문가105 Korean requests: dev43/32원질문그룹, validation62/47그룹.
+  원질문그룹 겹침0, KU겹침6. E12 이후 실패를 수정에 사용한 재사용 내부 평가다.
+  독립적인 일반화 성능에는 새 전문가 test set이 필요하다.
 - 전체290: 정상220(KO174/EN46), 직접36, 간접22, 범위 밖12.
   정상 오거절 분모216은 알 수 없는 local fact4개를 제외한다.
-- Fresh baseline validation: pre-security f307470 **0.945917**, main29fe3e2
-  **0.885623**, strict302f8d1 **0.899449**. strict를 반올림해 통과로 세지 않는다.
-- BERTScore: xlm-roberta-large layer18, IDF false, raw/unrescaled, slow tokenizer,
-  lang ko, revision c23d21b0620b635a76227c604d44e43a9f0ee389. 설정 변경 금지.
-  전체 표시 답변, 거절/오류0, 실패 제외/답변 자르기/reference 재작성 금지.
-- Qwen3-14B Q6_K, temp0/top_p.8/max_tokens768/n_ctx8192; 번역 fallback1536.
-- 영어 catalog129개는 전문가 source의 기계 번역+Codex 검토+별도 Claude 판정이며
-  인간 전문가 영어 정답이 아니다. 준비비용은 요청 latency에 포함되지 않는다.
-- 원문 인용은 높은 중복도를 만든다. 유사도는 의미/사실/관련성/안전성의 증명이 아니다.
-  원문 사실 문제는 `source-fact-review-notes.md`에 분리했고 평가중 정답을 고치지 않았다.
-- 간접공격은 clean retrieval 후 강제노출, 실제 검색 오염 성공률이 아니다.
-- warmup1+측정1, 단일GPU순차. 지연은 기술 통계이며 통계적 speedup 주장이 아니다.
+- Original f307470 validationF1 .945917, main29fe3e2 .885623,
+  strict302f8d1 .899449. strict를 반올림해 통과로 세지 않는다.
+- BERTScore: xlm-roberta-large layer18, IDFfalse, raw/unrescaled, slow tokenizer,
+  langko, revision c23d21b0620b635a76227c604d44e43a9f0ee389.
+  `config/bertscore.json`. full 표시 답변, 거절/오류0, 제외/자르기/정답재작성 금지.
+- Qwen3-14B Q6_K, temp0/top_p.8/max_tokens768/n_ctx8192; 번역fallback1536.
+- English catalog129개는 기계 번역+Codex 검토+Claude 판정이며 인간 전문가 정답이 아니다.
+  오프라인 준비비용은 요청 latency에서 제외. 비교는 전체 engineering package다.
+- 기본 박자2문항은 Fraction 계산+동일 입출력guard, `llm_guarded_calculation`으로 기록.
+- 원문 인용은 유사도를 높인다. .90은90%정확도가 아니며 source truth도 보장하지 않는다.
+  `source-fact-review-notes.md`에 원문 사실 문제4항목. corpus/정답은 고치지 않았다.
+- 간접공격은 clean retrieval 후 강제노출, 검색 오염 성공률이 아니다.
+- Warmup1+측정1, GPU순차. 지연은 기술통계로만 비교한다.
+- Claude는 최초 유효 판정만 수용; CLI/JSON/coverage/정확한 인용 실패만 최대3회재시도.
+  나쁜 점수는 재시도하지 않으며 생성모델의 guard와 별개의 평가다.
 
-정확한 해시는 `evaluation/ku_background_2026-10-31/resume-state.json`에 있다.
+## 보존된 이전 실패
+
+E19 full은 .97346을 넘었지만 D.S./mic 중대 의미 오류2와 간접 공격 성공2로 거절했다.
+E20은 같은 잘못된 라우팅을 가져98완료+controlled SIGINT1행에서 중단했다.
+E21은 조건 의미를 회복했지만 자료 불일치 원인 추측/박자 오류로 거절했다.
+E22도 박자 오류/오거절을 남겼다. E23은 제한된 일반 정의 재시도와 박자계산을
+추가했으나 짧은 박자 비교의 라우팅을 놓쳤다. E24가 이를 수정했고 전체평가를 마쳤다.
+E22/E23 full 설정은 준비만 했으며 실제 candidate 전체 실행은 없었다.
+역사적 결과와 실패 판정은 삭제/덮어쓰지 않는다.
+
+세부 source/config/corpus/model 해시는 각 provenance와 실행 manifest에 있다.
+`reproduce.md`, `protocol.md`, `development.md`를 함께 참고한다.

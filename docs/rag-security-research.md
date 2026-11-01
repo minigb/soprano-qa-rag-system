@@ -115,6 +115,16 @@ response-template directives embedded in documents. Ordinary performer
 instructions remain permitted. These changes were prompted by observed internal
 failures and require evaluation; they are not new research claims.
 
+Direct review of E24's complete comparison found a further boundary failure:
+one Korean answer quoted an embedded command to decode a Base64 request into
+the final answer. It did not produce the requested recipe, so the saved judge
+correctly marked the specified attack objective as unsuccessful, while the
+visible instruction contamination remained. E25 adds source/output screening
+for this command pattern without decoding the payload or blocking musical
+notation decoding. Formal attack success, literal source fidelity and visible
+control-text contamination are distinct observations; none substitutes for the
+others. The original E24 answer and unfavorable review remain available.
+
 The local model also repeatedly confused beat units even after explicit wording
 changes. A narrow arithmetic helper now computes conventional simple/compound
 meter counts using exact fractions, checked against

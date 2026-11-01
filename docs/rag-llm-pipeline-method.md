@@ -8,7 +8,7 @@ calls assess admission before composition and the draft's
 support before release. Admission assesses task safety, leaving evidence
 coverage to retrieval, composition, and output review. Retrieval confidence
 never selects a different answer renderer. This description reflects the
-2026-11-02 E24 candidate on `codex/ku-background-knowledge`.
+2026-11-02 E25 candidate on `codex/ku-background-knowledge`.
 It has not been promoted to main or the live demo. Its security checks supersede the earlier
 single-call behavior and release of rejected drafts with warnings.
 
@@ -29,6 +29,7 @@ flowchart LR
     V["Task-safety admission<br/>assessment"]
     R["Conservative intent routing<br/>then relevant source selection"]
     F["Qwen3-14B source selection<br/>and general explanation"]
+    M["Conventional basic meter<br/>arithmetic"]
     T["Complete Korean source quotation<br/>or reviewed/guarded English translation"]
     O["Draft support assessment"]
     G["Citation validation<br/>and presentation sanitization"]
@@ -39,13 +40,14 @@ flowchart LR
     C --> S --> P --> D
     B --> D
     D --> E --> V --> R --> F --> T --> O --> G --> H
+    R --> M --> O
     S -. rejected .-> U
     E -. rejected .-> U
     V -. rejected or failed .-> U
     R -. failed .-> U
     F -. empty answer .-> U
     O -. rejected or failed .-> U
-    O -. one fresh draft after valid negative verdict .-> F
+    O -. one retry for composed drafts after valid negative verdict .-> F
     G -. rejected .-> U
 ```
 
@@ -426,7 +428,7 @@ under the visible heading `참고 자료의 원문입니다.`. General prose is 
 generated and labelled separately. This improves literal fidelity but cannot
 establish source truth or relevance, and it raises reference-overlap metrics.
 
-The evaluated E19 configuration also enables
+The evaluated E25 configuration also enables
 `llm.evidence_translation="reviewed_catalog"`: English source items select
 labels before translation. All 129 curated answers have machine-authored,
 separately Claude-reviewed English versions keyed by exact Korean text SHA256.

@@ -363,7 +363,7 @@ and supplies the same checked meter rule bilingually. Generic practice defaults
 to singing. The 50 diagnostic case bodies, 290 full cases, expert references,
 translation catalog and BERTScore configuration remain unchanged. Observed
 failures inform this development; none of these reused evaluations is an
-independent untouched holdout. Full E22 acceptance is still pending.
+independent untouched holdout. E22 was subsequently rejected; outcomes follow.
 
 A reusable judge cache now accepts only complete hash-validated prior reviews
 under the identical model, rubric, schema and judge runner. Reuse requires the
@@ -371,3 +371,42 @@ entire packet (question, answer, sources, references, context and task) to match
 It retains the original assessment contract, including unfavorable scores.
 Changed packets receive fresh independent review. The aggregation records which
 judgments were reused and does not claim they were new CLI calls.
+
+## E22–E24 outcomes and E25 final boundary repair
+
+E22's unchanged 50-case diagnostic still had five false refusals and three
+substantial factual errors, including incorrect beat units. E23 added a bounded
+general-definition retry after a valid negative output verdict and a narrow
+conventional meter calculator. This recovered English legato and rubato answers,
+but the original terse meter comparisons did not reach the calculator. E24
+extended its recognizer to terse comparisons in the active music context while
+excluding fraction/date questions. Its 14-case diagnostic passed direct meter
+checking and independent review. E22/E23 full comparison configs were prepared
+but never run; their directories record that fact rather than fabricated results.
+
+E24 (`ec9534c`) then completed all 290 candidate requests, without execution
+errors. Validation F1 was **0.9734575238920027** (62/62), with zero truncation
+under the unchanged development-selected setting. The independent review had
+917 unique packets: 888 exact E19 packets reused and 29 freshly assessed.
+Candidate normal results were zero material drifts, zero substantial factual
+errors, two mixed/uncertain factual answers, three false refusals out of 216
+answerable requests, and effective rubric 94.7391/100. Known meaning cases had
+39 faithful and two minor drifts out of 41. The complete artifacts and manual
+review are retained, including remaining p/PP attribution/uncertainty omissions,
+source wording ambiguity and long repeated quotations.
+
+The 58 injection objectives and 12 plain out-of-scope requests all failed in
+E24. Nevertheless, direct reading of all ten delivered attack answers found a
+Base64 decoding command copied into `indirect-10-ko`. It did not produce a cookie
+recipe, the frozen success criterion, so formal ASR remained zero. This is an
+additional answer-contamination failure, also acknowledged in the saved judge
+rationale, and prevents adopting E24 as the final version.
+
+E25 (`a93b108`) changes only source/output screening for instructions that turn
+a decoded request into the final/actual answer. No payload is decoded; musical
+notation decoding remains allowed. Security tests49 passed and all953 original
+corpus records remained allowed. A four-case live diagnostic withheld both
+encoded indirect sources and reproduced the corrected D.S./microphone English
+answers exactly. The full290 candidate is being freshly measured under the same
+cases, metric, models and first-valid-judgment policy. E24's measurements remain
+separate; no candidate latency or answer rows are carried into E25.
