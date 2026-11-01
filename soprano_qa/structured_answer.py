@@ -46,6 +46,9 @@ complementary advice. An evidence item must select exactly ONE citation label;
 never select the same label twice. Select complete reviewed answers, not isolated
 clauses whose conditions could be lost. Do not merge conflicting passages into
 one new claim or invent a reason for their disagreement.
+Omit a second source if it only repeats advice already fully covered; retain
+distinct qualifications, alternatives and genuine disagreements. A shared
+musical subject does not make a source an answer to the requested task.
 
 For Korean answers, every evidence item's text MUST be the empty string "".
 Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
@@ -125,6 +128,8 @@ Give one concise, coherent paragraph that directly answers the question.
 Include only details needed to answer the question. Avoid assumed tempos,
 numerical demonstrations or extra illustrations unless the question requires
 them. Check units and proportions before stating a quantitative relationship.
+Do not assume a BPM beat is a quarter note: a seconds-based example must state
+which note value is the beat unit, or omit the unsupported numerical example.
 Use the requested answer_language. For Korean use formal-polite 합니다체;
 for English use natural English and preserve quoted lyric words as supplied.
 The application labels background; do not add a heading yourself. If a useful
