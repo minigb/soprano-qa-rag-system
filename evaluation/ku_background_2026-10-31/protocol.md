@@ -29,7 +29,7 @@ in the separate October 25 report. Include a fresh run of it on this same
 without pooling older measurements. Do not call either current comparison
 baseline unprotected, pool earlier experiments, or reuse historical latencies.
 
-The final-comparison candidate E19 (`93f3552`) additionally uses complete Korean
+The current full-comparison candidate E24 (`ec9534c`) uses complete Korean
 source quotation and 129 reviewed English source translations. A translation is
 selected only by exact original-text hash; new/changed sources use guarded model
 translation with a separate 1536-token limit. The translations are machine
@@ -37,7 +37,9 @@ authored and separately model reviewed, not human-expert English references.
 This offline source preparation is an extra resource excluded from request
 latency. The four-way comparison evaluates the complete engineering package;
 it does not isolate a security prompt's effect under equal source-preparation
-cost. All versions use the original, unchanged Korean corpus and expert targets.
+cost. E24 also calculates conventional beat units for a narrow basic meter
+question, retaining admission/output review and declaring
+`llm_guarded_calculation` in response metadata; these are not LLM-composed paragraphs. All versions use the original, unchanged Korean corpus and expert targets.
 
 ## Evaluation target
 
@@ -107,3 +109,12 @@ call into a passing assessment or exclude a poor answer from the denominator.
 Keep main, the live demo and published static answers unchanged. Commit source,
 reproducible evaluation tools, frozen inputs and actual results on the isolated
 branches. The previous reset-based stop policy is not used for this work.
+
+
+The final comparison may reuse E19's complete independent assessments only when
+the entire packet and model/rubric/schema/runner agree. Original contracts and
+unfavorable judgments remain unchanged. `reuse-aggregation.json` identifies
+reused versus fresh CLI assessments. Baseline rows and metric results are reused
+byte-identically from this same fresh campaign; every final candidate request
+is newly measured. Later independent diagnostic judgments are not candidates
+from which to select a favorable prior verdict.

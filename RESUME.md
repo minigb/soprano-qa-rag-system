@@ -4,6 +4,47 @@
 충분한 통과 기준이며 의미·유용성·정상 질문 응답률·속도를 우선한다.
 사용량/리셋 중지 조건과 Discord/process-stop notifier는 사용하지 않는다.
 
+## 현재 실행 — E24 전체 비교
+
+최종 후보 source **ec9534c**. 14개 진단은 모두 응답했고 Claude 판정에서
+오거절/중대한 의미 변경/실질적 사실 오류0이었다. 기본 박자6개는 직접
+계산 단위와 실제 답변도 대조했다. 이것만으로 목표를 완료하지 않는다.
+
+- Full290 exec **51544**, `e24-full-comparison-controller.log`.
+- 설정 `comparison-e24.config.json`, 결과 `comparison-2026-11-02-e24/`.
+- 스냅샷 `runtime/probe-e24/snapshots/hardened`, 공개 `e24-provenance.json`,
+  현재 프롬프트 `prompts-e24/`.
+- Driver가 baseline3개 완료행/metric 재사용 → candidate290 새 생성 →
+  고정 BERTScore dev/validation → E19와 동일한 packet의 원래 판정 재사용,
+  변경 packet 신규 Claude 판정 → 전체 요약/HTML까지 순차 실행한다.
+- 코드/runner/config/snapshot을 이 실행 중 변경하지 않는다. GPU는1worker만.
+- E23 진단50과 E24 진단14 모두 종료했다. E22/E23 full config는 준비만
+  했고 candidate 전체 실행은 없었다. 아래 기록은 과거 경과다.
+- Full 완료 후 supplement, quotation/translation audit, known41 의미
+  직접 대조(hash같은 건만 E19검토재사용), 전체 severe/attack flags 확인.
+- 실측 결과로 전체 품질이 수용될 때만 기본config의 reviewed_catalog/1536 채택,
+  최종문서/commit/Lab재동기화 및634개 RAG tests+demo44, main/dataset불변확인.
+
+## 최신 체크포인트 — E24 준비
+
+아래 E22 실행 설명은 과거 기록이다. E22 진단은 종료했고 채택하지 않았다.
+E23 (`f6e1869`)은 정의 설명의 기존1회 재시도를 일반 설명으로 복구하여
+legato EN 오거절을 해결했다. 기본박자계산을 추가했지만 원래의 짧은 두 박자
+비교 질문은 recognizer를 통과하지 못했다. E24는 그 일반 비교 표현만 확장했다.
+계산결과는 `llm_guarded_calculation`으로 기록하며 일반 모델생성으로 주장하지 않는다.
+
+- E23 진단50 큐 exec **71175**, `e23-probe-controller.log` (생성 후 판정/요약).
+- E24 snapshot 준비 exec **42159**, `runtime/probe-e24`.
+- E23 GPU 생성이 끝나고 GPU가 비었을 때 E24 진단14
+  (`e24_probe_cases.json`: 기존meter6+practice8)를 새로 생성/판정한다.
+- E24 준비 완료 후 reviewed_catalog/1536 override와 public provenance/prompt export 필요.
+- E22/E23 full config/baseline copy는 준비만 했고 실제 전체 후보 실행은 안 했다.
+  최종 full은 새 E24 config/output으로290개 실행할 것. Baseline/E19 judge cache는 그대로.
+- E23/현재 Lab633개 RAG tests, demo44 통과. E24의 meter/intent15개 통과, 총suite634.
+- Lab은 E23코드와 일반설명 UI badge까지 동기화했다. E24/최종결과 재동기화 필요.
+- Transposition EN admission과 Rosina KO output의 정상거절은 아직 남아 있다.
+  관측된 약점을 숨기거나 오거절0으로 가정하지 않는다.
+
 ## 작업 위치
 
 - RAG: `/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system`

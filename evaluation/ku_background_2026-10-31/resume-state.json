@@ -1,18 +1,26 @@
 {
-  "recorded_at": "2026-11-01T17:51:36.874573+00:00",
+  "recorded_at": "2026-11-01T18:14:32.125829+00:00",
   "reason": "Active resumed-work checkpoint. Evaluation continues; not a shutdown or usage-based stop.",
   "goal_achieved": false,
-  "candidate_source_commit": "e0a2cae133316120b92331cfcb645c4d2c0016df",
+  "candidate_source_commit": "ec9534c3087b86e193b9137c4f311c6a9709e23a",
   "branch": "codex/ku-background-knowledge",
-  "candidate_status": "E22 frozen; targeted50 generation and independent judging in progress. E19 full comparison completed/rejected. E20 incomplete/superseded, E21 diagnostics completed/rejected.",
+  "candidate_status": "E24 focused14 completed:14delivered,0false refusals,0material drifts,0substantial/mixed factual errors by independent judge; direct meter arithmetic verified. Full290 comparison now running.",
   "tests": {
-    "rag_unittest": {
-      "passed": 624,
-      "seconds": 23.341
+    "rag_full": {
+      "passed": 633,
+      "seconds": 23.359
     },
-    "subsequent_evaluation_integrity_tests": {
-      "passed": 14,
-      "note": "Includes3 new cache provenance/integrity tests; total suite now627."
+    "lab_rag_full": {
+      "passed": 633,
+      "seconds": 24.742
+    },
+    "lab_demo": {
+      "passed": 44,
+      "seconds": 5.157
+    },
+    "e24_targeted": {
+      "passed": 15,
+      "new_suite_total": 634
     }
   },
   "e17_probe": {
@@ -55,7 +63,7 @@
     "human_expert_english_annotations": false,
     "original_source_fact_findings": 3
   },
-  "next": "Inspect E22 targeted50 including direct review of conflict/meter/definition/microphone cases; then freeze comparison config and run full290 with exact completed E19 judge reuse only. Inspect all meaning/quality/security outcomes before adoption.",
+  "next": "Wait for full290 generation, fixed development/validation metrics and exact-packet cached/fresh independent review to complete. Then supplement/audits,41known meaning/direct all severe flags, final quality decision, default config adoption only if accepted, commits and final Lab sync/tests.",
   "files_sha256": {
     "config/bertscore.json": "5dbeef02714156a3624b016d52b6930439499bb07a00ec729cba6f1de245c129",
     "config/settings.json": "94303f0c6d53666af4b7e9970b89c205ca3a2621b46394846b0d7905c8e65a51",
@@ -168,5 +176,28 @@
     "attack_successes": 2,
     "judged_attacks": 70,
     "effective_quality_percent": 93.43434343434343
+  },
+  "e23": {
+    "source_commit": "f6e1869042f49209df715125ca47167624eda526",
+    "probe_exec_session": 71175,
+    "probe_cases": "e21_probe_cases.json",
+    "completed_at_checkpoint": 48,
+    "meter_calculation": "Longer transfer diagnostics reach calculator; short original meter questions missed recognizer, fixed in E24.",
+    "known_residuals": "Transposition EN admission still rejects despite explicit instruction; Rosina KO source interpretation output rejected. Do not claim all false refusals solved."
+  },
+  "e24_full": {
+    "exec_session": 51544,
+    "config": "comparison-e24.config.json",
+    "output": "comparison-2026-11-02-e24",
+    "log": "e24-full-comparison-controller.log",
+    "completed_requests_at_checkpoint": 16
+  },
+  "e24_probe": {
+    "requests": 14,
+    "delivered": 14,
+    "false_refusals": 0,
+    "material_drift": 0,
+    "substantial_factual_errors": 0,
+    "effective_rubric_percent": 91.55844155844156
   }
 }

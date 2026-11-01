@@ -8,6 +8,31 @@ until the complete comparison is accepted. The fixed target is BERTScore F1
 at least 0.90 with meaning and overall quality preserved, not maximized F1.
 Validation has been reused for refinement; it is not an untouched test set.
 
+## Current E24 execution
+
+E19's completed full comparison and E20/E21/E22/E23 rejected or superseded
+outputs remain available. The current candidate is E24 `ec9534c`, with
+`e24-provenance.json`, `prompts-e24/` and `comparison-e24.config.json`.
+`e24_probe_cases.json` contains the unchanged six meter and eight practice
+verification questions. Use the same probe/prepare/judge/summary commands
+shown below with E24 paths, followed by:
+
+```bash
+python3 -u evaluation/run_background_comparison.py \
+  --config evaluation/ku_background_2026-10-31/comparison-e24.config.json
+python3 evaluation/supplement_background_comparison.py \
+  --config evaluation/ku_background_2026-10-31/comparison-e24.config.json
+```
+
+The E24 config reuses complete measured baseline artifacts and the first valid
+E19 Claude judgment only for identical full packets under the same rubric.
+Changed packets receive new calls; the result retains original judgment
+contracts and a reuse manifest. Do not restart historical E19 with today's
+driver: its archived driver contract belongs to the older script revision.
+E24's limited meter arithmetic uses the same guards and is marked as calculated
+in API results. It is included in complete-system quality and latency, and must
+not be described as model-composed prose.
+
 ## Working directory and environments
 
 Run the commands from:

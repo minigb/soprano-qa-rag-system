@@ -2,7 +2,7 @@
 
 Research initially reviewed on **2026-10-25**, with refinement references checked
 on **2026-10-31**. The BERTScore, FaithfulRAG and two 2026 preprint pages were
-rechecked on **2026-11-01** while evaluation resumed. This document records the security
+rechecked on **2026-11-02** while evaluation resumed. This document records the security
 design and its limits for the local soprano-performance QA pipeline. The cited
 papers motivate the design; their reported attack-success rates are **not**
 measurements of this implementation.
@@ -107,6 +107,22 @@ the translations are machine authored and model reviewed, not human-expert
 English references. The review found source-level factual issues as well as
 translation issues, reinforcing the distinction between source fidelity and
 truth. Full service results remain necessary before adoption.
+
+The November 2 refinements retain actual passage checks for definition questions
+and named-work comparisons after the broader evaluation found source-discarding
+errors. Source/output screening now recognizes assistant-role replay and
+response-template directives embedded in documents. Ordinary performer
+instructions remain permitted. These changes were prompted by observed internal
+failures and require evaluation; they are not new research claims.
+
+The local model also repeatedly confused beat units even after explicit wording
+changes. A narrow arithmetic helper now computes conventional simple/compound
+meter counts using exact fractions, checked against
+[Open Music Theory's meter chapter](https://viva.pressbooks.pub/openmusictheory/chapter/compound-meters-and-time-signatures/).
+It does not establish score facts or alternate/performance interpretations.
+Admission/output review remains mandatory, and response metadata distinguishes
+calculated paragraphs from model-composed prose. This extra capability is part
+of the complete engineering-package comparison, not an isolated prompt effect.
 
 The user’s acceptance target is BERTScore F1 at least 0.90 **with overall answer
 quality preserved**, not maximum reference similarity. Evaluations must retain
