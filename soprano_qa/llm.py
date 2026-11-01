@@ -5,12 +5,14 @@
 from __future__ import annotations
 
 from functools import lru_cache
+import json
 import os
 import re
 import threading
 from typing import Any, Dict, List
 
 from soprano_qa.question_intent import explicit_general_intent
+from soprano_qa.meter import basic_meter_explanation
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
@@ -152,6 +154,21 @@ def generate(
         # theory. Judge relevance using the actual passages before discarding
         # them, and permit background in either composition path.
         preserve_sources = llm_settings.get("source_preservation") == "verbatim_or_translation"
+        calculated = basic_meter_explanation(security_context) if preserve_sources else None
+        if calculated is not None:
+            # Numeric beat units are derived from ordinary meter rules, rather
+            # than guessed by the model. Both security boundaries still run.
+            context = {**security_context, "Retrieved evidence": []}
+            answer = render_structured_answer(json.dumps({"sentences": [
+                {"kind": "background", "evidence": [], "text": calculated}
+            ]}, ensure_ascii=False), context)
+            screen_generated_answer(answer, context)
+            semantic_guard(model_path, llm_settings,
+                           {**context, "draft": str(answer), "composition": list(answer.parts)},
+                           stage="output", generate_fn=generate)
+            answer.answer_basis = "calculated_music_knowledge"
+            answer.generation_mode = "llm_guarded_calculation"
+            return answer
         general_intent = explicit_general_intent(security_context) if preserve_sources else None
         if general_intent in {"practice", "universal"}:
             # Explicit global practice/universal claims are not established by
@@ -233,6 +250,23 @@ def generate(
         except SecurityViolation as exc:
             if exc.reason != "security_output_rejected" or attempt:
                 raise
+            if general_intent == "definition" and not general_only:
+                # A definition's selected passage can be merely related. A
+                # rejected source-based draft gets the SAME one retry as a
+                # general explanation, still under full output review. Local
+                # questions, unsafe text and failed guards never use this path.
+                security_context = {**security_context, "Retrieved evidence": []}
+                security_context.pop("separate_source_translation", None)
+                separate_translation = False
+                general_only = True
+                messages = [
+                    {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"
+                     + GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
+                    {"role": "user", "content": serialize_untrusted(security_context)},
+                ]
+                completion_options["response_format"] = {
+                    "type": "json_object", "schema": answer_schema(security_context),
+                }
             messages = [
                 {**messages[0], "content": messages[0]["content"] + "\n"
                  "The previous composition did not pass review. Compose a new answer "

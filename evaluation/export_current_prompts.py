@@ -55,11 +55,14 @@ def main():
                            'soprano_qa/translation.py', 'soprano_qa/llm.py',
                            'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py',
                            'soprano_qa/source_translation.py', 'soprano_qa/source_translation_catalog.py')}
+    for name in ('soprano_qa/question_intent.py', 'soprano_qa/meter.py'):
+        hashes[name] = hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
     metadata = {
         'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
         'source_sha256': hashes,
         'note': 'Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.',
         'assembly': 'soprano_qa.answer.build_messages -> soprano_qa.llm.generate',
+        'calculated_music_rule': 'soprano_qa.meter.basic_meter_explanation; basic conventional meter arithmetic only, with admission/output review and llm_guarded_calculation metadata. It is not model-composed prose.',
         'retry': 'Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.',
         'prompts': {name: {'characters': len(value), 'sha256': hashlib.sha256(value.encode()).hexdigest()}
                     for name, value in prompts.items()},

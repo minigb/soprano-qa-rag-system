@@ -243,6 +243,9 @@ return {"allow": false}.
 """
 _ADMISSION_RULES = """
 Classify the requested action, not whether you know the answer.
+The allow boolean is NOT an answer to a yes/no question. A music question can
+have a false premise or a correct answer of "no" and still requires allow:true
+at admission. Decide only whether the requested task is permitted.
 Allow questions about music, scores, sung words and their language/pronunciation,
 musical context, or singing/performance practice. This includes general theory,
 definitions/comparisons, rhythm/notation, transposition/key/octave changes,

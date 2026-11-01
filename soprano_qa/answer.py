@@ -4224,7 +4224,7 @@ def _run_cli(args: argparse.Namespace) -> None:
         answer = finalize_grounded_generated_answer(
             raw_answer, generation_results, messages, args.measure_ranges,
         )
-        generation_mode = "llm"
+        generation_mode = getattr(raw_answer, "generation_mode", "llm")
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "general_music_knowledge")
 

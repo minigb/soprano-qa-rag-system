@@ -30,7 +30,7 @@ _UNIVERSAL = re.compile(r"항상|언제나|\balways\b", re.IGNORECASE)
 _GENERAL = re.compile(
     r"정의|무슨\s*뜻|어떤\s*뜻|차이|비교|일반적|"
     r"\b(?:define|definition|difference|compare|compared|versus)\b|"
-    r"\bin general\b|\bwhat (?:is|are)\b|\bwhat does\b.*\bmean\b",
+    r"\bin general\b|\bwhat (?:is|are)\b|\bdoes\b.*\bmean\b|\bthe same as\b",
     re.IGNORECASE,
 )
 

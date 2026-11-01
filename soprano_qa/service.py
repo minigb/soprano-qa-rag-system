@@ -358,7 +358,7 @@ def _ask(
         answer = finalize_grounded_generated_answer(
             raw_answer, generation_results, messages, measure_ranges, language=language,
         )
-        generation_mode = "llm"
+        generation_mode = getattr(raw_answer, "generation_mode", "llm")
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "score_context")
 
