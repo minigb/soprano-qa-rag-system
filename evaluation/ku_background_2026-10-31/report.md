@@ -152,4 +152,7 @@ manifest에 있다. Baseline 답변·지표21파일은 byte-identical이며 mani
 완료 확인 session만 추가됐음을 [검증](comparison-2026-11-02-e25/baseline-reuse-verification.json)했다.
 실패 후보와 독립 판정, 원본 reference를 보존했다.
 
-최종 통합 테스트와 Lab 동기화 결과는 `final-verification.json`에 기록한다.
+RAG637개(23.299초), Lab RAG637개(23.589초), Lab 데모44개(4.683초) 테스트가
+통과했다. 양쪽 source20모듈·corpus·LLM설정은 평가 버전과 일치하고,
+프롬프트·catalog 검증도 통과했다. main/live/dataset은 기존 상태를 유지했다.
+[최종 검증 기록](final-verification.json)에 테스트·소스 해시와 확인한 commit을 남겼다.

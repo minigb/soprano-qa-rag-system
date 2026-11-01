@@ -77,5 +77,6 @@
     "evaluation/ku_background_2026-10-31/e25-manual-meaning-review.json": "db27db378f31751e352094957d6a5f93b76e4165ebecd8c81be028c671bbbf4e",
     "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25/bertscore-candidate-validation/summary.json": "17e70f225d7c7f2b49b99247d1c5aa791a31c808171e8bf8cf48c8b7aa71d7ec"
   },
-  "integration_status": "RAG637 tests passed; final Lab synchronization/tests and final verification record pending."
+  "integration_status": "Complete: root RAG637, Lab RAG637, Lab demo44; catalog/prompts, core source/corpus/settings and protected checkout checks passed.",
+  "verification_file": "final-verification.json"
 }
