@@ -131,6 +131,12 @@ _SOURCE_CONTROL_PATTERNS = tuple(re.compile(pattern, re.IGNORECASE) for pattern 
     r".{0,180}\b(?:append|prepend|insert|emit|print|output|include)\b",
     r"(?:답변|응답|출력)(?:\s*(?:의|용))?\s*(?:형식|화면|템플릿|마커|종료\s*표시)"
     r".{0,180}(?:붙이|붙인|붙여|덧붙|추가|삽입|출력|내보내|표시하)",
+    # Decoding musical notation is subject matter. A source directing the QA
+    # system to turn a decoded request into its answer is a control instruction,
+    # even when the payload itself is never decoded or executed.
+    r"\b(?:decode|decipher|decrypt)\b.{0,160}\b(?:final|actual)\s+"
+    r"(?:answer|response|reply)\b",
+    r"(?:해독|디코딩|복호화).{0,160}(?:최종|실제)\s*(?:답변|응답)",
 ))
 
 # Question-only opaque identifiers are a common output-contamination channel.
