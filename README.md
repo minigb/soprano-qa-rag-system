@@ -152,12 +152,14 @@ result = ask(
 
 With `language="en"` the question is English and a generated answer is
 English. The extractive `generate=False` path still returns the Korean
-evidence text (`answer_language: "ko"`). English adds one translation call;
-Korean does not require translation. A completed generated answer normally
-uses three local-model calls: admission assessment, composition, and output
-assessment. English generation uses four including translation. Requests
-that are rejected early use fewer calls. An explicit empty composition skips
-output assessment and becomes an unavailable response.
+evidence text (`answer_language: "ko"`). English adds a query-translation call.
+A completed answer uses admission assessment, composition, and output review;
+a multi-source bundle may add a relevance-selection call. The optional
+`llm.evidence_translation="segmented"` mode adds a separate source-translation
+call for English source claims. A valid negative output review permits one
+composition retry, which must pass all checks again. Early rejections use fewer
+calls; an explicit empty composition skips output review. Report measured
+end-to-end latency rather than assuming a fixed number of model calls.
 
 `ask()` returns a `dict`. The fields to branch on:
 
@@ -280,7 +282,8 @@ question and actual source text. It may select none, enabling the general
 prompt. Short questions retain the selected work's context. With source
 preservation enabled, only explicit general definitions, comparisons or
 universal-rule questions without a local/causal referent or selected range
-take the general path directly. This conservative rule runs after admission;
+take the general path directly, unless the retriever found a complete primary
+source-question concept match. This conservative rule runs after admission;
 it never grants permission for an unrelated task. The model composes
 typed objects with text and model-selected evidence labels under a JSON schema.
 The application renders those labels into the draft and the output guard
@@ -315,7 +318,7 @@ in `soprano_qa/music_terms.py`. It supplies general definitions, never expert
 attribution or facts about the selected score. It is documented development
 guidance, separate from the frozen expert evaluation references.
 
-The selected configuration sets `llm.source_preservation` to
+The branch configuration sets `llm.source_preservation` to
 `verbatim_or_translation`. For Korean source claims, the model selects one
 source label per item and leaves its text empty. Application code quotes the
 complete actual retrieved answer, verifies its identity, and labels it
@@ -327,14 +330,28 @@ allowed when they help answer the question. This mode does not skip source,
 citation, scope or security checks. It may still choose an irrelevant or
 incomplete set of sources, and quoted source text itself may be inaccurate.
 
+The experimental `llm.evidence_translation="segmented"` option selects English
+source labels first, then translates original source sentences in a separate
+call without the user question. `soprano_qa/source_translation.py` protects
+quoted Korean strings, requires every sentence slot and literal token, and
+restores the original quoted spelling. The translation must still pass output
+review against the original sources. Slot coverage and literal identity do not
+prove that every relationship or musical term was translated correctly. The
+translation budget is separately configurable (default 1536 tokens), and its
+extra inference time belongs in end-to-end latency. This option is not enabled
+in the branch default until its quality comparison is accepted.
+
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
-`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The exact selected
-Korean, English and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e11/`; the conservative general
+`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current experimental
+Korean, English, translation and general policies are exported under
+`evaluation/ku_background_2026-10-31/prompts-e15/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity
 from literal source quotations is not proof of unrestricted generation quality.
+BERTScore 0.90 is a sufficient acceptance floor, not a score-maximization
+objective. Meaning, useful coverage, naturalness, refusals and latency determine
+whether a candidate is acceptable; the full comparison is still in progress.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the

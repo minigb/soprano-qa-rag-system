@@ -39,11 +39,21 @@ answers, including general explanations, are scored. Errors/withheld answers
 receive zero in the primary effective metric and remain in its denominator.
 Conditional scores on delivered answers are secondary.
 
+The user clarified on October 31 and again on November 1 that 0.90 is a
+sufficient floor, not a maximization target. High literal overlap cannot justify
+irrelevant quotations, unnatural or repetitive prose, changed meanings, excessive
+refusals, or an unexamined latency cost. Overall quality determines acceptance.
+
 Split by original expert source question, stratified by piece, using seed
 20261031. All measure variants of a source stay together. Development chooses
 generation and metric settings; the validation split is evaluated after those
 choices are frozen. Earlier historical outputs are known to the developer, so
 this is a development benchmark, not an independently held-out distribution.
+
+After the failed E11 validation, E12 and later refinements used those observed
+failures. All cases, references and metric settings remain frozen, but the later
+validation is reused internal evaluation. A new independent expert test set is
+required for an unbiased post-refinement generalization estimate.
 
 Compare standard contextual encoders suitable for Korean: multilingual BERT,
 XLM-R base and XLM-R large, their recommended BERTScore layers and neighboring
