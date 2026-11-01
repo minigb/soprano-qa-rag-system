@@ -1,14 +1,12 @@
-# Reproduce or resume the unfinished evaluation
+# Reproduce or resume the quality comparison
 
-This is a server-shutdown checkpoint, not a completed experiment. Read the root
-`RESUME.md` first. E14 production source is `759511c`; it is **experimental and
-not selected**. Its nine-case English probe is complete, with residual meaning,
-concision and refusal issues recorded in `e14-focused-review.json`. No complete
-four-system comparison has been run. E11 validation was below the target.
-
-BERTScore 0.90 is a sufficient floor, not a maximization objective. Acceptance
-also requires useful, faithful answers and an acceptable refusal/latency tradeoff.
-The later validation set has been reused for refinement, not held untouched.
+The November 1 resume supersedes the October 31 shutdown checkpoint. Read the
+root `RESUME.md` for live progress. E15 was rejected for English meaning errors
+despite passing development BERTScore. E17 source is `ba65680`, using reviewed
+source translations plus a teaching-context relevance repair. It is experimental
+until the complete comparison is accepted. The fixed target is BERTScore F1
+at least 0.90 with meaning and overall quality preserved, not maximized F1.
+Validation has been reused for refinement; it is not an untouched test set.
 
 ## Working directory and environments
 
@@ -23,56 +21,82 @@ Generation and tests use `/home/minhee/miniconda3/envs/soprano-qa/bin/python`
 `/home/minhee/.cache/soprano-rag-eval-venv/bin/python`
 (bert-score 0.3.13, transformers 5.10.2, torch 2.7.1+cu128).
 Models are Qwen3-14B Q6_K and Qwen3-Embedding-0.6B Q8_0; checkpoint/corpus/source
-hashes are in `provenance/e14/provenance.json`. Runtime snapshots and private
+hashes are in `e17-provenance.json`. Runtime snapshots and private
 traces are local and ignored by Git. Public outputs, manifests, frozen cases
 and provenance are committed.
 
-Before inference, inspect GPU processes and compare the hashes in
-`resume-state.json`. Do not stop or restart the existing live service. Run one
+Before inference, inspect GPU processes and compare the source/settings/case hashes in
+the current run manifests and provenance (the old `resume-state.json` is historical). Do not stop or restart the existing live service. Run one
 evaluation GPU worker at a time. No usage/reset stop or notifier is needed.
 
-## Finish independent review of the saved focused probe
+## Verify the reviewed source catalog
 
-These commands use saved answers and do not load a generation model:
+The catalog covers all 129 curated expert/performer sources, not selected test
+questions. It is machine authored and model reviewed, not a new expert-reference
+set. The original review and the five actual translation revisions are retained.
+Rebuild verification uses the first review for unchanged translations and the
+review of each edited version; it never selects the most favorable score.
 
 ```bash
-python3 evaluation/prepare_judge_packets.py \
-  --cases evaluation/ku_background_2026-10-31/e14_focused_cases.json \
-  --results evaluation/ku_background_2026-10-31/probe-e14-focused.jsonl \
-  --output evaluation/ku_background_2026-10-31/judge-e14-focused
-/home/minhee/miniconda3/envs/soprano-qa/bin/python \
-  evaluation/run_joint_claude_judge.py \
-  --directory evaluation/ku_background_2026-10-31/judge-e14-focused \
-  --workers 3 --model claude-opus-5-5
-python3 evaluation/summarize_background_eval.py \
-  --cases evaluation/ku_background_2026-10-31/e14_focused_cases.json \
-  --results evaluation/ku_background_2026-10-31/probe-e14-focused.jsonl \
-  --judge-directory evaluation/ku_background_2026-10-31/judge-e14-focused \
-  --output evaluation/ku_background_2026-10-31/review-e14-focused
+python3 evaluation/build_source_translation_catalog.py \
+  --base-review evaluation/ku_background_2026-10-31/translation-catalog-v1 \
+  --revision-review evaluation/ku_background_2026-10-31/translation-catalog-v2 \
+  --output soprano_qa/source_translation_catalog.py --check
 ```
 
-The CLI runner records the actual returned model, version, rubric/schema/input
-hashes and errors; tools, MCP and session persistence are disabled. There is no
-selection among repeated judgments. The latest rubric also explicitly penalizes
-irrelevant padding and asks for awkward wording to be flagged. Historical
-assessments retain their original rubric hashes.
+Exact original source SHA256 selects an English translation at request time;
+changed/new source text uses guarded segmented translation. Offline preparation
+and review are added resources excluded from request latency. Source fidelity,
+source factuality and question relevance must be evaluated separately.
+
+## E17 diagnostic probe
+
+Use the frozen E17 snapshot and the same 70 diagnostic cases as E15. Six are
+explicitly reused earlier validation failures; this is a diagnostic cohort.
+Never start another GPU job while an existing worker is running.
+
+```bash
+/home/minhee/miniconda3/envs/soprano-qa/bin/python -u \
+  evaluation/run_refinement_probe.py \
+  --system-root evaluation/ku_background_2026-10-31/runtime/probe-e17/snapshots/hardened \
+  --settings evaluation/ku_background_2026-10-31/runtime/probe-e17/snapshots/hardened/settings.json \
+  --cases evaluation/ku_background_2026-10-31/e15_probe_cases.json \
+  --output evaluation/ku_background_2026-10-31/probe-e17.jsonl \
+  --variant hardened --warmup-case expert-kim-die-forelle-03__no-range
+python3 evaluation/prepare_judge_packets.py \
+  --cases evaluation/ku_background_2026-10-31/e15_probe_cases.json \
+  --results evaluation/ku_background_2026-10-31/probe-e17.jsonl \
+  --output evaluation/ku_background_2026-10-31/judge-e17
+python3 evaluation/run_joint_claude_judge.py \
+  --directory evaluation/ku_background_2026-10-31/judge-e17 \
+  --workers 3 --model claude-opus-5-5
+python3 evaluation/summarize_background_eval.py \
+  --cases evaluation/ku_background_2026-10-31/e15_probe_cases.json \
+  --results evaluation/ku_background_2026-10-31/probe-e17.jsonl \
+  --judge-directory evaluation/ku_background_2026-10-31/judge-e17 \
+  --output evaluation/ku_background_2026-10-31/review-e17
+```
+
+The judge records the actual returned model, CLI version and input/rubric hashes;
+tools, MCP and session persistence are disabled. Invalid CLI/JSON/coverage/exact
+quotation results may be retried at most three times with errors retained. The
+first valid judgment is accepted even if unfavorable. No score-based retries.
+Prior completed reviews retain their original contracts and are not replaced.
 
 ## Full comparison after candidate review
 
-`comparison-e14.config.json` is prepared but **not started**. If E14 is retained
-for evaluation without source changes:
+The fresh campaign output is `comparison-2026-11-01/`. Pre-security `f307470`
+and main `29fe3e2` precede the candidate diagnostic probe; strict `302f8d1` follows.
+A final candidate configuration will reuse those completed frozen baseline rows
+and run 290 candidate requests, then jointly blind/deduplicate all four systems
+for Claude assessment. The historical `comparison-e14.config.json` was never
+started and must not be used as the final candidate configuration.
 
-```bash
-python3 -u evaluation/run_background_comparison.py \
-  --config evaluation/ku_background_2026-10-31/comparison-e14.config.json
-```
-
-This sequentially runs 290 requests for E14, pre-security `f307470`, main security
-`29fe3e2` and strict `302f8d1`; each has one untimed warmup and one measured run.
-It scores development and validation after each inference process exits, then
-jointly blinds/deduplicates packets, runs three independent Claude CLI workers,
-and writes the full JSON summary and side-by-side HTML. The evaluation generation
-model is never the independent judge.
+Use `python3 -u evaluation/run_background_comparison.py --config FINAL_CONFIG`
+only after the selected candidate and its config are recorded. Each system has
+one untimed warmup and one measured run. The driver scores development and
+validation after generation exits, then writes a complete JSON summary and
+side-by-side HTML. Generation uses Qwen, and assessment uses Claude.
 
 Every source/settings/case/script contract is hash-bound. Do not change runner
 scripts or snapshots while this command runs. If code changes, create a new
@@ -92,8 +116,8 @@ After committing a new candidate, use a **fresh** output directory:
   --output evaluation/ku_background_2026-10-31/runtime/NEW_CANDIDATE
 ```
 
-Use its `snapshots/hardened` as the candidate. E14 needs these settings overrides
-before any request is run: `llm.evidence_translation="segmented"` and
+Use its `snapshots/hardened` as the candidate. E17 needs these settings overrides
+before any request is run: `llm.evidence_translation="reviewed_catalog"` and
 `llm.evidence_translation_max_tokens=1536`. The default repository configuration
 has not enabled them. Record overrides and settings hashes in provenance, copy
 the comparison config, and set a new output path. `source_preservation` already
@@ -115,9 +139,9 @@ the comparison. Do not select a new metric using observed validation scores.
 /home/minhee/.cache/soprano-rag-eval-venv/bin/python \
   evaluation/score_expert_bertscore.py \
   --cases evaluation/ku_background_2026-10-31/expert_cases.json \
-  --results evaluation/ku_background_2026-10-31/comparison-e14/candidate.jsonl \
+  --results evaluation/ku_background_2026-10-31/comparison-2026-11-01/candidate.jsonl \
   --split validation --settings config/bertscore.json \
-  --output evaluation/ku_background_2026-10-31/validation-recheck-e14
+  --output evaluation/ku_background_2026-10-31/validation-recheck-final
 ```
 
 The target set has 105 Korean requests, split into 43 development and 62
@@ -137,7 +161,7 @@ meaning and general-knowledge usefulness before accepting a high score.
 ```bash
 /home/minhee/miniconda3/envs/soprano-qa/bin/python -m unittest discover -q
 python3 evaluation/export_current_prompts.py \
-  --output evaluation/ku_background_2026-10-31/prompts-e14 --check
+  --output evaluation/ku_background_2026-10-31/prompts-e17 --check
 ```
 
 Run equivalent tests from the lab worktree's `rag/`, and run
@@ -145,5 +169,5 @@ Run equivalent tests from the lab worktree's `rag/`, and run
 Synchronize only the isolated branches, not main/live. The final report must
 include reused-validation and six-KU-overlap limits, all-Korean BERTScore targets,
 source fidelity versus source truth, fallible judge/manual review, forced indirect
-attack exposure, and single-run shared-GPU latency limitations. Mark the goal
+attack exposure, and single-run latency limitations and additional offline source preparation. Mark the goal
 complete only after the target and overall quality comparison are actually done.

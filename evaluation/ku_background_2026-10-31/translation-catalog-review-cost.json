@@ -1,0 +1,19 @@
+{
+  "translation-catalog-v1": {
+    "assessments": 129,
+    "batch_equivalents": 24.0,
+    "reported_successful_batch_cost_usd": 2.123908,
+    "aggregate_worker_seconds": 438.40392773799493,
+    "failed_attempts": 0.0,
+    "assessments_sha256": "0bdd5f0536013d4aeb189e616891f20b960f228199c4f86ba5c308e487ab271e"
+  },
+  "translation-catalog-v2": {
+    "assessments": 5,
+    "batch_equivalents": 1.0,
+    "reported_successful_batch_cost_usd": 0.1187522,
+    "aggregate_worker_seconds": 24.360319318000982,
+    "failed_attempts": 0.0,
+    "assessments_sha256": "08c41c54c1f6adf17e15011dac74d06b1cd81484eaae87053b50a22eefccffa2"
+  },
+  "note": "Offline review only. CLI-reported cost is not an invoice or actual subscription charge. Authoring/coding effort is additional and unmetered here. Parallel workers make summed worker-seconds different from elapsed wall time. Not included in per-request latency."
+}
