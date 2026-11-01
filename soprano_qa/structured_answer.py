@@ -83,6 +83,8 @@ text to the EMPTY STRING. Never select a label twice. Do not translate or
 paraphrase a source here: the application translates selected sources separately.
 Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
 Preserve useful complementary sources without selecting unrelated passages.
+Omit a second source if it only repeats the same advice already fully covered;
+keep distinct qualifications, alternatives and genuine source disagreements.
 Background items may provide accurate general music knowledge or explicitly
 optional practice suggestions in English, only when they answer a useful aspect
 left open by the sources. Their evidence must be [], and text must be nonempty.

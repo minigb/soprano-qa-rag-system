@@ -14,6 +14,7 @@ from pathlib import Path
 import subprocess
 import tempfile
 import time
+import uuid
 
 
 SYSTEM = """You are an independent bilingual music-answer evaluator, not the answering assistant.
@@ -135,6 +136,56 @@ def validate(assessments, packets):
             raise ValueError('Judge source quotation is not exact')
 
 
+def evaluate_batch(batch, *, model, cwd, output, max_attempts=3):
+    """Accept the first structurally valid assessment, never the highest score.
+
+    Retry only CLI/format/coverage/quotation failures. Every failed attempt is
+    retained; a low score or unfavorable verdict is never a retry condition.
+    """
+    spec = schema([p['id'] for p in batch])
+    command = ['claude', '--print', '--model', model, '--safe-mode',
+               '--tools', '', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
+               '--no-session-persistence', '--output-format', 'json', '--effort', 'high',
+               '--system-prompt', SYSTEM, '--json-schema', json.dumps(spec)]
+    failures = []
+    for attempt in range(1, max_attempts + 1):
+        supplied = {'packets': batch}
+        if failures:
+            supplied['format_reminder'] = (
+                'A previous response failed output validation. Return all requested IDs '
+                'and fields. Any excerpt must be an exact contiguous substring of the '
+                'supplied answer/source: no ellipses, paraphrasing or normalized spelling. '
+                'Use empty excerpts unless needed to demonstrate a material drift. '
+                'Evaluate independently; do not infer an expected score or verdict.')
+        stdout = stderr = ''
+        try:
+            result = subprocess.run(command, input=json.dumps(supplied, ensure_ascii=False),
+                                    text=True, capture_output=True, cwd=cwd, timeout=300)
+            stdout, stderr = result.stdout, result.stderr
+            response = json.loads(stdout)
+            if result.returncode or response.get('is_error'):
+                raise ValueError('Claude CLI evaluation failed')
+            if list(response.get('modelUsage', {})) != [model]:
+                raise ValueError('Unexpected evaluator model')
+            structured = response.get('structured_output')
+            if structured is None:
+                structured = json.loads(response['result'])
+            assessments = structured['assessments']
+            validate(assessments, batch)
+            return assessments, response, {'attempts': attempt, 'failures': failures}
+        except (ValueError, TypeError, KeyError, subprocess.TimeoutExpired) as error:
+            diagnostic = output.with_name(output.name + '.' + uuid.uuid4().hex + '.private-failure.json')
+            diagnostic.write_text(json.dumps({'attempt': attempt, 'error': str(error),
+                'packet_ids': [p['id'] for p in batch], 'stdout': stdout, 'stderr': stderr}, ensure_ascii=False))
+            failures.append({'attempt': attempt, 'error': str(error),
+                             'diagnostic_file': diagnostic.name})
+            with output.with_name(output.name + '.attempt-failures.jsonl').open('a') as stream:
+                stream.write(json.dumps({'packet_ids': [p['id'] for p in batch],
+                                         **failures[-1]}, ensure_ascii=False) + '\n')
+            if attempt == max_attempts:
+                raise ValueError('No valid Claude assessment after bounded retries') from error
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--packets', type=Path, required=True)
@@ -142,6 +193,7 @@ def main():
     parser.add_argument('--model', default='claude-opus-5-5')
     parser.add_argument('--batch-size', type=int, default=6)
     parser.add_argument('--limit', type=int)
+    parser.add_argument('--max-attempts', type=int, default=3, choices=(1, 2, 3))
     args = parser.parse_args()
     packets = json.loads(args.packets.read_text())
     if args.limit:
@@ -150,6 +202,7 @@ def main():
         raise ValueError('Duplicate packet or invalid batch size')
     cli_version = subprocess.check_output(['claude', '--version'], text=True).strip()
     contract = {'model': args.model, 'cli_version': cli_version,
+                'max_attempts': args.max_attempts, 'acceptance': 'first valid batch; never retry based on a score',
                 'rubric_sha256': hashlib.sha256(SYSTEM.encode()).hexdigest(),
                 'runner_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
                 'schema_sha256': sha(schema([])), 'packet_file_sha256': hashlib.sha256(args.packets.read_bytes()).hexdigest()}
@@ -170,41 +223,22 @@ def main():
     with tempfile.TemporaryDirectory(prefix='soprano-judge-') as cwd:
         for offset in range(0, len(pending), args.batch_size):
             batch = pending[offset:offset + args.batch_size]
-            spec = schema([p['id'] for p in batch]); started = time.perf_counter()
-            command = ['claude', '--print', '--model', args.model, '--safe-mode',
-                       '--tools', '', '--strict-mcp-config', '--mcp-config', '{"mcpServers":{}}',
-                       '--no-session-persistence', '--output-format', 'json', '--effort', 'high',
-                       '--system-prompt', SYSTEM, '--json-schema', json.dumps(spec)]
-            result = subprocess.run(command, input=json.dumps({'packets': batch}, ensure_ascii=False),
-                                    text=True, capture_output=True, cwd=cwd, timeout=300)
-            try:
-                response = json.loads(result.stdout)
-                if result.returncode or response.get('is_error'):
-                    raise ValueError('Claude CLI evaluation failed')
-                actual_models = list(response.get('modelUsage', {}))
-                if actual_models != [args.model]:
-                    raise ValueError('Unexpected evaluator model: ' + str(actual_models))
-                output = response.get('structured_output')
-                if output is None:
-                    output = json.loads(response['result'])
-                assessments = output['assessments']; validate(assessments, batch)
-            except Exception:
-                # Preserve diagnostic output without accepting a partial/malformed score.
-                args.output.with_name(args.output.name + '.private-failure.json').write_text(
-                    json.dumps({'stdout': result.stdout, 'stderr': result.stderr}, ensure_ascii=False))
-                raise
+            started = time.perf_counter()
+            assessments, response, attempts = evaluate_batch(
+                batch, model=args.model, cwd=cwd, output=args.output, max_attempts=args.max_attempts)
             by_id = {a['id']: a for a in assessments}
             with args.output.open('a') as stream:
                 for packet in batch:
                     row = {'id': packet['id'], 'status': 'ok', 'contract_id': contract_id,
                            'packet_hash': sha(packet), 'assessment': by_id[packet['id']],
-                           'model': actual_models[0], 'batch_seconds': time.perf_counter() - started,
+                           'model': args.model, 'batch_seconds': time.perf_counter() - started,
+                           'batch_attempts': attempts,
                            'batch_size': len(batch), 'batch_usage': response.get('usage'),
                            'batch_cost_usd': response.get('total_cost_usd'),
                            'completed_at': datetime.now(timezone.utc).isoformat()}
                     stream.write(json.dumps(row, ensure_ascii=False) + '\n'); stream.flush()
             print(json.dumps({'completed': len(done) + min(offset + len(batch), len(pending)),
-                              'total': len(packets), 'model': actual_models[0]}), flush=True)
+                              'total': len(packets), 'model': args.model}), flush=True)
 
 
 if __name__ == '__main__':

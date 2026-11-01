@@ -1,8 +1,13 @@
 """Evaluation cannot silently drop failures or accept invented review evidence."""
 import unittest
 from copy import deepcopy
+import json
+from pathlib import Path
+import tempfile
+from types import SimpleNamespace
+from unittest.mock import patch
 
-from evaluation.run_claude_judge import validate, sha
+from evaluation.run_claude_judge import evaluate_batch, validate, sha
 from evaluation.run_joint_claude_judge import validate_coverage
 from evaluation.summarize_background_eval import summarize
 
@@ -80,6 +85,36 @@ class EvaluationIntegrityTests(unittest.TestCase):
                      [{**row, 'packet_hash': 'stale'}], [{**row, 'status': 'failed'}]):
             with self.subTest(rows=rows), self.assertRaises(ValueError):
                 validate_coverage([packet], rows, 'claude-opus-5-5')
+
+    def test_judge_retries_invalid_quotes_but_accepts_first_valid_low_score(self):
+        packet = {'id': 'opaque', 'answer': 'An answer.', 'evidence': []}
+        bad = {**self.assessment(), 'source_excerpt': 'invented source'}
+        low = {**self.assessment(), 'factual_correctness': 0, 'rationale': 'Seriously wrong.'}
+        def result(assessment):
+            return SimpleNamespace(returncode=0, stderr='', stdout=json.dumps({
+                'modelUsage': {'claude-opus-5-5': {}}, 'structured_output': {'assessments': [assessment]}}))
+        with tempfile.TemporaryDirectory() as directory, patch(
+                'evaluation.run_claude_judge.subprocess.run', side_effect=[result(bad), result(low)]) as run:
+            output = Path(directory)/'assessments.jsonl'
+            assessments, _, attempts = evaluate_batch([packet], model='claude-opus-5-5',
+                                                       cwd=directory, output=output)
+            self.assertEqual(run.call_count, 2)
+            self.assertEqual(assessments[0]['factual_correctness'], 0)
+            self.assertEqual(attempts['attempts'], 2)
+            self.assertEqual(len(list(Path(directory).glob('*.private-failure.json'))), 1)
+            self.assertIn('format_reminder', json.loads(run.call_args.kwargs['input']))
+
+    def test_judge_exhausted_invalid_responses_never_become_assessments(self):
+        with tempfile.TemporaryDirectory() as directory, patch(
+                'evaluation.run_claude_judge.subprocess.run',
+                return_value=SimpleNamespace(returncode=0, stderr='', stdout='invalid')) as run:
+            output = Path(directory)/'assessments.jsonl'
+            with self.assertRaises(ValueError):
+                evaluate_batch([{'id': 'opaque'}], model='claude-opus-5-5', cwd=directory,
+                               output=output, max_attempts=2)
+            self.assertEqual(run.call_count, 2)
+            self.assertFalse(output.exists())
+            self.assertEqual(len(list(Path(directory).glob('*.private-failure.json'))), 2)
 
 
 if __name__ == '__main__':

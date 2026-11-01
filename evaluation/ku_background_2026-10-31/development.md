@@ -187,3 +187,35 @@ referent drift remained, and one normal question was still withheld. Redundant
 source selection also produced repeated genre advice. E14 is **experimental,
 not selected**. The full matrix and independent Claude assessment remain
 pending. See `e14-focused-review.json` and the root `RESUME.md`.
+
+## November 1 resume and E15 quality repair
+
+The shutdown checkpoint hashes all matched, and main/dataset revisions and
+working-tree status were unchanged. The GPU had no live model after restart;
+no service was restarted. E14’s saved nine English answers were assessed by
+Claude Opus 5.5: five faithful, three minor drifts, one refusal, no material
+drift under that judge. One invalid batch used a nonliteral source excerpt and
+was rejected; the first valid retry was retained. Manual review additionally
+identifies the measure/phrase drift missed by Claude. The judge’s 81.82 percent
+effective rubric score is not factual accuracy.
+
+E15 uses translation-only lexical/syntax guidance instead of appending a
+general-answer glossary to the translator; it distinguishes measure/phrase,
+classical vocal production, pronunciation liaison, breathing, and the lyric
+phrase/syllable relationship. Source selection is asked to omit purely redundant
+passages while preserving complementary and conflicting advice. Output review
+now explicitly permits a reviewed source’s own conditional/general advice
+without treating that advice as proof of an unprovided local score fact.
+No guard or citation check is bypassed. The 598-test suite passes.
+
+The independent judge runner now permits at most three attempts only for CLI,
+format, coverage or exact-quotation failures, retaining diagnostic records. It
+accepts the first valid batch, even a low-scoring one; unfavorable judgments
+never trigger retries. Prior judge artifacts retain their original contracts.
+
+The fresh comparison campaign in `comparison-2026-11-01/` starts with the
+immutable pre-security baseline while candidate quality work proceeds. It will
+use the same frozen 290 cases and unchanged B-selected BERTScore configuration.
+Measured baseline rows will be retained exactly; old historical timings are
+not pooled into this campaign. Candidate selection remains subject to overall
+quality, not maximizing BERTScore beyond 0.90.
