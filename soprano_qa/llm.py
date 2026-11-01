@@ -10,7 +10,7 @@ import re
 import threading
 from typing import Any, Dict, List
 
-from soprano_qa.question_intent import is_explicit_general_question
+from soprano_qa.question_intent import explicit_general_intent
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
@@ -152,14 +152,16 @@ def generate(
         # theory. Judge relevance using the actual passages before discarding
         # them, and permit background in either composition path.
         preserve_sources = llm_settings.get("source_preservation") == "verbatim_or_translation"
-        if preserve_sources and is_explicit_general_question(security_context):
-            # Only explicit definitions/comparisons/universal-rule questions
-            # without a local referent take this path. Admission has already
-            # run, and generation and output review remain unchanged.
+        general_intent = explicit_general_intent(security_context) if preserve_sources else None
+        if general_intent in {"practice", "universal"}:
+            # Explicit global practice/universal claims are not established by
+            # local performance advice. Named works and local referents have
+            # already kept their evidence path. All guards remain mandatory.
             selected_context = {**security_context, "Retrieved evidence": []}
         else:
             selected_context = select_question_evidence(
                 model_path, llm_settings, security_context, generate_fn=generate,
+                assess_single=general_intent == "definition",
             )
         if selected_context is not security_context:
             security_context = selected_context

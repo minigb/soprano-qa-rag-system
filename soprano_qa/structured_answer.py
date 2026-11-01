@@ -46,6 +46,9 @@ complementary advice. An evidence item must select exactly ONE citation label;
 never select the same label twice. Select complete reviewed answers, not isolated
 clauses whose conditions could be lost. Do not merge conflicting passages into
 one new claim or invent a reason for their disagreement.
+If selected sources disagree on a concrete fact, add a brief background item
+explicitly identifying their differing claims and the unknown cause; do not
+leave contradictory quotations looking like one consistent account.
 Omit a second source if it only repeats advice already fully covered; retain
 distinct qualifications, alternatives and genuine disagreements. A shared
 musical subject does not make a source an answer to the requested task.
@@ -88,6 +91,8 @@ Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
 Preserve useful complementary sources without selecting unrelated passages.
 Omit a second source if it only repeats the same advice already fully covered;
 keep distinct qualifications, alternatives and genuine source disagreements.
+When selected sources disagree on a concrete fact, add a brief background item
+identifying their differing claims and stating that the cause is unknown.
 Background items may provide accurate general music knowledge or explicitly
 optional practice suggestions in English, only when they answer a useful aspect
 left open by the sources. Their evidence must be [], and text must be nonempty.

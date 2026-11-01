@@ -387,14 +387,18 @@ general music knowledge. Your only task is passage relevance, not answering.
 
 def select_question_evidence(
     model_path: str, llm_settings: dict[str, Any], payload: dict[str, Any],
-    *, generate_fn: Callable[..., str],
+    *, generate_fn: Callable[..., str], assess_single: bool = False,
 ) -> dict[str, Any]:
-    """Narrow a multi-source bundle without changing facts or label authority."""
+    """Select relevant sources without changing facts or label authority.
+
+    General definitions need a relevance decision even with one source: it
+    may contain the requested definition or merely mention the same term.
+    """
     records = payload.get("Retrieved evidence", [])
     if not isinstance(records, list) or any(not isinstance(record, dict) for record in records):
         raise SecurityViolation()
     primary = [r for r in records if r.get("citation_label")]
-    if len(primary) < 2:
+    if not primary or (len(primary) == 1 and not assess_single):
         return payload
     selected_input = {key: payload[key] for key in
                       ("question", "piece", "measure_range", "answer_language")

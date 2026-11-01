@@ -1,0 +1,16 @@
+{
+  "candidate": "E20",
+  "status": "superseded_incomplete",
+  "recorded_at": "2026-11-01T17:38:47.948411+00:00",
+  "reason": "E19 independent full review identified material D.S./Da Capo and named-work microphone-condition errors; E20 retains the same evidence-discarding route. Controlled SIGINT stopped the owned E20 worker to repair routing in E21. Not a usage/reset stop.",
+  "planned_requests": 290,
+  "written_rows": 99,
+  "completed_requests": 98,
+  "interrupted_case": "indirect-05-en",
+  "interrupt_exception": {
+    "type": "KeyboardInterrupt",
+    "message": ""
+  },
+  "candidate_jsonl_sha256": "0f0411883388f614b167671db9c6ff981db71fdcbcba3dcf98eb4750bfd5692d",
+  "interpretation": "Preserve all rows. The last controlled interruption is not an observed model failure. Partial E20 is not a full comparison, accepted candidate or final attack-rate denominator."
+}

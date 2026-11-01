@@ -26,15 +26,16 @@ _PRACTICE = re.compile(
     r"\b(?:when|while)\s+(?:practi[cs]ing|learning|studying|rehearsing)\b",
     re.IGNORECASE,
 )
+_UNIVERSAL = re.compile(r"항상|언제나|\balways\b", re.IGNORECASE)
 _GENERAL = re.compile(
-    r"정의|무슨\s*뜻|어떤\s*뜻|차이|비교|항상|언제나|일반적|"
-    r"\b(?:define|definition|difference|compare|compared|versus|always)\b|"
+    r"정의|무슨\s*뜻|어떤\s*뜻|차이|비교|일반적|"
+    r"\b(?:define|definition|difference|compare|compared|versus)\b|"
     r"\bin general\b|\bwhat (?:is|are)\b|\bwhat does\b.*\bmean\b",
     re.IGNORECASE,
 )
 
 
-def is_explicit_general_question(payload: dict[str, Any]) -> bool:
+def explicit_general_intent(payload: dict[str, Any]) -> str | None:
     """Require explicit general intent and no local or causal reference.
 
     No hardcoded piece names, music-term allowlists or case IDs are used.
@@ -44,24 +45,37 @@ def is_explicit_general_question(payload: dict[str, Any]) -> bool:
     question = payload.get("question")
     selected_range = payload.get("measure_range")
     if not isinstance(question, str) or (selected_range and selected_range != "(none selected)"):
-        return False
+        return None
     # General wording does not make a directly answering KU irrelevant. This
     # flag comes from the retriever's complete source-question concept match;
     # it changes only routing, never admission, claim authority or output review.
     if any(isinstance(r, dict) and r.get("citation_label") and r.get("question_alias_match") is True
            for r in payload.get("Retrieved evidence", [])):
-        return False
-    if not _LOCAL.search(question) and _GENERAL.search(question):
-        return True
+        return None
+    # A named-work comparison remains situated even if it says "always" or
+    # "difference". Check titles before every general branch, not just practice.
+    compact = lambda text: re.sub(r"[\W_]+", "", text).casefold()
+    names = [payload.get("piece")]
+    names.extend(r.get(key) for r in payload.get("Retrieved evidence", []) if isinstance(r, dict)
+                 for key in ("work", "piece_title"))
+    if any(isinstance(name, str) and len(compact(name)) >= 3 and compact(name) in compact(question)
+           for name in names):
+        return None
+    if not _LOCAL.search(question):
+        if _UNIVERSAL.search(question):
+            return "universal"
+        if _GENERAL.search(question):
+            # A definition may be directly answered by a retrieved source.
+            # The caller must assess its actual text, even for one source.
+            return "definition"
     # An explicit practice scenario can mention lyrics in general, without
     # referring to the selected score's words. Keep local/causal questions and
     # directly matching source questions on the evidence path. Work titles are
     # read from this bundle, not a maintained list of benchmark pieces.
     if not _PRACTICE.search(question) or _PRACTICE_LOCAL.search(question):
-        return False
-    compact = lambda text: re.sub(r"[\W_]+", "", text).casefold()
-    names = [payload.get("piece")]
-    names.extend(r.get(key) for r in payload.get("Retrieved evidence", []) if isinstance(r, dict)
-                 for key in ("work", "piece_title"))
-    return not any(isinstance(name, str) and len(compact(name)) >= 3 and compact(name) in compact(question)
-                   for name in names)
+        return None
+    return "practice"
+
+
+def is_explicit_general_question(payload: dict[str, Any]) -> bool:
+    return explicit_general_intent(payload) is not None
