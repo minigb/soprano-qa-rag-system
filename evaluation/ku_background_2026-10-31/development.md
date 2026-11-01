@@ -299,3 +299,33 @@ own opinion. This application-created metadata cannot be supplied through model
 JSON and grants no security, citation, scope or output-review exemption. The
 609-test suite passes. E18 is still awaiting its 78-case probe and final full
 comparison; no passing final validation result is claimed yet.
+
+## E18 diagnostic failures and E19 metadata/spelling repair
+
+E18 completed 78 requests: 75 delivered, three false refusals, no execution
+errors. Development F1 was 0.972074. Claude found no material meaning drift or
+substantial factual error, but marked one original source's Larghetto wording
+as mixed/uncertain. The effective rubric score was 92.22/100, including the
+eight newly added diagnostic cases; this is not directly comparable with the
+earlier 70-case aggregate. The English meaning cases remained faithful, and
+both slow-practice questions now received useful general practice advice.
+
+Two additional normal-question failures prevent adopting E18. A new-scale
+practice question was rejected at admission. An aria-practice answer passed
+semantic review but the finalizer rejected the translated spelling `YouTube`:
+the Korean source spells it 유튜브/유투브. Inspection also showed that actual
+curated KUs store original questions in `retrieval_aliases` and Korean work
+names in `piece_title`; E17/E18 had not exposed these fields to the intended
+context consumers. The complete E18 outputs and judgments are retained,
+including these new failures. `e18-failure-diagnostics.json` records the
+finalizer reason and answer/source text, without private model reasoning.
+
+E19 (`93f3552`) passes the actual question/title metadata as untrusted context,
+explicitly distinguishing a teaching question's premises from source facts.
+Admission now recognizes ordinary music exercises and ambiguous music words
+within the active musical context. The spelling heuristic accepts an English
+token present in the reviewed translation of an exact-hash Korean source;
+changed sources, unknown tokens, invalid citations and scope/security failures
+remain rejected. No security or citation exemption was added. All 611 unit
+tests passed. E19 is being checked on the same 78 cases, unchanged expert
+references and frozen metric before the complete four-system comparison.
