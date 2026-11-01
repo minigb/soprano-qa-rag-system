@@ -9,12 +9,21 @@ import re
 from typing import Any
 
 
-_LOCAL = re.compile(
-    r"마디|악보|이\s*곡|이\s*부분|여기|해당|작곡가|작곡자|음원|판본|반주|프레이즈|가사|"
+_LOCAL_BASE = (
+    r"마디|악보|이\s*곡|이\s*부분|여기|해당|작곡가|작곡자|음원|판본|반주|프레이즈|"
     r"왜|이유|의도|녹음|연주자|성악가|선생|전문가|자료|위의|앞의|"
     r"\b(?:bar|bars|measure|measures|score|piece|passage|edition|recording|"
-    r"composer|accompaniment|accompanist|phrase|lyrics?|singer|performer|expert|"
-    r"source|above|previous|why)\b|\b(?:this|these|that|those)\b",
+    r"composer|accompaniment|accompanist|phrase|singer|performer|expert|"
+    r"source|above|previous|why)\b|\b(?:this|these|that|those)\b"
+)
+_LOCAL = re.compile(_LOCAL_BASE + r"|가사|\blyrics?\b", re.IGNORECASE)
+_PRACTICE_LOCAL = re.compile(
+    _LOCAL_BASE + r"|(?:이|그|저|이번|본)\s*(?:가사|노래|곡|선율|멜로디|대목|부분)",
+    re.IGNORECASE,
+)
+_PRACTICE = re.compile(
+    r"(?:연습|훈련|학습|익히|배우)[가-힣]*\s*때.*(?:어떤|무엇|어떻게)|"
+    r"\b(?:when|while)\s+(?:practi[cs]ing|learning|studying|rehearsing)\b",
     re.IGNORECASE,
 )
 _GENERAL = re.compile(
@@ -28,7 +37,7 @@ _GENERAL = re.compile(
 def is_explicit_general_question(payload: dict[str, Any]) -> bool:
     """Require explicit general intent and no local or causal reference.
 
-    No piece names, music-term allowlists, or benchmark question IDs are used.
+    No hardcoded piece names, music-term allowlists or case IDs are used.
     A selected measure range always keeps the evidence path. Unrecognized
     wording also keeps it; the passage selector can still reject irrelevant KUs.
     """
@@ -42,4 +51,16 @@ def is_explicit_general_question(payload: dict[str, Any]) -> bool:
     if any(isinstance(r, dict) and r.get("citation_label") and r.get("question_alias_match") is True
            for r in payload.get("Retrieved evidence", [])):
         return False
-    return not _LOCAL.search(question) and bool(_GENERAL.search(question))
+    if not _LOCAL.search(question) and _GENERAL.search(question):
+        return True
+    # An explicit practice scenario can mention lyrics in general, without
+    # referring to the selected score's words. Keep local/causal questions and
+    # directly matching source questions on the evidence path. Work titles are
+    # read from this bundle, not a maintained list of benchmark pieces.
+    if not _PRACTICE.search(question) or _PRACTICE_LOCAL.search(question):
+        return False
+    compact = lambda text: re.sub(r"[\W_]+", "", text).casefold()
+    names = [payload.get("piece")]
+    names.extend(r.get("work") for r in payload.get("Retrieved evidence", []) if isinstance(r, dict))
+    return not any(isinstance(name, str) and len(compact(name)) >= 3 and compact(name) in compact(question)
+                   for name in names)

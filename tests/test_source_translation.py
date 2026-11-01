@@ -7,7 +7,7 @@ from unittest.mock import Mock, patch
 from soprano_qa import answer, llm, source_translation
 from soprano_qa.security import SecurityViolation
 from soprano_qa.source_translation import prepare_source, translate_source_parts
-from soprano_qa.structured_answer import RenderedAnswer
+from soprano_qa.structured_answer import RenderedAnswer, render_structured_answer
 from tests.test_security_integration import completion, evidence
 from tests.test_source_preservation import selection
 
@@ -86,8 +86,8 @@ class SourceTranslationTests(unittest.TestCase):
         with patch.object(llm, "load_llama", return_value=backend):
             rendered = llm.generate("fake", messages, {"source_preservation": "verbatim_or_translation",
                                     "evidence_translation": "segmented"}, security_context=payload)
-        result = answer.finalize_grounded_generated_answer(rendered, sources, messages, [])
-        result = answer.finalize_user_visible_answer(result, sources)
+        result = answer.finalize_grounded_generated_answer(rendered, sources, messages, [], language="en")
+        result = answer.finalize_user_visible_answer(result, sources, language="en")
         self.assertIn("Sing ‘구름처럼’ with a long duration.", result)
         calls = backend.create_chat_completion.call_args_list
         self.assertEqual(len(calls), 4)
@@ -133,7 +133,8 @@ class ReviewedSourceTranslationTests(unittest.TestCase):
         with self.catalog():
             result = translate_source_parts(RenderedAnswer([quoted(self.source)]),
                 model_path="fake", llm_settings=self.settings, generate_fn=model)
-        self.assertEqual(list(result.parts), [{"kind": "evidence", "evidence": ["E1"], "text": self.english}])
+        self.assertEqual(list(result.parts), [{"kind": "evidence", "evidence": ["E1"],
+                                             "text": self.english, "source_translation": True}])
         model.assert_not_called()
 
     def test_changed_source_with_same_label_uses_guarded_translation(self):
@@ -191,6 +192,17 @@ class ReviewedSourceTranslationTests(unittest.TestCase):
         self.assertIn(self.source, json.dumps(review, ensure_ascii=False))
         self.assertIn(self.english, review["draft"])
         self.assertNotIn("source_quotation", review["composition"][0])
+        visible = answer.finalize_grounded_generated_answer(result, sources, messages, [], language="en")
+        visible = answer.finalize_user_visible_answer(visible, sources, language="en")
+        self.assertTrue(visible.startswith("Translated reference text:\n"))
+        self.assertIn(self.english, visible)
+
+    def test_model_cannot_declare_app_translation_metadata(self):
+        payload = {"Retrieved evidence": [{"citation_label": "E1", "answer": self.source}]}
+        draft = {"sentences": [{"kind": "evidence", "evidence": ["E1"],
+                                 "text": self.english, "source_translation": True}]}
+        with self.assertRaises(SecurityViolation):
+            render_structured_answer(json.dumps(draft), payload)
 
     def test_catalog_cannot_bypass_negative_output_review(self):
         messages = answer.build_messages("die-forelle", "", "How should I sing this phrase?",

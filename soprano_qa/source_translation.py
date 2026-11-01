@@ -170,7 +170,7 @@ def translate_source_parts(
     for part in answer.parts:
         if part.get("source_quotation"):
             parts.append({"kind": "evidence", "evidence": part["evidence"],
-                          "text": restored[part["evidence"][0]]})
+                          "text": restored[part["evidence"][0]], "source_translation": True})
         else:
             parts.append(dict(part))
     return RenderedAnswer(parts, "en")

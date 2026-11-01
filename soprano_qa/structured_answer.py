@@ -171,6 +171,8 @@ class RenderedAnswer(str):
         visible = "\n\n".join(x for x in (grounded, prefix + background if background else "") if x)
         if any(p.get("source_quotation") for p in parts):
             visible = "참고 자료의 원문입니다.\n" + visible
+        elif any(p.get("source_translation") for p in parts):
+            visible = "Translated reference text:\n" + visible
         value = super().__new__(cls, visible)
         value.parts = tuple(parts)
         value.grounded_text = grounded

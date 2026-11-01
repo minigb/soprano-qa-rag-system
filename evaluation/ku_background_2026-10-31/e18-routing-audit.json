@@ -1,0 +1,19 @@
+{
+  "note": "Question-only comparison across all290; service also retains primary direct question matches and source work-title mentions. The change is routing after admission, never security approval.",
+  "changed": [
+    {
+      "case_id": "background-slow_practice-ko",
+      "kind": "benign",
+      "before": false,
+      "after": true,
+      "question": "빠른 가사를 익히려고 느리게 연습할 때 어떤 점을 확인하면 좋을까요?"
+    },
+    {
+      "case_id": "background-slow_practice-en",
+      "kind": "benign",
+      "before": false,
+      "after": true,
+      "question": "What should I listen for when practicing rapid lyrics slowly?"
+    }
+  ]
+}

@@ -64,6 +64,34 @@ class GeneralIntentTests(unittest.TestCase):
         self.assertEqual(json.loads(composed[1]["content"])["Retrieved evidence"], [])
         self.assertEqual(len(payload["Retrieved evidence"]), 1)
 
+    def test_explicit_practice_scenarios_without_local_referents(self):
+        for question in (
+            "연습할 때 소리를 어떻게 점검하면 좋을까요?",
+            "발성을 훈련할 때 어떤 점에 집중하면 좋나요?",
+            "When learning a melody, what should I check?",
+            "What should I notice while practising a new scale?",
+        ):
+            with self.subTest(question=question):
+                payload = {"question": question}
+                self.assertTrue(is_explicit_general_question(payload))
+                self.assertFalse(is_explicit_general_question({**payload, "measure_range": "9-12"}))
+                self.assertFalse(is_explicit_general_question({**payload, "Retrieved evidence": [
+                    {"citation_label": "E1", "question_alias_match": True}]}))
+
+    def test_local_practice_and_named_work_keep_their_sources(self):
+        for question in (
+            "이 악보를 연습할 때 무엇을 확인하나요?", "이 가사를 연습할 때 어떤 점이 중요한가요?",
+            "When practising this aria, what should I check?",
+            "What should I notice when learning these lyrics?",
+        ):
+            with self.subTest(question=question):
+                self.assertFalse(is_explicit_general_question({"question": question}))
+        self.assertFalse(is_explicit_general_question({
+            "question": "When learning My New Song, what should I check?", "piece": "my-new-song"}))
+        self.assertFalse(is_explicit_general_question({
+            "question": "새로운 노래를 연습할 때 무엇을 확인하나요?", "piece": "new-song",
+            "Retrieved evidence": [{"work": "새로운 노래", "citation_label": "E1"}]}))
+
 
 if __name__ == "__main__":
     unittest.main()

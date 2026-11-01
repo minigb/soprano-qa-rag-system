@@ -3975,6 +3975,18 @@ def finalize_grounded_generated_answer(
         ) if remaining else ""
         quoted = "참고 자료의 원문입니다.\n" + "\n\n".join(quotations)
         return PreservedSourceAnswer("\n\n".join(x for x in (quoted, addition) if x))
+    if isinstance(answer, RenderedAnswer) and any(p.get("source_translation") for p in answer.parts):
+        if language != "en":
+            raise GeneratedAnswerRejected("Source translation has the wrong language")
+        # This app-created flag only supplies visible attribution. Remove it
+        # before ordinary finalization: translated text has no native-quotation
+        # exemption and still receives every citation, scope and display check.
+        plain_parts = [{key: value for key, value in part.items() if key != "source_translation"}
+                       for part in answer.parts]
+        checked = finalize_grounded_generated_answer(
+            RenderedAnswer(plain_parts, language), results, messages, measure_ranges, language=language,
+        )
+        return "Translated reference text:\n" + checked
     if isinstance(answer, RenderedAnswer) and answer.background_text:
         # Provenance comes from validated structured output, not a guessed
         # heading in model prose. Source claims retain all existing checks.
