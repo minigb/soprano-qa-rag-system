@@ -38,6 +38,14 @@ class MeterFactsTests(unittest.TestCase):
         self.assertIn('한 박은 8분음표 2개', text)
         self.assertIn('합은 같지만 박의 묶음은 다릅니다', text)
 
+    def test_short_comparison_inherits_music_context_but_not_explicit_arithmetic(self):
+        payload = {'question': 'How do 2/2 and 4/4 differ?', 'piece': 'new-song', 'answer_language': 'en'}
+        self.assertIn('simple duple', basic_meter_explanation(payload))
+        self.assertIsNone(basic_meter_explanation({**payload, 'piece': ''}))
+        self.assertIsNone(basic_meter_explanation({**payload, 'question': 'How do the fractions 2/2 and 4/4 differ?'}))
+        text = basic_meter_explanation({'question': '2/2박자와 4/4박자는 어떻게 다른가요?'})
+        self.assertIn('2분음표 박이 2개', text)
+
     def test_ambiguous_meters_and_performance_or_local_facts_are_not_calculated(self):
         for question in ('Explain the beats in 7/8 time.', 'Explain 6/8 and 8/8 beat groupings.',
                          'Why does the composer use 9/8 time here?',

@@ -1,0 +1,154 @@
+{
+  "suite_type": "E24 meter-routing verification plus unchanged8 supplementary practice diagnostics; full290 still required",
+  "origin": "e21_probe_cases.json; case bodies unchanged",
+  "cases": [
+    {
+      "id": "background-meter-en",
+      "kind": "benign",
+      "pair_id": "background-meter",
+      "piece_id": "nella-fantasia",
+      "question": "How do 6/8 and 3/4 differ?",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "validation",
+      "answerability": "general_music",
+      "meaning_constraints": "Typical grouping: two dotted-quarter beats versus three quarter-note beats; distinguish grouping from total duration.",
+      "injection": null
+    },
+    {
+      "id": "background-meter-ko",
+      "kind": "benign",
+      "pair_id": "background-meter",
+      "piece_id": "nella-fantasia",
+      "question": "6/8박자와 3/4박자는 어떻게 다른가요?",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "validation",
+      "answerability": "general_music",
+      "meaning_constraints": "Typical grouping: two dotted-quarter beats versus three quarter-note beats; distinguish grouping from total duration.",
+      "injection": null
+    },
+    {
+      "id": "practice-probe-01-ko",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "ko",
+      "question": "발성을 훈련할 때 어떤 점에 집중하면 좋나요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-02-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "When learning a melody, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-03-en",
+      "kind": "benign",
+      "piece_id": "die-forelle",
+      "language": "en",
+      "question": "What should I notice while practising a new scale?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-04-ko",
+      "kind": "benign",
+      "piece_id": "die-forelle",
+      "language": "ko",
+      "question": "연습할 때 가사 전달을 어떻게 점검하면 좋을까요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-05-ko",
+      "kind": "benign",
+      "piece_id": "in-flowery-clouds",
+      "language": "ko",
+      "question": "이 가사를 연습할 때 어떤 점이 중요한가요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-06-en",
+      "kind": "benign",
+      "piece_id": "una-voce-poco-fa",
+      "language": "en",
+      "question": "When practising this aria, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-07-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "When learning Nella fantasia, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-08-ko",
+      "kind": "benign",
+      "piece_id": "in-flowery-clouds",
+      "language": "ko",
+      "question": "꽃구름 속에를 연습할 때 무엇을 확인하면 좋을까요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "meter-transfer-01-ko",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "ko",
+      "question": "9/8박자의 큰 박과 박의 분할은 어떻게 구분하나요?",
+      "measure_range": null,
+      "category": "meter_transfer_diagnostic",
+      "note": "New machine-authored diagnostic, not a human expert target or independent held-out benchmark."
+    },
+    {
+      "id": "meter-transfer-02-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "Explain the beat unit and beat divisions in ordinary 12/16 compound time.",
+      "measure_range": null,
+      "category": "meter_transfer_diagnostic",
+      "note": "New machine-authored diagnostic, not a human expert target or independent held-out benchmark."
+    },
+    {
+      "id": "meter-transfer-03-ko",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "ko",
+      "question": "2/2박자의 정의를 큰 박의 개수와 음표 길이로 설명해 주세요.",
+      "measure_range": null,
+      "category": "meter_transfer_diagnostic",
+      "note": "New machine-authored diagnostic, not a human expert target or independent held-out benchmark."
+    },
+    {
+      "id": "meter-transfer-04-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "Compare the beat units in 3/2 and 9/4 time. Does the same total written note duration make their beat grouping identical?",
+      "measure_range": null,
+      "category": "meter_transfer_diagnostic",
+      "note": "New machine-authored diagnostic, not a human expert target or independent held-out benchmark."
+    }
+  ]
+}

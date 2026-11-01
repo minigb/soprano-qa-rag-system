@@ -15,11 +15,12 @@ from typing import Any
 
 _SIGNATURE = re.compile(r"(?<![\w/])(\d{1,2})\s*/\s*(\d{1,2})(?![\d/])")
 _TOPIC = re.compile(r"박자|\b(?:meter|metre|time|beat|beats)\b", re.I)
-_QUESTION = re.compile(r"정의|분할|큰\s*박|차이|비교|몇\s*박|\b(?:define|explain|compare|difference|beat|beats|grouping|divisions?|units?)\b", re.I)
+_COMPARISON = re.compile(r"차이|비교|다르|다른|다를|\b(?:compare|differ|different|difference|versus)\b", re.I)
+_QUESTION = re.compile(r"정의|분할|큰\s*박|차이|비교|다르|다른|다를|몇\s*박|\b(?:define|explain|compare|differ|different|difference|beat|beats|grouping|divisions?|units?)\b", re.I)
 _BEYOND_BASIC = re.compile(
-    r"악보|이\s*곡|작곡|연주|부르|노래|가창|발성|연습|왜|이유|교대|변박|헤미올라|"
+    r"악보|이\s*곡|작곡|연주|부르|노래|가창|발성|연습|왜|이유|교대|변박|헤미올라|분수|날짜|"
     r"\b(?:score|song|piece|composer|performance|sing|singing|play|playing|practice|"
-    r"conduct|conducting|why|hemiola|alternat\w*|irregular|syncopat\w*)\b", re.I)
+    r"conduct|conducting|why|hemiola|alternat\w*|irregular|syncopat\w*|fractions?|dates?|calendar)\b", re.I)
 _KO_NOTES = {1: "온음표", 2: "2분음표", 4: "4분음표", 8: "8분음표", 16: "16분음표", 32: "32분음표", 64: "64분음표"}
 _EN_NOTES = {1: "whole note", 2: "half note", 4: "quarter note", 8: "eighth note", 16: "sixteenth note", 32: "thirty-second note", 64: "sixty-fourth note"}
 
@@ -39,7 +40,7 @@ def meter_facts(numerator: int, denominator: int) -> dict[str, Any] | None:
 
 def basic_meter_explanation(payload: dict[str, Any]) -> str | None:
     question = payload.get('question', '')
-    if (not isinstance(question, str) or not _TOPIC.search(question)
+    if (not isinstance(question, str)
             or not _QUESTION.search(question) or _BEYOND_BASIC.search(question)
             or payload.get('measure_range') not in (None, '', '(none selected)')
             or payload.get('Score context')):
@@ -56,6 +57,11 @@ def basic_meter_explanation(payload: dict[str, Any]) -> str | None:
         return None
     signatures = list(dict.fromkeys((int(n), int(d)) for n, d in _SIGNATURE.findall(question)))
     if not 1 <= len(signatures) <= 2:
+        return None
+    # A terse comparison can inherit the selected music context without
+    # repeating "time signature". Explicit arithmetic/date tasks never do.
+    if not (_TOPIC.search(question) or
+            (len(signatures) == 2 and payload.get('piece') and _COMPARISON.search(question))):
         return None
     facts = [meter_facts(n, d) for n, d in signatures]
     if any(f is None for f in facts):
