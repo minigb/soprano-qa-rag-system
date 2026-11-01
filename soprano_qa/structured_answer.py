@@ -46,9 +46,6 @@ complementary advice. An evidence item must select exactly ONE citation label;
 never select the same label twice. Select complete reviewed answers, not isolated
 clauses whose conditions could be lost. Do not merge conflicting passages into
 one new claim or invent a reason for their disagreement.
-If selected sources disagree on a concrete fact, add a brief background item
-explicitly identifying their differing claims and the unknown cause; do not
-leave contradictory quotations looking like one consistent account.
 Omit a second source if it only repeats advice already fully covered; retain
 distinct qualifications, alternatives and genuine disagreements. A shared
 musical subject does not make a source an answer to the requested task.
@@ -72,7 +69,11 @@ Background items require evidence=[] and nonempty text. They may give accurate
 general music knowledge or explicitly optional suggestions, clearly separate
 from the selected source. Add them only when the source alone leaves a useful
 part of the question unanswered. Do not repeat, contradict, or invent a cause
-for the source. Unknown local facts must remain unknown. score_lyrics items
+for the source. Do not synthesize source advice in a background paragraph:
+the selected quotations already supply that advice with its proper scope.
+If a requested reason for source disagreement is unknown, state that limit
+in one sentence; do not add possible causes, interpretations or shared advice.
+Unknown local facts must remain unknown. score_lyrics items
 remain limited to supplied sung words and require evidence=[]. All application
 scope, safety and output-review requirements still apply to every item.
 Use as few items as needed, at most six. Return {"sentences":[]} if no useful
@@ -91,13 +92,14 @@ Example: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}
 Preserve useful complementary sources without selecting unrelated passages.
 Omit a second source if it only repeats the same advice already fully covered;
 keep distinct qualifications, alternatives and genuine source disagreements.
-When selected sources disagree on a concrete fact, add a brief background item
-identifying their differing claims and stating that the cause is unknown.
 Background items may provide accurate general music knowledge or explicitly
 optional practice suggestions in English, only when they answer a useful aspect
 left open by the sources. Their evidence must be [], and text must be nonempty.
 Never invent a local fact, cause or expert attribution, or contradict supplied
-advice. score_lyrics items are limited to supplied sung words, with evidence=[].
+advice. Do not synthesize the selected source advice again in background.
+If a requested reason for source disagreement is unknown, state that limit
+in one sentence without possible causes, interpretations or shared advice.
+score_lyrics items are limited to supplied sung words, with evidence=[].
 Use as few items as needed, at most six. Return {"sentences":[]} if no useful
 authorized answer is possible. All safety and output-review requirements apply.
 /no_think
@@ -115,6 +117,10 @@ class PreservedSourceAnswer(str):
 GENERAL_MUSIC_SYSTEM_PROMPT = """You answer music-theory and singing-practice questions.
 No directly answering reviewed source was selected for this request. Use your
 general musical knowledge to answer the actual question helpfully and directly.
+For practice questions in this soprano service, assume singing unless the user
+explicitly asks about an instrument. Do not substitute keyboard or finger drills
+for vocal practice. Without hearing the singer, suggest optional checks rather
+than diagnosing their breathing, range or technique.
 Definitions, comparisons, note values, rhythm, terminology and optional general
 practice suggestions do not require a source passage. Do not refuse these just
 because no retrieved source was selected. The selected piece name is context,

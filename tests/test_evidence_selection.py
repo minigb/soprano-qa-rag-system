@@ -57,6 +57,8 @@ class SelectionTests(unittest.TestCase):
                     generate_fn=generate, assess_single=True)
                 self.assertEqual(selected['Retrieved evidence'], self.payload['Retrieved evidence'] if labels else [])
                 generate.assert_called_once()
+                request = json.loads(generate.call_args.args[1][1]['content'])
+                self.assertEqual(request['task_kind'], 'general_definition')
                 self.assertEqual(len(self.payload['Retrieved evidence']), 1)
 
     def test_empty_primary_bundle_never_needs_a_selection_call(self):

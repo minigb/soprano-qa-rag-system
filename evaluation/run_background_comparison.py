@@ -31,6 +31,8 @@ def main():
     scripts = ['run_refinement_probe.py', 'run_security_comparison.py', 'score_expert_bertscore.py',
                'prepare_judge_packets.py', 'run_joint_claude_judge.py', 'run_claude_judge.py',
                'summarize_background_eval.py', Path(__file__).name]
+    if config.get('judge_reuse_directory'):
+        scripts.append('run_reused_claude_judge.py')
     contract = {'config_sha256': sha(args.config),
                 'scripts': {name: sha(ROOT/'evaluation'/name) for name in scripts},
                 'cases_sha256': sha(ROOT/config['cases']),
@@ -75,8 +77,13 @@ def main():
     judge_dir = output/'judge'
     run('prepare-judge', [sys.executable, 'evaluation/prepare_judge_packets.py',
         '--cases', config['cases'], '--results', *results, '--output', str(judge_dir)])
-    run('judge', [config['generation_python'], '-u', 'evaluation/run_joint_claude_judge.py',
-                 '--directory', str(judge_dir), '--workers', '3', '--model', 'claude-opus-5-5'])
+    judge_command = [config['generation_python'], '-u',
+                     'evaluation/run_reused_claude_judge.py' if config.get('judge_reuse_directory')
+                     else 'evaluation/run_joint_claude_judge.py',
+                     '--directory', str(judge_dir), '--workers', '3', '--model', 'claude-opus-5-5']
+    if config.get('judge_reuse_directory'):
+        judge_command += ['--reuse-directory', config['judge_reuse_directory']]
+    run('judge', judge_command)
     run('summary', [sys.executable, 'evaluation/summarize_background_eval.py',
         '--cases', config['cases'], '--results', *results, '--judge-directory', str(judge_dir),
         '--output', str(output/'review')])
