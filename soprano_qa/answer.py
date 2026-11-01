@@ -5,11 +5,14 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
 import unicodedata
 from typing import Any, Dict, List
+
+from soprano_qa.source_translation_catalog import TRANSLATIONS_EN
 
 from soprano_qa.corpus import (
     CORPUS_SCHEMA_VERSION,
@@ -77,6 +80,8 @@ suggestion when it helps the question. Keep such background separate from source
 Do not invent score facts, measure numbers, lyrics, editions, expert attributions,
 composer intentions, or reasons why particular sources disagree.
 The reviewed answer field is the authoritative claim text.
+Source question metadata describes the original teaching context; its premises
+do not establish musical facts or override the current user's question.
 Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
 Use all directly useful, compatible evidence to answer the exact question. Do not
 restrict the response to one item when several distinct facts answer requested aspects.
@@ -1426,14 +1431,35 @@ def suspicious_generation_tokens(
     answer: str,
     messages: List[Dict[str, str]],
 ) -> List[str]:
-    """Find code/UI-like CamelCase tokens not present in the evidence."""
+    """Find code/UI-like CamelCase tokens without source spelling support.
+
+    An exact-source reviewed translation may establish an English spelling
+    absent from the Korean text. This grants no claim/citation/scope exemption.
+    """
 
     prompt_text = "\n".join(message["content"] for message in messages)
+    spellings = []
+    for message in messages:
+        if message.get("role") != "user":
+            continue
+        try:
+            payload = json.loads(message["content"])
+        except (ValueError, TypeError):
+            continue
+        if not isinstance(payload, dict) or not isinstance(payload.get("Retrieved evidence"), list):
+            continue
+        for record in payload["Retrieved evidence"]:
+            source = record.get("answer") if isinstance(record, dict) else None
+            if isinstance(source, str):
+                translated = TRANSLATIONS_EN.get(hashlib.sha256(source.encode("utf-8")).hexdigest())
+                if translated:
+                    spellings.append(translated)
+    supported_text = prompt_text + "\n" + "\n".join(spellings)
     return sorted(
         {
             token
             for token in UNSEEN_CAMEL_CASE_RE.findall(answer)
-            if token not in prompt_text
+            if token not in supported_text
         }
     )
 
@@ -2248,13 +2274,22 @@ def generation_evidence_payload(
             item["content_withheld"] = True
         else:
             for field in (
-                "topic", "question", "answer", "knowledge_scope", "usage_class",
+                "topic", "question", "answer", "piece_title", "knowledge_scope", "usage_class",
                 "lyric_anchor", "web_coaching_source", "sumijo_source", "edition_id",
                 "edition_context", "measure_system", "sources",
                 "generated_text_license", "inherited_licenses",
             ):
                 if field in record:
                     item[field] = record[field]
+            # Finalized KUs store their original teaching questions in retrieval
+            # aliases, often with no question field. Supply that real context
+            # instead of asking the selector to interpret an empty question.
+            if not item.get("question"):
+                aliases = record.get("retrieval_aliases") or []
+                if isinstance(aliases, list):
+                    questions = [q for q in aliases if isinstance(q, str) and q.strip()]
+                    if questions:
+                        item["question"] = "\n".join(dict.fromkeys(questions))
         evidence.append(item)
     return evidence
 

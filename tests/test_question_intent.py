@@ -90,7 +90,7 @@ class GeneralIntentTests(unittest.TestCase):
             "question": "When learning My New Song, what should I check?", "piece": "my-new-song"}))
         self.assertFalse(is_explicit_general_question({
             "question": "새로운 노래를 연습할 때 무엇을 확인하나요?", "piece": "new-song",
-            "Retrieved evidence": [{"work": "새로운 노래", "citation_label": "E1"}]}))
+            "Retrieved evidence": [{"work": "A Composer - A New Song", "piece_title": "새로운 노래", "citation_label": "E1"}]}))
 
 
 if __name__ == "__main__":

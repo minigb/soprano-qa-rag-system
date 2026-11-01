@@ -204,6 +204,19 @@ class ReviewedSourceTranslationTests(unittest.TestCase):
         with self.assertRaises(SecurityViolation):
             render_structured_answer(json.dumps(draft), payload)
 
+    def test_reviewed_source_spelling_does_not_authorize_new_artifact_tokens(self):
+        source = "유튜브 영상에서 다른 변주를 들을 수 있습니다."
+        key = hashlib.sha256(source.encode()).hexdigest()
+        messages = [{"role": "user", "content": json.dumps({"Retrieved evidence": [{"answer": source}]})}]
+        with patch.object(answer, "TRANSLATIONS_EN", {key: "Different variants can be heard in YouTube videos."}):
+            self.assertEqual(answer.suspicious_generation_tokens("YouTube and SizePolicy", messages), ["SizePolicy"])
+            changed = [{"role": "user", "content": json.dumps({"Retrieved evidence": [{"answer": source + " 변경"}]})}]
+            self.assertEqual(answer.suspicious_generation_tokens("YouTube", changed), ["YouTube"])
+            # A reviewed spelling establishes no source/citation authority.
+            with self.assertRaises(answer.GeneratedAnswerRejected):
+                answer.finalize_grounded_generated_answer("YouTube contains variants. [E9]", [evidence(source)],
+                                                          messages, [], language="en")
+
     def test_catalog_cannot_bypass_negative_output_review(self):
         messages = answer.build_messages("die-forelle", "", "How should I sing this phrase?",
                                          [evidence(self.source)], language="en")

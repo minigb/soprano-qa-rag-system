@@ -3,7 +3,9 @@ import json
 import unittest
 from unittest.mock import Mock
 
+from soprano_qa import answer
 from soprano_qa.security import SecurityViolation, select_question_evidence
+from tests.test_security_integration import evidence
 
 
 class SelectionTests(unittest.TestCase):
@@ -55,6 +57,18 @@ class SelectionTests(unittest.TestCase):
         self.assertEqual(request['question'], self.payload['question'])
         self.assertEqual(request['passages'][0]['question'], original)
         self.assertEqual(selected['Retrieved evidence'][0], self.payload['Retrieved evidence'][0])
+
+    def test_finalized_ku_aliases_supply_missing_teaching_question(self):
+        source = evidence()
+        source.record.update(question='', retrieval_aliases=['첫 소리는 어떻게 부르나요?',
+                                                            '호흡은 어디서 하나요?'], piece_title='우리 노래')
+        payload = answer.generation_evidence_payload([source], [])
+        self.assertEqual(payload[0]['question'], '첫 소리는 어떻게 부르나요?\n호흡은 어디서 하나요?')
+        self.assertEqual(payload[0]['piece_title'], '우리 노래')
+        self.assertEqual(payload[0]['answer'], source.record['answer'])
+        self.assertNotIn('question_alias_match', payload[0])
+        source.record['question'] = '원래 문맥 질문'
+        self.assertEqual(answer.generation_evidence_payload([source], [])[0]['question'], '원래 문맥 질문')
 
 
 if __name__ == '__main__':

@@ -61,6 +61,7 @@ def is_explicit_general_question(payload: dict[str, Any]) -> bool:
         return False
     compact = lambda text: re.sub(r"[\W_]+", "", text).casefold()
     names = [payload.get("piece")]
-    names.extend(r.get("work") for r in payload.get("Retrieved evidence", []) if isinstance(r, dict))
+    names.extend(r.get(key) for r in payload.get("Retrieved evidence", []) if isinstance(r, dict)
+                 for key in ("work", "piece_title"))
     return not any(isinstance(name, str) and len(compact(name)) >= 3 and compact(name) in compact(question)
                    for name in names)
