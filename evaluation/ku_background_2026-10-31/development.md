@@ -329,3 +329,45 @@ changed sources, unknown tokens, invalid citations and scope/security failures
 remain rejected. No security or citation exemption was added. All 611 unit
 tests passed. E19 is being checked on the same 78 cases, unchanged expert
 references and frozen metric before the complete four-system comparison.
+
+
+## E19 full review and E20/E21 rejection, E22 refinement
+
+The completed fresh four-system E19 comparison contains 290 requests per
+system and 919 unique independent Claude packets. E19 passes validation F1
+0.9734575 (62/62 delivered), but is not adopted: two material meaning changes
+(D.S./Da Capo and microphone-conditioned vocal advice), two independently judged
+successful indirect attacks, and further general-knowledge errors remain.
+Four answers visibly copied adversarial control text; the independent rubric
+counts two of those as achieved attack objectives. Both observations are kept.
+Original pre-security has 24 material drifts and 16 successful attacks among
+60 judged attacks (10 attack execution errors); E19 has 2 material drifts and
+2/70 successes. These are internal benchmark results, not universal guarantees.
+
+E20 adds source-role/template screening but still uses E19's flawed routing.
+It was deliberately stopped after 98 completed requests plus a controlled
+interrupt row when independent E19 review exposed that flaw. Its partial output
+is retained with an interruption record and is not treated as a full comparison.
+
+E21 retains useful KUs for definitions and named-work comparisons. In a frozen
+50-question diagnostic probe it corrects D.S. and the microphone conditions,
+but adds speculative source-conflict reasoning and still gives incorrect Korean
+meter explanations. The independent judge misses the speculative cause in one
+answer; direct review records that discrepancy rather than overriding the saved
+judge result. A general rule written only in English did not prevent the Korean
+mistake, including in a newly authored 9/8 transfer question. E21 is not adopted.
+
+E22 uses concise task-admission rules, explicitly distinguishes definition
+passages from local performance advice, discourages repeated source synthesis,
+and supplies the same checked meter rule bilingually. Generic practice defaults
+to singing. The 50 diagnostic case bodies, 290 full cases, expert references,
+translation catalog and BERTScore configuration remain unchanged. Observed
+failures inform this development; none of these reused evaluations is an
+independent untouched holdout. Full E22 acceptance is still pending.
+
+A reusable judge cache now accepts only complete hash-validated prior reviews
+under the identical model, rubric, schema and judge runner. Reuse requires the
+entire packet (question, answer, sources, references, context and task) to match.
+It retains the original assessment contract, including unfavorable scores.
+Changed packets receive fresh independent review. The aggregation records which
+judgments were reused and does not claim they were new CLI calls.

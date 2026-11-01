@@ -8,7 +8,7 @@ calls assess admission before composition and the draft's
 support before release. Admission assesses task safety, leaving evidence
 coverage to retrieval, composition, and output review. Retrieval confidence
 never selects a different answer renderer. This description reflects the
-2026-11-02 E19 candidate on `codex/ku-background-knowledge`.
+2026-11-02 E22 candidate on `codex/ku-background-knowledge`.
 It has not been promoted to main or the live demo. Its security checks supersede the earlier
 single-call behavior and release of rejected drafts with warnings.
 
@@ -296,16 +296,23 @@ returns, and stopping points are musical content; commands to change the
 assistant's role or insert arbitrary markers are not. Only approval permits
 the composition call. A nonempty draft then receives
 a separate support assessment before deterministic validation and release.
-A relevance pass narrows bundles with at least two primary passages to
-existing labels or none, using the question, teaching context and actual passage text;
-it cannot add text, renumber labels or promote context-only authority. Invalid
-responses fail closed. An experimental question-only intent classifier was
-removed after it discarded useful sources for short performance and notation
-questions. The current deterministic route is narrower: explicit general
-definitions or practice scenarios can use a general explanation, while selected
-ranges, local/causal references, matching original questions and named works
-keep source context. Work names come from actual `work`/`piece_title` metadata.
-General knowledge remains available in either composition path.
+A relevance pass selects existing labels or none using the question, original
+teaching context and actual source text. It cannot add text, renumber labels or
+promote context-only authority. Invalid responses fail closed. Multiple primary
+passages receive this pass; explicit definitions/comparisons also receive it
+when there is only one primary passage. A term appearing in performance advice
+does not make that advice a definition of the term.
+
+Selected ranges, local/causal references, directly matching source questions and
+named works retain the evidence path. Work names come from actual
+`work`/`piece_title` metadata and are checked before every general-intent branch,
+including comparisons. Explicit general practice or universal-rule questions
+without these referents use general knowledge; a local recommendation does not
+establish a universal rule. General knowledge remains available in either
+composition path. Unspecified practice questions use the service's singing
+context rather than assuming a keyboard instrument. Background does not restate
+or synthesize the selected source advice. An unsupported reason for source
+disagreement should be stated as unknown without proposing a cause.
 Relevance and factual review are prompted heuristics, not guarantees.
 
 A completed Korean request normally uses three model calls, plus passage
