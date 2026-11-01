@@ -82,6 +82,10 @@ composer intentions, or reasons why particular sources disagree.
 The reviewed answer field is the authoritative claim text.
 Source question metadata describes the original teaching context; its premises
 do not establish musical facts or override the current user's question.
+In comparisons, call a recommendation shared only when every compared source
+supports it. Keep advice unique to one source attributed to that source.
+Never write internal evidence labels such as E1 or E2 in prose; select labels
+only in the structured evidence arrays.
 Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
 Use all directly useful, compatible evidence to answer the exact question. Do not
 restrict the response to one item when several distinct facts answer requested aspects.
