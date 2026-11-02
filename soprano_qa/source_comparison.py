@@ -74,12 +74,16 @@ def opening_dynamics_comparison(payload: dict):
         ]
     else:
         prose = [
-            f"The first source describes the opening accompaniment as {values[0]}, and the second as {values[1]}.",
+            f"The first source describes the opening accompaniment as {values[0]}.",
+            f"The second source describes the opening accompaniment as {values[1]}.",
             "These sources do not establish why their accounts differ.",
             "Both suggest avoiding an overly loud first vocal note.",
         ]
+    # Separate English accounts carry their own citations. The common advice
+    # and the statement of unresolved cause are reviewed against both sources.
+    citations = [[labels[0]], [labels[1]], labels, labels] if len(prose) == 4 else [labels] * 3
     context = {k: v for k, v in payload.items()
                if k not in ("source_preservation", "separate_source_translation")}
     return render_structured_answer(json.dumps({"sentences": [
-        {"kind": "evidence", "evidence": labels, "text": text} for text in prose
+        {"kind": "evidence", "evidence": cited, "text": text} for text, cited in zip(prose, citations)
     ]}, ensure_ascii=False), context)

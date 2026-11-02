@@ -140,6 +140,9 @@ Give one concise, coherent paragraph that directly answers the question.
 Include only details needed to answer the question. Avoid assumed tempos,
 numerical demonstrations or extra illustrations unless the question requires
 them. Check units and proportions before stating a quantitative relationship.
+Describe register changes precisely: shifting selected notes by an octave does
+not itself change their pitch classes or the song's key. Do not infer damaged
+harmony or artistic quality merely from a register change.
 Do not assume a BPM beat is a quarter note: a seconds-based example must state
 which note value is the beat unit, or omit the unsupported numerical example.
 Use the requested answer_language. For Korean use formal-polite 합니다체;

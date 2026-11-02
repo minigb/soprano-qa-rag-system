@@ -33,11 +33,13 @@ class SourceSynthesisTests(unittest.TestCase):
             original = deepcopy(payload)
             result = opening_dynamics_comparison(payload)
             self.assertEqual(payload, original)
-            self.assertEqual(len(result.parts), 3)
-            self.assertTrue(all(p["evidence"] == ["E2", "E4"] for p in result.parts))
+            self.assertEqual(len(result.parts), 3 if language == "ko" else 4)
+            self.assertTrue(all(p["evidence"] == ["E2", "E4"] for p in result.parts[-2:]))
+            if language == "en":
+                self.assertEqual([p["evidence"] for p in result.parts[:2]], [["E2"], ["E4"]])
             self.assertTrue(all(not p.get("source_quotation") for p in result.parts))
             self.assertIn("PP", result.parts[0]["text"])
-            self.assertIn("p", result.parts[0]["text"])
+            self.assertIn("p", result)
             self.assertIn("반주" if language == "ko" else "accompaniment", result.parts[0]["text"])
             self.assertIn("확정할 수 없" if language == "ko" else "do not establish", result)
             self.assertIn("권합니다" if language == "ko" else "suggest", result)
@@ -50,7 +52,7 @@ class SourceSynthesisTests(unittest.TestCase):
         payload = context("en", one, two)
         payload["question"] = "Does the opening accompaniment really begin ff, and why do these markings differ?"
         result = opening_dynamics_comparison(payload)
-        self.assertIn("as mp,", result)
+        self.assertIn("as mp.", result)
         self.assertIn("as p.", result)
         self.assertNotIn("as ff", result)
         self.assertNotIn("PP", result)
@@ -126,7 +128,7 @@ class SourceSynthesisTests(unittest.TestCase):
                         checked = json.loads(backend.create_chat_completion.call_args.kwargs["messages"][1]["content"])
                         self.assertEqual(checked["question"], payload["question"])
                         self.assertTrue(checked["source_synthesis"])
-                        self.assertEqual(checked["composition"][0]["evidence"], ["E2", "E4"])
+                        self.assertEqual(checked["composition"][-1]["evidence"], ["E2", "E4"])
 
 
 if __name__ == "__main__":
