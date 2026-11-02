@@ -52,6 +52,18 @@ class SourceSynthesisTests(unittest.TestCase):
         with self.assertRaises(SecurityViolation):
             render_comparison(json.dumps({**draft, "background": "An invented explanation."}), payload)
 
+    def test_english_comparison_checks_each_prose_item_and_preserves_lyric_values(self):
+        payload = {"answer_language":"en", "Retrieved evidence":[
+            {"citation_label":"E1","answer":"가사에는 아리랑이라고 적혀 있습니다."},
+            {"citation_label":"E2","answer":"가사에는 도라지라고 적혀 있습니다."}]}
+        draft = {"contrast":contrast("lyric text",[("E1","아리랑","아리랑"),("E2","도라지","도라지")]),
+                 "shared_guidance":None,"cause":None}
+        self.assertIn("아리랑",render_comparison(json.dumps(draft),payload))
+        with self.assertRaises(SecurityViolation) as error:
+            render_comparison(json.dumps({**draft,"shared_guidance":{
+                "evidence":["E1","E2"],"text":"영어 문단 사이에 한국어 설명을 숨기면 안 됩니다."}}),payload)
+        self.assertEqual(error.exception.reason,"comparison_language_mismatch")
+
     def test_complementary_sources_and_single_source_do_not_get_comparison(self):
         payload = {"question": "How should I sing?", "Retrieved evidence": [
             {"citation_label":"E1", "answer":"Without a microphone, project the voice."},

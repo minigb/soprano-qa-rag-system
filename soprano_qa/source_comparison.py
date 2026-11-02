@@ -66,6 +66,39 @@ is not evidence for notation or performance advice. Preserve original lyric text
 """
 
 
+COMPARISON_KOREAN_STYLE = """화면에 보일 feature, value, shared_guidance의 text는 자연스러운 한국어로 씁니다.
+음악의 dynamics는 '셈여림' 또는 '다이나믹'이며 '동적 강도'라고 번역하지 않습니다.
+feature에는 자료가 실제로 말하는 대상도 명시합니다. 반주부의 표기를 노래의
+표기로 바꾸지 않습니다. 표기값은 원문 그대로 간결하게 옮기고 부연하지 않습니다.
+공통 조언은 '두 자료 모두 …하는 쪽을 권합니다'와 같이 제안으로 표현합니다.
+그 조언을 '반드시 해야 한다'나 '중요하다' 같은 의무·단정으로 강화하지 않습니다.
+support와 cause의 quote만 검증을 위한 원문 인용이며 고쳐 쓰지 않습니다.
+"""
+COMPARISON_ENGLISH_STYLE = """Every visible feature, value description and shared_guidance text must be English.
+Only support/quote fields may copy original Korean source text. Preserve musical
+symbols and original sung words when they are the compared values. Include the
+actual subject/part in feature: an accompaniment marking is not automatically a
+singer's marking. Keep shared guidance a suggestion explicitly shared by both
+accounts, not a requirement or a claim of importance. Do not add an explanation.
+"""
+
+
+def comparison_language_policy(language: str) -> str:
+    return COMPARISON_ENGLISH_STYLE if language == "en" else COMPARISON_KOREAN_STYLE
+
+
+def _check_comparison_prose_language(text: str, language: str) -> None:
+    if language != "en":
+        return
+    # A long English contrast must not conceal a wholly Korean advice item
+    # below the final answer's overall language-ratio threshold. Values and
+    # literal source excerpts are handled separately, preserving sung words.
+    hangul = len(re.findall(r"[가-힣]", text))
+    latin = len(re.findall(r"[A-Za-z]", text))
+    if hangul and hangul / (hangul + latin) > 0.3:
+        raise SecurityViolation("comparison_language_mismatch")
+
+
 def sources_disagree(model_path: str, settings: dict, payload: dict, *, generate_fn: Callable) -> bool:
     sources = [r for r in payload.get("Retrieved evidence", []) if r.get("citation_label")]
     if len(sources) < 2:
@@ -168,6 +201,7 @@ def render_comparison(raw: str, payload: dict) -> str:
             name = _display_source_names(label,sources,language)
             clauses.append(f"{name}에는 ‘{value}’" if language == "ko" else f"{name} reports “{value}”")
         feature = contrast["feature"].strip()
+        _check_comparison_prose_language(feature, language)
         text = (feature+"에 대해 "+", ".join(clauses)+"라고 되어 있습니다." if language == "ko"
                 else "For "+feature+", "+", while ".join(clauses)+".")
         parts = [{"kind":"evidence", "evidence":labels,"text":text}]
@@ -178,6 +212,7 @@ def render_comparison(raw: str, payload: dict) -> str:
             if claim["evidence"] != list(sources):
                 raise ValueError()
             text = claim["text"].strip()
+            _check_comparison_prose_language(text, language)
             if text and language == "en":
                 text = text[0].upper() + text[1:]
             if text and text[-1] not in ".!?。！？":

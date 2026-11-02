@@ -33,7 +33,7 @@ from soprano_qa.structured_answer import (
 )
 from soprano_qa.source_translation import translate_source_parts
 from soprano_qa.source_comparison import (
-    sources_disagree, render_comparison, COMPARISON_POLICY,
+    sources_disagree, render_comparison, COMPARISON_POLICY, comparison_language_policy,
 )
 
 
@@ -220,7 +220,8 @@ def generate(
                                "Retrieved evidence": [{key: record[key] for key in
                                    ("citation_label", "answer", "evidence_role", "measure_range", "query_scope_relation")
                                    if key in record} for record in security_context["Retrieved evidence"]]}
-            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n/think"},
+            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n"
+                         + comparison_language_policy(security_context.get("answer_language", "ko")) + "\n/think"},
                         {"role": "user", "content": serialize_untrusted(comparison_view)}]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
