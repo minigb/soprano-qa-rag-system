@@ -209,6 +209,10 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.assertNotIn('response_format', compose)
         self.assertEqual(compose['max_tokens'], 1536)
         self.assertTrue(compose['messages'][0]['content'].endswith('/think'))
+        self.assertEqual(set(json.loads(compose['messages'][1]['content'])), {'question', 'answer_language'})
+        checked = json.loads(backend.create_chat_completion.call_args.kwargs['messages'][1]['content'])
+        self.assertEqual(checked['piece'], self.payload['piece'])
+        self.assertEqual(checked['question'], self.payload['question'])
         with self.assertRaises(SecurityViolation):
             self.run_model(['{"task":"music_question"}', draft, '{"allow":false}', draft, '{"allow":false}'])
         with self.assertRaises(SecurityViolation):

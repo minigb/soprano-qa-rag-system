@@ -168,6 +168,11 @@ and security boundaries still apply to every item.
 GENERAL_MUSIC_FORMAT_POLICY += "\n" + MUSIC_TERMINOLOGY
 
 
+def concise_concept_system_prompt(language: str) -> str:
+    return ("Explain the requested music concept accurately in TWO short sentences. "
+            f"Answer in {language}. No examples, headings, lists or extra judgments.\n")
+
+
 GENERAL_PRACTICE_SYSTEM_PROMPT = """Give ONE optional, practical singing exercise for the requested skill.
 Use the requested answer_language, formal-polite 합니다체 for Korean. In this
 soprano service, practice means singing unless an instrument is explicitly asked

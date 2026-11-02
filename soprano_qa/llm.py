@@ -11,9 +11,8 @@ import re
 import threading
 from typing import Any, Dict, List
 
-from soprano_qa.question_intent import explicit_general_intent
+from soprano_qa.question_intent import explicit_general_intent, concise_pitch_question
 from soprano_qa.meter import basic_meter_explanation
-from soprano_qa.music_terms import general_pitch_guidance
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
@@ -28,6 +27,7 @@ from soprano_qa.structured_answer import (
     GENERAL_MUSIC_SYSTEM_PROMPT,
     GENERAL_PRACTICE_SYSTEM_PROMPT,
     GENERAL_PRACTICE_SYSTEM_PROMPT_KO,
+    concise_concept_system_prompt,
     GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
     render_structured_answer,
@@ -211,10 +211,12 @@ def generate(
             general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
             if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
                 general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
-            if general_intent != "practice":
-                guidance = general_pitch_guidance(security_context.get("question", ""))
-                general_policy += "\n" + guidance
-                reason_general = bool(guidance)
+            reason_general = general_intent != "practice" and concise_pitch_question(security_context)
+            if reason_general:
+                general_policy = concise_concept_system_prompt(security_context.get("answer_language", "ko"))
+                view = {"question": security_context["question"],
+                        "answer_language": security_context.get("answer_language", "ko")}
+                messages[1] = {"role": "user", "content": serialize_untrusted(view)}
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
@@ -289,14 +291,17 @@ def generate(
                 security_context.pop("separate_source_translation", None)
                 separate_translation = False
                 general_only = True
-                guidance = general_pitch_guidance(security_context.get("question", ""))
-                reason_general = bool(guidance)
+                reason_general = concise_pitch_question(security_context)
+                general_policy = (concise_concept_system_prompt(security_context.get("answer_language", "ko"))
+                                  if reason_general else GENERAL_MUSIC_SYSTEM_PROMPT)
+                view = ({"question": security_context["question"],
+                         "answer_language": security_context.get("answer_language", "ko")}
+                        if reason_general else security_context)
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"
-                     + GENERAL_MUSIC_SYSTEM_PROMPT + "\n"
-                     + guidance + "\n" + SECURITY_SYSTEM_POLICY
+                     + general_policy + "\n" + SECURITY_SYSTEM_POLICY
                      + ("\n/think" if reason_general else "")},
-                    {"role": "user", "content": serialize_untrusted(security_context)},
+                    {"role": "user", "content": serialize_untrusted(view)},
                 ]
                 if reason_general:
                     completion_options.pop("response_format", None)

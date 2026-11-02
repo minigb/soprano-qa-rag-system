@@ -3,12 +3,19 @@ import unittest
 from unittest.mock import Mock, patch
 
 from soprano_qa import llm
-from soprano_qa.question_intent import explicit_general_intent, is_explicit_general_question
+from soprano_qa.question_intent import explicit_general_intent, is_explicit_general_question, concise_pitch_question
 from soprano_qa.security import SecurityViolation
 from tests.test_security_integration import completion
 
 
 class GeneralIntentTests(unittest.TestCase):
+    def test_compact_pitch_style_retains_needed_score_or_range_context(self):
+        payload = {"question": "Is transposition the same as an octave change?"}
+        self.assertTrue(concise_pitch_question(payload))
+        self.assertFalse(concise_pitch_question({**payload, "measure_range": [3, 4]}))
+        self.assertFalse(concise_pitch_question({**payload, "Score context": "Supplied sung words"}))
+        self.assertFalse(concise_pitch_question({"question": "How is legato different from staccato?"}))
+
     def test_direct_question_match_preserves_an_available_definition(self):
         payload = {"question": "What is syncopation?", "Retrieved evidence": [
             {"citation_label": "E2", "question_alias_match": True, "answer": "A definition."}]}

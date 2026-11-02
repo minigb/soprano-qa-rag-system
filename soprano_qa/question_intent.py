@@ -37,6 +37,18 @@ _GENERAL = re.compile(
 )
 
 
+def concise_pitch_question(payload: dict[str, Any]) -> bool:
+    """Choose concise explanation style only after source selection is empty.
+
+    This is not an admission, relevance, score-fact or answerability decision.
+    Context needed for local facts must not be discarded by this style route.
+    """
+    return (payload.get("measure_range") in (None, "", "(none selected)")
+            and not payload.get("Score context")
+            and bool(re.search(r"조옮김|이조|옥타브|이명동음|\b(?:transpos\w*|octaves?|enharmonic\w*)\b",
+                               payload.get("question", ""), re.I)))
+
+
 def explicit_general_intent(payload: dict[str, Any]) -> str | None:
     """Require explicit general intent and no local or causal reference.
 
