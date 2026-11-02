@@ -421,6 +421,12 @@ model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
 
 ## Evaluation
 
+The [local answer-review demo](sites/answer-review/README.md) displays all 460
+paired cases with searchable questions, piece and quality filters, full KU
+evidence, original Claude assessments, and browser-local review notes. Start
+it with `python -m http.server 8766 --bind 127.0.0.1 --directory sites/answer-review/dist`
+and open <http://localhost:8766/>. It displays the saved evaluation answers.
+
 The [expanded 460-case comparison](evaluation/expanded_460_2026-11-02/report.md)
 reruns the existing Korean questions on E37 and the pre-security original, with
 fresh Claude Opus 5.5 judgments. Material source-meaning changes fall from 27 to

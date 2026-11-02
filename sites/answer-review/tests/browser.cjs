@@ -1,0 +1,77 @@
+const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+
+(async () => {
+  const launch = { headless: true, args: ["--no-sandbox"] };
+  if (process.env.REVIEW_BROWSER_PATH) launch.executablePath = process.env.REVIEW_BROWSER_PATH;
+  if (process.env.REVIEW_BROWSER_LIBS) launch.env = { ...process.env, LD_LIBRARY_PATH: process.env.REVIEW_BROWSER_LIBS };
+  const browser = await chromium.launch(launch);
+  const errors = [], checks = [];
+  try {
+    const context = await browser.newContext({ viewport: { width: 1440, height: 1050 } });
+    const page = await context.newPage(); page.on("pageerror", (e) => errors.push(e.message));
+    const url = process.env.REVIEW_BASE_URL || "http://127.0.0.1:8766/";
+    const response = await page.goto(url); assert.equal(response.status(), 200);
+    await page.waitForSelector(".answer-text");
+    const data = await (await context.request.get(new URL("data.json", url).href)).json();
+    assert.equal(await page.locator(".case-item").count(), 460);
+    const selected = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
+    const c = data.cases.find((row) => row.id === selected);
+    for (const version of ["original", "current"]) assert.equal(await page.locator(`.answer-text[data-version=${version}]`).textContent(), c.versions[version].answer);
+    checks.push("460 cases and full original/current text");
+    await page.locator('[data-filter="declined"]').click(); assert.equal(await page.locator(".case-item").count(), 272);
+    await page.locator('[data-filter="resolved"]').click(); assert.equal(await page.locator(".case-item").count(), 27);
+    await page.locator('[data-filter="remaining"]').click(); assert.equal(await page.locator(".case-item").count(), 3);
+    await page.locator('[data-filter="overlength"]').click(); assert.equal(await page.locator(".case-item").count(), 2);
+    assert.equal(await page.locator(".current .unscorable").textContent(), "계산 불가");
+    const overlong = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
+    assert.equal(await page.locator('.answer-text[data-version="current"]').textContent(), data.cases.find((row) => row.id === overlong).versions.current.answer);
+    checks.push("paired filters and untruncated overlength answers");
+    await page.locator("#clear-filters").click();
+    await page.locator("#piece").selectOption("nella-fantasia"); assert.equal(await page.locator(".case-item").count(), 75);
+    await page.locator("#clear-filters").click(); await page.locator("#family").selectOption("original"); assert.equal(await page.locator(".case-item").count(), 105);
+    await page.locator("#clear-filters").click();
+    await page.locator("#search").fill("expert-kim-nella-fantasia-03__no-range"); assert.equal(await page.locator(".case-item").count(), 1);
+    await page.locator("#search").fill("nonexistent_case_zzzz"); assert.equal(await page.locator(".case-item").count(), 0);
+    await page.getByRole("button", { name: "모든 문항 보기", exact: true }).click(); assert.equal(await page.locator(".case-item").count(), 460);
+    checks.push("piece/family/search filters and empty-state recovery");
+    await page.locator("#show-judgments").uncheck(); assert.equal(await page.locator(".current .judge-box").isVisible(), false);
+    await page.locator("#show-judgments").check();
+    await page.locator(".current .evidence summary").click(); assert.equal(await page.locator(".current .source-text").first().isVisible(), true);
+    await page.locator(".references summary").click(); assert.equal(await page.locator(".references .source-text").first().isVisible(), true);
+    checks.push("judgment toggle and full source panels");
+    const note = "테스트 메모 <img src=x onerror=alert(1)> & 의미 조건 확인";
+    await page.locator("#bookmark").click(); await page.locator("#review-note").fill(note); await page.locator("#verdict").selectOption("meaning");
+    const deepLink = page.url(); await page.reload(); await page.waitForSelector("#review-note");
+    assert.equal(await page.locator("#review-note").inputValue(), note);
+    assert.equal(await page.locator("#verdict").inputValue(), "meaning");
+    assert.equal(await page.locator("#bookmark").getAttribute("aria-pressed"), "true");
+    const downloadPromise = page.waitForEvent("download"); await page.locator("#export-notes").click();
+    const download = await downloadPromise; const exported = JSON.parse(fs.readFileSync(await download.path(), "utf8"));
+    assert.equal(exported.notes.length, 1); assert.equal(exported.notes[0].text, note);
+    await page.locator('[data-filter="marked"]').click(); assert.equal(await page.locator(".case-item").count(), 1);
+    checks.push("local notes/bookmark persistence and JSON export");
+    await page.goto(deepLink); await page.waitForSelector(".answer-text"); assert.equal(page.url(), deepLink);
+    await page.locator("#next").click(); const nextLink = page.url(); assert.notEqual(nextLink, deepLink);
+    await page.goBack(); await page.waitForSelector(".answer-text"); assert.equal(page.url(), deepLink);
+    checks.push("case deep links, next and browser back");
+    await page.locator("#method-button").click(); assert.equal(await page.locator("#method-dialog").isVisible(), true);
+    await page.keyboard.press("Escape"); assert.equal(await page.locator("#method-dialog").isVisible(), false);
+    checks.push("method dialog keyboard close");
+    for (const width of [1440, 1100, 800, 390]) {
+      await page.setViewportSize({ width, height: 950 });
+      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, `horizontal overflow at ${width}`);
+    }
+    if (process.env.REVIEW_SCREENSHOT_DIR) {
+      fs.mkdirSync(process.env.REVIEW_SCREENSHOT_DIR, { recursive: true });
+      await page.screenshot({ path: path.join(process.env.REVIEW_SCREENSHOT_DIR, "mobile.png"), fullPage: true });
+      await page.setViewportSize({ width: 1440, height: 1050 });
+      await page.screenshot({ path: path.join(process.env.REVIEW_SCREENSHOT_DIR, "desktop.png"), fullPage: true });
+    }
+    checks.push("responsive layouts at four viewport widths");
+    assert.deepEqual(errors, []);
+    console.log(JSON.stringify({ status: "passed", checks, browser_errors: errors }));
+  } finally { await browser.close(); }
+})().catch((e) => { console.error(e); process.exit(1); });
