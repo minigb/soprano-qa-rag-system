@@ -32,9 +32,7 @@ from soprano_qa.structured_answer import (
     render_structured_answer,
 )
 from soprano_qa.source_translation import translate_source_parts
-from soprano_qa.source_comparison import (
-    sources_disagree, render_comparison, COMPARISON_POLICY, comparison_language_policy,
-)
+from soprano_qa.source_comparison import opening_dynamics_comparison
 
 
 _INFERENCE_LOCK = threading.Lock()
@@ -188,16 +186,17 @@ def generate(
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
-        # Conditional alternatives remain intact. Only differing accounts of
-        # the same fact need an explicit, bounded source comparison.
-        synthesize_sources = preserve_sources and sources_disagree(
-            model_path, llm_settings, security_context, generate_fn=generate,
-        )
-        if synthesize_sources:
-            preserve_sources = False
-            security_context = {**security_context, "source_synthesis": True}
-            security_context.pop("source_preservation", None)
-            security_context.pop("separate_source_translation", None)
+        compared = opening_dynamics_comparison(security_context) if preserve_sources else None
+        if compared is not None:
+            context = {k: v for k, v in security_context.items()
+                       if k not in ("source_preservation", "separate_source_translation")}
+            context["source_synthesis"] = True
+            screen_generated_answer(compared, context)
+            semantic_guard(model_path, llm_settings,
+                           {**context, "draft": str(compared), "composition": list(compared.parts)},
+                           stage="output", generate_fn=generate)
+            compared.generation_mode = "llm_guarded_source_comparison"
+            return compared
         if preserve_sources:
             security_context = {**security_context, "source_preservation": True}
             separate_translation = (security_context.get("answer_language") == "en"
@@ -212,17 +211,6 @@ def generate(
                 general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
-        elif synthesize_sources:
-            # Compare the actual source facts, independent of a question's
-            # actor/premise. Admission and final review still receive the full
-            # original question; only this extraction view omits it.
-            comparison_view = {"answer_language": security_context.get("answer_language", "ko"),
-                               "Retrieved evidence": [{key: record[key] for key in
-                                   ("citation_label", "answer", "evidence_role", "measure_range", "query_scope_relation")
-                                   if key in record} for record in security_context["Retrieved evidence"]]}
-            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n"
-                         + comparison_language_policy(security_context.get("answer_language", "ko")) + "\n/think"},
-                        {"role": "user", "content": serialize_untrusted(comparison_view)}]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.
@@ -231,19 +219,14 @@ def generate(
         # and can encourage the model to summarize the entire payload.
         messages = [
             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
-                                       COMPARISON_POLICY if synthesize_sources else
                                        SOURCE_SELECTION_POLICY if separate_translation else
                                        SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
              + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
-        if not synthesize_sources:
-            completion_options["response_format"] = {
-                "type": "json_object", "schema": answer_schema(security_context),
-            }
-        # A forced JSON first token suppresses Qwen's comparison reasoning.
-        # Only this narrow route uses an unconstrained final completion, whose
-        # JSON, excerpts, citations and meaning are still fully validated below.
+        completion_options["response_format"] = {
+            "type": "json_object", "schema": answer_schema(security_context),
+        }
     # A denied output may receive one new composition under the same policy.
     # Admission denials, malformed verdicts, unsafe text and backend failures
     # never enter this path. A replacement still needs every normal check.
@@ -260,15 +243,13 @@ def generate(
                 messages=messages,
                 temperature=float(llm_settings.get("temperature", 0.0)),
                 top_p=float(llm_settings.get("top_p", 0.8)),
-                max_tokens=(2560 if security_context is not None and synthesize_sources
-                            else int(llm_settings.get("max_tokens", 768))),
+                max_tokens=int(llm_settings.get("max_tokens", 768)),
                 **completion_options,
             )
         answer = strip_thinking(response["choices"][0]["message"]["content"])
         if security_context is None:
             return answer
-        answer = (render_comparison(answer, security_context) if synthesize_sources
-                  else render_structured_answer(answer, security_context))
+        answer = render_structured_answer(answer, security_context)
         if answer == NO_GROUNDED_ANSWER_SENTINEL:
             # An explicit abstention has no prose to assess. The public answer
             # finalizer turns it into the normal fixed unavailable response.
@@ -294,7 +275,6 @@ def generate(
                 security_context = {**security_context, "Retrieved evidence": []}
                 security_context.pop("separate_source_translation", None)
                 separate_translation = False
-                synthesize_sources = False
                 general_only = True
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"

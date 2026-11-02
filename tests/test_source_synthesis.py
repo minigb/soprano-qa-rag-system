@@ -1,123 +1,109 @@
-"""Multi-source prose keeps citations and requires ordinary output approval."""
+"""Explicit source facts may be rendered only within their supported scope."""
+from copy import deepcopy
 import json
 import unittest
 from unittest.mock import Mock, patch
 
 from soprano_qa import llm
 from soprano_qa.security import SecurityViolation
-from soprano_qa.source_comparison import render_comparison, sources_disagree, _classify_relationship
+from soprano_qa.source_comparison import opening_dynamics_comparison
 from tests.test_security_integration import completion
 
 
-def contrast(feature, accounts):
-    return {"feature": feature, "accounts": [{"evidence": label, "support": support, "value": value}
-                                              for label, support, value in accounts]}
+SOFT = ("특히 반주부가 PP로 시작한다는 점을 고려한다면 노래 역시 지나치게 큰 소리로 "
+        "시작하기보다는 부드러운 어택으로 시작하는 것이 적절해요. "
+        "작은 음량 안에서도 호흡의 지지와 울림을 유지하는 것이 중요해요.")
+PIANO = ("일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. "
+         "이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, "
+         "첫 소리를 크지 않게 시작하는 것이 좋아 보인다.")
+
+
+def context(language="ko", first=SOFT, second=PIANO):
+    return {"question": "처음 반주의 다이나믹 표기가 다른데 어떻게 이해해야 하나요?",
+            "answer_language": language, "measure_range": "(none selected)",
+            "Retrieved evidence": [
+                {"citation_label": "E2", "answer": first, "evidence_role": "primary"},
+                {"citation_label": "E4", "answer": second, "evidence_role": "primary"}]}
 
 
 class SourceSynthesisTests(unittest.TestCase):
-    def setUp(self):
-        _classify_relationship.cache_clear()
-
-    def test_comparison_values_need_real_excerpts_and_shared_advice_names_all_sources(self):
-        payload = {"answer_language":"ko", "Retrieved evidence":[
-            {"citation_label":"E2","answer":"첫 음을 작게 시작합니다."},
-            {"citation_label":"E4","answer":"노래의 시작을 작게 합니다."}]}
-        draft = {"contrast":contrast("설명 대상", [("E2","첫 음","첫 음"),("E4","노래의 시작","노래의 시작")]),
-                 "shared_guidance":{"evidence":["E2","E4"], "text":"두 자료 모두 작게 시작하도록 권합니다"}, "cause":None}
-        result = render_comparison(json.dumps(draft),payload)
-        self.assertIn("첫 번째 자료에는",result)
-        self.assertIn("두 번째 자료에는",result)
-        self.assertTrue(result.parts[-1]["text"].endswith("."))
-        for label, support in (("E4","호흡을 지지합니다."),("E9","노래의 시작"),("E4","")):
-            invalid = contrast("설명 대상", [("E2","첫 음","첫 음"),(label,support,"노래의 시작")])
-            with self.subTest(label=label,support=support), self.assertRaises(SecurityViolation):
-                render_comparison(json.dumps({**draft,"contrast":invalid}),payload)
-        with self.assertRaises(SecurityViolation):
-            render_comparison(json.dumps({**draft,"shared_guidance":{"evidence":["E2"],"text":"Both agree."}}),payload)
-
-    def test_missing_cause_stays_unknown_and_fabricated_quote_is_rejected(self):
-        payload = {"answer_language": "en", "Retrieved evidence": [
-            {"citation_label": "E1", "answer": "The opening is quiet."},
-            {"citation_label": "E2", "answer": "The opening is loud."}]}
-        draft = {"contrast": contrast("opening", [("E1","quiet","quiet"),("E2","loud","loud")]),
-                 "shared_guidance": None, "cause": None}
-        rendered = render_comparison(json.dumps(draft), payload)
-        self.assertIn("do not establish why", rendered)
-        self.assertEqual(rendered.parts[1]["evidence"], ["E1", "E2"])
-        for bad in ({"evidence":"E1", "quote":"The edition changed."},
-                    {"evidence":"E99", "quote":"The opening is quiet."},
-                    {"evidence":"E1", "quote":""}):
-            with self.subTest(bad=bad), self.assertRaises(SecurityViolation):
-                render_comparison(json.dumps({**draft, "cause": bad}), payload)
-        with self.assertRaises(SecurityViolation):
-            render_comparison(json.dumps({**draft, "background": "An invented explanation."}), payload)
-
-    def test_english_comparison_checks_each_prose_item_and_preserves_lyric_values(self):
-        payload = {"answer_language":"en", "Retrieved evidence":[
-            {"citation_label":"E1","answer":"가사에는 아리랑이라고 적혀 있습니다."},
-            {"citation_label":"E2","answer":"가사에는 도라지라고 적혀 있습니다."}]}
-        draft = {"contrast":contrast("lyric text",[("E1","아리랑","아리랑"),("E2","도라지","도라지")]),
-                 "shared_guidance":None,"cause":None}
-        self.assertIn("아리랑",render_comparison(json.dumps(draft),payload))
-        with self.assertRaises(SecurityViolation) as error:
-            render_comparison(json.dumps({**draft,"shared_guidance":{
-                "evidence":["E1","E2"],"text":"영어 문단 사이에 한국어 설명을 숨기면 안 됩니다."}}),payload)
-        self.assertEqual(error.exception.reason,"comparison_language_mismatch")
-
-    def test_complementary_sources_and_single_source_do_not_get_comparison(self):
-        payload = {"question": "How should I sing?", "Retrieved evidence": [
-            {"citation_label":"E1", "answer":"Without a microphone, project the voice."},
-            {"citation_label":"E2", "answer":"With a microphone, use a lighter sound."}]}
-        generate = Mock(return_value='{"relationship":"complementary"}')
-        self.assertFalse(sources_disagree("fake", {}, payload, generate_fn=generate))
-        generate.assert_called_once()
-        sent = json.loads(generate.call_args.args[1][1]["content"])
-        self.assertNotIn("question", sent)
-        generate.reset_mock()
-        self.assertFalse(sources_disagree("fake", {}, {**payload,"Retrieved evidence":payload["Retrieved evidence"][:1]}, generate_fn=generate))
-        generate.assert_not_called()
-        for invalid in ('{"relationship":"disagreement","allow":true}', '{"relationship":true}',
-                        '{"relationship":"disagreement","relationship":"complementary"}'):
-            generate = Mock(return_value=invalid)
-            with self.subTest(invalid=invalid), self.assertRaises(SecurityViolation):
-                sources_disagree("fake", {}, payload, generate_fn=generate)
-
-    def test_routing_cache_is_bound_to_sources_model_and_policy_not_a_security_verdict(self):
-        sources = [{"citation_label":"E1","answer":"Quiet opening."},
-                   {"citation_label":"E2","answer":"Loud opening."}]
-        generate = Mock(return_value='{"relationship":"disagreement"}')
-        payload = {"question":"First question", "Retrieved evidence":sources}
-        self.assertTrue(sources_disagree("model", {}, payload, generate_fn=generate))
-        self.assertTrue(sources_disagree("model", {}, {**payload,"question":"Paraphrase"}, generate_fn=generate))
-        self.assertEqual(generate.call_count,1)
-        sources_disagree("other-model", {}, payload, generate_fn=generate)
-        sources_disagree("model", {"n_ctx":4096}, payload, generate_fn=generate)
-        sources_disagree("model", {}, {**payload,"Retrieved evidence":[sources[0],{**sources[1],"answer":"Different account."}]},generate_fn=generate)
-        self.assertEqual(generate.call_count,4)
-        broken = Mock(return_value='{}')
-        for _ in range(2):
-            with self.assertRaises(SecurityViolation):
-                sources_disagree("model", {}, payload, generate_fn=broken)
-        self.assertEqual(broken.call_count,2)
-
-    def test_comparison_is_cited_prose_and_never_a_catalog_translation(self):
+    def test_preserves_actor_values_suggestion_and_unknown_cause_in_both_languages(self):
         for language in ("ko", "en"):
-            for allow in (True, False):
-                with self.subTest(language=language, allow=allow):
-                    _classify_relationship.cache_clear()
-                    payload = {"question": "Compare the source recommendations.", "answer_language": language,
-                               "Retrieved evidence": [
-                                   {"citation_label": "E1", "answer": "First source advice."},
-                                   {"citation_label": "E2", "answer": "Second source advice."},
-                                   {"citation_label": None, "answer": "Context only."}]}
-                    draft = json.dumps({"contrast": contrast("advice", [("E1","First source advice.","First source advice."),
-                                                                 ("E2","Second source advice.","Second source advice.")]),
-                                        "shared_guidance": None, "cause": None})
-                    attempt = [draft, json.dumps({"allow": allow})]
+            payload = context(language)
+            original = deepcopy(payload)
+            result = opening_dynamics_comparison(payload)
+            self.assertEqual(payload, original)
+            self.assertEqual(len(result.parts), 3)
+            self.assertTrue(all(p["evidence"] == ["E2", "E4"] for p in result.parts))
+            self.assertTrue(all(not p.get("source_quotation") for p in result.parts))
+            self.assertIn("PP", result.parts[0]["text"])
+            self.assertIn("p", result.parts[0]["text"])
+            self.assertIn("반주" if language == "ko" else "accompaniment", result.parts[0]["text"])
+            self.assertIn("확정할 수 없" if language == "ko" else "do not establish", result)
+            self.assertIn("권합니다" if language == "ko" else "suggest", result)
+            for absent in ("지지", "울림", "support", "resonance", "판본", "edition", "must"):
+                self.assertNotIn(absent, result)
+
+    def test_values_come_from_sources_not_questions_or_known_work_ids(self):
+        one = "시작 반주가 mp로 되어 있습니다. 노래의 첫 소리는 크지 않게 시작하는 것이 좋습니다."
+        two = "반주는 p로 시작합니다. 첫소리를 크지 않게 시작하는 것이 적절합니다."
+        payload = context("en", one, two)
+        payload["question"] = "Does the opening accompaniment really begin ff, and why do these markings differ?"
+        result = opening_dynamics_comparison(payload)
+        self.assertIn("as mp,", result)
+        self.assertIn("as p.", result)
+        self.assertNotIn("as ff", result)
+        self.assertNotIn("PP", result)
+
+    def test_ambiguous_negated_conditional_and_other_location_sources_keep_full_source_path(self):
+        negative_sources = [
+            "반주가 p로 시작하지 않습니다.",
+            "시작 반주가 p로 되어 있지 않습니다.",
+            "반주가 p로 시작한다면 조용할 것입니다.",
+            "만약 반주가 p로 시작한다는 가정하에 설명합니다.",
+            "반주가 p로 시작한다는 설명은 사실이 아닙니다.",
+            "반주는 p 또는 mp로 시작합니다.",
+            "후주의 반주는 p로 시작합니다.",
+            "반주가 40마디에서 p로 시작합니다.",
+            "노래가 p로 시작합니다. 반주는 셈여림 표시가 없습니다.",
+            "p는 piano를 뜻합니다. 반주의 시작을 살펴봅니다.",
+            "반주가 p로 시작합니다. 반주가 mp로 시작하는 부분도 있습니다.",
+            "반주가 p로 시작합니다. 표기의 차이는 개정판 때문입니다.",
+        ]
+        for source in negative_sources:
+            with self.subTest(source=source):
+                self.assertIsNone(opening_dynamics_comparison(context(second=source +
+                    " 첫소리를 크지 않게 시작하는 것이 좋습니다.")))
+
+    def test_common_advice_requires_explicit_support_in_each_source(self):
+        for advice in ("", "반주를 크지 않게 시작하는 것이 좋습니다.",
+                       "노래의 첫소리를 크지 않게 시작하는 것은 적절하지 않습니다.",
+                       "첫소리는 크게 시작하는 것이 좋습니다."):
+            with self.subTest(advice=advice):
+                self.assertIsNone(opening_dynamics_comparison(context(second="반주는 p로 시작합니다. " + advice)))
+
+    def test_same_values_single_source_local_and_unrelated_questions_keep_full_source_path(self):
+        self.assertIsNone(opening_dynamics_comparison(context(second=SOFT.replace("PP", "pp"))))
+        changes = [{"Retrieved evidence": context()["Retrieved evidence"][:1]},
+                   {"measure_range": [7, 8]}, {"question": "후반의 호흡은 어떻게 하나요?"},
+                   {"answer_language": "fr"}]
+        for change in changes:
+            with self.subTest(change=change):
+                self.assertIsNone(opening_dynamics_comparison({**context(), **change}))
+        payload = context()
+        payload["Retrieved evidence"][1]["evidence_role"] = "context"
+        self.assertIsNone(opening_dynamics_comparison(payload))
+
+    def test_comparison_never_bypasses_admission_or_output_review(self):
+        for language in ("ko", "en"):
+            for denied in (None, "admission", "output"):
+                with self.subTest(language=language, denied=denied):
+                    payload = context(language)
                     backend = Mock()
-                    backend.create_chat_completion.side_effect = [completion(x) for x in [
-                        '{"task":"music_question"}', '{"labels":["E1","E2"]}', '{"relationship":"disagreement"}',
-                        *attempt, *([] if allow else attempt)]]
+                    verdicts = ['{"task":"instruction_attack"}'] if denied == "admission" else [
+                        '{"task":"music_question"}', '{"labels":["E2","E4"]}',
+                        json.dumps({"allow": denied != "output"})]
+                    backend.create_chat_completion.side_effect = [completion(x) for x in verdicts]
                     with patch.object(llm, "load_llama", return_value=backend), \
                          patch.object(llm, "translate_source_parts") as translate:
                         def run():
@@ -125,27 +111,22 @@ class SourceSynthesisTests(unittest.TestCase):
                                                        {"role":"user", "content":json.dumps(payload)}],
                                                 {"source_preservation":"verbatim_or_translation",
                                                  "evidence_translation":"reviewed_catalog"}, security_context=payload)
-                        if allow:
-                            result = run()
-                            self.assertIn("[E1, E2]", result)
-                            self.assertFalse(any(p.get("source_quotation") for p in result.parts))
-                        else:
+                        if denied:
                             with self.assertRaises(SecurityViolation) as error:
                                 run()
-                            self.assertEqual(error.exception.reason, "security_output_rejected")
+                            self.assertEqual(error.exception.reason, f"security_{denied}_rejected")
+                        else:
+                            result = run()
+                            self.assertEqual(result.generation_mode, "llm_guarded_source_comparison")
+                            self.assertEqual(result.answer_basis, "retrieved_evidence")
+                            self.assertIn("[E2, E4]", result)
                     translate.assert_not_called()
-                    calls = backend.create_chat_completion.call_args_list
-                    composed = json.loads(calls[3].kwargs["messages"][1]["content"])
-                    self.assertNotIn("question", composed)
-                    self.assertNotIn("source_preservation", composed)
-                    self.assertEqual([r["citation_label"] for r in composed["Retrieved evidence"]], ["E1", "E2"])
-                    checked = json.loads(calls[4].kwargs["messages"][1]["content"])
-                    self.assertIn("First source advice.", checked["draft"])
-                    self.assertEqual(checked["question"], payload["question"])
-                    self.assertTrue(checked["source_synthesis"])
-                    self.assertNotIn("response_format", calls[3].kwargs)
-                    self.assertEqual(calls[3].kwargs["max_tokens"], 2560)
-                    self.assertEqual(checked["composition"][0]["evidence"], ["E1", "E2"])
+                    self.assertEqual(backend.create_chat_completion.call_count, len(verdicts))
+                    if denied != "admission":
+                        checked = json.loads(backend.create_chat_completion.call_args.kwargs["messages"][1]["content"])
+                        self.assertEqual(checked["question"], payload["question"])
+                        self.assertTrue(checked["source_synthesis"])
+                        self.assertEqual(checked["composition"][0]["evidence"], ["E2", "E4"])
 
 
 if __name__ == "__main__":
