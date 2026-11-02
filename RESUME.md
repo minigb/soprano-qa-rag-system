@@ -1,3 +1,26 @@
+# 확장460개 평가 실행 중 — 2026-11-02
+
+사용자 요청: 기존 확장 평가460개를 현재 E37과 보안 적용 전 원본으로 새로 실행하고,
+Claude Opus5.5로 의미 보존·자연스러움을 비교하며 전문가 기반 BERTScore≥0.90 확인.
+같은 `codex/ku-background-knowledge` 브랜치. production E37은 변경하지 않는다.
+
+현재 문서: [평가 방법/재개](evaluation/expanded_460_2026-11-02/README.md)
+진행 상태: [analysis-state](evaluation/expanded_460_2026-11-02/analysis-state.json)
+입력: [cases](evaluation/expanded_460_2026-11-02/cases.json)
+설정: [config](evaluation/expanded_460_2026-11-02/config.json)
+
+E37→원본 순으로 각각460개를 새로 생성한다. 생성 controller와 생성 완료 후
+분석을 시작하는 controller가 실행 중이다. 새로 시작하기 전에 기존 프로세스를
+확인해서 중복 실행하지 않는다. 분석은 지표→눈가림 Claude→집계 순서다.
+전체 끝난 뒤 낮은 의미/자연스러움 평가를 직접 확인하고, 보고서·검증·Lab동기화·커밋이 남는다.
+원본946개 vs현재953개 자료 차이를 발견했다. 공통946개/전문가KU122개는 동일하며
+추가7개는 조수미 피드백이다. 이전 보고서의 동일corpus 표현을 정확히 한정해
+새 README에 명시했다. 과거 결과와 참조를 바꾸지 않았다.
+
+사용량/reset 중지와 notifier는 사용하지 않는다. 아래는 직전 E37 완료 기록이다.
+
+---
+
 # 후속 개선 완료 — E37, 2026-11-02
 
 요청한 오거절3건과 p/PP 설명 개선을 마쳤다. BERTScore를 높이기 위한 재튜닝 없이

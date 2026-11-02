@@ -1,0 +1,74 @@
+[
+  {
+    "id": "faithful_fluent",
+    "question": "레가토와 포르타멘토는 어떻게 다른가요?",
+    "piece_id": "general-music",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "calibration-source",
+        "text": "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다.",
+        "role": "primary",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "false_fluent",
+    "question": "레가토와 포르타멘토는 어떻게 다른가요?",
+    "piece_id": "general-music",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "레가토는 음을 짧게 끊어서 부르는 주법이고, 포르타멘토는 음높이를 전혀 바꾸지 않는 주법입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "calibration-source",
+        "text": "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다.",
+        "role": "primary",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "faithful_repetitive",
+    "question": "레가토와 포르타멘토는 어떻게 다른가요?",
+    "piece_id": "general-music",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 또한 말씀드리면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 다시 말하면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 또한 말씀드리면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 다시 말하면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 또한 말씀드리면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 다시 말하면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 또한 말씀드리면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다. 다시 말하면, 레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "calibration-source",
+        "text": "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다.",
+        "role": "primary",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "레가토는 음과 음을 부드럽게 연결하는 주법입니다. 포르타멘토는 한 음에서 다음 음으로 음높이를 미끄러지듯 이동하는 표현입니다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]
