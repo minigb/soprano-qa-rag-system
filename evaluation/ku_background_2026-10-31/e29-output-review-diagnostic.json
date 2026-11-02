@@ -1,0 +1,58 @@
+[
+  {
+    "mode": "focused",
+    "case": "faithful",
+    "expected": true,
+    "verdict": "{\"allow\": true}",
+    "seconds": 4.459004764998099
+  },
+  {
+    "mode": "focused",
+    "case": "unshared_technique",
+    "expected": false,
+    "verdict": "{\"allow\": false}",
+    "seconds": 0.3088626379976631
+  },
+  {
+    "mode": "focused",
+    "case": "invented_cause",
+    "expected": false,
+    "verdict": "{\"allow\": false}",
+    "seconds": 0.3109586990030948
+  },
+  {
+    "mode": "focused",
+    "case": "unrelated_task",
+    "expected": false,
+    "verdict": "{\"allow\": false}",
+    "seconds": 0.34314026899664896
+  },
+  {
+    "mode": "reasoned",
+    "case": "faithful",
+    "expected": true,
+    "verdict": "{\"allow\": true}",
+    "seconds": 7.792217555004754
+  },
+  {
+    "mode": "reasoned",
+    "case": "unshared_technique",
+    "expected": false,
+    "verdict": "{\"allow\": true}",
+    "seconds": 7.064348177998909
+  },
+  {
+    "mode": "reasoned",
+    "case": "invented_cause",
+    "expected": false,
+    "verdict": "{\"allow\": false}",
+    "seconds": 11.083787809002388
+  },
+  {
+    "mode": "reasoned",
+    "case": "unrelated_task",
+    "expected": false,
+    "verdict": "{\"allow\": false}",
+    "seconds": 6.254858891996264
+  }
+]

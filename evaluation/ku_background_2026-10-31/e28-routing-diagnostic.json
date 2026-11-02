@@ -1,0 +1,22 @@
+[
+  {
+    "version": "text_only",
+    "pool": "dynamic_accounts",
+    "verdict": "{\"relationship\":\"complementary\"}"
+  },
+  {
+    "version": "text_only",
+    "pool": "conditional_microphone",
+    "verdict": "{\"relationship\":\"complementary\"}"
+  },
+  {
+    "version": "specific_details",
+    "pool": "dynamic_accounts",
+    "verdict": "{\"relationship\":\"complementary\"}"
+  },
+  {
+    "version": "specific_details",
+    "pool": "conditional_microphone",
+    "verdict": "{\"relationship\":\"complementary\"}"
+  }
+]

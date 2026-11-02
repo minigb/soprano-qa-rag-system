@@ -1,0 +1,90 @@
+[
+  {
+    "key": "probe-e29:fixed-observed-p-pp-1",
+    "case_id": "fixed-observed-p-pp-1",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "9a94ec7f081ca8ebefea"
+  },
+  {
+    "key": "probe-e29:fixed-observed-p-pp-2",
+    "case_id": "fixed-observed-p-pp-2",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "4141ec67e294cf365866"
+  },
+  {
+    "key": "probe-e29:expert-kim-nella-fantasia-03__no-range",
+    "case_id": "expert-kim-nella-fantasia-03__no-range",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "f075cfab2a22ef27e6a5"
+  },
+  {
+    "key": "probe-e29:followup-breath-ko",
+    "case_id": "followup-breath-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "e010478fda256e5b7cb8"
+  },
+  {
+    "key": "probe-e29:followup-comparison-en",
+    "case_id": "followup-comparison-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "unavailable",
+    "review_id": "effa24d2ad71ef088cac"
+  },
+  {
+    "key": "probe-e29:followup-practice-paraphrase",
+    "case_id": "followup-practice-paraphrase",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "e5bf6b0729146e71a270"
+  },
+  {
+    "key": "probe-e29:static-19-en",
+    "case_id": "static-19-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "aad54fa5ee61342d6f80"
+  },
+  {
+    "key": "probe-e29:fresh-benign-04-en",
+    "case_id": "fresh-benign-04-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e29.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "f5e8b113e9f0382f25ab"
+  }
+]

@@ -1,0 +1,2309 @@
+{
+  "results_sha256": "27a75fb3117215b4483ea09cbc8e78a7c52b9e294969c223533b1615946ad972",
+  "script_sha256": "1c95833ca8136e1cd1003c8ef24b48d1e9373dd910154fb377c048355b65a1c3",
+  "limitations": "Literal text identity allowing display-time trailing whitespace removal at the end of the answer only. A quotation may still be irrelevant, incomplete, inaccurate in its source, or unsafe. Non-quotation answers and English translations require separate assessment. An unmatched tail can also be a score-lyric addition; inspect it rather than automatically declaring a semantic error.",
+  "rows": 290,
+  "quotation_answers": 165,
+  "verified_quotation_answers": 165,
+  "cases": [
+    {
+      "case_id": "direct-01-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-duration-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-17__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-018",
+        "la-capinera-ku-030"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-15__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-020"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-15-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-17-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-06-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-02-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "out-of-scope-04-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-13-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-03__m16-16",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-15__m92-93",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-020"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-la-capinera-01__m11-14",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-09__m67-69",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-11__m67-69",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-19-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-09__m44-52",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-16-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-038-ku-01",
+        "nella-fantasia-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-03__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-08-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-18-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-19-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-021"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-13__m62-62",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-017"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-duration-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-14-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-die-forelle-04__m28-40",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-12-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-07-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-03__m21-22",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-004",
+        "una-voce-poco-fa-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-15__m86-88",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-016"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-05__m20-20",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-10__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-06__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-08-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-19__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-05__m22-24",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-fermata-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-11-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-benign-01-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-transpose-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-08__m95-96",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-12__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-03-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "out-of-scope-05-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-08__m56-59",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "static-21-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-12-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-05-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-09__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-08-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-036"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-12__m68-69",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-014"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-12__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-029"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-breath-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-07__m28-40",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__m1-2",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-05-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-08-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-06-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__m1-2",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-09__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-016"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fixed-observed-p-pp-2",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-legato-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-dynamics-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-05-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-09__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-15__m92-93",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-020"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-17-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-20__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-nella-fantasia-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-038-ku-01",
+        "nella-fantasia-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-indirect-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-10-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-why_unknown-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-19__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-04__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-fermata-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-04-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-03-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-11-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-la-capinera-13__m80-80",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-09__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__m39-49",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-pitch_unknown-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-07__reported-no-range-01",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-transpose-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-die-forelle-05__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-009",
+        "die-forelle-ku-017",
+        "die-forelle-ku-016",
+        "die-forelle-wc-5027"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-la-capinera-14__m83-85",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-la-capinera-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-16__m103-103",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-017"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-17__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-018"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-05-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-04-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-10-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-14__m83-85",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-10__m51-66",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-10__m37-37",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "out-of-scope-05-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-09-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-glossary-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-15__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-020"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-16__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-032"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-03__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-03__m7-8",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-002"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-15-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-05__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-11-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-05__m19-21",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-13__m80-80",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-12-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-17-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-002"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "out-of-scope-02-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-indirect-01-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-15-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-meter-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-12__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "out-of-scope-01-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-direct-03-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-005",
+        "die-forelle-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-02-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__m44-55",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-016"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-17__m117-124",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-018"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-breath-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-05-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-06__m20-24",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-11-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-18-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-016"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-20__m42-42",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-04__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-02-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-09__m31-34",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-012",
+        "una-voce-poco-fa-ku-013",
+        "una-voce-poco-fa-ku-014"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-20-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-legato-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-pitch_unknown-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-nella-fantasia-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "out-of-scope-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-09-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-04-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-028"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__reported-no-range-01",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-04-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-10-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-01__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-23-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "out-of-scope-03-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-02__m11-12",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-002",
+        "in-flowery-clouds-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-15-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-06__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-18__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-022"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-18__m137-137",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-019"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-08__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-08__m32-32",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-die-forelle-04__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-09__m41-43",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-benign-05-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-05-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-022"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-09-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "out-of-scope-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-07__m25-25",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-16-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-02-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-16__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-021"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-02__m41-54",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-002"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-14__m67-67",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-019"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-13-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-03-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-025"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-la-capinera-11__m67-69",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-09__m31-34",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-012",
+        "una-voce-poco-fa-ku-013",
+        "una-voce-poco-fa-ku-014"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-07__m11-17",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-06__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-direct-02-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-03__no-range",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-08__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-01__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-direct-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-09-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-11__reported-no-range-01",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-016"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-direct-02-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-dynamics-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-07-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-05-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-03__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-01-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-yeon-nella-fantasia-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-038-ku-01",
+        "nella-fantasia-ku-015"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-01-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-002"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-rubato-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-08__m32-32",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-011"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-14-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-09__m67-69",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-06-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-04-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "static-18-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-07-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-07-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-06__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-07-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-13-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "indirect-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "static-19-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-direct-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-06-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-09__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-040-ku-01",
+        "nella-fantasia-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-15-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-10-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-10-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__reported-no-range-01",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-la-capinera-12__m135-137",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-029"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-slow_practice-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-nella-fantasia-02__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-004",
+        "nella-fantasia-ku-014"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-20__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-018"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-10__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-039-ku-01",
+        "nella-fantasia-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-07-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "recent-benign-14-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-07__m39-49",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-03__m21-22",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-004",
+        "una-voce-poco-fa-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-03-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-04-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-14-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-06-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-05__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-037-ku-01",
+        "nella-fantasia-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-out-of-scope-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "out-of-scope-01-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-07__m28-35",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-009"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-02__m11-12",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-002",
+        "in-flowery-clouds-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-yeon-nella-fantasia-01__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-013"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-08-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-07-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-007"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-14-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-glossary-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-13-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-06-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-direct-01-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-022"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "static-25-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-07__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-11__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fixed-observed-p-pp-1",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-04-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "sumijo-nella-fantasia-037-ku-01",
+        "nella-fantasia-ku-004"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "fresh-out-of-scope-01-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-12__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-20-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-026"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "direct-04-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-slow_practice-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "benign-12-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-18__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-035"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-10-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-08-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-why_unknown-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "direct-11-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-yeon-una-voce-poco-fa-17__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-033"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "benign-09-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-04__m17-19",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-005"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-die-forelle-01__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-18__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-019"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-01__m11-14",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-001"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-05__m19-21",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "background-rubato-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-la-capinera-02__m22-22",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "la-capinera-ku-003"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-04__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-006"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "indirect-09-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-008"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-in-flowery-clouds-11__m74-79",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "in-flowery-clouds-ku-012"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "history-yeon-die-forelle-05__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "die-forelle-ku-009",
+        "die-forelle-ku-017",
+        "die-forelle-ku-016",
+        "die-forelle-wc-5027"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "expert-kim-nella-fantasia-10__m34-35",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "nella-fantasia-ku-010"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "out-of-scope-04-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "fresh-benign-03-en",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "background-meter-ko",
+      "status": "response",
+      "quotation": false
+    },
+    {
+      "case_id": "expert-kim-una-voce-poco-fa-18__no-range",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-022"
+      ],
+      "verified": true,
+      "separate_background": false
+    },
+    {
+      "case_id": "recent-fresh-benign-05-ko",
+      "status": "response",
+      "quotation": true,
+      "exact_source_ids": [
+        "una-voce-poco-fa-ku-022"
+      ],
+      "verified": true,
+      "separate_background": false
+    }
+  ]
+}

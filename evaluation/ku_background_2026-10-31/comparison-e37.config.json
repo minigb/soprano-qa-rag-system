@@ -1,0 +1,58 @@
+{
+  "generation_python": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "metric_python": "/home/minhee/.cache/soprano-rag-eval-venv/bin/python",
+  "cases": "evaluation/ku_background_2026-10-31/all_cases.json",
+  "expert_cases": "evaluation/ku_background_2026-10-31/expert_cases.json",
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "warmup_case": "expert-kim-die-forelle-03__no-range",
+  "judge_reuse_directory": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/judge",
+  "output": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e37",
+  "systems": [
+    {
+      "name": "pre-security",
+      "root": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329"
+    },
+    {
+      "name": "prior-e25",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e25/snapshots/hardened",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e25/snapshots/hardened/settings.json",
+      "variant": "hardened",
+      "source_commit": "a93b10894371a3039cb0ad34ee60a045638fee90",
+      "settings_sha256": "b8e252a1058637f4eef02a399b0c8ad69c6c911dbddb22c9351a70698f9eb976"
+    },
+    {
+      "name": "candidate",
+      "root": "evaluation/ku_background_2026-10-31/runtime/followup-e37/snapshots/hardened",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/followup-e37/snapshots/hardened/settings.json",
+      "variant": "hardened",
+      "source_commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+      "settings_sha256": "6dd676ab833283cc1fd7daaf6b0ad12fd2f9da1eacc8f6a33c0439c398be2f71"
+    }
+  ],
+  "protocol": {
+    "repetitions": 1,
+    "case_count_per_system": 290,
+    "validation_expert_requests": 62,
+    "ordering": "Reuse immutable pre-security and E25 rows/metrics, then one fresh E37 warmup and all290 requests. One GPU worker.",
+    "metric_selection": "Frozen development-B xlm-roberta-large/layer18, raw unrescaled F1, idf=false, slow tokenizer; unchanged. Full visible answers, errors/refusals zero.",
+    "validation_status": "Reused internal evaluation; earlier failures inform refinement. Not an untouched holdout.",
+    "selection_priority": "BERTScore >=0.90 is a sufficient floor. Meaning, usefulness and naturalness take priority over maximizing reference similarity.",
+    "baseline_reuse": "Byte-identical previously measured rows and metrics from comparison-2026-11-02-e25; baseline-reuse.json records copy hashes. No timing pooling or error reruns.",
+    "judge_reuse": "Exact full packet + identical model/rubric/schema/runner match to completed E19 review only; preserve unfavorable first-valid judgments. Changed packets receive fresh Claude Opus5.5 CLI assessments.",
+    "candidate_status": "Frozen E37 after 23-case diagnostic and separate Claude review; full evaluation required before acceptance.",
+    "no_candidate_changes_during_comparison": true,
+    "indirect_attacks": "Forced model exposure after clean retrieval, not retrieval poisoning.",
+    "additional_generation_methods": [
+      "Existing basic-meter arithmetic with all guards.",
+      "Bounded explicit opening-accompaniment marking comparison and shared quiet vocal entry, in actual selected Korean sources; no inferred cause, no known-case lookup; all guards.",
+      "Concise question/language view and bounded private reasoning for source-empty pitch concepts; full original context remains in admission/output checks.",
+      "Existing129 machine-authored/reviewed English source translations; exact source-hash lookup."
+    ],
+    "latency_environment": "Same A6000/model/settings. Fresh full E37 run, no concurrent GPU inference/metric worker. Single-run descriptive timing; diagnostic latency not pooled.",
+    "probe_limitations": "Claude found no substantial factual or material source-meaning failures among 15 benign probe requests; minor transposition/octave wording and practice completeness remain. No claim of perfect factual accuracy."
+  }
+}

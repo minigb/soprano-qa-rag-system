@@ -1,4 +1,6 @@
-"""Isolate relationship routing from comparison composition; not a release eval."""
+"""Historical E28 diagnostic: run with source b017c15 / runtime/probe-e28.
+The relationship API was deliberately removed from the accepted comparison design.
+Isolate relationship routing from comparison composition; not a release eval."""
 import json
 from pathlib import Path
 import sys

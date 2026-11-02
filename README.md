@@ -355,33 +355,40 @@ Korean expert evaluation references remain unchanged. See
 `evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
 full fidelity review and the separately flagged original-source factual errors.
 English source translations are visibly labelled as translated reference text,
-including first-person statements inherited from the source. E25 retains a
+including first-person statements inherited from the source. The service retains a
 narrow route for explicit general practice scenarios without a local referent;
 selected ranges, directly matching source questions and selected-work names
 retain evidence. Explicit definition/comparison questions assess actual source
 relevance even when only one KU is retrieved, so a directly answering definition
-is retained. E23 also calculates basic explicit beat-unit questions using conventional
+is retained. It also calculates basic explicit beat-unit questions using conventional
 simple/compound meter arithmetic. These answers retain both model security
 checks and are reported as `llm_guarded_calculation`, not model-composed prose.
 Score facts, alternate groupings and performance interpretations do not use this
-shortcut. E25 also screens source/output instructions that promote a decoded
+shortcut. The service also screens source/output instructions that promote a decoded
 request into the final answer, while permitting ordinary musical notation
-decoding. Its [completed comparison](evaluation/ku_background_2026-10-31/report.md)
+decoding. A bounded source comparison identifies differing explicit opening
+accompaniment markings and shared quiet vocal-entrance advice in two selected
+Korean sources, without inventing a cause. All guards remain mandatory;
+`llm_guarded_source_comparison` identifies the application-rendered answer.
+For source-empty pitch concepts without local score context, a concise question
+view and bounded private reasoning reduce irrelevant examples; strict final
+JSON and full-context output review still apply.
+Its [completed comparison](evaluation/ku_background_2026-10-31/followup-report.md)
 passes the fixed metric target and checks meaning, security, usefulness and latency.
 
 Current policy code is in `soprano_qa/structured_answer.py`, assembled by
 `soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current
 Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e25/`; the conservative general
+`evaluation/ku_background_2026-10-31/prompts-e37/`; the conservative general
 intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
 is `config/bertscore.json`, with the development choices and limitations in
 `evaluation/ku_background_2026-10-31/development.md`. High reference similarity
 from literal source quotations is not proof of unrestricted generation quality.
 BERTScore 0.90 is a sufficient acceptance floor, not a score-maximization
 objective. Meaning, useful coverage, naturalness, refusals and latency determine
-whether a candidate is acceptable. E25 is selected on this branch; the report
-retains three normal false refusals, remaining source/presentation issues and
-the latency cost relative to the original system.
+whether a candidate is acceptable. E37 is selected on this branch; the report
+records resolution of the three false refusals, remaining small theory/practice
+and source-presentation issues, and latency relative to the original system.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the
@@ -414,14 +421,15 @@ model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
 
 ## Evaluation
 
-The [2026-11-02 final comparison](evaluation/ku_background_2026-10-31/report.md)
+The [2026-11-02 follow-up comparison](evaluation/ku_background_2026-10-31/followup-report.md)
 covers 290 Korean/English normal and adversarial requests per system. Expert
-validation BERTScore F1 is 0.973458 (62/62 answers), with 0/58 observed injection
-successes, no judged material meaning drift, and 3/216 normal false refusals.
+validation BERTScore F1 is 0.972987 (62/62 answers), with 0/58 observed injection
+successes, no judged material meaning drift, and 0/216 normal false refusals.
 The cases were reused during refinement; literal KU quotations raise reference
-overlap, and the score is not factual accuracy. The report includes the original,
-initial-security and strict baselines, independent Claude judgments, direct
-meaning checks and paired latency.
+overlap, and the score is not factual accuracy. The report compares the original
+system and E25 using independent Claude judgments, direct meaning checks and
+paired latency. The [earlier report](evaluation/ku_background_2026-10-31/report.md)
+retains the initial-security and strict-baseline comparisons.
 
 The [2026-10-25 bilingual security comparison](evaluation/security_comparison_2026-10-25/report.md)
 contains 400 measured requests comparing the original and hardened systems on
