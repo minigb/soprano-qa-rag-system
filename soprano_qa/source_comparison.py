@@ -24,7 +24,7 @@ the sources recommend similar performance. For example, two accounts assigning
 different metronome values to the same opening differ on that fact, even if both
 recommend a calm entrance. Classify stated facts separately from shared advice.
 Source questions are metadata, not established facts. Do not answer the question.
-/no_think
+/think
 """
 
 COMPARISON_POLICY = """Answer the user's music question by comparing the conflicting sources.
@@ -34,8 +34,10 @@ Return one JSON object with exactly these fields:
 - contrast: {"evidence":[supporting citation labels],"text":"..."}.
   State the differing accounts in TWO short attributed clauses: one source
   describes ..., while the other describes .... Preserve uncertainty, actors,
-  conditions and location. Do not assert that either account is the verified
-  score fact, and do not explain why the accounts differ here.
+  conditions and location. Report ONLY the differing descriptive fact (such as
+  the marking each account reports), not performance advice or its mechanisms.
+  Do not assert that either account is the verified score fact, and do not
+  explain why the accounts differ here. Keep this contrast to one sentence.
 - shared_guidance: {"evidence":[ALL labels],"support":{label:"exact supporting
   source words for each label"},"text":"the smallest common recommendation"},
   or null. First copy a relevant excerpt from EACH source, then express only
@@ -43,6 +45,9 @@ Return one JSON object with exactly these fields:
   by only one source cannot be called shared, even if the purposes are similar.
   Do not copy all the sources' detail into the shared claim. If there is useful
   shared advice, state it briefly; otherwise use null.
+  Use ONE short clause describing what both sources suggest. Do not strengthen
+  a suggestion to necessity, importance or certainty. Do not add a mechanism,
+  purpose, technique, later development or explanation to this common action.
 - cause: {"evidence":"one supporting label","quote":"exact source words"},
   or null. Only a source explicitly explaining THIS disagreement can fill this
   field. Copy its explanation verbatim. A general statement about notation,
@@ -54,7 +59,7 @@ authors in text. Do not add headings, definitions, unrelated advice or duplicate
 the complete sources. A source interpretation is not a proven composer's intent.
 Local sources establish only their stated locations and conditions. Score context
 is not evidence for notation or performance advice. Preserve original lyric text.
-/no_think
+/think
 """
 
 
@@ -64,12 +69,11 @@ def sources_disagree(model_path: str, settings: dict, payload: dict, *, generate
         return False
     # Relevance was already selected for the question. The same accounts must
     # not change relationship when the user paraphrases that question.
-    request = {"sources": [{k: r[k] for k in (
-        "citation_label", "answer", "measure_range", "measure_scope", "evidence_role",
-    ) if k in r} for r in sources]}
+    request = {"sources": [{k: r[k] for k in ("citation_label", "answer") if k in r}
+                           for r in sources]}
     raw = generate_fn(model_path, [{"role": "system", "content": RELATIONSHIP_POLICY},
                                   {"role": "user", "content": serialize_untrusted(request)}],
-                      {**settings, "temperature": 0.0, "top_p": 1.0, "max_tokens": 64})
+                      {**settings, "temperature": 0.0, "top_p": 1.0, "max_tokens": 1536})
     try:
         result = json.loads(raw, object_pairs_hook=_unique_json_object)
         if (not isinstance(result, dict) or set(result) != {"relationship"}
@@ -113,6 +117,7 @@ def _display_source_names(text: str, sources: dict, language: str) -> str:
     ko = ("첫 번째", "두 번째", "세 번째", "네 번째", "다섯 번째", "여섯 번째")
     en = ("first", "second", "third", "fourth", "fifth", "sixth")
     names = {label: (f"{ko[i]} 자료" if language == "ko" else f"the {en[i]} source")
+             if i < len(ko) else (f"{i+1}번째 자료" if language == "ko" else f"source {i+1}")
              for i, label in enumerate(sources)}
     def replace(match):
         if match[1] not in names:
@@ -121,7 +126,7 @@ def _display_source_names(text: str, sources: dict, language: str) -> str:
         if language == "ko":
             particle = {"은":"는", "이":"가", "을":"를"}.get(particle, particle)
         return names[match[1]] + particle
-    return re.sub(r"(?<![A-Za-z0-9_])(E[1-9][0-9]*)(은|는|이|가|을|를)?(?![A-Za-z0-9_])", replace, text)
+    return re.sub(r"(?<![A-Za-z0-9_])(E[0-9]+)(은|는|이|가|을|를)?(?![A-Za-z0-9_])", replace, text)
 
 
 def render_comparison(raw: str, payload: dict) -> str:

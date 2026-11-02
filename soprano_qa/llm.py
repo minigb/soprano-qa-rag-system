@@ -210,7 +210,7 @@ def generate(
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         elif synthesize_sources:
-            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY}, *messages[1:]]
+            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n/think"}, *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.
@@ -225,10 +225,13 @@ def generate(
              + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
-        completion_options["response_format"] = {
-            "type": "json_object", "schema": (comparison_schema(security_context) if synthesize_sources
-                                                else answer_schema(security_context)),
-        }
+        if not synthesize_sources:
+            completion_options["response_format"] = {
+                "type": "json_object", "schema": answer_schema(security_context),
+            }
+        # A forced JSON first token suppresses Qwen's comparison reasoning.
+        # Only this narrow route uses an unconstrained final completion, whose
+        # JSON, excerpts, citations and meaning are still fully validated below.
     # A denied output may receive one new composition under the same policy.
     # Admission denials, malformed verdicts, unsafe text and backend failures
     # never enter this path. A replacement still needs every normal check.
@@ -245,7 +248,8 @@ def generate(
                 messages=messages,
                 temperature=float(llm_settings.get("temperature", 0.0)),
                 top_p=float(llm_settings.get("top_p", 0.8)),
-                max_tokens=int(llm_settings.get("max_tokens", 768)),
+                max_tokens=(2560 if security_context is not None and synthesize_sources
+                            else int(llm_settings.get("max_tokens", 768))),
                 **completion_options,
             )
         answer = strip_thinking(response["choices"][0]["message"]["content"])
