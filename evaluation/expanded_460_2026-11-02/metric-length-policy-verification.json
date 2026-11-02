@@ -1,0 +1,14 @@
+{
+  "recorded_at": "2026-11-02T08:44:47.933739+00:00",
+  "instrument": "Mock encoder with four-token limit, five requests: short answer, long answer, short answer, long reference, execution error.",
+  "checked": {
+    "only_short_complete_texts_sent_to_encoder": true,
+    "noncontiguous_score_to_case_alignment": true,
+    "all_five_requests_retained": true,
+    "four_delivered_two_scored_two_overlength": true,
+    "no_truncation": true,
+    "effective_mean_equals_0_34": true,
+    "overlength_not_claimed_as_computed_BERTScore": true
+  },
+  "production_code_changed": false
+}

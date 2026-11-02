@@ -62,7 +62,8 @@ Claude Opus5.5 CLI에 시스템명·버전·BERTScore를 숨긴 문항/답변/�
 이전 설정을 고정한다: `xlm-roberta-large`,18층,IDF=false,raw/unrescaled F1,
 slow tokenizer, revision `c23d21b0620b635a76227c604d44e43a9f0ee389`.
 설정 탐색·정답 수정·불리한 문항 제외는 하지 않는다. 답변 전체를 사용하고
-잘림이 필요하면 점수 계산을 실패 처리한다. pipeline의 unavailable/error는0점이다.
+길이 제한을 넘는 답변은 계산 불가로 명시하고 보수적 집계에0점을 배정한다.
+pipeline의 unavailable/error도0점이다. 길이 초과의0은 실제 계산한 BERTScore가 아니다.
 Claude가 추가로 판정한 순수 거절까지0점으로 환산한 보조 평균도 구분한다.
 
 원질문105개, 기존 개발43개·검증62개, 표현 변형306개, KU 파생49개, 전체460개의
@@ -77,7 +78,7 @@ branch `codex/ku-background-knowledge`에서 실행한다.
 
 ```bash
 /home/minhee/miniconda3/envs/soprano-qa/bin/python -u evaluation/run_expanded_generation.py
-/home/minhee/miniconda3/envs/soprano-qa/bin/python -u evaluation/run_expanded_analysis.py
+/home/minhee/miniconda3/envs/soprano-qa/bin/python -u evaluation/run_expanded_analysis_bounded.py
 ```
 
 첫 명령은 완료된 요청을 해시 계약으로 확인해 건너뛰고 미실행 요청만 실행한다.
@@ -89,3 +90,16 @@ branch `codex/ku-background-knowledge`에서 실행한다.
 
 사용량/reset 중지 조건·Discord·process-stop notifier를 사용하지 않는다.
 main/live/dataset을 수정하지 않는다.
+
+## 길이 사전 검사에 따른 측정 제한 처리
+
+E37 전체 생성 후, 지표·benchmark Claude 채점 전의 tokenizer 검사에서 표현 변형
+2개가600/730토큰으로 확인됐다. 원질문105개와 모든 참조는512토큰 이내다.
+답변·문항·참조·encoder·layer 등 설정은 그대로 두고, 초과 문항을 제외하지 않고
+계산 불가 사유/길이와0점 기여를 명시하는 보수적 집계를 추가했다. 양쪽 시스템에
+같은 정책을 적용한다. Claude는 초과 답변도 전문을 평가한다.
+
+기존 분석 controller는 생성 완료를 기다리던 상태에서만 종료했다. 생성은 계속
+진행됐다. v1스크립트·계약을 보존하고 v2분석 계약을 새로 만든다. 근거는
+[길이 처리 명세](metric-length-amendment.json), [해당 문항](overlength-candidate-cases.json),
+[독립 검증](metric-length-policy-verification.json), [v1종료 기록](analysis-v1-stop.json)에 있다.
