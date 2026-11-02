@@ -1,5 +1,9 @@
 # Local answer comparison demo
 
+The default E37 screen is historical quotation-mode evidence, not proof of
+generative answer quality. `dist/evaluations.json` labels each version and keeps
+its notes in a separate storage key; the original E37 key is preserved.
+
 All 460 frozen questions and 920 full answers from `expanded_460_2026-11-02`,
 with the original Claude judgments, BERTScore values, retrieved KUs and expert
 references. This is a static review tool; it does not generate new answers or
@@ -47,3 +51,7 @@ context and does not modify user notes. It covers exact displayed answers,
 filter counts, overlength score labels, notes/export persistence, deep links,
 no-result recovery and mobile layouts. Browser setup is not required to use
 the demo.
+
+For browser QA without starting any HTTP server, set `REVIEW_STATIC_DIR` to the
+absolute `dist` path. Playwright intercepts an in-memory test origin and reads
+only the local static files; this does not bind a port or start the demo.

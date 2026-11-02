@@ -11,23 +11,43 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
   const errors = [], checks = [];
   try {
     const context = await browser.newContext({ viewport: { width: 1440, height: 1050 } });
+    const staticDir = process.env.REVIEW_STATIC_DIR && path.resolve(process.env.REVIEW_STATIC_DIR);
+    if (staticDir) await context.route("http://answer-review.test/**", async (route) => {
+      const pathname = decodeURIComponent(new URL(route.request().url()).pathname);
+      const file = path.resolve(staticDir, "." + (pathname.endsWith("/") ? pathname + "index.html" : pathname));
+      if (!file.startsWith(staticDir + path.sep) || !fs.existsSync(file)) return route.fulfill({ status: 404, body: "Not found" });
+      const type = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".json": "application/json" }[path.extname(file)];
+      return route.fulfill({ status: 200, contentType: type, body: fs.readFileSync(file) });
+    });
     const page = await context.newPage(); page.on("pageerror", (e) => errors.push(e.message));
-    const url = process.env.REVIEW_BASE_URL || "http://127.0.0.1:8766/";
+    const url = process.env.REVIEW_BASE_URL || (staticDir ? "http://answer-review.test/" : "http://127.0.0.1:8766/");
     const response = await page.goto(url); assert.equal(response.status(), 200);
     await page.waitForSelector(".answer-text");
-    const data = await (await context.request.get(new URL("data.json", url).href)).json();
+    const readJSON = async (name) => staticDir ? JSON.parse(fs.readFileSync(path.join(staticDir, name), "utf8"))
+      : (await context.request.get(new URL(name, url).href)).json();
+    const catalog = await readJSON("evaluations.json");
+    const active = catalog.evaluations.find((e) => e.id === (new URL(url).searchParams.get("evaluation") || catalog.default));
+    const data = await readJSON(active.data);
     assert.equal(await page.locator(".case-item").count(), 460);
     const selected = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
     const c = data.cases.find((row) => row.id === selected);
     for (const version of ["original", "current"]) assert.equal(await page.locator(`.answer-text[data-version=${version}]`).textContent(), c.versions[version].answer);
     checks.push("460 cases and full original/current text");
-    await page.locator('[data-filter="declined"]').click(); assert.equal(await page.locator(".case-item").count(), 272);
-    await page.locator('[data-filter="resolved"]').click(); assert.equal(await page.locator(".case-item").count(), 27);
-    await page.locator('[data-filter="remaining"]').click(); assert.equal(await page.locator(".case-item").count(), 3);
-    await page.locator('[data-filter="overlength"]').click(); assert.equal(await page.locator(".case-item").count(), 2);
-    assert.equal(await page.locator(".current .unscorable").textContent(), "계산 불가");
-    const overlong = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
-    assert.equal(await page.locator('.answer-text[data-version="current"]').textContent(), data.cases.find((row) => row.id === overlong).versions.current.answer);
+    const predicates = {
+      declined: (c) => c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
+      resolved: (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift",
+      remaining: (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2,
+      overlength: (c) => !c.versions.current.bertscore.scored || !c.versions.original.bertscore.scored,
+    };
+    for (const [filter, predicate] of Object.entries(predicates)) {
+      await page.locator(`[data-filter="${filter}"]`).click();
+      assert.equal(await page.locator(".case-item").count(), data.cases.filter(predicate).length);
+    }
+    if (data.cases.some(predicates.overlength)) {
+      assert.equal(await page.locator(".unscorable").first().textContent(), "계산 불가");
+      const overlong = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
+      assert.equal(await page.locator('.answer-text[data-version="current"]').textContent(), data.cases.find((row) => row.id === overlong).versions.current.answer);
+    }
     checks.push("paired filters and untruncated overlength answers");
     await page.locator("#clear-filters").click();
     await page.locator("#piece").selectOption("nella-fantasia"); assert.equal(await page.locator(".case-item").count(), 75);

@@ -9,14 +9,14 @@ const el = (tag, className = "", text = null) => {
 };
 const FAMILY = { original: "전문가 원질문", paraphrase: "표현 변형", ku_derived: "KU 파생 질문" };
 const FIDELITY = { faithful: "의미 보존", minor_drift: "경미한 의미 변경", material_drift: "중대한 의미 변경", uncertain: "판정 불확실", not_applicable: "해당 없음" };
-const STORAGE_KEY = "soprano-answer-review:expanded_460_2026-11-02:v1";
+let storageKey;
 const FEATURED = "expert-kim-in-flowery-clouds-02__m11-12";
-const state = { data: null, selected: null, filtered: [], focus: "all", notes: {}, storageOK: true };
+const state = { evaluation: null, data: null, selected: null, filtered: [], focus: "all", notes: {}, storageOK: true };
 const filters = [
   ["all", "전체 문항", () => true],
   ["declined", "자연스러움 하락", (c) => c.versions.current.judge.naturalness < c.versions.original.judge.naturalness],
   ["resolved", "중대한 의미 변경 해소", (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"],
-  ["remaining", "현재 의미·사실 검토", (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2],
+  ["remaining", "선택 버전 의미·사실 검토", (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2],
   ["overlength", "BERTScore 계산 불가", (c) => !c.versions.current.bertscore.scored || !c.versions.original.bertscore.scored],
   ["marked", "내 검토 기록", (c) => hasNote(c.id)],
 ];
@@ -38,7 +38,7 @@ function toast(message) {
 function saveNote(id, patch) {
   state.notes[id] = { ...noteFor(id), ...patch, updated_at: new Date().toISOString() };
   if (!hasNote(id)) delete state.notes[id];
-  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state.notes)); state.storageOK = true; }
+  try { localStorage.setItem(storageKey, JSON.stringify(state.notes)); state.storageOK = true; }
   catch { state.storageOK = false; }
   const status = $("note-status");
   if (status) status.textContent = state.storageOK ? "이 브라우저에 저장됨" : "브라우저 저장 실패 · 내보내기로 보관하세요";
@@ -49,9 +49,9 @@ function saveNote(id, patch) {
 function renderOverview() {
   const old = state.data.summary.original, now = state.data.summary.current;
   const items = [
-    ["중대한 출처 의미 변경", old.all.material_drifts, now.all.material_drifts, "건", "전체 460문항 · 원본 → 현재", false],
+    ["중대한 출처 의미 변경", old.all.material_drifts, now.all.material_drifts, "건", `전체 460문항 · 원본 → ${state.evaluation.shortLabel}`, false],
     ["자연스러움 평균", old.all.naturalness_mean_useful_out_of_4.toFixed(2), now.all.naturalness_mean_useful_out_of_4.toFixed(2), "/ 4", `${state.data.naturalness_comparison.losses}문항에서 하락 · Claude 평가`, true],
-    ["전문가 원질문 BERTScore", old.original.bertscore_effective_f1.toFixed(4), now.original.bertscore_effective_f1.toFixed(4), "F1", "105문항 평균 · 기준 0.90 충족", false],
+    ["전문가 원질문 BERTScore", old.original.bertscore_effective_f1.toFixed(4), now.original.bertscore_effective_f1.toFixed(4), "F1", state.evaluation.metricNote, false],
     ["응답 지연 중앙값", old.all.latency_all.median_seconds.toFixed(2), now.all.latency_all.median_seconds.toFixed(2), "초", "버전별 1회 실행 · 생성 당시 기록", true],
   ];
   $("overview").replaceChildren(...items.map(([title, before, after, unit, note, warn]) => {
@@ -95,7 +95,7 @@ function renderList() {
     piece.append(el("span", "", pieceFor(c.piece_id).title), el("span", "", noteFor(c.id).bookmarked ? "★" : String(c.index).padStart(3, "0")));
     bottom.append(el("span", "", rangeText(c.measure_range)));
     const current = c.versions.current.judge, original = c.versions.original.judge;
-    if (current.source_fidelity !== "faithful" || current.factual_correctness <= 2) bottom.append(el("span", "mini-badge danger judgment-content", "현재 답변 검토"));
+    if (current.source_fidelity !== "faithful" || current.factual_correctness <= 2) bottom.append(el("span", "mini-badge danger judgment-content", "선택 버전 검토"));
     else if (original.source_fidelity === "material_drift") bottom.append(el("span", "mini-badge judgment-content", "의미 변경 해소"));
     else if (current.naturalness < original.naturalness) bottom.append(el("span", "mini-badge warn judgment-content", "자연스러움 ↓"));
     button.append(piece, el("div", "case-question", c.question), bottom);
@@ -131,8 +131,8 @@ function makeAnswer(c, version) {
   const v = c.versions[version], current = version === "current";
   const card = el("section", `answer-card ${version}`);
   const head = el("div", "answer-head"), title = el("div", "answer-label");
-  title.append(el("span", "version-dot"), el("h3", "", current ? "현재 시스템" : "원본 시스템"));
-  head.append(title, el("small", "", current ? "E37" : "보안 적용 전"));
+  title.append(el("span", "version-dot"), el("h3", "", current ? state.evaluation.answerLabel : "원본 시스템"));
+  head.append(title, el("small", "", current ? state.evaluation.answerSubtitle : "보안 적용 전"));
   const body = el("div", "answer-body"), answer = el("p", "answer-text", v.answer), meta = el("div", "answer-meta");
   answer.dataset.version = version;
   meta.append(el("span", "", "저장된 답변 전문"), el("span", "", `${[...v.answer].length}자 · ${v.latency_seconds.toFixed(2)}초`));
@@ -142,7 +142,9 @@ function makeAnswer(c, version) {
   const metrics = el("div", "metric-row");
   metrics.append(makeMetric("자연스러움", String(v.judge.naturalness), "/ 4"), makeMetric("사실성", String(v.judge.factual_correctness), "/ 4"), makeMetric("BERTScore F1", v.bertscore.scored ? v.bertscore.f1.toFixed(4) : "계산 불가", "", !v.bertscore.scored));
   judge.append(jt, metrics);
-  if (!v.bertscore.scored) judge.append(el("p", "judge-rationale", `${v.bertscore.candidate_tokens}토큰으로 512토큰 제한을 넘었습니다. 답변은 자르지 않았고 전체 집계에서만 0점 기여로 포함했습니다.`));
+  if (!v.bertscore.scored) judge.append(el("p", "judge-rationale", v.bertscore.reason === "encoder_length_limit"
+    ? `${v.bertscore.candidate_tokens}토큰으로 512토큰 제한을 넘었습니다. 답변은 자르지 않았고 전체 집계에서만 0점 기여로 포함했습니다.`
+    : "답변 거절 또는 실행 실패로 BERTScore를 계산하지 못했습니다. 전체 평균에는 0점 기여로 포함했습니다."));
   for (const [label, text] of [["자연스러움", v.judge.naturalness_rationale], ["의미·내용", v.judge.rationale]]) {
     const p = el("p", "judge-rationale"); p.append(el("strong", "", label + " · "), document.createTextNode(text || "판정 설명 없음")); judge.append(p);
   }
@@ -222,7 +224,7 @@ function exportNotes() {
 function readHash() { return new URLSearchParams(location.hash.slice(1)).get("case"); }
 function restoreNotes() {
   try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+    const saved = JSON.parse(localStorage.getItem(storageKey) || "{}");
     if (!saved || typeof saved !== "object" || Array.isArray(saved)) return;
     const allowed = new Set(state.data.cases.map((c) => c.id));
     for (const [id, note] of Object.entries(saved)) {
@@ -233,7 +235,24 @@ function restoreNotes() {
 }
 async function init() {
   try {
-    const response = await fetch("data.json", { cache: "no-cache" });
+    const catalogResponse = await fetch("evaluations.json", { cache: "no-cache" });
+    if (!catalogResponse.ok) throw new Error("평가 버전 목록을 불러올 수 없습니다.");
+    const catalog = await catalogResponse.json();
+    const requested = new URL(location.href).searchParams.get("evaluation") || catalog.default;
+    state.evaluation = catalog.evaluations.find((e) => e.id === requested);
+    if (!state.evaluation) throw new Error("알 수 없는 평가 버전입니다.");
+    storageKey = state.evaluation.storageKey;
+    for (const entry of catalog.evaluations) { const option = el("option", "", entry.label); option.value = entry.id; $("evaluation").append(option); }
+    $("evaluation").value = state.evaluation.id;
+    $("evaluation").addEventListener("change", () => {
+      const target = new URL(location.href); target.searchParams.set("evaluation", $("evaluation").value); location.href = target.href;
+    });
+    $("evaluation-notice").textContent = state.evaluation.note;
+    $("method-intro").textContent = state.evaluation.methodIntro;
+    $("method-bert").textContent = state.evaluation.methodBert;
+    $("method-scope").textContent = state.evaluation.methodScope;
+    $("snapshot").textContent = state.evaluation.date + " 평가 기록";
+    const response = await fetch(state.evaluation.data, { cache: "no-cache" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
     if (state.data.cases.length !== 460) throw new Error("460개 문항을 확인할 수 없습니다.");
