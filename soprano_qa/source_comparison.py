@@ -6,6 +6,7 @@ admission, source, output, citation and scope checks remain mandatory.
 from __future__ import annotations
 
 import json
+import re
 from typing import Any, Callable
 
 from soprano_qa.security import SecurityViolation, serialize_untrusted, _unique_json_object
@@ -18,6 +19,10 @@ Return exactly {"relationship":"disagreement"} if the actual answers give
 different accounts of the SAME fact in the SAME situation. Otherwise return
 {"relationship":"complementary"}. Differences between conditional recommendations,
 different locations or situations, and optional alternatives are not a conflict.
+Different values or markings for the same event are a disagreement EVEN WHEN
+the sources recommend similar performance. For example, two accounts assigning
+different metronome values to the same opening differ on that fact, even if both
+recommend a calm entrance. Classify stated facts separately from shared advice.
 Source questions are metadata, not established facts. Do not answer the question.
 /no_think
 """
@@ -31,9 +36,13 @@ Return one JSON object with exactly these fields:
   describes ..., while the other describes .... Preserve uncertainty, actors,
   conditions and location. Do not assert that either account is the verified
   score fact, and do not explain why the accounts differ here.
-- shared_guidance: the same evidence/text object, or null. Include only advice
-  actually supported by EVERY cited source; do not generalize a detail from one
-  source into joint advice. If no supported shared advice is useful, use null.
+- shared_guidance: {"evidence":[ALL labels],"support":{label:"exact supporting
+  source words for each label"},"text":"the smallest common recommendation"},
+  or null. First copy a relevant excerpt from EACH source, then express only
+  their common action. A specific technique, mechanism or extra condition given
+  by only one source cannot be called shared, even if the purposes are similar.
+  Do not copy all the sources' detail into the shared claim. If there is useful
+  shared advice, state it briefly; otherwise use null.
 - cause: {"evidence":"one supporting label","quote":"exact source words"},
   or null. Only a source explicitly explaining THIS disagreement can fill this
   field. Copy its explanation verbatim. A general statement about notation,
@@ -53,7 +62,11 @@ def sources_disagree(model_path: str, settings: dict, payload: dict, *, generate
     sources = [r for r in payload.get("Retrieved evidence", []) if r.get("citation_label")]
     if len(sources) < 2:
         return False
-    request = {"question": payload["question"], "sources": sources}
+    # Relevance was already selected for the question. The same accounts must
+    # not change relationship when the user paraphrases that question.
+    request = {"sources": [{k: r[k] for k in (
+        "citation_label", "answer", "measure_range", "measure_scope", "evidence_role",
+    ) if k in r} for r in sources]}
     raw = generate_fn(model_path, [{"role": "system", "content": RELATIONSHIP_POLICY},
                                   {"role": "user", "content": serialize_untrusted(request)}],
                       {**settings, "temperature": 0.0, "top_p": 1.0, "max_tokens": 64})
@@ -78,10 +91,37 @@ def comparison_schema(payload: dict) -> dict:
         "evidence": {"type": "string", "enum": labels},
         "quote": {"type": "string", "minLength": 1}},
         "required": ["evidence", "quote"], "additionalProperties": False}
+    shared = {"type": "object", "properties": {
+        "evidence": {"const": labels},
+        "support": {"type": "object", "properties": {
+            label: {"type": "string", "minLength": 1} for label in labels},
+            "required": labels, "additionalProperties": False},
+        "text": {"type": "string", "minLength": 1}},
+        "required": ["evidence", "support", "text"], "additionalProperties": False}
     return {"type": "object", "properties": {
-        "contrast": claim, "shared_guidance": {"oneOf": [claim, {"type": "null"}]},
+        "contrast": claim, "shared_guidance": {"oneOf": [shared, {"type": "null"}]},
         "cause": {"oneOf": [cause, {"type": "null"}]}},
         "required": ["contrast", "shared_guidance", "cause"], "additionalProperties": False}
+
+
+def _display_source_names(text: str, sources: dict, language: str) -> str:
+    """Render recognized internal labels as ordinary source references.
+
+    Unknown labels are rejected, never silently assigned to an actual source.
+    This replaces only a name and its Korean particle, not the attributed claim.
+    """
+    ko = ("첫 번째", "두 번째", "세 번째", "네 번째", "다섯 번째", "여섯 번째")
+    en = ("first", "second", "third", "fourth", "fifth", "sixth")
+    names = {label: (f"{ko[i]} 자료" if language == "ko" else f"the {en[i]} source")
+             for i, label in enumerate(sources)}
+    def replace(match):
+        if match[1] not in names:
+            raise SecurityViolation()
+        particle = match[2] or ""
+        if language == "ko":
+            particle = {"은":"는", "이":"가", "을":"를"}.get(particle, particle)
+        return names[match[1]] + particle
+    return re.sub(r"(?<![A-Za-z0-9_])(E[1-9][0-9]*)(은|는|이|가|을|를)?(?![A-Za-z0-9_])", replace, text)
 
 
 def render_comparison(raw: str, payload: dict) -> str:
@@ -95,9 +135,18 @@ def render_comparison(raw: str, payload: dict) -> str:
             claim = obj[key]
             if key == "shared_guidance" and claim is None:
                 continue
-            if not isinstance(claim, dict) or set(claim) != {"evidence", "text"}:
+            expected = {"evidence", "support", "text"} if key == "shared_guidance" else {"evidence", "text"}
+            if not isinstance(claim, dict) or set(claim) != expected or not isinstance(claim["text"], str):
                 raise ValueError()
-            parts.append({"kind": "evidence", **claim})
+            if key == "shared_guidance":
+                support = claim["support"]
+                if (not isinstance(support, dict) or set(support) != set(sources)
+                        or claim["evidence"] != list(sources)
+                        or any(not isinstance(quote, str) or not quote.strip()
+                               or quote not in sources[label]["answer"] for label, quote in support.items())):
+                    raise ValueError()
+            parts.append({"kind": "evidence", "evidence": claim["evidence"],
+                          "text": _display_source_names(claim["text"], sources, payload.get("answer_language", "ko"))})
         cause = obj["cause"]
         if cause is None:
             text = ("The provided sources do not establish why their accounts differ."

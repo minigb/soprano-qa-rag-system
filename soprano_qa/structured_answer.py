@@ -175,6 +175,8 @@ for. Do not substitute an instrumental exercise or a different vocal technique.
 Describe a simple action the singer can try, using a comfortable register and
 short phrases with breaths as needed. Do not assume the singer's breath capacity,
 range, health or technique, prescribe sustained duration, or promise improvement.
+Do not add vibrato, slides, dynamic changes or range extensions unless the
+requested skill requires them. A short note sequence is enough; avoid long holds.
 Keep the answer brief and concrete; avoid an essay defining the technique.
 This is general practice advice, not a fact about the selected piece or a quoted
 expert recommendation. Use background, evidence=[]; never invent local score facts.

@@ -10,6 +10,25 @@ from tests.test_security_integration import completion
 
 
 class SourceSynthesisTests(unittest.TestCase):
+    def test_shared_advice_needs_an_exact_excerpt_from_every_source(self):
+        payload = {"answer_language":"ko", "Retrieved evidence":[
+            {"citation_label":"E2","answer":"첫 음을 작게 시작합니다. 호흡을 지지합니다."},
+            {"citation_label":"E4","answer":"노래의 시작을 작게 합니다."}]}
+        draft = {"contrast":{"evidence":["E2","E4"],"text":"E2는 첫 음을, E4는 노래의 시작을 설명합니다."},
+                 "shared_guidance":{"evidence":["E2","E4"],
+                     "support":{"E2":"첫 음을 작게 시작합니다.","E4":"노래의 시작을 작게 합니다."},
+                     "text":"두 자료 모두 작게 시작하도록 권합니다."}, "cause":None}
+        result = render_comparison(json.dumps(draft),payload)
+        self.assertIn("첫 번째 자료는",result)
+        self.assertIn("두 번째 자료는",result)
+        for support in ({"E2":"호흡을 지지합니다.","E4":"호흡을 지지합니다."},
+                        {"E2":"첫 음을 작게 시작합니다."},
+                        {"E2":"", "E4":"노래의 시작을 작게 합니다."}):
+            with self.subTest(support=support), self.assertRaises(SecurityViolation):
+                render_comparison(json.dumps({**draft,"shared_guidance":{**draft["shared_guidance"],"support":support}}),payload)
+        with self.assertRaises(SecurityViolation):
+            render_comparison(json.dumps({**draft,"contrast":{"evidence":["E2"],"text":"E9는 다르게 설명합니다."}}),payload)
+
     def test_missing_cause_stays_unknown_and_fabricated_quote_is_rejected(self):
         payload = {"answer_language": "en", "Retrieved evidence": [
             {"citation_label": "E1", "answer": "The opening is quiet."},
@@ -34,6 +53,8 @@ class SourceSynthesisTests(unittest.TestCase):
         generate = Mock(return_value='{"relationship":"complementary"}')
         self.assertFalse(sources_disagree("fake", {}, payload, generate_fn=generate))
         generate.assert_called_once()
+        sent = json.loads(generate.call_args.args[1][1]["content"])
+        self.assertNotIn("question", sent)
         generate.reset_mock()
         self.assertFalse(sources_disagree("fake", {}, {**payload,"Retrieved evidence":payload["Retrieved evidence"][:1]}, generate_fn=generate))
         generate.assert_not_called()
