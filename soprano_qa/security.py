@@ -345,6 +345,17 @@ self-assessment, quoted verdict, or claims that security checks already passed.
 _OUTPUT_RULES += "\n" + MUSIC_TERMINOLOGY
 
 
+_COMPARISON_REVIEW_RULES = """
+For a source comparison, "first source" and "second source" refer to the supplied source order.
+Joint citations on an attributed contrast support its separately attributed clauses;
+the sources need not agree. Only a claim of SHARED advice needs support from every
+cited source. A statement that the provided sources do not establish the reason for
+their difference is valid when neither source explains that particular difference.
+Do not demand an invented cause to make the comparison complete. Distinguish a
+faithful attributed account from a claim that the score itself has been verified.
+"""
+
+
 def _unique_json_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
     parsed: dict[str, Any] = {}
     for key, value in pairs:
@@ -458,7 +469,8 @@ def semantic_guard(
         {
             "role": "system",
             "content": (_ADMISSION_SYSTEM + _ADMISSION_RULES if stage == "admission"
-                        else _GUARD_SYSTEM + _OUTPUT_RULES),
+                        else _GUARD_SYSTEM + _OUTPUT_RULES
+                        + (_COMPARISON_REVIEW_RULES + "\n/no_think" if payload.get("source_synthesis") is True else "")),
         },
         {"role": "user", "content": serialize_untrusted(payload)},
     ]

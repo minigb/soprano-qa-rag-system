@@ -299,6 +299,15 @@ class SemanticGuardTests(unittest.TestCase):
             self.run_guard('{"task":"music_question"}', "output")
         self.assertEqual(raised.exception.reason, "security_guard_invalid_response")
 
+    def test_comparison_clarifies_joint_citations_without_overriding_a_denial(self):
+        generate = mock.Mock(return_value='{"allow":false}')
+        with self.assertRaises(SecurityViolation) as error:
+            semantic_guard("model",{}, {"source_synthesis":True,"draft":"Both sources require an unsupported technique."},
+                           stage="output",generate_fn=generate)
+        self.assertEqual(error.exception.reason,"security_output_rejected")
+        self.assertIn("Only a claim of SHARED advice",generate.call_args.args[1][0]["content"])
+        self.assertEqual(generate.call_args.args[2]["max_tokens"],64)
+
     def test_inference_failures_do_not_release_or_echo_the_payload(self) -> None:
         generate = mock.Mock(side_effect=RuntimeError("SECRET QUESTION"))
         with self.assertRaises(SecurityViolation) as raised:

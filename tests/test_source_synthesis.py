@@ -5,35 +5,43 @@ from unittest.mock import Mock, patch
 
 from soprano_qa import llm
 from soprano_qa.security import SecurityViolation
-from soprano_qa.source_comparison import render_comparison, sources_disagree
+from soprano_qa.source_comparison import render_comparison, sources_disagree, _classify_relationship
 from tests.test_security_integration import completion
 
 
+def contrast(feature, accounts):
+    return {"feature": feature, "accounts": [{"evidence": label, "support": support, "value": value}
+                                              for label, support, value in accounts]}
+
+
 class SourceSynthesisTests(unittest.TestCase):
+    def setUp(self):
+        _classify_relationship.cache_clear()
+
     def test_shared_advice_needs_an_exact_excerpt_from_every_source(self):
         payload = {"answer_language":"ko", "Retrieved evidence":[
             {"citation_label":"E2","answer":"첫 음을 작게 시작합니다. 호흡을 지지합니다."},
             {"citation_label":"E4","answer":"노래의 시작을 작게 합니다."}]}
-        draft = {"contrast":{"evidence":["E2","E4"],"text":"E2는 첫 음을, E4는 노래의 시작을 설명합니다."},
+        draft = {"contrast":contrast("설명 대상", [("E2","첫 음","첫 음"),("E4","노래의 시작","노래의 시작")]),
                  "shared_guidance":{"evidence":["E2","E4"],
                      "support":{"E2":"첫 음을 작게 시작합니다.","E4":"노래의 시작을 작게 합니다."},
                      "text":"두 자료 모두 작게 시작하도록 권합니다."}, "cause":None}
         result = render_comparison(json.dumps(draft),payload)
-        self.assertIn("첫 번째 자료는",result)
-        self.assertIn("두 번째 자료는",result)
+        self.assertIn("첫 번째 자료에는",result)
+        self.assertIn("두 번째 자료에는",result)
         for support in ({"E2":"호흡을 지지합니다.","E4":"호흡을 지지합니다."},
                         {"E2":"첫 음을 작게 시작합니다."},
                         {"E2":"", "E4":"노래의 시작을 작게 합니다."}):
             with self.subTest(support=support), self.assertRaises(SecurityViolation):
                 render_comparison(json.dumps({**draft,"shared_guidance":{**draft["shared_guidance"],"support":support}}),payload)
         with self.assertRaises(SecurityViolation):
-            render_comparison(json.dumps({**draft,"contrast":{"evidence":["E2"],"text":"E9는 다르게 설명합니다."}}),payload)
+            render_comparison(json.dumps({**draft,"contrast":contrast("설명 대상", [("E2","첫 음","첫 음"),("E9","노래의 시작","노래의 시작")])}),payload)
 
     def test_missing_cause_stays_unknown_and_fabricated_quote_is_rejected(self):
         payload = {"answer_language": "en", "Retrieved evidence": [
             {"citation_label": "E1", "answer": "The opening is quiet."},
             {"citation_label": "E2", "answer": "The opening is loud."}]}
-        draft = {"contrast": {"evidence": ["E1", "E2"], "text": "One account says quiet, the other loud."},
+        draft = {"contrast": contrast("opening", [("E1","quiet","quiet"),("E2","loud","loud")]),
                  "shared_guidance": None, "cause": None}
         rendered = render_comparison(json.dumps(draft), payload)
         self.assertIn("do not establish why", rendered)
@@ -60,20 +68,40 @@ class SourceSynthesisTests(unittest.TestCase):
         generate.assert_not_called()
         for invalid in ('{"relationship":"disagreement","allow":true}', '{"relationship":true}',
                         '{"relationship":"disagreement","relationship":"complementary"}'):
-            generate.return_value = invalid
+            generate = Mock(return_value=invalid)
             with self.subTest(invalid=invalid), self.assertRaises(SecurityViolation):
                 sources_disagree("fake", {}, payload, generate_fn=generate)
+
+    def test_routing_cache_is_bound_to_sources_model_and_policy_not_a_security_verdict(self):
+        sources = [{"citation_label":"E1","answer":"Quiet opening."},
+                   {"citation_label":"E2","answer":"Loud opening."}]
+        generate = Mock(return_value='{"relationship":"disagreement"}')
+        payload = {"question":"First question", "Retrieved evidence":sources}
+        self.assertTrue(sources_disagree("model", {}, payload, generate_fn=generate))
+        self.assertTrue(sources_disagree("model", {}, {**payload,"question":"Paraphrase"}, generate_fn=generate))
+        self.assertEqual(generate.call_count,1)
+        sources_disagree("other-model", {}, payload, generate_fn=generate)
+        sources_disagree("model", {"n_ctx":4096}, payload, generate_fn=generate)
+        sources_disagree("model", {}, {**payload,"Retrieved evidence":[sources[0],{**sources[1],"answer":"Different account."}]},generate_fn=generate)
+        self.assertEqual(generate.call_count,4)
+        broken = Mock(return_value='{}')
+        for _ in range(2):
+            with self.assertRaises(SecurityViolation):
+                sources_disagree("model", {}, payload, generate_fn=broken)
+        self.assertEqual(broken.call_count,2)
 
     def test_comparison_is_cited_prose_and_never_a_catalog_translation(self):
         for language in ("ko", "en"):
             for allow in (True, False):
                 with self.subTest(language=language, allow=allow):
+                    _classify_relationship.cache_clear()
                     payload = {"question": "Compare the source recommendations.", "answer_language": language,
                                "Retrieved evidence": [
                                    {"citation_label": "E1", "answer": "First source advice."},
                                    {"citation_label": "E2", "answer": "Second source advice."},
                                    {"citation_label": None, "answer": "Context only."}]}
-                    draft = json.dumps({"contrast": {"evidence": ["E1", "E2"], "text": "The sources disagree."},
+                    draft = json.dumps({"contrast": contrast("advice", [("E1","First source advice.","First source advice."),
+                                                                 ("E2","Second source advice.","Second source advice.")]),
                                         "shared_guidance": None, "cause": None})
                     attempt = [draft, json.dumps({"allow": allow})]
                     backend = Mock()
@@ -102,7 +130,9 @@ class SourceSynthesisTests(unittest.TestCase):
                     self.assertNotIn("source_preservation", composed)
                     self.assertEqual([r["citation_label"] for r in composed["Retrieved evidence"]], ["E1", "E2"])
                     checked = json.loads(calls[4].kwargs["messages"][1]["content"])
-                    self.assertIn("sources disagree", checked["draft"])
+                    self.assertIn("First source advice.", checked["draft"])
+                    self.assertNotIn("response_format", calls[3].kwargs)
+                    self.assertEqual(calls[3].kwargs["max_tokens"], 2560)
                     self.assertEqual(checked["composition"][0]["evidence"], ["E1", "E2"])
 
 

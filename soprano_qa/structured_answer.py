@@ -177,6 +177,10 @@ short phrases with breaths as needed. Do not assume the singer's breath capacity
 range, health or technique, prescribe sustained duration, or promise improvement.
 Do not add vibrato, slides, dynamic changes or range extensions unless the
 requested skill requires them. A short note sequence is enough; avoid long holds.
+For connected singing, connect adjacent notes within each short phrase and take
+breaths BETWEEN phrases as needed. Shorten the phrase instead of detaching every
+note. Do not prescribe seconds per note or invent note-name examples; use a brief
+familiar phrase. 음을 분리하는 연습을 레가토라고 설명하지 마세요.
 Keep the answer brief and concrete; avoid an essay defining the technique.
 This is general practice advice, not a fact about the selected piece or a quoted
 expert recommendation. Use background, evidence=[]; never invent local score facts.

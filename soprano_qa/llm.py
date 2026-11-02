@@ -32,7 +32,7 @@ from soprano_qa.structured_answer import (
 )
 from soprano_qa.source_translation import translate_source_parts
 from soprano_qa.source_comparison import (
-    sources_disagree, comparison_schema, render_comparison, COMPARISON_POLICY,
+    sources_disagree, render_comparison, COMPARISON_POLICY,
 )
 
 
