@@ -90,7 +90,7 @@ class SourcePreservationTests(unittest.TestCase):
         self.assertFalse(translated.parts[0].get("source_quotation"))
         backend = Mock()
         backend.create_chat_completion.side_effect = [completion(x) for x in (
-            '{"allow":true}',
+            '{"task":"music_question"}',
             json.dumps({"sentences": [selection(text="Maintain a long breath.")]}),
             '{"allow":true}',
         )]
@@ -106,7 +106,7 @@ class SourcePreservationTests(unittest.TestCase):
         self.prepare("조건이 맞을 때 가볍게 부른다.")
         backend = Mock()
         backend.create_chat_completion.side_effect = [completion(x) for x in (
-            '{"allow":true}', json.dumps({"sentences": [selection()]}), '{"allow":false}',
+            '{"task":"music_question"}', json.dumps({"sentences": [selection()]}), '{"allow":false}',
             json.dumps({"sentences": [selection()]}), '{"allow":false}',
         )]
         with patch.object(llm, "load_llama", return_value=backend), self.assertRaises(SecurityViolation) as error:

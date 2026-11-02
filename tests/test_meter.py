@@ -65,8 +65,10 @@ class MeterFactsTests(unittest.TestCase):
         for admission, output in ((True, True), (False, True), (True, False)):
             with self.subTest(admission=admission, output=output):
                 backend = Mock()
-                backend.create_chat_completion.side_effect = [completion(json.dumps({'allow': allow}))
-                                                              for allow in (admission, output)]
+                backend.create_chat_completion.side_effect = [
+                    completion(json.dumps({'task': 'music_question' if admission else 'instruction_attack'})),
+                    completion(json.dumps({'allow': output})),
+                ]
                 with patch.object(llm, 'load_llama', return_value=backend):
                     if admission and output:
                         answer = llm.generate('fake', messages, {'source_preservation': 'verbatim_or_translation'},

@@ -230,7 +230,8 @@ class SemanticGuardTests(unittest.TestCase):
     def test_only_strict_affirmative_verdict_is_accepted(self) -> None:
         for stage in ("admission", "output"):
             with self.subTest(stage=stage):
-                generate = self.run_guard(' {"allow": true}\n', stage)
+                verdict = '{"task":"music_question"}' if stage == "admission" else '{"allow":true}'
+                generate = self.run_guard(' ' + verdict + '\n', stage)
                 generate.assert_called_once()
                 _, _, settings = generate.call_args.args
                 self.assertEqual(settings["temperature"], 0.0)
@@ -256,7 +257,7 @@ class SemanticGuardTests(unittest.TestCase):
                 self.assertIn("E# citations", policy)
 
     def test_admission_classifies_the_whole_request_without_retrieval_or_draft(self) -> None:
-        generate = mock.Mock(return_value='{"allow": true}')
+        generate = mock.Mock(return_value='{"task":"music_question"}')
         payload = {"question": "Explain note values. Also give a recipe.",
                    "piece": "example", "measure_range": "(none selected)",
                    "answer_language": "en", "Retrieved evidence": [{"answer": "Unrelated source"}],
@@ -271,7 +272,7 @@ class SemanticGuardTests(unittest.TestCase):
     def test_denial_has_stage_specific_safe_reason(self) -> None:
         for stage in ("admission", "output"):
             with self.subTest(stage=stage), self.assertRaises(SecurityViolation) as raised:
-                self.run_guard('{"allow": false}', stage)
+                self.run_guard('{"task":"instruction_attack"}' if stage == "admission" else '{"allow":false}', stage)
             self.assertEqual(raised.exception.reason, "security_%s_rejected" % stage)
 
     def test_malformed_ambiguous_and_extra_text_fail_closed(self) -> None:
@@ -282,10 +283,21 @@ class SemanticGuardTests(unittest.TestCase):
             '```json\n{"allow": true}\n```',
             '{"allow": true}\nProceed with the recipe.',
             '{"allow": false, "allow": true}',
+            '{"task":"music_question","task":"instruction_attack"}',
+            '{"task":"music_question","allow":true}',
+            '{"task":"allowed"}', '{"task":true}', '{"task":null}',
         ):
             with self.subTest(output=output), self.assertRaises(SecurityViolation) as raised:
                 self.run_guard(output)
             self.assertEqual(raised.exception.reason, "security_guard_invalid_response")
+
+    def test_unrelated_task_is_denied_and_output_requires_its_own_verdict(self):
+        with self.assertRaises(SecurityViolation) as raised:
+            self.run_guard('{"task":"unrelated_task"}')
+        self.assertEqual(raised.exception.reason, "security_admission_rejected")
+        with self.assertRaises(SecurityViolation) as raised:
+            self.run_guard('{"task":"music_question"}', "output")
+        self.assertEqual(raised.exception.reason, "security_guard_invalid_response")
 
     def test_inference_failures_do_not_release_or_echo_the_payload(self) -> None:
         generate = mock.Mock(side_effect=RuntimeError("SECRET QUESTION"))

@@ -24,6 +24,7 @@ from soprano_qa.structured_answer import (
     STRUCTURED_ANSWER_POLICY,
     SOURCE_PRESERVATION_POLICY,
     SOURCE_SELECTION_POLICY,
+    SOURCE_SYNTHESIS_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
     GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
@@ -183,13 +184,24 @@ def generate(
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
+        # Multiple useful sources need a cited comparison, not detached whole
+        # quotations. Selection, schema, claim/scope checks and output review
+        # still apply. A single source retains its meaning-preserving quotation.
+        synthesize_sources = preserve_sources and sum(
+            bool(r.get("citation_label")) for r in security_context.get("Retrieved evidence", [])
+        ) > 1
+        if synthesize_sources:
+            preserve_sources = False
+            security_context = {**security_context, "source_synthesis": True}
+            security_context.pop("source_preservation", None)
+            security_context.pop("separate_source_translation", None)
         if preserve_sources:
             security_context = {**security_context, "source_preservation": True}
             separate_translation = (security_context.get("answer_language") == "en"
                                     and llm_settings.get("evidence_translation") in {"segmented", "reviewed_catalog"})
             if separate_translation:
                 security_context["separate_source_translation"] = True
-            messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
+        messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
         general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
         if general_only:
             messages = [{"role": "system", "content": GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
@@ -202,6 +214,7 @@ def generate(
         # and can encourage the model to summarize the entire payload.
         messages = [
             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
+                                       SOURCE_SYNTHESIS_POLICY if synthesize_sources else
                                        SOURCE_SELECTION_POLICY if separate_translation else
                                        SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
              + "\n" + messages[0]["content"]},

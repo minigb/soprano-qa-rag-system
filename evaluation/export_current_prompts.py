@@ -14,12 +14,12 @@ sys.path.insert(0, str(ROOT))
 
 from soprano_qa.answer import system_prompt
 from soprano_qa.security import (
-    _GUARD_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM,
+    _GUARD_SYSTEM, _ADMISSION_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _SELECTION_SYSTEM,
     SECURITY_SYSTEM_POLICY,
 )
 from soprano_qa.structured_answer import (
     STRUCTURED_ANSWER_POLICY, GENERAL_MUSIC_FORMAT_POLICY,
-    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, SOURCE_SELECTION_POLICY, answer_schema,
+    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, SOURCE_SELECTION_POLICY, SOURCE_SYNTHESIS_POLICY, answer_schema,
 )
 from soprano_qa.source_translation import SOURCE_TRANSLATION_POLICY
 from soprano_qa.translation import QUERY_TRANSLATION_SYSTEM_PROMPT
@@ -44,7 +44,9 @@ def main():
         'source-translation-en.txt': SOURCE_TRANSLATION_POLICY,
         'answer-general.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_MUSIC_SYSTEM_PROMPT
                               + '\n' + SECURITY_SYSTEM_POLICY,
-        'guard-admission.txt': _GUARD_SYSTEM + _ADMISSION_RULES,
+        'answer-synthesis-ko.txt': SOURCE_SYNTHESIS_POLICY + '\n' + system_prompt('ko'),
+        'answer-synthesis-en.txt': SOURCE_SYNTHESIS_POLICY + '\n' + system_prompt('en'),
+        'guard-admission.txt': _ADMISSION_SYSTEM + _ADMISSION_RULES,
         'guard-output.txt': _GUARD_SYSTEM + _OUTPUT_RULES,
         'evidence-selection.txt': _SELECTION_SYSTEM,
         'query-translation.txt': QUERY_TRANSLATION_SYSTEM_PROMPT,
@@ -94,7 +96,7 @@ def main():
             if path.exists() and path.read_text() != value:
                 raise ValueError('Refusing to replace frozen prompt: ' + str(path))
             path.write_text(value)
-    print(('Checked' if args.check else 'Exported'), 'twelve policies, five schema examples and manifest')
+    print(('Checked' if args.check else 'Exported'), 'fourteen policies, five schema examples and manifest')
 
 
 if __name__ == '__main__':

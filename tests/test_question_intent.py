@@ -54,7 +54,7 @@ class GeneralIntentTests(unittest.TestCase):
         draft = json.dumps({"sentences": [{"kind": "background", "evidence": [],
                                            "text": "Syncopation displaces expected rhythmic accents."}]})
         backend.create_chat_completion.side_effect = [completion(x) for x in
-            ('{"allow":true}', draft, '{"allow":false}', draft, '{"allow":false}')]
+            ('{"task":"music_question"}', draft, '{"allow":false}', draft, '{"allow":false}')]
         with patch.object(llm, "load_llama", return_value=backend), \
              patch.object(llm, "select_question_evidence", return_value={**payload, "Retrieved evidence": []}) as selector, \
              self.assertRaises(SecurityViolation):
@@ -79,7 +79,7 @@ class GeneralIntentTests(unittest.TestCase):
                     "kind": "background", "evidence": [], "text": "당김음은 예상되는 강세를 옮깁니다."}
                 backend = Mock()
                 backend.create_chat_completion.side_effect = [completion(x) for x in (
-                    '{"allow":true}', json.dumps({"labels": labels}),
+                    '{"task":"music_question"}', json.dumps({"labels": labels}),
                     json.dumps({"sentences": [draft]}), '{"allow":true}')]
                 with patch.object(llm, "load_llama", return_value=backend):
                     result = llm.generate("fake", messages, {"source_preservation": "verbatim_or_translation"},
@@ -115,7 +115,7 @@ class GeneralIntentTests(unittest.TestCase):
             with self.subTest(final_allow=final_allow):
                 backend = Mock()
                 backend.create_chat_completion.side_effect = [completion(x) for x in (
-                    '{"allow":true}', '{"labels":["E1"]}', source, '{"allow":false}',
+                    '{"task":"music_question"}', '{"labels":["E1"]}', source, '{"allow":false}',
                     background, json.dumps({"allow": final_allow}))]
                 with patch.object(llm, "load_llama", return_value=backend):
                     if final_allow:
@@ -139,6 +139,10 @@ class GeneralIntentTests(unittest.TestCase):
             "발성을 훈련할 때 어떤 점에 집중하면 좋나요?",
             "When learning a melody, what should I check?",
             "What should I notice while practising a new scale?",
+            "Could you suggest a general legato exercise, without assuming you know my breathing ability?",
+            "Please suggest general warm-up routines for singing.",
+            "일반적인 레가토 연습을 알려 주세요. 제 호흡 능력은 가정하지 마세요.",
+            "기본적인 발성 훈련을 추천해 주세요.",
         ):
             with self.subTest(question=question):
                 payload = {"question": question}
@@ -152,6 +156,8 @@ class GeneralIntentTests(unittest.TestCase):
             "이 악보를 연습할 때 무엇을 확인하나요?", "이 가사를 연습할 때 어떤 점이 중요한가요?",
             "When practising this aria, what should I check?",
             "What should I notice when learning these lyrics?",
+            "Suggest a general exercise for this passage.",
+            "이 곡에 적용할 일반적인 호흡 연습을 알려 주세요.",
         ):
             with self.subTest(question=question):
                 self.assertFalse(is_explicit_general_question({"question": question}))

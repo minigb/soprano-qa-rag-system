@@ -80,7 +80,7 @@ class SourceTranslationTests(unittest.TestCase):
         payload = json.loads(messages[1]["content"])
         backend = Mock()
         backend.create_chat_completion.side_effect = [completion(x) for x in (
-            '{"allow":true}', json.dumps({"sentences": [selection()]}),
+            '{"task":"music_question"}', json.dumps({"sentences": [selection()]}),
             '{"S1_1":"Sing KUSOURCE_LITERAL_1_1 with a long duration."}', '{"allow":true}',
         )]
         with patch.object(llm, "load_llama", return_value=backend):
@@ -109,7 +109,7 @@ class SourceTranslationTests(unittest.TestCase):
         backend = Mock()
         attempt = [json.dumps({"sentences": [selection()]}),
                    '{"S1_1":"Keep a long breath."}', '{"allow":false}']
-        backend.create_chat_completion.side_effect = [completion(x) for x in ['{"allow":true}', *attempt, *attempt]]
+        backend.create_chat_completion.side_effect = [completion(x) for x in ['{"task":"music_question"}', *attempt, *attempt]]
         with patch.object(llm, "load_llama", return_value=backend), self.assertRaises(SecurityViolation) as error:
             llm.generate("fake", messages, {"source_preservation": "verbatim_or_translation",
                          "evidence_translation": "segmented"}, security_context=json.loads(messages[1]["content"]))
@@ -181,7 +181,7 @@ class ReviewedSourceTranslationTests(unittest.TestCase):
         messages = answer.build_messages("die-forelle", "", "How should I sing this phrase?", sources, language="en")
         backend = Mock()
         backend.create_chat_completion.side_effect = [completion(x) for x in (
-            '{"allow":true}', json.dumps({"sentences": [selection()]}), '{"allow":true}',
+            '{"task":"music_question"}', json.dumps({"sentences": [selection()]}), '{"allow":true}',
         )]
         with self.catalog(), patch.object(llm, "load_llama", return_value=backend):
             result = llm.generate("fake", messages, self.settings,
@@ -222,7 +222,7 @@ class ReviewedSourceTranslationTests(unittest.TestCase):
                                          [evidence(self.source)], language="en")
         backend = Mock()
         attempt = [json.dumps({"sentences": [selection()]}), '{"allow":false}']
-        backend.create_chat_completion.side_effect = [completion(x) for x in ['{"allow":true}', *attempt, *attempt]]
+        backend.create_chat_completion.side_effect = [completion(x) for x in ['{"task":"music_question"}', *attempt, *attempt]]
         with self.catalog(), patch.object(llm, "load_llama", return_value=backend), self.assertRaises(SecurityViolation) as error:
             llm.generate("fake", messages, self.settings, security_context=json.loads(messages[1]["content"]))
         self.assertEqual(error.exception.reason, "security_output_rejected")

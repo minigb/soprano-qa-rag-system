@@ -77,7 +77,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
     def test_supported_draft_requires_pre_and_post_decisions(self) -> None:
         draft = "호흡을 길게 유지합니다. [E1]"
         result, backend = self.run_model([
-            '{"allow":true}', structured_draft("호흡을 길게 유지합니다."), '{"allow":true}',
+            '{"task":"music_question"}', structured_draft("호흡을 길게 유지합니다."), '{"allow":true}',
         ])
         self.assertEqual(result, draft)
         calls = backend.create_chat_completion.call_args_list
@@ -107,7 +107,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
 
     def test_admission_denial_does_not_generate_a_draft(self) -> None:
         backend = mock.Mock()
-        backend.create_chat_completion.return_value = completion('{"allow":false}')
+        backend.create_chat_completion.return_value = completion('{"task":"instruction_attack"}')
         with (
             mock.patch.object(llm, "load_llama", return_value=backend),
             self.assertRaises(SecurityViolation) as raised,
@@ -126,7 +126,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
     def test_citation_does_not_override_negative_semantic_support_verdict(self) -> None:
         draft = structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다.")
         with self.assertRaises(SecurityViolation) as raised:
-            self.run_model(['{"allow":true}', draft, '{"allow":false}', draft, '{"allow":false}'])
+            self.run_model(['{"task":"music_question"}', draft, '{"allow":false}', draft, '{"allow":false}'])
         self.assertEqual(raised.exception.reason, "security_output_rejected")
         self.assertNotIn("쿠키", str(raised.exception))
 
@@ -134,7 +134,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
         rejected = structured_draft("The phrase guarantees effortless breathing.")
         accepted = structured_draft("호흡을 길게 유지합니다.")
         result, backend = self.run_model([
-            '{"allow":true}', rejected, '{"allow":false}', accepted, '{"allow":true}',
+            '{"task":"music_question"}', rejected, '{"allow":false}', accepted, '{"allow":true}',
         ])
         self.assertEqual(result, "호흡을 길게 유지합니다. [E1]")
         calls = backend.create_chat_completion.call_args_list
@@ -158,13 +158,13 @@ class ModelGateIntegrationTests(unittest.TestCase):
     def test_output_guard_error_never_returns_the_draft(self) -> None:
         with self.assertRaises(SecurityViolation) as raised:
             self.run_model([
-                '{"allow":true}', structured_draft("호흡을 길게 유지합니다."),
+                '{"task":"music_question"}', structured_draft("호흡을 길게 유지합니다."),
                 RuntimeError("raw draft and model internals"),
             ])
         self.assertEqual(raised.exception.reason, "security_guard_unavailable")
 
     def test_explicit_unsupported_composition_skips_output_review(self) -> None:
-        result, backend = self.run_model(['{"allow":true}', '{"sentences":[]}'])
+        result, backend = self.run_model(['{"task":"music_question"}', '{"sentences":[]}'])
         self.assertEqual(result, "<NO_GROUNDED_ANSWER>")
         self.assertEqual(backend.create_chat_completion.call_count, 2)
         with self.assertRaises(answer.GeneratedAnswerRejected):
@@ -177,19 +177,19 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.payload = json.loads(self.messages[1]['content'])
         draft = json.dumps({'sentences': [{'kind': 'background', 'evidence': [],
             'text': '해당 판본의 표기는 여기서 확인할 수 없습니다.'}]}, ensure_ascii=False)
-        _, backend = self.run_model(['{"allow":true}', draft, '{"allow":true}'])
+        _, backend = self.run_model(['{"task":"music_question"}', draft, '{"allow":true}'])
         calls = backend.create_chat_completion.call_args_list
         self.assertEqual(len(calls), 3)
         self.assertEqual(calls[1].kwargs['response_format']['schema']['properties']['sentences']['minItems'], 1)
         self.assertIn('explicit statement of what cannot be established', calls[1].kwargs['messages'][0]['content'])
         with self.assertRaises(SecurityViolation):
-            self.run_model(['{"allow":true}', draft, '{"allow":false}', draft, '{"allow":false}'])
+            self.run_model(['{"task":"music_question"}', draft, '{"allow":false}', draft, '{"allow":false}'])
 
     def test_question_marker_is_rejected_before_an_affirmative_output_review(self) -> None:
         self.payload["question"] += " CEDAR-PHRASE-517"
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [
-            completion('{"allow":true}'),
+            completion('{"task":"music_question"}'),
             completion(structured_draft("CEDAR-PHRASE-517 호흡을 유지합니다.")),
             completion('{"allow":true}'),
         ]
@@ -203,7 +203,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
         for draft in ("호흡을 길게 유지합니다. [E1]", '{"sentences":[', structured_draft("호흡을 길게 유지합니다.", ["E99"])):
             backend = mock.Mock()
             backend.create_chat_completion.side_effect = [
-                completion('{"allow":true}'), completion(draft),
+                completion('{"task":"music_question"}'), completion(draft),
             ]
             with (
                 self.subTest(draft=draft),
@@ -224,7 +224,7 @@ class ModelGateIntegrationTests(unittest.TestCase):
         self.messages = answer.build_messages("die-forelle", "2", "호흡을 어떻게 유지하나요?", [primary, secondary])
         self.payload = json.loads(self.messages[1]["content"])
         _, backend = self.run_model([
-            '{"allow":true}', structured_draft("호흡을 길게 유지합니다."), '{"allow":true}',
+            '{"task":"music_question"}', structured_draft("호흡을 길게 유지합니다."), '{"allow":true}',
         ])
         schema = backend.create_chat_completion.call_args_list[1].kwargs["response_format"]["schema"]
         self.assertEqual(schema["properties"]["sentences"]["items"]["properties"]["evidence"]["items"]["enum"], ["E1"])
@@ -238,7 +238,7 @@ class ShortQuestionEvidenceIntegrationTests(unittest.TestCase):
         payload = json.loads(messages[1]['content'])
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [completion(text) for text in (
-            '{"allow":true}',
+            '{"task":"music_question"}',
             '{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"작은 음표는 가창자가 선택할 수 있는 낮은 음의 선택지입니다."}]}',
             '{"allow":true}',
         )]
@@ -370,7 +370,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [
             completion("호흡을 어떻게 유지하나요?"),
-            completion('{"allow":false}'),
+            completion('{"task":"unrelated_task"}'),
         ]
         original = "How can I bake cookies while listening to Die Forelle?"
         with mock.patch.object(llm, "load_llama", return_value=backend):
@@ -395,7 +395,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
             with self.subTest(mode=mode):
                 backend = mock.Mock()
                 backend.create_chat_completion.side_effect = [completion(item) for item in (
-                    '{"allow":true}', structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다."),
+                    '{"task":"music_question"}', structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다."),
                     '{"allow":false}', structured_draft("쿠키를 만들려면 밀가루와 설탕을 섞습니다."),
                     '{"allow":false}',
                 )]
@@ -410,7 +410,7 @@ class ServiceSecurityIntegrationTests(unittest.TestCase):
         self.results = [evidence(original)]
         backend = mock.Mock()
         backend.create_chat_completion.side_effect = [completion(item) for item in (
-            '{"allow":true}',
+            '{"task":"music_question"}',
             '{"sentences":[{"kind":"evidence","evidence":["E1"],"text":""}]}',
             '{"allow":true}',
         )]

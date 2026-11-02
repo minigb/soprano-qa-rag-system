@@ -1873,6 +1873,24 @@ class DenseRetrievalTests(unittest.TestCase):
                     missing_dense_answer_constraints(question, incomplete),
                 )
 
+    def test_character_interpretation_accepts_personality_with_expression_relation(self):
+        question = "이 리듬은 어떤 성격을 표현하는 것으로 볼 수 있나요?"
+        for source in (
+            "당차고 활발하며 확신에 찬 인물의 성격을 표현합니다.",
+            "쾌활한 성격을 노래로 드러내는 것이 좋습니다.",
+            "수줍고 불안한 느낌을 표현하는 것으로 볼 수 있습니다.",
+            "단호하고 대담한 분위기로 노래합니다.",
+        ):
+            with self.subTest(source=source):
+                self.assertNotIn("vocal_character_description", missing_dense_answer_constraints(question, source))
+        for source in (
+            "인물의 성격을 표현하는 것이 좋습니다.",
+            "인물은 쾌활합니다. 악보의 음표를 확인합니다.",
+            "리듬의 짧은 음을 다음 음에 가깝게 노래합니다.",
+        ):
+            with self.subTest(source=source):
+                self.assertIn("vocal_character_description", missing_dense_answer_constraints(question, source))
+
     def test_vocal_character_requires_a_descriptive_singing_relation(
         self,
     ) -> None:
