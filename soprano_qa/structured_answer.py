@@ -187,6 +187,20 @@ expert recommendation. Use background, evidence=[]; never invent local score fac
 /no_think
 """
 
+GENERAL_PRACTICE_SYSTEM_PROMPT_KO = """질문에서 요청한 기법을 연습하는 성악 연습 한 가지를 짧고 구체적으로 설명합니다.
+일반적인 연습 제안이며 전문가의 인용이나 선택한 곡에 대한 사실이 아닙니다.
+사용자의 호흡량·음역·발성 상태를 알고 있다고 가정하거나 효과를 보장하지 않습니다.
+사용자가 편한 음역에서 익숙한 짧은 구절을 골라 시도할 수 있도록 안내합니다.
+음이름의 나열, 특정 곡의 가사, 음 하나를 몇 초씩 내라는 수치 예시는 쓰지 않습니다.
+레가토 연습이라면 짧은 구절 안에서 이웃한 음을 매끄럽게 연결합니다. 호흡이
+필요하면 구절을 더 짧게 나누고 구절 사이에서 숨을 쉽니다. 음표마다 끊어 부르는
+연습이나 포르타멘토·비브라토를 레가토 대신 제안하지 않습니다.
+요청한 기법과 관계없는 연습은 덧붙이지 않습니다. 편안한 범위에서 선택적으로
+해 볼 수 있는 방법으로 설명하며, 합니다체를 사용합니다. kind는 background,
+evidence는 []입니다. 악보의 알려지지 않은 사실을 만들어 내지 않습니다.
+/no_think
+"""
+
 
 class RenderedAnswer(str):
     """Carry validated claim provenance until public answer finalization.

@@ -26,6 +26,7 @@ from soprano_qa.structured_answer import (
     SOURCE_SELECTION_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
     GENERAL_PRACTICE_SYSTEM_PROMPT,
+    GENERAL_PRACTICE_SYSTEM_PROMPT_KO,
     GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
     render_structured_answer,
@@ -207,10 +208,20 @@ def generate(
         general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
         if general_only:
             general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
+            if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
+                general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         elif synthesize_sources:
-            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n/think"}, *messages[1:]]
+            # Compare the actual source facts, independent of a question's
+            # actor/premise. Admission and final review still receive the full
+            # original question; only this extraction view omits it.
+            comparison_view = {"answer_language": security_context.get("answer_language", "ko"),
+                               "Retrieved evidence": [{key: record[key] for key in
+                                   ("citation_label", "answer", "evidence_role", "measure_range", "query_scope_relation")
+                                   if key in record} for record in security_context["Retrieved evidence"]]}
+            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY + "\n/think"},
+                        {"role": "user", "content": serialize_untrusted(comparison_view)}]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.

@@ -18,24 +18,22 @@ class SourceSynthesisTests(unittest.TestCase):
     def setUp(self):
         _classify_relationship.cache_clear()
 
-    def test_shared_advice_needs_an_exact_excerpt_from_every_source(self):
+    def test_comparison_values_need_real_excerpts_and_shared_advice_names_all_sources(self):
         payload = {"answer_language":"ko", "Retrieved evidence":[
-            {"citation_label":"E2","answer":"첫 음을 작게 시작합니다. 호흡을 지지합니다."},
+            {"citation_label":"E2","answer":"첫 음을 작게 시작합니다."},
             {"citation_label":"E4","answer":"노래의 시작을 작게 합니다."}]}
         draft = {"contrast":contrast("설명 대상", [("E2","첫 음","첫 음"),("E4","노래의 시작","노래의 시작")]),
-                 "shared_guidance":{"evidence":["E2","E4"],
-                     "support":{"E2":"첫 음을 작게 시작합니다.","E4":"노래의 시작을 작게 합니다."},
-                     "text":"두 자료 모두 작게 시작하도록 권합니다."}, "cause":None}
+                 "shared_guidance":{"evidence":["E2","E4"], "text":"두 자료 모두 작게 시작하도록 권합니다"}, "cause":None}
         result = render_comparison(json.dumps(draft),payload)
         self.assertIn("첫 번째 자료에는",result)
         self.assertIn("두 번째 자료에는",result)
-        for support in ({"E2":"호흡을 지지합니다.","E4":"호흡을 지지합니다."},
-                        {"E2":"첫 음을 작게 시작합니다."},
-                        {"E2":"", "E4":"노래의 시작을 작게 합니다."}):
-            with self.subTest(support=support), self.assertRaises(SecurityViolation):
-                render_comparison(json.dumps({**draft,"shared_guidance":{**draft["shared_guidance"],"support":support}}),payload)
+        self.assertTrue(result.parts[-1]["text"].endswith("."))
+        for label, support in (("E4","호흡을 지지합니다."),("E9","노래의 시작"),("E4","")):
+            invalid = contrast("설명 대상", [("E2","첫 음","첫 음"),(label,support,"노래의 시작")])
+            with self.subTest(label=label,support=support), self.assertRaises(SecurityViolation):
+                render_comparison(json.dumps({**draft,"contrast":invalid}),payload)
         with self.assertRaises(SecurityViolation):
-            render_comparison(json.dumps({**draft,"contrast":contrast("설명 대상", [("E2","첫 음","첫 음"),("E9","노래의 시작","노래의 시작")])}),payload)
+            render_comparison(json.dumps({**draft,"shared_guidance":{"evidence":["E2"],"text":"Both agree."}}),payload)
 
     def test_missing_cause_stays_unknown_and_fabricated_quote_is_rejected(self):
         payload = {"answer_language": "en", "Retrieved evidence": [
@@ -126,11 +124,13 @@ class SourceSynthesisTests(unittest.TestCase):
                     translate.assert_not_called()
                     calls = backend.create_chat_completion.call_args_list
                     composed = json.loads(calls[3].kwargs["messages"][1]["content"])
-                    self.assertTrue(composed["source_synthesis"])
+                    self.assertNotIn("question", composed)
                     self.assertNotIn("source_preservation", composed)
                     self.assertEqual([r["citation_label"] for r in composed["Retrieved evidence"]], ["E1", "E2"])
                     checked = json.loads(calls[4].kwargs["messages"][1]["content"])
                     self.assertIn("First source advice.", checked["draft"])
+                    self.assertEqual(checked["question"], payload["question"])
+                    self.assertTrue(checked["source_synthesis"])
                     self.assertNotIn("response_format", calls[3].kwargs)
                     self.assertEqual(calls[3].kwargs["max_tokens"], 2560)
                     self.assertEqual(checked["composition"][0]["evidence"], ["E1", "E2"])
