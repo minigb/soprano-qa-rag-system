@@ -13,6 +13,7 @@ from typing import Any, Dict, List
 
 from soprano_qa.question_intent import explicit_general_intent
 from soprano_qa.meter import basic_meter_explanation
+from soprano_qa.music_terms import general_pitch_guidance
 
 from soprano_qa.security import (
     SecurityViolation, screen_generated_answer, semantic_guard,
@@ -209,6 +210,8 @@ def generate(
             general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
             if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
                 general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
+            if general_intent != "practice":
+                general_policy += "\n" + general_pitch_guidance(security_context.get("question", ""))
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
@@ -278,7 +281,9 @@ def generate(
                 general_only = True
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"
-                     + GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
+                     + GENERAL_MUSIC_SYSTEM_PROMPT + "\n"
+                     + general_pitch_guidance(security_context.get("question", "")) + "\n"
+                     + SECURITY_SYSTEM_POLICY},
                     {"role": "user", "content": serialize_untrusted(security_context)},
                 ]
                 completion_options["response_format"] = {

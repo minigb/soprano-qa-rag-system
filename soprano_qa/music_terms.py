@@ -16,6 +16,37 @@ https://viva.pressbooks.pub/openmusictheory/chapter/compound-meters-and-time-sig
 The general rules below are not answers indexed by evaluation question.
 """
 
+import re
+
+
+# General theory aid checked against the authors' textbooks, not against
+# evaluation references or a selected work's score:
+# https://odp.library.tamu.edu/stepstomusictheory/chapter/more-intervals/
+# https://openmusictheory.github.io/pitches.html
+PITCH_CHANGE_TERMINOLOGY = """General pitch terminology; use only what answers the question.
+Chromatic transposition moves every note in a passage by the same directed
+interval, preserving intervals within that passage. A non-octave transposition
+can change the key; transposition by a whole octave retains the pitch classes.
+Moving only selected notes by an octave changes their register and can change
+the intervals to surrounding notes, but retains those notes' pitch classes.
+That alone does not change the song's key or necessarily damage its harmony.
+Enharmonic respelling changes note names, not sounding pitch in twelve-tone
+equal temperament. It is not a change of key or an octave displacement.
+한국어: 조옮김은 구절의 모든 음을 같은 방향·같은 음정만큼 옮깁니다.
+몇 음만 옥타브로 바꾸면 그 음들의 음역과 주변 음과의 간격이 달라질 수
+있지만 음고류는 그대로입니다. 이것만으로 조성이 바뀌거나 화성이 망가진다고
+하지 않습니다. 모든 음을 옥타브만큼 옮기는 전조도 음고류와 조성을 유지합니다.
+평균율에서 이명동음은 같은 높이의 음을 다르게 적은 것이며 조옮김이 아닙니다.
+No unrequested note-name examples, claims about artistic quality or score facts.
+"""
+
+
+def general_pitch_guidance(question: str) -> str:
+    """Supply a small relevant terminology aid, never an answer or verdict."""
+    return PITCH_CHANGE_TERMINOLOGY if re.search(
+        r"조옮김|이조|옥타브|이명동음|\b(?:transpos\w*|octaves?|enharmonic\w*)\b",
+        question, re.I) else ""
+
 MUSIC_TERMINOLOGY = """General musical terminology (not a source about this piece)
 Distinguish pitch (음높이), loudness (셈여림), and duration (음의 길이).
 - legato / 레가토: smoothly connected notes, 음과 음을 매끄럽게 연결합니다.
