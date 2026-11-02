@@ -24,13 +24,16 @@ from soprano_qa.structured_answer import (
     STRUCTURED_ANSWER_POLICY,
     SOURCE_PRESERVATION_POLICY,
     SOURCE_SELECTION_POLICY,
-    SOURCE_SYNTHESIS_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
+    GENERAL_PRACTICE_SYSTEM_PROMPT,
     GENERAL_MUSIC_FORMAT_POLICY,
     answer_schema,
     render_structured_answer,
 )
 from soprano_qa.source_translation import translate_source_parts
+from soprano_qa.source_comparison import (
+    sources_disagree, comparison_schema, render_comparison, COMPARISON_POLICY,
+)
 
 
 _INFERENCE_LOCK = threading.Lock()
@@ -184,12 +187,11 @@ def generate(
         if selected_context is not security_context:
             security_context = selected_context
             messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
-        # Multiple useful sources need a cited comparison, not detached whole
-        # quotations. Selection, schema, claim/scope checks and output review
-        # still apply. A single source retains its meaning-preserving quotation.
-        synthesize_sources = preserve_sources and sum(
-            bool(r.get("citation_label")) for r in security_context.get("Retrieved evidence", [])
-        ) > 1
+        # Conditional alternatives remain intact. Only differing accounts of
+        # the same fact need an explicit, bounded source comparison.
+        synthesize_sources = preserve_sources and sources_disagree(
+            model_path, llm_settings, security_context, generate_fn=generate,
+        )
         if synthesize_sources:
             preserve_sources = False
             security_context = {**security_context, "source_synthesis": True}
@@ -204,8 +206,11 @@ def generate(
         messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
         general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
         if general_only:
-            messages = [{"role": "system", "content": GENERAL_MUSIC_SYSTEM_PROMPT + "\n" + SECURITY_SYSTEM_POLICY},
+            general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
+            messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
+        elif synthesize_sources:
+            messages = [{"role": "system", "content": SECURITY_SYSTEM_POLICY}, *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
         # rendered by application code and verified against the cited text.
         # This prevents a missing inline label from invalidating useful prose.
@@ -214,14 +219,15 @@ def generate(
         # and can encourage the model to summarize the entire payload.
         messages = [
             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
-                                       SOURCE_SYNTHESIS_POLICY if synthesize_sources else
+                                       COMPARISON_POLICY if synthesize_sources else
                                        SOURCE_SELECTION_POLICY if separate_translation else
                                        SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
              + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
         completion_options["response_format"] = {
-            "type": "json_object", "schema": answer_schema(security_context),
+            "type": "json_object", "schema": (comparison_schema(security_context) if synthesize_sources
+                                                else answer_schema(security_context)),
         }
     # A denied output may receive one new composition under the same policy.
     # Admission denials, malformed verdicts, unsafe text and backend failures
@@ -245,7 +251,8 @@ def generate(
         answer = strip_thinking(response["choices"][0]["message"]["content"])
         if security_context is None:
             return answer
-        answer = render_structured_answer(answer, security_context)
+        answer = (render_comparison(answer, security_context) if synthesize_sources
+                  else render_structured_answer(answer, security_context))
         if answer == NO_GROUNDED_ANSWER_SENTINEL:
             # An explicit abstention has no prose to assess. The public answer
             # finalizer turns it into the normal fixed unavailable response.
@@ -271,6 +278,7 @@ def generate(
                 security_context = {**security_context, "Retrieved evidence": []}
                 security_context.pop("separate_source_translation", None)
                 separate_translation = False
+                synthesize_sources = False
                 general_only = True
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"

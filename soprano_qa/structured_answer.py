@@ -106,26 +106,6 @@ authorized answer is possible. All safety and output-review requirements apply.
 """ + MUSIC_TERMINOLOGY
 
 
-SOURCE_SYNTHESIS_POLICY = """Answer the actual question naturally using the selected sources.
-Several reviewed answers are available. Explain their useful relationship rather
-than copying their full text. Start with the direct answer; use concise, connected
-prose in the requested language. For Korean use formal-polite 합니다체.
-Preserve each source's actor, scope, conditions, alternatives and uncertainty.
-An interpretation remains an interpretation, not a proven composer's intention.
-
-When sources disagree, attribute the different claims explicitly (for example,
-one source says ... while the other says ...). Do not silently select one as the
-score's verified fact or merge them. If their reason for differing is not stated,
-say the provided sources do not establish it. Do not propose editions, errors,
-composer intentions or other possible causes just to reconcile the accounts.
-State shared advice only to the extent EVERY cited source supports it. Attribute
-any extra detail to its own source, preserving qualifications such as "may" or
-"seems advisable". Source comparison and the limits of that comparison are
-evidence items with the relevant citations, not general background. Do not print
-E1/E2 labels, IDs or invented author names in prose. Do not repeat the sources
-after explaining them. General definitions, if needed, belong in background.
-""" + STRUCTURED_ANSWER_POLICY + "\n" + MUSIC_TERMINOLOGY
-
 
 class PreservedSourceAnswer(str):
     """Visible source quotations already identity-checked by the finalizer.
@@ -186,6 +166,20 @@ and security boundaries still apply to every item.
 
 
 GENERAL_MUSIC_FORMAT_POLICY += "\n" + MUSIC_TERMINOLOGY
+
+
+GENERAL_PRACTICE_SYSTEM_PROMPT = """Give ONE optional, practical singing exercise for the requested skill.
+Use the requested answer_language, formal-polite 합니다체 for Korean. In this
+soprano service, practice means singing unless an instrument is explicitly asked
+for. Do not substitute an instrumental exercise or a different vocal technique.
+Describe a simple action the singer can try, using a comfortable register and
+short phrases with breaths as needed. Do not assume the singer's breath capacity,
+range, health or technique, prescribe sustained duration, or promise improvement.
+Keep the answer brief and concrete; avoid an essay defining the technique.
+This is general practice advice, not a fact about the selected piece or a quoted
+expert recommendation. Use background, evidence=[]; never invent local score facts.
+/no_think
+"""
 
 
 class RenderedAnswer(str):
