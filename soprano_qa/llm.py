@@ -145,6 +145,7 @@ def generate(
             raise ValueError("A guarded answer must use its own application schema")
         completion_options["response_format"] = {"type": "json_object", "schema": response_schema}
     separate_translation = False
+    reason_general = False
     if security_context is not None:
         if not messages or messages[0].get("role") != "system":
             raise SecurityViolation()
@@ -211,7 +212,9 @@ def generate(
             if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
                 general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
             if general_intent != "practice":
-                general_policy += "\n" + general_pitch_guidance(security_context.get("question", ""))
+                guidance = general_pitch_guidance(security_context.get("question", ""))
+                general_policy += "\n" + guidance
+                reason_general = bool(guidance)
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
@@ -227,9 +230,16 @@ def generate(
              + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
-        completion_options["response_format"] = {
-            "type": "json_object", "schema": answer_schema(security_context),
-        }
+        if reason_general:
+            # A JSON grammar forces the first token and suppresses Qwen's
+            # reasoning. General pitch operations need that reasoning to keep
+            # pitch, register, key and enharmonic spelling distinct. The final
+            # JSON still passes the same strict parser and all output checks.
+            messages[0]["content"] += "\n/think"
+        else:
+            completion_options["response_format"] = {
+                "type": "json_object", "schema": answer_schema(security_context),
+            }
     # A denied output may receive one new composition under the same policy.
     # Admission denials, malformed verdicts, unsafe text and backend failures
     # never enter this path. A replacement still needs every normal check.
@@ -246,7 +256,7 @@ def generate(
                 messages=messages,
                 temperature=float(llm_settings.get("temperature", 0.0)),
                 top_p=float(llm_settings.get("top_p", 0.8)),
-                max_tokens=int(llm_settings.get("max_tokens", 768)),
+                max_tokens=1536 if reason_general else int(llm_settings.get("max_tokens", 768)),
                 **completion_options,
             )
         answer = strip_thinking(response["choices"][0]["message"]["content"])
@@ -279,16 +289,21 @@ def generate(
                 security_context.pop("separate_source_translation", None)
                 separate_translation = False
                 general_only = True
+                guidance = general_pitch_guidance(security_context.get("question", ""))
+                reason_general = bool(guidance)
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"
                      + GENERAL_MUSIC_SYSTEM_PROMPT + "\n"
-                     + general_pitch_guidance(security_context.get("question", "")) + "\n"
-                     + SECURITY_SYSTEM_POLICY},
+                     + guidance + "\n" + SECURITY_SYSTEM_POLICY
+                     + ("\n/think" if reason_general else "")},
                     {"role": "user", "content": serialize_untrusted(security_context)},
                 ]
-                completion_options["response_format"] = {
-                    "type": "json_object", "schema": answer_schema(security_context),
-                }
+                if reason_general:
+                    completion_options.pop("response_format", None)
+                else:
+                    completion_options["response_format"] = {
+                        "type": "json_object", "schema": answer_schema(security_context),
+                    }
             messages = [
                 {**messages[0], "content": messages[0]["content"] + "\n"
                  "The previous composition did not pass review. Compose a new answer "

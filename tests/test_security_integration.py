@@ -198,6 +198,22 @@ class ModelGateIntegrationTests(unittest.TestCase):
                 llm.generate("model", self.messages, self.settings, security_context=self.payload)
         self.assertEqual(backend.create_chat_completion.call_count, 2)
 
+    def test_reasoned_general_pitch_answer_keeps_parser_and_output_guard(self) -> None:
+        self.messages = answer.build_messages('die-forelle', '', '조옮김과 옥타브 이동은 같은가요?', [])
+        self.payload = json.loads(self.messages[1]['content'])
+        draft = '<think>Private intermediate text.</think>' + json.dumps({'sentences': [
+            {'kind': 'background', 'evidence': [], 'text': '몇 음의 옥타브 이동은 곡 전체의 조옮김과 다릅니다.'}]}, ensure_ascii=False)
+        result, backend = self.run_model(['{"task":"music_question"}', draft, '{"allow":true}'])
+        self.assertNotIn('Private intermediate', result)
+        compose = backend.create_chat_completion.call_args_list[1].kwargs
+        self.assertNotIn('response_format', compose)
+        self.assertEqual(compose['max_tokens'], 1536)
+        self.assertTrue(compose['messages'][0]['content'].endswith('/think'))
+        with self.assertRaises(SecurityViolation):
+            self.run_model(['{"task":"music_question"}', draft, '{"allow":false}', draft, '{"allow":false}'])
+        with self.assertRaises(SecurityViolation):
+            self.run_model(['{"task":"music_question"}', '<think>Private text.</think>{"unknown":1}'])
+
 
     def test_malformed_composition_stops_before_output_guard(self) -> None:
         for draft in ("호흡을 길게 유지합니다. [E1]", '{"sentences":[', structured_draft("호흡을 길게 유지합니다.", ["E99"])):

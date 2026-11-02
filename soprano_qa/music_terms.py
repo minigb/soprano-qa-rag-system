@@ -35,7 +35,7 @@ equal temperament. It is not a change of key or an octave displacement.
 한국어: 조옮김은 구절의 모든 음을 같은 방향·같은 음정만큼 옮깁니다.
 몇 음만 옥타브로 바꾸면 그 음들의 음역과 주변 음과의 간격이 달라질 수
 있지만 음고류는 그대로입니다. 이것만으로 조성이 바뀌거나 화성이 망가진다고
-하지 않습니다. 모든 음을 옥타브만큼 옮기는 전조도 음고류와 조성을 유지합니다.
+하지 않습니다. 모든 음을 옥타브만큼 옮기는 조옮김도 음고류와 조성을 유지합니다.
 평균율에서 이명동음은 같은 높이의 음을 다르게 적은 것이며 조옮김이 아닙니다.
 No unrequested note-name examples, claims about artistic quality or score facts.
 """
