@@ -5,6 +5,17 @@ Run every command in this document from the repository root with the
 pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
 voce poco fa.
 
+## Expanded460 comparison (2026-11-02)
+
+The [new paired evaluation](expanded_460_2026-11-02/report.md) runs all460 existing
+requests on native E37 and pre-security pipelines, with fresh Claude Opus5.5
+meaning/naturalness judgments. Material source drifts fall27→0, but naturalness
+falls3.50→2.89/4. Expert original-validation62 BERTScore is0.972987. Two overlength
+paraphrase answers are explicitly unscorable and contribute zero to conservative
+full-denominator averages; no answer is truncated. This is a reused internal
+benchmark, with a documented7-record native corpus difference. See the report
+for full answers, methodology and remaining defects.
+
 ## Meaning fidelity (2026-10-31 follow-up)
 
 The [targeted audit](meaning_fidelity_2026-10-31/report.md) compares 41 cases per

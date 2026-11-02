@@ -1,0 +1,53 @@
+{
+  "status": "passed",
+  "recorded_at": "2026-11-02T09:29:02.123013+00:00",
+  "branch": "codex/ku-background-knowledge",
+  "systems": {
+    "candidate-e37": {
+      "requests": 460,
+      "errors": 0,
+      "bertscore_scored": 458,
+      "unscorable_overlength": 2,
+      "truncated_texts": 0,
+      "source_matches_frozen_snapshot": true
+    },
+    "pre-security": {
+      "requests": 460,
+      "errors": 0,
+      "bertscore_scored": 460,
+      "unscorable_overlength": 0,
+      "truncated_texts": 0,
+      "source_matches_frozen_snapshot": true
+    }
+  },
+  "checks": {
+    "generation-contract.json": "all hashes match",
+    "analysis-contract-v2.json": "all hashes match",
+    "archived_questions_and_references": "unchanged source artifacts and exact original105 fields",
+    "fresh_blind_judge": {
+      "packets": 918,
+      "requests_mapped": 920,
+      "model": "claude-opus-5-5",
+      "prior_judgments_reused": 0
+    },
+    "literal_quote_identity": {
+      "verified": 459,
+      "nonquotation_requires_semantic_review": 1
+    },
+    "protected_main_and_dataset_checkouts": "unchanged heads and worktree states",
+    "production_modules": "Root RAG, Lab and E37 frozen source identical"
+  },
+  "model_file_hash_verification": "Full model file hashes verified before execution and recorded in provenance.json.",
+  "limits": "Internal reused evaluation; one judge model; native corpora differ by7 performer-feedback records;2 E37 overlength scores are unscorable zero contributions.",
+  "usage_reset_stop": false,
+  "notifier_used": false,
+  "artifacts_sha256": {
+    "config.json": "c9c9974a9698c2f13db2432dc40c6826cf8d5b1caf1b683b09eaa632e1db2235",
+    "cases.json": "0e3f1061d1465b50e0a1a7c2ccb5b6433d14baf7c5be46b0faf917ad2b9710b1",
+    "provenance.json": "4b89db081f8e389ebe9c78f8a73a8f17add45e17e5209f386798f5b145653e46",
+    "review/summary.json": "b6026492ca55328a1cab972f239eb32ae2fbb48d92c33564f90f39df80bd0fa5",
+    "manual-review.json": "11725cc669743acd0b27241cbe8f33a47451b32a65e2d007907cf14e5a43f2ad",
+    "metric-length-amendment.json": "43dd14d003f53ba73daca7142baea5eed0d86499ae038dcb9f339368697de9a0",
+    "judge/aggregation.json": "be0635f18e74ea3afd300adb4c4a633b58e80b3d0c131573275f8528c64caad4"
+  }
+}

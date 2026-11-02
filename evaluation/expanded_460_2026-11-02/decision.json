@@ -1,0 +1,47 @@
+{
+  "recorded_at": "2026-11-02T09:34:17.030471+00:00",
+  "task": "Evaluate existing460 requests on E37 and pre-security original; compare meaning/naturalness with Claude and verify expert BERTScore floor.",
+  "evaluation_complete": true,
+  "production_candidate": "E37",
+  "production_modified": false,
+  "primary_original_validation62_f1": 0.9729869557965186,
+  "primary_0_90_floor_met": true,
+  "original105_f1": 0.9726130156289964,
+  "expanded460_conservative_f1": 0.9677408065484918,
+  "unscorable_overlength_cases": 2,
+  "meaning": {
+    "original_material_drifts": 27,
+    "current_material_drifts": 0,
+    "current_minor_drifts": 2
+  },
+  "naturalness": {
+    "original_mean_out_of4": 3.502173913043478,
+    "current_mean_out_of4": 2.889130434782609,
+    "preserved": false,
+    "wins_ties_losses": [
+      6,
+      182,
+      272
+    ]
+  },
+  "conclusion": "BERTScore floor met and source meaning improved, but naturalness regressed. Do not claim overall answer quality was preserved or improved without qualification.",
+  "remaining_quality_findings": [
+    "Repeated or mechanically concatenated source quotations and mixed registers.",
+    "Two no-range crescendo questions retain a dangling local referent and insufficient general-practice advice.",
+    "A Larghetto ambiguity originates in the reference itself.",
+    "The short p/PP comparison preserves source distinctions but can omit useful separately attributed first-entrance advice."
+  ],
+  "next_refinement_priorities": [
+    "Reduce repetition and connect source claims directly to the question while preserving condition, negation, attribution, scope and quoted musical text.",
+    "Explicitly identify local source scope when no score range was selected.",
+    "Keep fixed metric settings; separately judge meaning and naturalness and preserve all unfavorable cases."
+  ],
+  "limitations": [
+    "Reused internal Korean-only benchmark, not new independent holdout.",
+    "One Claude judge model and subjective fluency rubric;20 targeted unblinded secondary examples.",
+    "Native corpora differ by7 performer-feedback records;946 shared records and122 expert KUs match.",
+    "Two overlength answers contribute0 conservatively but have no computed full-answer BERTScore."
+  ],
+  "usage_reset_stop": false,
+  "notifier_used": false
+}

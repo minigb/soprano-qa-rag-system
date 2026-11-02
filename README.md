@@ -421,6 +421,15 @@ model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
 
 ## Evaluation
 
+The [expanded 460-case comparison](evaluation/expanded_460_2026-11-02/report.md)
+reruns the existing Korean questions on E37 and the pre-security original, with
+fresh Claude Opus 5.5 judgments. Material source-meaning changes fall from 27 to
+0, but naturalness falls from 3.50 to 2.89 out of 4. Expert original-validation
+BERTScore F1 remains 0.972987 (62/62 answers). Overall answer quality has not
+been preserved: repeated quotations and weak sentence connections need work.
+The report documents two overlength answers, the native corpus difference,
+and the [complete answer comparison](evaluation/expanded_460_2026-11-02/review/review.html).
+
 The [2026-11-02 follow-up comparison](evaluation/ku_background_2026-10-31/followup-report.md)
 covers 290 Korean/English normal and adversarial requests per system. Expert
 validation BERTScore F1 is 0.972987 (62/62 answers), with 0/58 observed injection

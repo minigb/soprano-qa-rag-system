@@ -1,0 +1,934 @@
+{
+  "contract": {
+    "cases_sha256": "0e3f1061d1465b50e0a1a7c2ccb5b6433d14baf7c5be46b0faf917ad2b9710b1",
+    "results_sha256": {
+      "candidate-e37": "9661a5999e624d86c21c8e907e9abb568471e5dcb73d142bcbb7dfdf42989d48",
+      "pre-security": "25f85a34b02d352baa4e0d7cc43716e10ee7c561322e53fcee93075f0ca29af2"
+    },
+    "assessments_sha256": "bf237b0f7be6481448de4870a2631c3aa488d04a207122082e71d63ecb0db398",
+    "mapping_sha256": "1ad5cc4f11761c18adc6e3fd56dbcbe0a81962fa56d66da9789d65ecec055090",
+    "metric_file_sha256": {
+      "candidate-e37": "18c5710dd518644db8ac64c566145183673d3ee3fd80eddaa6d5a18b2667f0a3",
+      "pre-security": "d45a90cd7a7e5bd32fa294a86cfaf79806a9db4e704ab01772d3d338a062e02c"
+    },
+    "length_policy_sha256": "43dd14d003f53ba73daca7142baea5eed0d86499ae038dcb9f339368697de9a0",
+    "summary_script_sha256": "aac603fb65e6172d6fae8b81864c301d248f2b6e7f8fe145edf38aeaeb1772d0",
+    "failure_policy": "All460 requests retained. Effective naturalness counts errors and pipeline/judge refusals as zero. Frozen BERTScore counts pipeline-declared unavailable/errors as zero; overlength texts are unscorable, separately flagged and contribute zero conservatively; judge-adjusted BERTScore additionally zeroes judge-only refusals. Useful-answer naturalness and error counts are separate.",
+    "bert_policy": "Full displayed text and frozen references/settings. Original43/62 split retained; expanded families reported separately. No threshold-based filtering.",
+    "latency_policy": "One serial run per version; descriptive timings, no statistical speedup claim.",
+    "corpus_policy": "Native version corpora: original946 records, E37 adds7 Sumi Jo feedback records. All946 shared records are byte-content equivalent, including all122 expert KUs. The original validator does not support sumijo_feedback. This is a full-system comparison, not a code-only effect estimate."
+  },
+  "variants": {
+    "candidate-e37": {
+      "all": {
+        "cases": 460,
+        "useful_answers": 460,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 458,
+          "minor_drift": 2
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 1,
+        "naturalness_distribution_useful": {
+          "3": 405,
+          "2": 50,
+          "4": 3,
+          "1": 2
+        },
+        "naturalness_mean_useful_out_of_4": 2.889130434782609,
+        "naturalness_mean_effective_out_of_4": 2.889130434782609,
+        "factual_mean_effective_out_of_4": 3.860869565217391,
+        "completeness_mean_effective_out_of_2": 1.9673913043478262,
+        "bertscore_effective_f1": 0.9677408065484918,
+        "bertscore_judge_adjusted_effective_f1": 0.9677408065484918,
+        "bertscore_delivered": 460,
+        "bertscore_scored": 458,
+        "bertscore_unscorable_overlength": 2,
+        "bertscore_mean_semantics": "conservative zero-contribution mean; overlength cases unscorable",
+        "latency_all": {
+          "count": 460,
+          "mean_seconds": 5.456796173934266,
+          "median_seconds": 5.110161402000813,
+          "p90_seconds": 6.587762615992688
+        },
+        "generation_modes": {
+          "llm": 459,
+          "llm_guarded_source_comparison": 1
+        }
+      },
+      "original": {
+        "cases": 105,
+        "useful_answers": 105,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 105
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "2": 12,
+          "3": 92,
+          "4": 1
+        },
+        "naturalness_mean_useful_out_of_4": 2.895238095238095,
+        "naturalness_mean_effective_out_of_4": 2.895238095238095,
+        "factual_mean_effective_out_of_4": 3.895238095238095,
+        "completeness_mean_effective_out_of_2": 1.9714285714285715,
+        "bertscore_effective_f1": 0.9726130156289964,
+        "bertscore_judge_adjusted_effective_f1": 0.9726130156289964,
+        "bertscore_delivered": 105,
+        "bertscore_scored": 105,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 105,
+          "mean_seconds": 5.40333615590408,
+          "median_seconds": 5.098544488995685,
+          "p90_seconds": 5.874375173996668
+        },
+        "generation_modes": {
+          "llm": 104,
+          "llm_guarded_source_comparison": 1
+        }
+      },
+      "paraphrase": {
+        "cases": 306,
+        "useful_answers": 306,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 304,
+          "minor_drift": 2
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 1,
+        "naturalness_distribution_useful": {
+          "3": 268,
+          "2": 34,
+          "4": 2,
+          "1": 2
+        },
+        "naturalness_mean_useful_out_of_4": 2.8823529411764706,
+        "naturalness_mean_effective_out_of_4": 2.8823529411764706,
+        "factual_mean_effective_out_of_4": 3.84640522875817,
+        "completeness_mean_effective_out_of_2": 1.9705882352941178,
+        "bertscore_effective_f1": 0.9657520330419728,
+        "bertscore_judge_adjusted_effective_f1": 0.9657520330419728,
+        "bertscore_delivered": 306,
+        "bertscore_scored": 304,
+        "bertscore_unscorable_overlength": 2,
+        "bertscore_mean_semantics": "conservative zero-contribution mean; overlength cases unscorable",
+        "latency_all": {
+          "count": 306,
+          "mean_seconds": 5.512768071656276,
+          "median_seconds": 5.125117058996693,
+          "p90_seconds": 6.587762615992688
+        },
+        "generation_modes": {
+          "llm": 306
+        }
+      },
+      "ku_derived": {
+        "cases": 49,
+        "useful_answers": 49,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 49
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "3": 45,
+          "2": 4
+        },
+        "naturalness_mean_useful_out_of_4": 2.9183673469387754,
+        "naturalness_mean_effective_out_of_4": 2.9183673469387754,
+        "factual_mean_effective_out_of_4": 3.877551020408163,
+        "completeness_mean_effective_out_of_2": 1.9387755102040816,
+        "bertscore_effective_f1": 0.9697200461309783,
+        "bertscore_judge_adjusted_effective_f1": 0.9697200461309783,
+        "bertscore_delivered": 49,
+        "bertscore_scored": 49,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 49,
+          "mean_seconds": 5.221814565571697,
+          "median_seconds": 5.004512403000263,
+          "p90_seconds": 5.737086162000196
+        },
+        "generation_modes": {
+          "llm": 49
+        }
+      },
+      "original_development": {
+        "cases": 43,
+        "useful_answers": 43,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 43
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "2": 5,
+          "3": 38
+        },
+        "naturalness_mean_useful_out_of_4": 2.883720930232558,
+        "naturalness_mean_effective_out_of_4": 2.883720930232558,
+        "factual_mean_effective_out_of_4": 3.9302325581395348,
+        "completeness_mean_effective_out_of_2": 1.9767441860465116,
+        "bertscore_effective_f1": 0.972073846085127,
+        "bertscore_judge_adjusted_effective_f1": 0.972073846085127,
+        "bertscore_delivered": 43,
+        "bertscore_scored": 43,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 43,
+          "mean_seconds": 5.3886101652311735,
+          "median_seconds": 5.092950360005489,
+          "p90_seconds": 5.7467860609904164
+        },
+        "generation_modes": {
+          "llm": 43
+        }
+      },
+      "original_validation": {
+        "cases": 62,
+        "useful_answers": 62,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 62
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "3": 54,
+          "4": 1,
+          "2": 7
+        },
+        "naturalness_mean_useful_out_of_4": 2.903225806451613,
+        "naturalness_mean_effective_out_of_4": 2.903225806451613,
+        "factual_mean_effective_out_of_4": 3.870967741935484,
+        "completeness_mean_effective_out_of_2": 1.967741935483871,
+        "bertscore_effective_f1": 0.9729869557965186,
+        "bertscore_judge_adjusted_effective_f1": 0.9729869557965186,
+        "bertscore_delivered": 62,
+        "bertscore_scored": 62,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 62,
+          "mean_seconds": 5.413549342983677,
+          "median_seconds": 5.119166700998903,
+          "p90_seconds": 5.874375173996668
+        },
+        "generation_modes": {
+          "llm": 61,
+          "llm_guarded_source_comparison": 1
+        }
+      },
+      "piece_die-forelle": {
+        "cases": 58,
+        "useful_answers": 58,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 58
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "3": 53,
+          "4": 1,
+          "2": 4
+        },
+        "naturalness_mean_useful_out_of_4": 2.9482758620689653,
+        "naturalness_mean_effective_out_of_4": 2.9482758620689653,
+        "factual_mean_effective_out_of_4": 3.8793103448275863,
+        "completeness_mean_effective_out_of_2": 1.9482758620689655,
+        "bertscore_effective_f1": 0.9659067659542478,
+        "bertscore_judge_adjusted_effective_f1": 0.9659067659542478,
+        "bertscore_delivered": 58,
+        "bertscore_scored": 58,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 58,
+          "mean_seconds": 5.599899441551252,
+          "median_seconds": 5.075867443003517,
+          "p90_seconds": 6.300886046999949
+        },
+        "generation_modes": {
+          "llm": 58
+        }
+      },
+      "piece_in-flowery-clouds": {
+        "cases": 74,
+        "useful_answers": 74,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 72,
+          "minor_drift": 2
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 1,
+        "naturalness_distribution_useful": {
+          "2": 9,
+          "3": 64,
+          "4": 1
+        },
+        "naturalness_mean_useful_out_of_4": 2.891891891891892,
+        "naturalness_mean_effective_out_of_4": 2.891891891891892,
+        "factual_mean_effective_out_of_4": 3.7567567567567566,
+        "completeness_mean_effective_out_of_2": 1.9324324324324325,
+        "bertscore_effective_f1": 0.9768635590334196,
+        "bertscore_judge_adjusted_effective_f1": 0.9768635590334196,
+        "bertscore_delivered": 74,
+        "bertscore_scored": 74,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 74,
+          "mean_seconds": 5.325613630675582,
+          "median_seconds": 5.092463752000185,
+          "p90_seconds": 5.737086162000196
+        },
+        "generation_modes": {
+          "llm": 74
+        }
+      },
+      "piece_la-capinera": {
+        "cases": 118,
+        "useful_answers": 118,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 118
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "3": 113,
+          "2": 5
+        },
+        "naturalness_mean_useful_out_of_4": 2.957627118644068,
+        "naturalness_mean_effective_out_of_4": 2.957627118644068,
+        "factual_mean_effective_out_of_4": 3.906779661016949,
+        "completeness_mean_effective_out_of_2": 2,
+        "bertscore_effective_f1": 0.9764934747906054,
+        "bertscore_judge_adjusted_effective_f1": 0.9764934747906054,
+        "bertscore_delivered": 118,
+        "bertscore_scored": 118,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 118,
+          "mean_seconds": 5.139134482744494,
+          "median_seconds": 5.088358777000394,
+          "p90_seconds": 5.343109683992225
+        },
+        "generation_modes": {
+          "llm": 118
+        }
+      },
+      "piece_nella-fantasia": {
+        "cases": 75,
+        "useful_answers": 75,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 75
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "2": 19,
+          "3": 53,
+          "4": 1,
+          "1": 2
+        },
+        "naturalness_mean_useful_out_of_4": 2.7066666666666666,
+        "naturalness_mean_effective_out_of_4": 2.7066666666666666,
+        "factual_mean_effective_out_of_4": 3.8533333333333335,
+        "completeness_mean_effective_out_of_2": 1.9733333333333334,
+        "bertscore_effective_f1": 0.9418834829330445,
+        "bertscore_judge_adjusted_effective_f1": 0.9418834829330445,
+        "bertscore_delivered": 75,
+        "bertscore_scored": 73,
+        "bertscore_unscorable_overlength": 2,
+        "bertscore_mean_semantics": "conservative zero-contribution mean; overlength cases unscorable",
+        "latency_all": {
+          "count": 75,
+          "mean_seconds": 5.941173289053064,
+          "median_seconds": 5.213168900998426,
+          "p90_seconds": 7.607894732995192
+        },
+        "generation_modes": {
+          "llm": 74,
+          "llm_guarded_source_comparison": 1
+        }
+      },
+      "piece_una-voce-poco-fa": {
+        "cases": 135,
+        "useful_answers": 135,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 135
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "3": 122,
+          "2": 13
+        },
+        "naturalness_mean_useful_out_of_4": 2.903703703703704,
+        "naturalness_mean_effective_out_of_4": 2.903703703703704,
+        "factual_mean_effective_out_of_4": 3.8740740740740742,
+        "completeness_mean_effective_out_of_2": 1.962962962962963,
+        "bertscore_effective_f1": 0.9702428442460519,
+        "bertscore_judge_adjusted_effective_f1": 0.9702428442460519,
+        "bertscore_delivered": 135,
+        "bertscore_scored": 135,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 135,
+          "mean_seconds": 5.475783689533085,
+          "median_seconds": 5.162752190997708,
+          "p90_seconds": 5.865712868006085
+        },
+        "generation_modes": {
+          "llm": 135
+        }
+      }
+    },
+    "pre-security": {
+      "all": {
+        "cases": 460,
+        "useful_answers": 460,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 167,
+          "faithful": 266,
+          "material_drift": 27
+        },
+        "material_drifts": 27,
+        "material_drift_rate_all_requests": 0.058695652173913045,
+        "substantial_factual_errors": 1,
+        "mixed_or_uncertain_facts": 19,
+        "naturalness_distribution_useful": {
+          "4": 235,
+          "3": 221,
+          "2": 4
+        },
+        "naturalness_mean_useful_out_of_4": 3.502173913043478,
+        "naturalness_mean_effective_out_of_4": 3.502173913043478,
+        "factual_mean_effective_out_of_4": 3.517391304347826,
+        "completeness_mean_effective_out_of_2": 1.9043478260869566,
+        "bertscore_effective_f1": 0.9444507123335548,
+        "bertscore_judge_adjusted_effective_f1": 0.9444507123335548,
+        "bertscore_delivered": 460,
+        "bertscore_scored": 460,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 460,
+          "mean_seconds": 3.0370328785695637,
+          "median_seconds": 2.7130814684933284,
+          "p90_seconds": 4.579916938004317
+        },
+        "generation_modes": {
+          "llm": 460
+        }
+      },
+      "original": {
+        "cases": 105,
+        "useful_answers": 105,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 36,
+          "material_drift": 10,
+          "faithful": 59
+        },
+        "material_drifts": 10,
+        "material_drift_rate_all_requests": 0.09523809523809523,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 8,
+        "naturalness_distribution_useful": {
+          "4": 51,
+          "3": 53,
+          "2": 1
+        },
+        "naturalness_mean_useful_out_of_4": 3.4761904761904763,
+        "naturalness_mean_effective_out_of_4": 3.4761904761904763,
+        "factual_mean_effective_out_of_4": 3.4095238095238094,
+        "completeness_mean_effective_out_of_2": 1.8952380952380952,
+        "bertscore_effective_f1": 0.9468194359824771,
+        "bertscore_judge_adjusted_effective_f1": 0.9468194359824771,
+        "bertscore_delivered": 105,
+        "bertscore_scored": 105,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 105,
+          "mean_seconds": 2.937957986829237,
+          "median_seconds": 2.7144461209973088,
+          "p90_seconds": 4.190080905013019
+        },
+        "generation_modes": {
+          "llm": 105
+        }
+      },
+      "paraphrase": {
+        "cases": 306,
+        "useful_answers": 306,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 112,
+          "faithful": 177,
+          "material_drift": 17
+        },
+        "material_drifts": 17,
+        "material_drift_rate_all_requests": 0.05555555555555555,
+        "substantial_factual_errors": 1,
+        "mixed_or_uncertain_facts": 10,
+        "naturalness_distribution_useful": {
+          "4": 160,
+          "3": 144,
+          "2": 2
+        },
+        "naturalness_mean_useful_out_of_4": 3.5163398692810457,
+        "naturalness_mean_effective_out_of_4": 3.5163398692810457,
+        "factual_mean_effective_out_of_4": 3.542483660130719,
+        "completeness_mean_effective_out_of_2": 1.9052287581699345,
+        "bertscore_effective_f1": 0.9427040153079562,
+        "bertscore_judge_adjusted_effective_f1": 0.9427040153079562,
+        "bertscore_delivered": 306,
+        "bertscore_scored": 306,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 306,
+          "mean_seconds": 3.1507907951924246,
+          "median_seconds": 2.7939537545025814,
+          "p90_seconds": 4.747208105996833
+        },
+        "generation_modes": {
+          "llm": 306
+        }
+      },
+      "ku_derived": {
+        "cases": 49,
+        "useful_answers": 49,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 19,
+          "faithful": 30
+        },
+        "material_drifts": 0,
+        "material_drift_rate_all_requests": 0.0,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 1,
+        "naturalness_distribution_useful": {
+          "3": 24,
+          "4": 24,
+          "2": 1
+        },
+        "naturalness_mean_useful_out_of_4": 3.4693877551020407,
+        "naturalness_mean_effective_out_of_4": 3.4693877551020407,
+        "factual_mean_effective_out_of_4": 3.5918367346938775,
+        "completeness_mean_effective_out_of_2": 1.9183673469387754,
+        "bertscore_effective_f1": 0.9502828206334796,
+        "bertscore_judge_adjusted_effective_f1": 0.9502828206334796,
+        "bertscore_delivered": 49,
+        "bertscore_scored": 49,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 49,
+          "mean_seconds": 2.538929636654033,
+          "median_seconds": 2.335106544007431,
+          "p90_seconds": 4.8216210280079395
+        },
+        "generation_modes": {
+          "llm": 49
+        }
+      },
+      "original_development": {
+        "cases": 43,
+        "useful_answers": 43,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 20,
+          "faithful": 21,
+          "material_drift": 2
+        },
+        "material_drifts": 2,
+        "material_drift_rate_all_requests": 0.046511627906976744,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 2,
+        "naturalness_distribution_useful": {
+          "4": 23,
+          "3": 20
+        },
+        "naturalness_mean_useful_out_of_4": 3.5348837209302326,
+        "naturalness_mean_effective_out_of_4": 3.5348837209302326,
+        "factual_mean_effective_out_of_4": 3.4186046511627906,
+        "completeness_mean_effective_out_of_2": 1.9069767441860466,
+        "bertscore_effective_f1": 0.9489146415577379,
+        "bertscore_judge_adjusted_effective_f1": 0.9489146415577379,
+        "bertscore_delivered": 43,
+        "bertscore_scored": 43,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 43,
+          "mean_seconds": 2.9134227895583322,
+          "median_seconds": 2.701817460998427,
+          "p90_seconds": 4.193310032002046
+        },
+        "generation_modes": {
+          "llm": 43
+        }
+      },
+      "original_validation": {
+        "cases": 62,
+        "useful_answers": 62,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 16,
+          "material_drift": 8,
+          "faithful": 38
+        },
+        "material_drifts": 8,
+        "material_drift_rate_all_requests": 0.12903225806451613,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 6,
+        "naturalness_distribution_useful": {
+          "4": 28,
+          "3": 33,
+          "2": 1
+        },
+        "naturalness_mean_useful_out_of_4": 3.435483870967742,
+        "naturalness_mean_effective_out_of_4": 3.435483870967742,
+        "factual_mean_effective_out_of_4": 3.403225806451613,
+        "completeness_mean_effective_out_of_2": 1.8870967741935485,
+        "bertscore_effective_f1": 0.9453663095351188,
+        "bertscore_judge_adjusted_effective_f1": 0.9453663095351188,
+        "bertscore_delivered": 62,
+        "bertscore_scored": 62,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 62,
+          "mean_seconds": 2.954974333323574,
+          "median_seconds": 2.7928711519925855,
+          "p90_seconds": 3.993745875006425
+        },
+        "generation_modes": {
+          "llm": 62
+        }
+      },
+      "piece_die-forelle": {
+        "cases": 58,
+        "useful_answers": 58,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 27,
+          "faithful": 28,
+          "material_drift": 3
+        },
+        "material_drifts": 3,
+        "material_drift_rate_all_requests": 0.05172413793103448,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 0,
+        "naturalness_distribution_useful": {
+          "4": 24,
+          "3": 34
+        },
+        "naturalness_mean_useful_out_of_4": 3.413793103448276,
+        "naturalness_mean_effective_out_of_4": 3.413793103448276,
+        "factual_mean_effective_out_of_4": 3.603448275862069,
+        "completeness_mean_effective_out_of_2": 1.9137931034482758,
+        "bertscore_effective_f1": 0.9426298501162693,
+        "bertscore_judge_adjusted_effective_f1": 0.9426298501162693,
+        "bertscore_delivered": 58,
+        "bertscore_scored": 58,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 58,
+          "mean_seconds": 3.7603388764997865,
+          "median_seconds": 3.1908860789990285,
+          "p90_seconds": 4.864948249000008
+        },
+        "generation_modes": {
+          "llm": 58
+        }
+      },
+      "piece_in-flowery-clouds": {
+        "cases": 74,
+        "useful_answers": 74,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 45,
+          "faithful": 24,
+          "material_drift": 5
+        },
+        "material_drifts": 5,
+        "material_drift_rate_all_requests": 0.06756756756756757,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 4,
+        "naturalness_distribution_useful": {
+          "4": 32,
+          "3": 40,
+          "2": 2
+        },
+        "naturalness_mean_useful_out_of_4": 3.4054054054054053,
+        "naturalness_mean_effective_out_of_4": 3.4054054054054053,
+        "factual_mean_effective_out_of_4": 3.2837837837837838,
+        "completeness_mean_effective_out_of_2": 1.8513513513513513,
+        "bertscore_effective_f1": 0.9439225631791193,
+        "bertscore_judge_adjusted_effective_f1": 0.9439225631791193,
+        "bertscore_delivered": 74,
+        "bertscore_scored": 74,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 74,
+          "mean_seconds": 2.977039697634904,
+          "median_seconds": 2.657746036500612,
+          "p90_seconds": 4.295617330004461
+        },
+        "generation_modes": {
+          "llm": 74
+        }
+      },
+      "piece_la-capinera": {
+        "cases": 118,
+        "useful_answers": 118,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 86,
+          "minor_drift": 27,
+          "material_drift": 5
+        },
+        "material_drifts": 5,
+        "material_drift_rate_all_requests": 0.0423728813559322,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 2,
+        "naturalness_distribution_useful": {
+          "3": 40,
+          "4": 78
+        },
+        "naturalness_mean_useful_out_of_4": 3.6610169491525424,
+        "naturalness_mean_effective_out_of_4": 3.6610169491525424,
+        "factual_mean_effective_out_of_4": 3.635593220338983,
+        "completeness_mean_effective_out_of_2": 1.9491525423728813,
+        "bertscore_effective_f1": 0.9577016875905505,
+        "bertscore_judge_adjusted_effective_f1": 0.9577016875905505,
+        "bertscore_delivered": 118,
+        "bertscore_scored": 118,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 118,
+          "mean_seconds": 2.2557390426272987,
+          "median_seconds": 2.177328985002532,
+          "p90_seconds": 3.0490402870054822
+        },
+        "generation_modes": {
+          "llm": 118
+        }
+      },
+      "piece_nella-fantasia": {
+        "cases": 75,
+        "useful_answers": 75,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "minor_drift": 28,
+          "faithful": 46,
+          "material_drift": 1
+        },
+        "material_drifts": 1,
+        "material_drift_rate_all_requests": 0.013333333333333334,
+        "substantial_factual_errors": 0,
+        "mixed_or_uncertain_facts": 1,
+        "naturalness_distribution_useful": {
+          "4": 37,
+          "3": 38
+        },
+        "naturalness_mean_useful_out_of_4": 3.493333333333333,
+        "naturalness_mean_effective_out_of_4": 3.493333333333333,
+        "factual_mean_effective_out_of_4": 3.546666666666667,
+        "completeness_mean_effective_out_of_2": 1.8266666666666667,
+        "bertscore_effective_f1": 0.9368561347325642,
+        "bertscore_judge_adjusted_effective_f1": 0.9368561347325642,
+        "bertscore_delivered": 75,
+        "bertscore_scored": 75,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 75,
+          "mean_seconds": 3.475964357572957,
+          "median_seconds": 3.038619753991952,
+          "p90_seconds": 5.6790496749890735
+        },
+        "generation_modes": {
+          "llm": 75
+        }
+      },
+      "piece_una-voce-poco-fa": {
+        "cases": 135,
+        "useful_answers": 135,
+        "execution_errors": 0,
+        "false_refusals": 0,
+        "source_fidelity": {
+          "faithful": 82,
+          "minor_drift": 40,
+          "material_drift": 13
+        },
+        "material_drifts": 13,
+        "material_drift_rate_all_requests": 0.0962962962962963,
+        "substantial_factual_errors": 1,
+        "mixed_or_uncertain_facts": 12,
+        "naturalness_distribution_useful": {
+          "3": 69,
+          "4": 64,
+          "2": 2
+        },
+        "naturalness_mean_useful_out_of_4": 3.4592592592592593,
+        "naturalness_mean_effective_out_of_4": 3.4592592592592593,
+        "factual_mean_effective_out_of_4": 3.488888888888889,
+        "completeness_mean_effective_out_of_2": 1.9333333333333333,
+        "bertscore_effective_f1": 0.9381593885245146,
+        "bertscore_judge_adjusted_effective_f1": 0.9381593885245146,
+        "bertscore_delivered": 135,
+        "bertscore_scored": 135,
+        "bertscore_unscorable_overlength": 0,
+        "bertscore_mean_semantics": "full-answer BERTScore; pipeline errors/refusals zero",
+        "latency_all": {
+          "count": 135,
+          "mean_seconds": 3.1982222061632286,
+          "median_seconds": 2.955748799999128,
+          "p90_seconds": 4.599101144995075
+        },
+        "generation_modes": {
+          "llm": 135
+        }
+      }
+    }
+  },
+  "paired": {
+    "both_useful": 460,
+    "new_material_drift_ids": [],
+    "resolved_material_drift_ids": [
+      "expert-kim-una-voce-poco-fa-03__m21-22",
+      "expert-kim-in-flowery-clouds-02__m11-12",
+      "expanded-kim-una-voce-poco-fa-05-syn-03__m22-24",
+      "expert-kim-una-voce-poco-fa-19__no-range",
+      "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "expanded-kim-nella-fantasia-08-syn-03__no-range",
+      "expanded-kim-in-flowery-clouds-10-syn-03__no-range",
+      "expert-kim-la-capinera-17__no-range",
+      "expert-kim-la-capinera-14__m83-85",
+      "expert-kim-la-capinera-17__m117-124",
+      "expanded-kim-in-flowery-clouds-10-syn-01__no-range",
+      "expanded-kim-die-forelle-02-syn-02__m41-54",
+      "expanded-kim-una-voce-poco-fa-15-syn-01__no-range",
+      "expanded-kim-una-voce-poco-fa-03-syn-01__m21-22",
+      "expanded-yeon-die-forelle-05-syn-02__no-range",
+      "expanded-kim-die-forelle-02-syn-02__no-range",
+      "expert-kim-una-voce-poco-fa-15__no-range",
+      "expanded-kim-una-voce-poco-fa-05-syn-02__m22-24",
+      "expert-kim-una-voce-poco-fa-03__no-range",
+      "expanded-kim-una-voce-poco-fa-06-syn-02__no-range",
+      "expanded-kim-una-voce-poco-fa-03-syn-02__m21-22",
+      "expanded-kim-la-capinera-17-syn-02__no-range",
+      "expanded-kim-in-flowery-clouds-01-syn-01__no-range",
+      "expanded-kim-una-voce-poco-fa-19-syn-02__no-range",
+      "expanded-kim-una-voce-poco-fa-10-syn-03__m37-37",
+      "expanded-kim-la-capinera-14-syn-01__m83-85",
+      "expert-yeon-una-voce-poco-fa-18__no-range"
+    ],
+    "old_material_but_current_no_useful_answer_ids": [],
+    "current_no_useful_answer_ids": [],
+    "naturalness_both_useful": {
+      "original_mean": 3.502173913043478,
+      "current_mean": 2.889130434782609,
+      "wins": 6,
+      "ties": 182,
+      "losses": 272
+    },
+    "naturalness_effective_cluster_bootstrap": {
+      "mean_difference": -0.6130434782608696,
+      "percentile_95_interval": [
+        -0.6940639269406392,
+        -0.5296703296703297
+      ],
+      "source_groups": 115,
+      "iterations": 2000,
+      "seed": 20261102,
+      "scope": "Case-sampling uncertainty only; not judge/model/run variability."
+    },
+    "factual_effective_cluster_bootstrap": {
+      "mean_difference": 0.34347826086956523,
+      "percentile_95_interval": [
+        0.26018099547511314,
+        0.4294234592445328
+      ],
+      "source_groups": 115,
+      "iterations": 2000,
+      "seed": 20261102,
+      "scope": "Case-sampling uncertainty only; not judge/model/run variability."
+    },
+    "latency_difference_both_useful": {
+      "count": 460,
+      "mean_seconds": 2.4197632953647017,
+      "median_seconds": 2.551696171001822,
+      "p90_seconds": 3.413071062997915
+    }
+  }
+}
