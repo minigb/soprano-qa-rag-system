@@ -1,0 +1,750 @@
+[
+  {
+    "id": "8a5663ef6fffd22737b0",
+    "question": "이 곡을 부를 수 있는 성별과 성부가 따로 정해져 있을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재합니다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-001",
+        "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2a8e288ed0ed9817eb4c",
+    "question": "leggiero는 어떤 방식으로 표현하면 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      28,
+      35
+    ],
+    "language": "ko",
+    "answer": "leggiero는 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋습니다. 이 프레이즈는 새소리를 연상시키며, 마치 새가 노래하는 듯한 느낌을 주어야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tua"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo- -ce un"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "tal pia-"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cer mi"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "fa Che"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "di can-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tar de- -sio mi"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "dà"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-009",
+        "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            35
+          ],
+          [
+            94,
+            101
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              35
+            ],
+            [
+              94,
+              101
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "92e434236a4343282d32",
+    "question": "Larghetto라고 적힌 대목에서는 빠르기를 어느 수준으로 잡으면 될까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      74,
+      79
+    ],
+    "language": "ko",
+    "answer": "Larghetto는 한 마디 한 마디를 충분히 표현할 수 있도록 약간 느린 템포로 연주하는 것이 좋습니다. 템포는 연주자의 해석에 따라 달라질 수 있으며, 각 음을 강조하면서도 문장이 이어지도록 주의해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 74,
+          "voice": "sung",
+          "lyric_lines": [
+            "나 비"
+          ]
+        },
+        {
+          "measure": 75,
+          "voice": "sung",
+          "lyric_lines": [
+            "처"
+          ]
+        },
+        {
+          "measure": 76,
+          "voice": "sung",
+          "lyric_lines": [
+            "럼"
+          ]
+        },
+        {
+          "measure": 77,
+          "voice": "sung",
+          "lyric_lines": [
+            "쓰 러"
+          ]
+        },
+        {
+          "measure": 78,
+          "voice": "sung",
+          "lyric_lines": [
+            "지 게"
+          ]
+        },
+        {
+          "measure": 79,
+          "voice": "sung",
+          "lyric_lines": [
+            "하 - 여"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-012",
+        "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            74,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              74,
+              79
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "912f0de354997ae68b60",
+    "question": "악보 전체에 반복되는 부점은 어떤 방식으로 처리해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      42,
+      42
+    ],
+    "language": "ko",
+    "answer": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋습니다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 42,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ra- -i, la vin- -ce-",
+            "sworn it, for weal or"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            17,
+            19
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ],
+          [
+            63,
+            63
+          ],
+          [
+            111,
+            111
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "08cbb8f77a2ab824b870",
+    "question": "소리가 이어지지 않는 대목은 어떤 식으로 노래하는 것이 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      95,
+      96
+    ],
+    "language": "ko",
+    "answer": "소리가 끊어지는 부분은 프레이즈 전체를 고려해 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습을 해보는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 95,
+          "voice": "sung",
+          "lyric_lines": [
+            "men- -tre il"
+          ]
+        },
+        {
+          "measure": 96,
+          "voice": "sung",
+          "lyric_lines": [
+            "cor vi-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-010",
+        "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            29,
+            30
+          ],
+          [
+            95,
+            96
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              29,
+              30
+            ],
+            [
+              95,
+              96
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "33c7ae5c546baba36301",
+    "question": "음악의 성격이 전환되는 대목을 노래로 어떻게 살리면 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "피아노 파트의 음형 변화는 낚시꾼의 행동을 표현하며, 이에 따라 긴장감과 분위기 전환이 일어납니다. 노래하는 사람은 이를 이해하고, 피아노의 긴장감을 활용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "60a7ce170e2b8b95d70a",
+    "question": "악보의 ‘OPP’ 표시는 무엇을 뜻하며, 그 장식 구절은 어떻게 선택해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      53,
+      59
+    ],
+    "language": "ko",
+    "answer": "악보의 ‘OPP’ 표시는 선택적으로 부를 수 있는 장식 구절을 의미합니다. 기교적으로 소화할 수 있다면 곡의 분위기를 더욱 효과적으로 살리기 위해 해당 장식을 넣어 부르는 것이 좋습니다. 경우에 따라서는 플루트 파트의 선율을 성악가가 대신 부르기도 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 53,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-025",
+        "text": "악보에서 ‘OPP’로 표기된 부분은 optional, 즉 선택적으로 부를 수 있는 장식 구절을 의미한다. 기교적으로 소화할 수 있다면 곡의 분위기를 더욱 효과적으로 살리기 위해 해당 장식을 넣어 부르는 것이 좋다. 경우에 따라서는 플루트 파트(Flauto)의 선율을 성악가가 대신 부르기도 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            53,
+            59
+          ],
+          [
+            119,
+            124
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "악보에서 ‘OPP’로 표기된 부분은 optional, 즉 선택적으로 부를 수 있는 장식 구절을 의미한다. 기교적으로 소화할 수 있다면 곡의 분위기를 더욱 효과적으로 살리기 위해 해당 장식을 넣어 부르는 것이 좋다. 경우에 따라서는 플루트 파트(Flauto)의 선율을 성악가가 대신 부르기도 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "악보에서 ‘OPP’로 표기된 부분은 optional, 즉 선택적으로 부를 수 있는 장식 구절을 의미한다. 기교적으로 소화할 수 있다면 곡의 분위기를 더욱 효과적으로 살리기 위해 해당 장식을 넣어 부르는 것이 좋다. 경우에 따라서는 플루트 파트(Flauto)의 선율을 성악가가 대신 부르기도 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              53,
+              59
+            ],
+            [
+              119,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-025"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

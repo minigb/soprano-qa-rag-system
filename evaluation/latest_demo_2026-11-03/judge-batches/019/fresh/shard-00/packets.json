@@ -1,0 +1,562 @@
+[
+  {
+    "id": "f566ab39897c6957e07b",
+    "question": "dolce amorosa를 연결해 부를 때 모음을 바꾸는 시점과 방법은 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      62,
+      62
+    ],
+    "language": "ko",
+    "answer": "dolce amorosa를 연결해 부를 때는 모음 전환을 위해 리듬을 잘 나누어 부르는 것이 좋습니다. 특히 빠르게 변화하는 3연음보에서는 모음 전환을 수월하게 하기 위해 주의가 필요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "dol- -ce,‿a- -mo-",
+            "all soft e-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-017",
+        "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "881412f291f0e1deb344",
+    "question": "성악 성부 위의 작은 보표인 오시아는 무엇이며, 기본 선율과 어떻게 선택해 불러야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      112,
+      115
+    ],
+    "language": "ko",
+    "answer": "성악 성부 위의 작은 보표는 오시아(ossia)로, 장식적 대안 선율을 나타냅니다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택해야 하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 112,
+          "voice": "sung",
+          "lyric_lines": [
+            "-car, fa- -rò gio-",
+            "way, to have my"
+          ]
+        },
+        {
+          "measure": 113,
+          "voice": "sung",
+          "lyric_lines": [
+            "-car, fa- -rò gio-",
+            "way, to have my"
+          ]
+        },
+        {
+          "measure": 114,
+          "voice": "sung",
+          "lyric_lines": [
+            "-car, fa- -rò gio-",
+            "way, to have my"
+          ]
+        },
+        {
+          "measure": 115,
+          "voice": "sung",
+          "lyric_lines": [
+            "-car.",
+            "way."
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-026",
+        "text": "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ],
+          [
+            28,
+            30
+          ],
+          [
+            33,
+            43
+          ],
+          [
+            67,
+            67
+          ],
+          [
+            70,
+            71
+          ],
+          [
+            74,
+            76
+          ],
+          [
+            83,
+            83
+          ],
+          [
+            90,
+            108
+          ],
+          [
+            112,
+            115
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "성악 성부 위의 작은 보표는 오시아(ossia)로 제시된 장식적 대안 선율이다. 기본 선율과 동시에 부르는 것이 아니라 둘 중 하나를 선택하며, 가창자는 자신의 기교와 해석에 따라 기본 선율 또는 보다 화려한 오시아 선율을 선택할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              20,
+              20
+            ],
+            [
+              28,
+              30
+            ],
+            [
+              33,
+              43
+            ],
+            [
+              67,
+              67
+            ],
+            [
+              70,
+              71
+            ],
+            [
+              74,
+              76
+            ],
+            [
+              83,
+              83
+            ],
+            [
+              90,
+              108
+            ],
+            [
+              112,
+              115
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-026"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6e0ac3bb99ecc8c63aec",
+    "question": "이 노래가 대중적으로 사랑받으며 자주 불리는 이유는 무엇일까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 노래는 영화 The Mission에 등장한 곡에서 시작되어, 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지로 인해 세계적으로 사랑받았습니다. 한국에서는 예능 프로그램과 합창 프로그램에서 자주 불리면서 더욱 유명해졌습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-013",
+        "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "593bfdc931306d4ad8cb",
+    "question": "음원과 악보가 서로 다를 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Nella fantasia》는 여러 버전으로 존재하여 구성이 달라질 수 있고, 음원과 악보가 다를 수 있습니다. 따라서 악보와 음원이 다르면 어떤 형태로 부를지 미리 확인하고, 생략하거나 반복할 부분을 계획하는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-007",
+        "text": "《Nella fantasia》는 여러 버전으로 존재하여 상황에 따라 솔로곡·중창·합창, 오케스트라 반주·피아노 반주, 전주·후주·간주 등의 구성이 모두 다를 수 있고 연주나 가창자에 따라 자유롭게 편곡할 수 있다. 음원을 악보로 옮기는 과정에서도 피아노용이나 오케스트라용 등 목적에 따라 변화가 생길 수 있고, 음원 자체도 다양한 목적에 맞게 변형되는 경우가 있다. 따라서 가진 악보와 음원이 다르면 어떤 형태로 부를지 미리 확인하고 어느 부분을 생략하거나 반복할지 계획하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 여러 버전으로 존재하여 상황에 따라 솔로곡·중창·합창, 오케스트라 반주·피아노 반주, 전주·후주·간주 등의 구성이 모두 다를 수 있고 연주나 가창자에 따라 자유롭게 편곡할 수 있다. 음원을 악보로 옮기는 과정에서도 피아노용이나 오케스트라용 등 목적에 따라 변화가 생길 수 있고, 음원 자체도 다양한 목적에 맞게 변형되는 경우가 있다. 따라서 가진 악보와 음원이 다르면 어떤 형태로 부를지 미리 확인하고 어느 부분을 생략하거나 반복할지 계획하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 여러 버전으로 존재하여 상황에 따라 솔로곡·중창·합창, 오케스트라 반주·피아노 반주, 전주·후주·간주 등의 구성이 모두 다를 수 있고 연주나 가창자에 따라 자유롭게 편곡할 수 있다. 음원을 악보로 옮기는 과정에서도 피아노용이나 오케스트라용 등 목적에 따라 변화가 생길 수 있고, 음원 자체도 다양한 목적에 맞게 변형되는 경우가 있다. 따라서 가진 악보와 음원이 다르면 어떤 형태로 부를지 미리 확인하고 어느 부분을 생략하거나 반복할지 계획하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a0180e113e73a25ccee5",
+    "question": "《La capinera》의 도약하는 고음을 지나치게 강하거나 날카롭지 않게 부르려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      125,
+      125
+    ],
+    "language": "ko",
+    "answer": "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽습니다. 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 합니다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 125,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-021",
+        "text": "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다.\n",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            30,
+            30
+          ],
+          [
+            33,
+            33
+          ],
+          [
+            51,
+            52
+          ],
+          [
+            55,
+            56
+          ],
+          [
+            96,
+            96
+          ],
+          [
+            99,
+            99
+          ],
+          [
+            117,
+            118
+          ],
+          [
+            121,
+            122
+          ],
+          [
+            125,
+            125
+          ],
+          [
+            127,
+            127
+          ],
+          [
+            130,
+            132
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              30,
+              30
+            ],
+            [
+              33,
+              33
+            ],
+            [
+              51,
+              52
+            ],
+            [
+              55,
+              56
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              99,
+              99
+            ],
+            [
+              117,
+              118
+            ],
+            [
+              121,
+              122
+            ],
+            [
+              125,
+              125
+            ],
+            [
+              127,
+              127
+            ],
+            [
+              130,
+              132
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-021"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "857f9d7f416672c3f019",
+    "question": "곡이 너무 높다면 내게 맞도록 조정 또는 편곡할 수 있을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 조성이 자신의 음역대에 맞지 않는다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-007",
+        "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a9acc7efc97f9816bbf8",
+    "question": "《Die Forelle》에서 명확한 딕션과 단어의 뉘앙스를 어떻게 살려야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》에서는 명확한 딕션과 함께 텍스트의 뉘앙스를 살리는 것이 중요합니다. 특히 'zuckte', 'zappelt' 같은 단어는 그 자체로 뉘앙스와 의미를 잘 표현해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-012",
+        "text": "《Die Forelle》에서는 명확한 딕션뿐 아니라 텍스트와 단어의 뉘앙스를 살리는 것이 매우 중요하다. 특히 zuckte, zappelt와 같이 단어 자체가 주는 뉘앙스와 뜻이 잘 드러나도록 표현해야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》에서는 명확한 딕션뿐 아니라 텍스트와 단어의 뉘앙스를 살리는 것이 매우 중요하다. 특히 zuckte, zappelt와 같이 단어 자체가 주는 뉘앙스와 뜻이 잘 드러나도록 표현해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》에서는 명확한 딕션뿐 아니라 텍스트와 단어의 뉘앙스를 살리는 것이 매우 중요하다. 특히 zuckte, zappelt와 같이 단어 자체가 주는 뉘앙스와 뜻이 잘 드러나도록 표현해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

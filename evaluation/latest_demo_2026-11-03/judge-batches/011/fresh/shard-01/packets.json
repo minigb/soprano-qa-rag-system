@@ -1,0 +1,676 @@
+[
+  {
+    "id": "6d276ce79ec93e157275",
+    "question": "왜 악센트가 첫 박이 아니라 다른 박에 놓여 있을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악센트가 첫 박이 아니라 다른 박에 놓인 것은, 피아노/오케스트라 파트의 경쾌한 리듬과 멜로디파트의 첫 박자의 이음줄 형태를 통해 로지나 캐릭터의 발랄하고 경쾌한 이미지를 표현하기 위한 것으로 해석할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "fea97abab06a9a7300fb",
+    "question": "음악이 곡의 중간에서 달라지는 이유는 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "lang,"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "er macht das"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "Bäch- -lein tü- -ckisch"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "trü- -be, und"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "eh' ich es ge-"
+          ]
+        },
+        {
+          "measure": 36,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dacht, so"
+          ]
+        },
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "zuck- -te sei- -ne"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "Ru- -the, das"
+          ]
+        },
+        {
+          "measure": 39,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein, das"
+          ]
+        },
+        {
+          "measure": 40,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein zap- -pelt"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        },
+        {
+          "reference_id": "R002",
+          "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "161abba2f51a5ddb61ef",
+    "question": "악센트 표시가 첫 박 아닌 곳에 나오는 것은 어떤 까닭일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      92,
+      93
+    ],
+    "language": "ko",
+    "answer": "악센트가 첫 박이 아닌 곳에 표시된 것은, 피아노/오케스트라 파트의 경쾌한 리듬과 멜로디파트의 이음줄 형태를 통해 로지나 캐릭터의 발랄하고 경쾌한 이미지를 표현하기 위한 연주 방식입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 92,
+          "voice": "sung",
+          "lyric_lines": [
+            "toc- -ca- -no dov'- -è‿il mio",
+            "cross my will, or what I"
+          ]
+        },
+        {
+          "measure": 93,
+          "voice": "sung",
+          "lyric_lines": [
+            "de- -bo- -le, sa- -rò‿u- -na",
+            "do take ill, like an- -y"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7f8f1c574b04715fd581",
+    "question": "이 곡은 성별이나 성부에 상관없이 부를 수 있을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재합니다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-001",
+        "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3e53ef1a9e9e848a5788",
+    "question": "같은 곡인데도 악보의 내용이 서로 다른 까닭은 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "같은 곡의 악보 내용이 서로 다른 이유는 작곡가가 여러 번 개선해 여러 버전을 만들었거나, 출판사가 보기 편하게 편집했기 때문입니다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 해서 여러 버전이 생길 수 있습니다. 원본에 가까운 악보를 찾는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-001",
+        "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-008",
+        "text": "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.\n성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-001"
+        },
+        {
+          "reference_id": "R002",
+          "text": "성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-002"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "11133c88d5f2b494dfc8",
+    "question": "짧은 음표가 계속 나올 때 발음을 빠르게 이어 가려면 어떻게 연습할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      31,
+      34
+    ],
+    "language": "ko",
+    "answer": "짧은 음표가 많고 발음해야 할 것이 많은 부분은 느린 박자로 시작해 점차 빠르게 연습하는 방식이 도움이 됩니다.\n짧은 음표가 많은 부분에서는 모든 글자를 힘주어 말하지 말고, 중요한 단어와 악센트를 중심으로 강약을 조절하며 연습해야 합니다. 악센트가 없는 글자는 부드럽게 넘어가도록 하면 빠르게 발음할 때도 좋은 발음이 됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "Il tu- -tor ri- -cu- -se-",
+            "My in- -tent I’ll not re-"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, io l’in- -ge- -gno a- -guz- -ze-",
+            "-sign, Though my guard- -ian should say"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rò, al- -la fin s’ac- -che- -te-",
+            "no, He my love need not di-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, E con- -ten- -ta io re- -ste-",
+            "-vine, Till my hand I may be-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-012",
+        "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            31,
+            34
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-013",
+        "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.\n짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.\n16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              31,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-012"
+        },
+        {
+          "reference_id": "R002",
+          "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-013"
+        },
+        {
+          "reference_id": "R003",
+          "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b6ec9dd50d2ebf63db7f",
+    "question": "‘l’amor la gioventu’는 어떤 방식으로 노래해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      41,
+      43
+    ],
+    "language": "ko",
+    "answer": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있습니다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 합니다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 41,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam l’a-"
+          ]
+        },
+        {
+          "measure": 42,
+          "voice": "sung",
+          "lyric_lines": [
+            "-mor la gio- -ven-"
+          ]
+        },
+        {
+          "measure": 43,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tù"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-011",
+        "text": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            41,
+            43
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              41,
+              43
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

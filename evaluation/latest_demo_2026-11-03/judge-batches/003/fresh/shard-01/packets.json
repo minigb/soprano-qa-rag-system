@@ -1,0 +1,429 @@
+[
+  {
+    "id": "4546fe94e39eb730c06d",
+    "question": "더 정확한 발음을 위해 ‘Col ritorna’와 ‘Tu torni’는 어떻게 소리 내야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      16,
+      16
+    ],
+    "language": "ko",
+    "answer": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요합니다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 16,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tu tor- -ni"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-004",
+        "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            12,
+            14
+          ],
+          [
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              12,
+              14
+            ],
+            [
+              16,
+              16
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c1770a489d79b8d4004b",
+    "question": "어려운 부분을 부를 때는 어떻게 하는 게 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 빠른 템포와 발음이 어려운 단어가 많아, 단어의 악센트와 마디의 강박·약박을 파악하는 것이 중요합니다. 마디의 마지막 박자에 있는 단어가 다음 마디의 첫 박자 단어의 악센트로 이어지는 점도 유의해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5762b2f45eb56e83649e",
+    "question": "곡이 새로운 분위기로 접어들면 가창 표현은 어떻게 달라져야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 분위기 전환에 따라 가창 표현도 달라져야 합니다. 피아노 파트의 음형 변화는 낚시꾼의 행동을 묘사하며, 이에 따라 가창자는 긴장감을 표현하고 전환점을 자연스럽게 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ed771500137a5f9a1d4d",
+    "question": "이 구절은 음과 음 사이를 어떻게 연결해 불러야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      37,
+      38
+    ],
+    "language": "ko",
+    "answer": "이 구절은 레가토로 음과 음 사이를 연결해 불러야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "풍 - 기 어"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "라"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-019",
+        "text": "해당 구절은 레가토로 연결하여 부른다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            37,
+            38
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "해당 구절은 레가토로 연결하여 부른다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "해당 구절은 레가토로 연결하여 부른다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              37,
+              38
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "89a0bcc560bbb17e6754",
+    "question": "꾸밈음을 많이 넣은 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡에는 꾸밈음이 많아 보이는 경우가 있습니다. Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼고, 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 표현하는 데 도움이 됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-035",
+        "text": "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-035"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2e0cfe4a9141dae2ac83",
+    "question": "‘venticel’의 ‘cel’을 더 자연스럽게 발음하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      86,
+      88
+    ],
+    "language": "ko",
+    "answer": "‘venticel’의 ‘cel’을 자연스럽게 발음하려면, 이태리어에서 모음이 가장 중요하다는 점을 고려해 e의 발음이 충분히 길어질 수 있도록 c는 앞으로, l은 뒤로 위치시켜야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 86,
+          "voice": "sung",
+          "lyric_lines": [
+            "Del ven- -ti-"
+          ]
+        },
+        {
+          "measure": 87,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cel"
+          ]
+        },
+        {
+          "measure": 88,
+          "voice": "sung",
+          "lyric_lines": [
+            "il mor- -mo-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-016",
+        "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            86,
+            88
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              86,
+              88
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "4d2999011b3328fe6142",
+    "question": "악보와 영상, 가창자의 방식이 서로 맞지 않으면 어떤 기준으로 판단할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보와 영상, 가창자의 방식이 서로 다를 수 있는 이유는 이 시대의 음악에서 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었기 때문입니다. 특히 낭만시대의 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했으며, 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋습니다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있으며, 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-018",
+        "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

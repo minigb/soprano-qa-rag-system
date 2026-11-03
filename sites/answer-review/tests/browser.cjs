@@ -28,16 +28,23 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
     const catalog = await readJSON("evaluations.json");
     const active = catalog.evaluations.find((e) => e.id === (new URL(url).searchParams.get("evaluation") || catalog.default));
     const data = await readJSON(active.data);
+    assert.equal(new URL(page.url()).searchParams.get("evaluation"), active.id);
     assert.equal(await page.locator(".case-item").count(), 460);
     const selected = new URLSearchParams(new URL(page.url()).hash.slice(1)).get("case");
     const c = data.cases.find((row) => row.id === selected);
     for (const version of ["original", "current"]) assert.equal(await page.locator(`.answer-text[data-version=${version}]`).textContent(), c.versions[version].answer);
     checks.push("460 cases and full original/current text");
+    const assessed = (v) => v.judge.available !== false && Number.isFinite(v.judge.naturalness);
+    const paired = (c) => assessed(c.versions.original) && assessed(c.versions.current);
     const predicates = {
-      declined: (c) => c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
-      resolved: (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift",
-      remaining: (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2,
-      overlength: (c) => !c.versions.current.bertscore.scored || !c.versions.original.bertscore.scored,
+      declined: (c) => paired(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
+      resolved: (c) => paired(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"
+        && !c.versions.current.judge.refusal && c.versions.current.generation_mode !== "unavailable"
+        && (!c.versions.current.status || c.versions.current.status === "response"),
+      remaining: (c) => assessed(c.versions.current) && (c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2),
+      unavailable: (c) => c.versions.current.status && c.versions.current.status !== 'response' || c.versions.current.generation_mode === 'unavailable' || Boolean(c.versions.current.judge.refusal) || !c.versions.current.answer.trim(),
+      unreviewed: (c) => !assessed(c.versions.current),
+      overlength: (c) => Object.values(c.versions).some((v) => !v.bertscore.scored && v.bertscore.reason !== "not_evaluated"),
     };
     for (const [filter, predicate] of Object.entries(predicates)) {
       await page.locator(`[data-filter="${filter}"]`).click();
@@ -49,6 +56,15 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
       assert.equal(await page.locator('.answer-text[data-version="current"]').textContent(), data.cases.find((row) => row.id === overlong).versions.current.answer);
     }
     checks.push("paired filters and untruncated overlength answers");
+    if (data.assessment_status === "not_evaluated") {
+      await page.locator("#clear-filters").click();
+      assert.equal(await page.locator('.current .fidelity').textContent(), "미평가");
+      assert.equal(await page.locator('.current .unscorable').count(), 0);
+      assert.equal(await page.locator('.current .metric strong').allTextContents().then((x) => x.every((v) => v === "미평가")), true);
+      assert.equal((await page.locator('#overview').textContent()).includes('NaN'), false);
+      assert.equal((await page.locator('#overview').textContent()).includes('null'), false);
+      checks.push("unrated latest outputs never treated as zero, improved, declined or unscorable");
+    }
     await page.locator("#clear-filters").click();
     await page.locator("#piece").selectOption("nella-fantasia"); assert.equal(await page.locator(".case-item").count(), 75);
     await page.locator("#clear-filters").click(); await page.locator("#family").selectOption("original"); assert.equal(await page.locator(".case-item").count(), 105);
@@ -73,6 +89,19 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
     assert.equal(exported.notes.length, 1); assert.equal(exported.notes[0].text, note);
     await page.locator('[data-filter="marked"]').click(); assert.equal(await page.locator(".case-item").count(), 1);
     checks.push("local notes/bookmark persistence and JSON export");
+    if (catalog.evaluations.length > 1) {
+      const other = catalog.evaluations.find((e) => e.id !== active.id);
+      await page.locator('#evaluation').selectOption(other.id);
+      await page.waitForFunction(({id, label}) => document.querySelector('#evaluation')?.value === id && document.querySelector('.current .answer-label h3')?.textContent === label, {id:other.id, label:other.answerLabel});
+      assert.equal(await page.locator('#review-note').inputValue(), '');
+      const historical = await readJSON(other.data);
+      const id = new URLSearchParams(new URL(page.url()).hash.slice(1)).get('case');
+      assert.equal(await page.locator('.answer-text[data-version=current]').textContent(), historical.cases.find((x) => x.id === id).versions.current.answer);
+      await page.locator('#evaluation').selectOption(active.id);
+      await page.waitForFunction(({id, label}) => document.querySelector('#evaluation')?.value === id && document.querySelector('.current .answer-label h3')?.textContent === label && document.querySelector('#review-note')?.value !== '', {id:active.id, label:active.answerLabel});
+      assert.equal(await page.locator('#review-note').inputValue(), note);
+      checks.push('historical version remains accessible and version notes stay isolated');
+    }
     await page.goto(deepLink); await page.waitForSelector(".answer-text"); assert.equal(page.url(), deepLink);
     await page.locator("#next").click(); const nextLink = page.url(); assert.notEqual(nextLink, deepLink);
     await page.goBack(); await page.waitForSelector(".answer-text"); assert.equal(page.url(), deepLink);

@@ -1,0 +1,506 @@
+[
+  {
+    "id": "a3ffbcf56f42d675b58f",
+    "question": "왜 박자를 앞에서 쓰던 것으로 되돌렸을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닙니다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러납니다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b319f3711a39ea3a8950",
+    "question": "D.S. al Coda라는 악보 지시는 무엇을 의미할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 연주하거나 노래하라는 지시입니다. 이는 도돌이표, Da Capo, Dal Segno, Coda 등과 같은 음악적 지시 기호 중 하나로, D.S. Dal Segno의 줄임말로 Segno 표시로 돌아간다는 뜻이며, al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-012",
+        "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "205f9c25a0280cb7713c",
+    "question": "《La capinera》의 도약하는 고음을 지나치게 강하거나 날카롭지 않게 부르려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《La capinera》는 도약하는 고음을 지나치게 강하거나 날카롭게 부르지 않도록 주의해야 합니다. 강박에 해당하는 낮은 음에 더 무게를 두고 노래하면 도약하는 고음이 자연스럽게 이어질 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-021",
+        "text": "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다.\n",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            30,
+            30
+          ],
+          [
+            33,
+            33
+          ],
+          [
+            51,
+            52
+          ],
+          [
+            55,
+            56
+          ],
+          [
+            96,
+            96
+          ],
+          [
+            99,
+            99
+          ],
+          [
+            117,
+            118
+          ],
+          [
+            121,
+            122
+          ],
+          [
+            125,
+            125
+          ],
+          [
+            127,
+            127
+          ],
+          [
+            130,
+            132
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《La capinera》는 전반적으로 도약음과 고음이 많아 고음을 지나치게 강하거나 크게 내기 쉽다. 따라서 강박의 위치에 유의하고, 고음이 필요 이상으로 강조되거나 날카롭게 들리지 않도록 주의해야 한다. 예를 들어 낮은 음이 강박에 놓이고 그 뒤에 도약하는 고음이 이어질 경우, 강박에 해당하는 낮은 음에 더 무게를 두고 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              30,
+              30
+            ],
+            [
+              33,
+              33
+            ],
+            [
+              51,
+              52
+            ],
+            [
+              55,
+              56
+            ],
+            [
+              96,
+              96
+            ],
+            [
+              99,
+              99
+            ],
+            [
+              117,
+              118
+            ],
+            [
+              121,
+              122
+            ],
+            [
+              125,
+              125
+            ],
+            [
+              127,
+              127
+            ],
+            [
+              130,
+              132
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-021"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "30c4dd13e02f0addbfe8",
+    "question": "테크닉과 기교가 들어간 대목에서는 가사를 어떻게 연결할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "테크닉이 많거나 스케일과 트릴이 있는 부분에서는 ‘아-’나 해당 단어의 모음으로 스케일을 이어갈 수 있습니다. 단어의 모음으로 부를 때에는 프레이즈가 끝나기 전에 단어의 끝맺음을 지켜야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-032",
+        "text": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-032"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d23a8daf46e3b6b54d55",
+    "question": "나에게 너무 높은 이 노래를 내 음역에 맞춰 조정하거나 편곡해도 괜찮을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 조성이 자신의 음역에 맞지 않는다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-007",
+        "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d40eda81bd0d604c2c5a",
+    "question": "더 자연스러운 발음이 되려면 ‘venticel’에서 ‘cel’을 어떻게 소리 내야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      86,
+      88
+    ],
+    "language": "ko",
+    "answer": "‘venticel’의 ‘cel’에서 e의 발음이 충분히 들리도록 c는 앞쪽, l은 뒤쪽으로 위치시켜야 합니다. 이태리어에서는 모음이 중요하며, e의 발음이 길어질수록 공명과 좋은 소리가 전달됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 86,
+          "voice": "sung",
+          "lyric_lines": [
+            "Del ven- -ti-"
+          ]
+        },
+        {
+          "measure": 87,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cel"
+          ]
+        },
+        {
+          "measure": 88,
+          "voice": "sung",
+          "lyric_lines": [
+            "il mor- -mo-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-016",
+        "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            86,
+            88
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              86,
+              88
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "1c638de485e1eb30d66a",
+    "question": "《꽃구름 속에》는 어떤 음색과 느낌으로 부르는 것이 좋을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《꽃구름 속에》는 크게 지르기보다 가볍고 깔끔하게 부르는 것이 좋습니다. 전주의 꽃가루와 바람 같은 느낌, 성악 도입부의 ‘꽃바람 꽃바람’의 스타카토 같은 가벼움을 참고하면 좋습니다. 전주의 반주 패턴은 흩뿌리는 느낌으로 곡의 초반부터 주제의 느낌을 전하므로, 가창자는 그 느낌을 유지해 가볍게 부르는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-015",
+        "text": "《꽃구름 속에》는 크게 지르기보다 가볍고 깔끔하게 부르는 것이 가장 중요하다. 전주의 꽃가루와 바람 같은 느낌과 성악 도입부 ‘꽃바람 꽃바람’의 스타카토 같은 가벼움을 이러한 표현의 기준으로 삼는다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-ku-014",
+        "text": "《꽃구름 속에》의 전주는 꽃가루와 바람이 연상되는 듯한 느낌을 준다. 예를 들어 전주의 반주 패턴은 흩뿌리는 느낌으로 곡의 초반부터 주제의 느낌을 전하므로, 가창자도 그 느낌을 유지해 가볍게 부르는 것이 중요하다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            10
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-wc-5043",
+        "text": "강사는 「꽃구름 속에」가 박두진 작사, 이흥렬 작곡으로, 굉장히 빠르고 리드미컬한 작품으로 재미있게 쓰였다고 소개한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-0017",
+        "text": "필자는 가곡 ‘꽃구름 속에’를 산책하며 흥얼거리기에도 좋은 노래로 꼽는다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-0004",
+        "text": "제3부는 “꽃향에 꽃향에 취하여 아득하니 꽃구름 속에”로 시작하며, 처음의 악상으로 되돌아가 곡의 통일성을 이룬다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-5019",
+        "text": "강사는 「꽃구름 속에」가 박두진 시, 이흥렬 곡이라고 소개한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》는 크게 지르기보다 가볍고 깔끔하게 부르는 것이 가장 중요하다. 전주의 꽃가루와 바람 같은 느낌과 성악 도입부 ‘꽃바람 꽃바람’의 스타카토 같은 가벼움을 이러한 표현의 기준으로 삼는다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》는 크게 지르기보다 가볍고 깔끔하게 부르는 것이 가장 중요하다. 전주의 꽃가루와 바람 같은 느낌과 성악 도입부 ‘꽃바람 꽃바람’의 스타카토 같은 가벼움을 이러한 표현의 기준으로 삼는다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

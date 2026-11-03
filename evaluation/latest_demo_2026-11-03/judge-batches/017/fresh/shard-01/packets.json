@@ -1,0 +1,564 @@
+[
+  {
+    "id": "8dc7ef8da82435e28e8e",
+    "question": "노래하지 않는 간주 부분을 어떤 행동과 표현으로 채우면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "노래하지 않는 간주 부분에서는 앞뒤 가사의 내용과 감정 변화를 살펴보고, 표정, 시선, 움직임 등으로 반응하는 것이 좋습니다. 이는 간주가 단순한 쉼이 아니라 극적 전환의 역할을 할 수 있기 때문입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c17f88cbfbc8aaffdc1a",
+    "question": "꾸밈음(grace note)의 길이 차이와 일부에 그어진 사선은 각각 무엇을 의미할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "꾸밈음의 길이 차이는 오케스트라 총보에서는 같지만, 피아노 반주 악보에서는 강조를 위해 의도적으로 바꾸거나, 작곡가의 오리지널 버전을 차용한 경우일 수 있습니다.\n사선이 없는 꾸밈음은 원음과 박자를 균등하게 나누어 노래하고, 사선이 있는 경우는 원음 앞에서 미리 노래합니다. 사선이 없는 꾸밈음이 4분음표와 함께 나오면 원음을 16분음표 네 개로 나누어 노래합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-008",
+        "text": "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-009",
+        "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.\n꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3370c1e7d9b0ae0ba75f",
+    "question": "이 작품은 메조소프라노를 위한 곡일까, 소프라노를 위한 곡일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 작품은 메조소프라노나 소프라노가 부를 수 있는 곡입니다. 연출이나 제작자의 결정에 따라 Rosina 역할을 맡는 가수가 달라질 수 있습니다. 성부와 관계없이 캐릭터 표현에 집중하는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-033",
+        "text": "Rosina는 때에 따라 메조소프라노가 부르기도 하고 소프라노가 부르기도 한다. 오페라 공연에서 연출자나 제작자 등이 원하는 구성에 따라 Rosina를 소프라노로 할지 메조소프라노로 할지가 달라질 수 있다. 성부와 관계없이 Rosina의 캐릭터는 같으므로, 가창자로서 이를 어떻게 표현할지 연구하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "Rosina는 때에 따라 메조소프라노가 부르기도 하고 소프라노가 부르기도 한다. 오페라 공연에서 연출자나 제작자 등이 원하는 구성에 따라 Rosina를 소프라노로 할지 메조소프라노로 할지가 달라질 수 있다. 성부와 관계없이 Rosina의 캐릭터는 같으므로, 가창자로서 이를 어떻게 표현할지 연구하는 것이 중요하다.\nRosina의 아리아는 부르는 성부에 따라 저음, 고음, 스케일 등 테크닉적으로 어떤 점을 살릴지가 달라질 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "Rosina는 때에 따라 메조소프라노가 부르기도 하고 소프라노가 부르기도 한다. 오페라 공연에서 연출자나 제작자 등이 원하는 구성에 따라 Rosina를 소프라노로 할지 메조소프라노로 할지가 달라질 수 있다. 성부와 관계없이 Rosina의 캐릭터는 같으므로, 가창자로서 이를 어떻게 표현할지 연구하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-033"
+        },
+        {
+          "reference_id": "R002",
+          "text": "Rosina의 아리아는 부르는 성부에 따라 저음, 고음, 스케일 등 테크닉적으로 어떤 점을 살릴지가 달라질 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-034"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b849e62bc833da07da02",
+    "question": "작품의 분위기와 특징을 효과적으로 드러내려면 어떻게 부르면 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 대중적이고 자유로운 음악적 언어를 사용하므로, 오페라적인 발성보다는 상황에 맞는 음색을 선택하는 것이 중요합니다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로, 마이크 없이 또는 큰 홀에서 부를 때는 성악적인 발성을 사용하는 것이 좋습니다.\n긴 호흡으로 전체적인 레가토를 유지하는 것이 중요합니다. 음의 도약이 있는 부분에서는 자연스럽게 모음과 울림을 유지하며, 프레이즈 시작 시 높은 음 위치의 공간을 확보하고 숨을 쉬는 연습이 필요합니다.\n가사의 서정적이고 희망적인 메시지를 효과적으로 전달하려면 호흡의 연결과 다이나믹 변화를 깊이 있게 고민하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-037-ku-01",
+        "text": "이 곡은 정통 예술가곡이나 오페라 아리아와는 달리 보다 대중적이고 자유로운 음악적 언어를 갖고 있죠. 그래서 모든 부분을 오페라적인 성량과 발성으로 표현하기보다는 이 장르에 맞는 그런 음색을 선택하는 것이 중요해요.\n\n마이크를 사용하는 공연이나 또 비교적 작은 공간에서는 지나치게 무겁고 성악적인 발성보다는 보다 자연스럽고 친밀한 음색을 사용할 수 있습니다. 반면 마이크 없이 노래하거나 또 홀이 큰 경우에는 충분한 공명과 호흡 지지를 바탕으로 한 성악적 발성이 필요할 수 있어요.\n\n웬만하면 이 노래는 작은 공간에서, 아니면 큰 공간에서 마이크를 써서 노래하는 것이 적당하다고 봅니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-004",
+        "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-018",
+        "text": "《Nella fantasia》의 가사 뜻과 전체적인 메시지는 일관되게 서정적이고 희망적이다. 가창자가 이를 더 아카데믹하게 표현하려면 호흡의 연결과 다이나믹 등 음악적 표현을 깊이 고민해 보는 것을 추천한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c3c7241094bb296a520e",
+    "question": "음악의 성격이 전환되는 대목을 노래로 어떻게 살리면 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer": "피아노 파트의 음형 변화는 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 장면을 표현한 것으로, 이에 따라 노래는 긴장감과 분위기 전환을 만들어냅니다. 이 변화를 잘 이해하고 피아노의 긴장감을 반영해 가사를 표현하며, 전환이 자연스럽게 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "lang,"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "er macht das"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "Bäch- -lein tü- -ckisch"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "trü- -be, und"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "eh' ich es ge-"
+          ]
+        },
+        {
+          "measure": 36,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dacht, so"
+          ]
+        },
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "zuck- -te sei- -ne"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "Ru- -the, das"
+          ]
+        },
+        {
+          "measure": 39,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein, das"
+          ]
+        },
+        {
+          "measure": 40,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein zap- -pelt"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "685906f1edc0c39e03a6",
+    "question": "dolce amorosa를 이어 발음할 때 모음은 언제 어떻게 바꿀까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      62,
+      62
+    ],
+    "language": "ko",
+    "answer": "dolce amorosa를 이어 발음할 때는 모음 전환을 위해 리듬을 잘 나누어 발음해야 합니다. 특히 빠르게 변화하는 3연음보에서는 모음 변환이 까다로울 수 있으므로 주의가 필요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "dol- -ce,‿a- -mo-",
+            "all soft e-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-017",
+        "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "20bdc432476b00f6a579",
+    "question": "‘Col ritorna’와 ‘Tu torni’를 더 정확하게 발음하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      16,
+      16
+    ],
+    "language": "ko",
+    "answer": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요합니다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 16,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tu tor- -ni"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-004",
+        "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            12,
+            14
+          ],
+          [
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              12,
+              14
+            ],
+            [
+              16,
+              16
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

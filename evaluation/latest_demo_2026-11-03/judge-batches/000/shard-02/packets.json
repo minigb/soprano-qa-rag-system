@@ -1,0 +1,449 @@
+[
+  {
+    "id": "ffde26f41b4515cbd504",
+    "question": "셋잇단음표에서는 모음을 어느 음에 붙이면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "셋잇단음표에서는 첫음에 모음을 붙이고, 음정이 바뀔 때는 모음을 길게 유지하면서 발음합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              23,
+              23
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              36,
+              36
+            ],
+            [
+              38,
+              38
+            ],
+            [
+              58,
+              58
+            ],
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "435d76031ba49959fe2d",
+    "question": "가창 중 힘이 들거나 숨이 모자라면 어떤 방법으로 해결할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "고음이나 도약음은 힘을 너무 주지 않고 부드럽게 처리하는 것이 좋습니다. 음표 사이의 쉼표를 충분히 활용해 쉬는 것도 도움이 됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0c84f922d35957e36b55",
+    "question": "많은 사람들이 이 곡을 부르게 된 배경은 무엇일까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 영화 《The Mission》에 사용된 엔리코 모리꼬네의 곡에서 시작되었고, 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지로 인해 세계적으로 사랑받기 시작했습니다.\n드라마 〈베토벤 바이러스〉에 삽입된 적이 있고, 예능 〈남자의 자격〉 합창단 프로젝트를 통해 널리 알려졌습니다.\n몽환적인 멜로디와 평화로운 가사가 잘 어울려 많은 가수·성악가가 이 곡을 자신만의 스타일로 바꿔 불렀습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-013",
+        "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5060",
+        "text": "강사는 이 곡을 보통 여성들이 많이 부르지만 남성들도 조를 낮춰 부르면 매우 멋있을 것 같다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-0019",
+        "text": "나무위키는 몽환적인 멜로디와 평화로운 가사가 잘 맞아떨어지며, 그래서 많은 가수·성악가가 이 곡을 자신만의 스타일로 바꿔 불렀다고 평한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5083",
+        "text": "강사는 이 곡이 드라마 〈베토벤 바이러스〉에 삽입된 적이 있고, 무엇보다 예능 〈남자의 자격〉 합창단 프로젝트를 통해 널리 알려졌다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5025",
+        "text": "강사는 이 곡을 너무 힘을 주어 욕심내서 부르면 어렵고 곡에 어울리지 않지만, 가사에 어느 정도 무게감이 있으므로 너무 가볍게 불러도 안 된다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a7353b538695d6ce507b",
+    "question": "유절가곡의 범주에 이 작품을 넣어도 무리가 없을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 유절가곡의 변형된 형식으로 볼 수 있습니다. 원래 시는 4연이지만 슈베르트는 1-3연만 사용했고, 1-2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌어 일반적인 유절가곡과 구조가 다릅니다. 이는 슈베르트의 의도로 보이며, 노래에서 이를 잘 표현하는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-007",
+        "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "91f4fb9b7d3c4e0ab7c3",
+    "question": "셋잇단음표에서 모음은 어디에 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "셋잇단음표에서 모음은 첫머리에 붙이고, 음정이 바뀔 때는 발음 중인 모음을 길게 유지하면서 바꾸는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              23,
+              23
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              36,
+              36
+            ],
+            [
+              38,
+              38
+            ],
+            [
+              58,
+              58
+            ],
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7121f60a68f012eaf3fb",
+    "question": "음원에서 들은 음 길이와 악보의 페르마타 표기가 서로 맞지 않을 때는 어떤 식으로 대처해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보의 페르마타 표기와 음원의 음 길이가 다를 경우, 이는 편곡 차이로 볼 수 있습니다. 페르마타가 있는 경우와 없는 경우 모두 허용되며, 악보에 따라 연주할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

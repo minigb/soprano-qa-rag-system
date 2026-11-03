@@ -1,13 +1,19 @@
 # Local answer comparison demo
 
-The default E37 screen is historical quotation-mode evidence, not proof of
-generative answer quality. `dist/evaluations.json` labels each version and keeps
-its notes in a separate storage key; the original E37 key is preserved.
+The default screen compares the unchanged initial-system answers with fresh
+outputs from the current Qwen3-14B semantic-generation work in progress.
+The right-hand output is the real service response, including refusals and
+failures, without editing or substituting source text. It is not a claim that
+the candidate is ready for deployment. `dist/evaluations.json` preserves E37 as
+a separate historical version and keeps the old notes key unchanged.
 
-All 460 frozen questions and 920 full answers from `expanded_460_2026-11-02`,
-with the original Claude judgments, BERTScore values, retrieved KUs and expert
-references. This is a static review tool; it does not generate new answers or
-call a model. No dependencies or external assets are required to serve it.
+All 460 frozen questions remain. The left column retains its original answers,
+Claude judgments and BERTScore values. The latest right column is generated in
+`evaluation/latest_demo_2026-11-03/` using the unchanged current working-tree source
+snapshot and actual retrieval. Its Claude judgments and fixed-setting BERTScore
+are newly computed; no old score is attached to a changed answer. The UI also
+supports explicitly unevaluated outputs without treating them as zero or failures.
+This static review tool does not call a model when opened in a browser.
 
 From this directory:
 
@@ -32,6 +38,14 @@ python export_data.py
 python verify_data.py
 node --check dist/app.js
 ```
+
+Those first two commands reproduce/verify the preserved historical E37 data.
+The latest capture/export lives on branch `codex/latest-answer-demo` at
+`/home/minhee/.codex/worktrees/rag-latest-answer-demo/soprano-qa-rag-system`.
+From that checkout, use `python sites/answer-review/export_latest.py` and
+`python sites/answer-review/verify_latest.py` after generation and evaluation.
+The independent verifier checks every full answer, unchanged left column,
+source text, score mapping and production-source hash.
 
 The exporter reads the frozen evaluation. It projects only fields shown in
 the UI: full question/answer/source text, measurements and judgment summaries.

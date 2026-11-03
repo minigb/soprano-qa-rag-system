@@ -1,0 +1,574 @@
+[
+  {
+    "id": "5212a284b9f8c8fb2807",
+    "question": "이 곡의 부점 리듬을 부를 때 무엇에 주의해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 합니다.\n‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 합니다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋습니다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-018",
+        "text": "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            13,
+            13
+          ],
+          [
+            15,
+            15
+          ],
+          [
+            21,
+            21
+          ],
+          [
+            33,
+            34
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-005",
+        "text": "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            13,
+            13
+          ],
+          [
+            15,
+            15
+          ],
+          [
+            21,
+            21
+          ],
+          [
+            33,
+            34
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-wc-5045",
+        "text": "강사는 곡의 특성상 4분의 2박자라서 6소절씩 나누어 선창하고 따라 부르게 하겠다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-0001",
+        "text": "제1부는 “꽃바람 꽃바람 마을마다 훈훈히 불어오라.”로 시작하며, 약간 빠른 4분의 2박자와 마장조로 되어 있고 경쾌한 리듬과 화려한 악상이 펼쳐진다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-0046",
+        "text": "작곡가 김효근은 의미를 전해야 하는 단어의 첫 음절이 약박에 걸리면 잘 들리지 않으므로, 악보의 셈여림보다 한 단계 음량을 높여 불러야 또렷이 들린다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "in-flowery-clouds-wc-5012",
+        "text": "강사는 '꽃바람'의 첫 음이 높다고 생각되면 그 음의 높이를 일단 눈에 보이듯이(가시적으로) 생각해야 한다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              13,
+              13
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              21,
+              21
+            ],
+            [
+              33,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a733656ec4d90bfffc8a",
+    "question": "Lindoro mio sara의 가사는 어떻게 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      22,
+      24
+    ],
+    "language": "ko",
+    "answer": "꾸밈음은 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래해야 합니다.\n\n가사 'Lindoro mio sara'는 22-24절에서 각 박자에 놓인 꾸밈음에서 발음이 시작됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "-gò. Sì, Lin-",
+            "glow, Yes, Lin-"
+          ]
+        },
+        {
+          "measure": 23,
+          "voice": "sung",
+          "lyric_lines": [
+            "-do- -ro mi- -o sa-",
+            "-do- -ro shall be"
+          ]
+        },
+        {
+          "measure": 24,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, lo giu-",
+            "mine, I have"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-007",
+        "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            24
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              24
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5bae81de467fb9e18998",
+    "question": "악보에 작게 그려진 음표들은 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보에 작게 그려진 음표들은 가창자가 선택적으로 사용할 수 있는 옵셔널 음표입니다. 이들은 특히 높은 음을 부르기 어려운 경우, 상대적으로 낮은 음으로 마무리할 수 있도록 도와줍니다. 옵셔널 음표를 선택할 때는 조금 더 호소력 있는 소리를 내어 다른 선택지를 택한 이유를 충분히 표현하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-013",
+        "text": "작곡가는 자신이 기입한 멜로디 이외에 가창자가 자유롭게 선택할 수 있는 음표를 추가하기도 한다. 악보에 추가된 작은 음표는 너무 높은 음으로 향하기 어려운 사람이 상대적으로 낮은 음으로 마무리할 수 있도록 만든 선택지(옵셔널)이다. 옵셔널을 선택해 노래할 때는 조금 더 호소력 있는 소리를 내어 다른 선택지를 택한 이유를 충분히 만들어 주는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "작곡가는 자신이 기입한 멜로디 이외에 가창자가 자유롭게 선택할 수 있는 음표를 추가하기도 한다. 악보에 추가된 작은 음표는 너무 높은 음으로 향하기 어려운 사람이 상대적으로 낮은 음으로 마무리할 수 있도록 만든 선택지(옵셔널)이다. 옵셔널을 선택해 노래할 때는 조금 더 호소력 있는 소리를 내어 다른 선택지를 택한 이유를 충분히 만들어 주는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "작곡가는 자신이 기입한 멜로디 이외에 가창자가 자유롭게 선택할 수 있는 음표를 추가하기도 한다. 악보에 추가된 작은 음표는 너무 높은 음으로 향하기 어려운 사람이 상대적으로 낮은 음으로 마무리할 수 있도록 만든 선택지(옵셔널)이다. 옵셔널을 선택해 노래할 때는 조금 더 호소력 있는 소리를 내어 다른 선택지를 택한 이유를 충분히 만들어 주는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "dc35c3f0ed3e16a25c52",
+    "question": "간주에서는 무엇을 하며 어떻게 표현할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "간주에서는 앞뒤 가사의 내용과 정서 변화를 살펴보고, 그 흐름에 맞춰 표정, 시선, 움직임 등으로 반응해야 합니다. 긴 간주는 단순히 쉬는 시간이 아니라, 이야기의 이어짐이나 감정 변화를 보여주는 극적 전환 구간일 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2335f33af3ef1703bd43",
+    "question": "곡의 분위기는 박자가 바뀌면서 어떻게 달라지고, 박자를 바꾼 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      39,
+      49
+    ],
+    "language": "ko",
+    "answer": "곡의 분위기는 박자와 조성, 반주 리듬의 변화로 전환됩니다. 이는 가사 '추위와 주림에 시달리어'와 겨울, 고난, 시련 같은 이미지를 나타내는 데 기여합니다. 작곡가는 이러한 변화를 통해 분위기를 바꾸는 방식을 사용했습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 39,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 40,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 41,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 42,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 43,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 44,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "추 위"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "와 주 림 에 시 달 리"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "어 - 한 겨 우"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-008",
+        "text": "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            39,
+            49
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              39,
+              49
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-008"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "062329d455b40460ba03",
+    "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      34,
+      35
+    ],
+    "language": "ko",
+    "answer": "대중적인 곡이나 가벼운 가요의 경우, 반주가 끝날 때까지 소리를 지속하는 경우가 많아 노래를 마무리하는 느낌을 만들 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "no"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "569e8c1f1bd6416e5106",
+    "question": "박자가 앞서 사용한 박자로 돌아간 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닙니다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러납니다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

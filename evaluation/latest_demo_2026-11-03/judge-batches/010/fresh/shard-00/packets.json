@@ -1,0 +1,610 @@
+[
+  {
+    "id": "cb6f85d86584074fb450",
+    "question": "서로 다른 악보에서 가사 단어의 구분이 일치하지 않으면 어떻게 부르는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "서로 다른 악보에서 가사 단어의 구분이 일치하지 않을 때는 원곡의 가사를 확인하고, 원곡의 단어 구분에 따라 노래하는 것이 좋습니다. 단어 구분에 따라 강세나 강조할 단어, 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 될 수 있으므로 주의가 필요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-005",
+        "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e746d3aebb87109da95a",
+    "question": "자꾸 소리가 끊기는 대목을 어떤 방식으로 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      95,
+      96
+    ],
+    "language": "ko",
+    "answer": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있습니다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 95,
+          "voice": "sung",
+          "lyric_lines": [
+            "men- -tre il"
+          ]
+        },
+        {
+          "measure": 96,
+          "voice": "sung",
+          "lyric_lines": [
+            "cor vi-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-010",
+        "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            29,
+            30
+          ],
+          [
+            95,
+            96
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              29,
+              30
+            ],
+            [
+              95,
+              96
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ae6872fc3dd55fa4ce7c",
+    "question": "Larghetto의 템포는 어느 정도로 느리게 잡아야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      74,
+      79
+    ],
+    "language": "ko",
+    "answer": "Larghetto는 한 마디 한 마디를 충분히 표현할 수 있도록 약간 느리게 잡는 것이 좋습니다. 템포는 연주자의 해석에 따라 달라질 수 있으며, 아주 느린 템포로 가려면 각 음을 강조하면서도 문장이 이어지도록 주의해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 74,
+          "voice": "sung",
+          "lyric_lines": [
+            "나 비"
+          ]
+        },
+        {
+          "measure": 75,
+          "voice": "sung",
+          "lyric_lines": [
+            "처"
+          ]
+        },
+        {
+          "measure": 76,
+          "voice": "sung",
+          "lyric_lines": [
+            "럼"
+          ]
+        },
+        {
+          "measure": 77,
+          "voice": "sung",
+          "lyric_lines": [
+            "쓰 러"
+          ]
+        },
+        {
+          "measure": 78,
+          "voice": "sung",
+          "lyric_lines": [
+            "지 게"
+          ]
+        },
+        {
+          "measure": 79,
+          "voice": "sung",
+          "lyric_lines": [
+            "하 - 여"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-012",
+        "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            74,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              74,
+              79
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "948e77a0b1070a3d97e3",
+    "question": "《La capinera》에서 특별히 주의해야 하는 리듬은 무엇일까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      102,
+      105
+    ],
+    "language": "ko",
+    "answer": "《La capinera》 102–105절에서는 부점 리듬에 주의해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 102,
+          "voice": "sung",
+          "lyric_lines": [
+            "Io"
+          ]
+        },
+        {
+          "measure": 103,
+          "voice": "sung",
+          "lyric_lines": [
+            "vuò can- -tar"
+          ]
+        },
+        {
+          "measure": 104,
+          "voice": "sung",
+          "lyric_lines": [
+            "mi"
+          ]
+        },
+        {
+          "measure": 105,
+          "voice": "sung",
+          "lyric_lines": [
+            "gui- -da tu"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-024",
+        "text": "부점 리듬에 주의한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            36,
+            39
+          ],
+          [
+            44,
+            47
+          ],
+          [
+            102,
+            105
+          ],
+          [
+            110,
+            113
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점 리듬에 주의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점 리듬에 주의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              36,
+              39
+            ],
+            [
+              44,
+              47
+            ],
+            [
+              102,
+              105
+            ],
+            [
+              110,
+              113
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-024"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "947249b665d852a9a927",
+    "question": "음정 위에 ‘vieni a’의 발음을 어떻게 얹어야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      20,
+      20
+    ],
+    "language": "ko",
+    "answer": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              20,
+              20
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0b592399544c2e5af46b",
+    "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      22,
+      22
+    ],
+    "language": "ko",
+    "answer": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "la tua can-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              14
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              88,
+              88
+            ],
+            [
+              95,
+              95
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "960797c59defc072dea4",
+    "question": "곡이 다시 밝고 희망적인 분위기로 바뀔 때 어떻게 표현해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡이 밝고 희망적인 분위기로 전환될 때는 크레센도와 표정, 음색 등을 활용해 분위기를 바꾸는 것이 중요합니다. 이어지는 대목부터는 가볍게 부르며, 박자·조성·반주 리듬의 변화를 통해 분위기를 전환할 수 있습니다. 중간에 고난과 시련을 나타내는 분위기로 바뀌었다가 다시 회복되어 희망적으로 바뀌므로, 이러한 전환을 잘 표현하는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-021",
+        "text": "다시 밝은 분위기로 전환될 때에는 가창자도 반주와 함께 크레센도와 표정 등을 활용해 분위기를 바꾸는 것이 중요하다. 이어지는 대목부터는 다시 가볍게 부른다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            60,
+            83
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-008",
+        "text": "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            39,
+            49
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-016",
+        "text": "《꽃구름 속에》는 중간에 고난과 시련을 나타내는 분위기로 바뀌었다가 다시 회복되어 희망적으로 바뀌므로, 이러한 분위기 전환을 잘 표현하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "다시 밝은 분위기로 전환될 때에는 가창자도 반주와 함께 크레센도와 표정 등을 활용해 분위기를 바꾸는 것이 중요하다. 이어지는 대목부터는 다시 가볍게 부른다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "다시 밝은 분위기로 전환될 때에는 가창자도 반주와 함께 크레센도와 표정 등을 활용해 분위기를 바꾸는 것이 중요하다. 이어지는 대목부터는 다시 가볍게 부른다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              60,
+              83
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-021"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

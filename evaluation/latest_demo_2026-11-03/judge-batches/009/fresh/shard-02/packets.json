@@ -1,0 +1,455 @@
+[
+  {
+    "id": "6e01397232fc79371dd3",
+    "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      34,
+      35
+    ],
+    "language": "ko",
+    "answer": "대중적인 곡이나 가벼운 가요의 경우, 반주가 끝날 때까지 끝 음을 지속해서 노래를 마무리하는 느낌을 만들 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "no"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e7a865b9cbc8f6e5d784",
+    "question": "‘Col ritorna’와 ‘Tu torni’는 어떻게 발음해야 더 정확할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      16,
+      16
+    ],
+    "language": "ko",
+    "answer": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요합니다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 16,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tu tor- -ni"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-004",
+        "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            12,
+            14
+          ],
+          [
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              12,
+              14
+            ],
+            [
+              16,
+              16
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e1a16f790744c4029afb",
+    "question": "‘linguaggio’의 겹자음을 더 잘 발음하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      83,
+      85
+    ],
+    "language": "ko",
+    "answer": "‘linguaggio’의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 두고, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 83,
+          "voice": "sung",
+          "lyric_lines": [
+            "-can lin-"
+          ]
+        },
+        {
+          "measure": 84,
+          "voice": "sung",
+          "lyric_lines": [
+            "-guag- -gio"
+          ]
+        },
+        {
+          "measure": 85,
+          "voice": "sung",
+          "lyric_lines": [
+            "lor."
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-015",
+        "text": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            83,
+            85
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              83,
+              85
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "512e65f782bb6dfb4074",
+    "question": "영상에서 들리는 방식과 악보의 표기, 가창자의 해석이 서로 다르면 무엇을 기준으로 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "영상에서 들리는 방식과 악보의 표기, 가창자의 해석이 서로 다르면 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었던 이 시대의 음악 특성과, 자신의 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-018",
+        "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8680e43a4b418dc570e4",
+    "question": "D.S. al Coda는 어떤 뜻일까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 지시 기호입니다. 이와 같은 지시에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있으며, D.S. Dal Segno의 줄임말로 Segno 표시로 돌아간다는 뜻이고, al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-012",
+        "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "fde63e3567a8a2084307",
+    "question": "‘꽃바람’에 별도 지시가 없는 악보와 이를 스타카토로 부른 음원 중 무엇을 기준으로 삼아야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      12
+    ],
+    "language": "ko",
+    "answer": "‘꽃바람’은 악보에 스타카토 표시가 없지만, 성악가들이 대체로 가볍게 부르는 경향이 있습니다. 이는 가사의 내용과 곡의 분위기를 표현하기 위한 것입니다.\n‘꽃바람’은 ‘꼬-빠-람’처럼 발음하는 것이 좋으며, ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려울 경우 자음 사이에 잠깐 멈추는 방식으로 발음할 수 있습니다.\n\n일반적인 음악 설명입니다.\n악보에 별도 지시가 없는 경우, 곡의 분위기와 가사의 내용을 반영한 해석이 일반적으로 권장됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        },
+        {
+          "measure": 12,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-002",
+        "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.\n‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              12
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-002"
+        },
+        {
+          "reference_id": "R002",
+          "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              11
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

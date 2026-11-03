@@ -1,0 +1,805 @@
+[
+  {
+    "id": "f888777450e1db9bd3b0",
+    "question": "프레이즈가 이어지지 않고 토막 난 듯 들리는 문제는 어떻게 바로잡을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "프레이즈가 이어지지 않고 토막 난 듯 들리는 문제는 자음을 강하게 발음하려 하기 때문일 수 있습니다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있습니다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-006",
+        "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5041",
+        "text": "강사는 슈베르트 가곡에서 대조가 생각보다 빨리 일어나므로, 프레이즈를 생각보다 더 반으로 나누어 번갈아 대조를 주면 노래가 훨씬 생동감 있게 될 수 있다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5042",
+        "text": "강사는 1절에서 처음으로 파사지오를 지나는 음이 나올 때 두 가지 방법이 있다고 설명한다. 소리를 정확히 내는 데 시간이 필요하므로 약간의 리타르단도로 표현하거나, 그러지 않으려면 처음부터 파사지오의 느낌을 가지고 공간감 있게 준비해서 바로 지나가며 노래하는 것이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5039",
+        "text": "강사는 노래를 더 부드럽게 하는 방법으로, 노래 선율에 16분음표가 나올 때 하나하나 끊어 주지 말고 모두 부드럽게 이어서 표현해 보라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-0053",
+        "text": "IPA Source는 이런 표현적 겹자음 사용은 결코 강요되어서는 안 되며, 언제나 언어의 의미를 잘 느끼는 가수의 감정적 선택과 취향의 문제라고 강조한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8c635ab65ec359fd9f56",
+    "question": "보통의 부점 리듬을 두고 로시니가 겹부점 리듬을 사용한 까닭은 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "로시니는 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것으로 보는 것이 일반적입니다. 이는 로지나의 성격을 나타내기 위한 것으로 해석할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "62d2039c287cb6cb8758",
+    "question": "곡이 중간쯤 가면 음악이 달라지는데, 왜 그런 걸까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer": "곡 중간에서 음악이 달라지는 이유는 피아노 파트의 음형 변화가 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 장면을 묘사하기 때문입니다. 이 변화는 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 피아노의 긴장감을 이해하고, 이를 통해 가사를 표현하며 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "lang,"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "er macht das"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "Bäch- -lein tü- -ckisch"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "trü- -be, und"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "eh' ich es ge-"
+          ]
+        },
+        {
+          "measure": 36,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dacht, so"
+          ]
+        },
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "zuck- -te sei- -ne"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "Ru- -the, das"
+          ]
+        },
+        {
+          "measure": 39,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein, das"
+          ]
+        },
+        {
+          "measure": 40,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein zap- -pelt"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      },
+      {
+        "id": "die-forelle-ku-015",
+        "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        },
+        {
+          "reference_id": "R002",
+          "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "4dbbca00a17432715523",
+    "question": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      1,
+      2
+    ],
+    "language": "ko",
+    "answer": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는, 이는 악보에 따른 편곡의 차이일 수 있습니다. 페르마타가 있는 경우와 없는 경우 모두 허용되며, 이에 따라 연주나 해석의 차이가 있을 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 1,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 2,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "bf9b410bec4b25ab52b0",
+    "question": "leggiero를 표현하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      28,
+      35
+    ],
+    "language": "ko",
+    "answer": "leggiero를 표현하려면 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋습니다. 이 프레이즈는 새소리를 연상시키며, 마치 새가 노래하는 듯한 느낌을 주어야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tua"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo- -ce un"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "tal pia-"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cer mi"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "fa Che"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "di can-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tar de- -sio mi"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "dà"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-009",
+        "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            35
+          ],
+          [
+            94,
+            101
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              35
+            ],
+            [
+              94,
+              101
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9af5579f782532b63094",
+    "question": "짧은 음표가 계속 나올 때 발음을 빠르게 이어 가려면 어떻게 연습할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "짧은 음표가 계속 나올 때는 리듬을 지키며 아주 느린 박자로 시작한 뒤, 점차 빠르게 연습하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-012",
+        "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            31,
+            34
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.\n짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.\n16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              31,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-012"
+        },
+        {
+          "reference_id": "R002",
+          "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-013"
+        },
+        {
+          "reference_id": "R003",
+          "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "093de1a818e0421257d0",
+    "question": "간주에서는 무엇을 하며 어떻게 표현할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      44,
+      55
+    ],
+    "language": "ko",
+    "answer": "긴 간주는 단순히 쉼을 내는 부분이 아니라, 이야기의 흐름을 이어가거나 캐릭터의 감정 변화를 보여주는 극적 전환 구간일 수 있습니다. 성악가는 앞뒤 가사의 내용과 감정 변화를 살펴보고, 표정, 시선, 움직임 등으로 간주에 반응해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 48,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 49,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 50,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

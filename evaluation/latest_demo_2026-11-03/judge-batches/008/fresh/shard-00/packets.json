@@ -1,0 +1,657 @@
+[
+  {
+    "id": "a9544405caa742c2ba5e",
+    "question": "노래에서 ‘꽃바람’의 한국어 모음을 어떻게 발음하고 표현해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      11
+    ],
+    "language": "ko",
+    "answer": "‘꽃바람’은 ‘꼬-빠-람’으로 발음하는 것이 좋습니다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려우므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-003",
+        "text": "‘꽃바람’이 나오는 대목의 발음은 국립국어원의 발음법을 기초로 한다. 한국어의 모음은 유럽 언어의 모음만큼 길게 발음하지 않는 경우가 많지만, 노래에서는 유럽 언어의 모음처럼 길게 발음하는 것이 소리를 표현하고 전달하는 데 유리하다. 가창자는 이 점을 고려해 어떻게 발음하고 노래할지 미리 생각하는 것이 좋다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "‘꽃바람’이 나오는 대목의 발음은 국립국어원의 발음법을 기초로 한다. 한국어의 모음은 유럽 언어의 모음만큼 길게 발음하지 않는 경우가 많지만, 노래에서는 유럽 언어의 모음처럼 길게 발음하는 것이 소리를 표현하고 전달하는 데 유리하다. 가창자는 이 점을 고려해 어떻게 발음하고 노래할지 미리 생각하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘꽃바람’이 나오는 대목의 발음은 국립국어원의 발음법을 기초로 한다. 한국어의 모음은 유럽 언어의 모음만큼 길게 발음하지 않는 경우가 많지만, 노래에서는 유럽 언어의 모음처럼 길게 발음하는 것이 소리를 표현하고 전달하는 데 유리하다. 가창자는 이 점을 고려해 어떻게 발음하고 노래할지 미리 생각하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "73b3c3a943da4a9f04a4",
+    "question": "악보 앞부분의 글에는 어떤 내용이 적혀 있을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보 앞부분의 글에는 이 아리아의 배경인 바르톨로의 집과 창문이 닫혀 있고 로지나가 편지를 들고 있는 상황이 설명되어 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-006",
+        "text": "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7fa48b11d6607aa894f2",
+    "question": "ff와 pp의 대비는 어떤 음악적 효과를 표현할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "ff와 pp의 대비는 산새의 경쾌함과 메아리 같은 반향 효과를 표현할 수 있습니다. 성악가는 피아노/오케스트라의 기호도 주의해서 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-030",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            51,
+            58
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              117,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ae537a1b7f7d8bde06f8",
+    "question": "‘La la’ 부분이 자연스럽지 않게 들릴 때는 어떻게 해결해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      51,
+      66
+    ],
+    "language": "ko",
+    "answer": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있습니다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam La la"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 53,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 60,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 61,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 63,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 64,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 65,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 66,
+          "voice": "sung",
+          "lyric_lines": [
+            "La"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-012",
+        "text": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            51,
+            66
+          ],
+          [
+            117,
+            132
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              51,
+              66
+            ],
+            [
+              117,
+              132
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "261b22fbda25c169dcb7",
+    "question": "lo의 이음줄이 마지막 음표까지 이어지지 않은 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      37,
+      37
+    ],
+    "language": "ko",
+    "answer": "3연음 중 앞의 두 음표에만 이음줄이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있습니다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있습니다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, lo giu-",
+            "mine, I have"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-015",
+        "text": "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            16,
+            16
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            24,
+            24
+          ],
+          [
+            37,
+            37
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              16,
+              16
+            ],
+            [
+              20,
+              20
+            ],
+            [
+              24,
+              24
+            ],
+            [
+              37,
+              37
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e0eb1c9544c9d16823f1",
+    "question": "셋잇단음표에서는 모음을 어느 음에 붙이면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      25,
+      25
+    ],
+    "language": "ko",
+    "answer": "셋잇단음표에서는 첫머리에 모음을 붙이고, 음정이 바뀔 때는 모음을 길게 유지하면서 발음 중인 모음을 그대로 두는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 25,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ra- -i, la vin- -ce-",
+            "sworn it, for weal or"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              23,
+              23
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              36,
+              36
+            ],
+            [
+              38,
+              38
+            ],
+            [
+              58,
+              58
+            ],
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "025c668568f81abc48c9",
+    "question": "가사를 테크닉이나 기교가 있는 부분에 어떻게 배치해 부를까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "테크닉이 많은 부분이나 스케일, 트릴이 필요한 부분은 ‘아-’나 해당 단어의 모음으로 스케일을 이어가며 부를 수 있습니다. 단어의 모음으로 부를 때에는 프레이즈가 끝나기 전에 단어의 끝맺음을 지켜야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-032",
+        "text": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-032"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]
