@@ -1,0 +1,137 @@
+{
+  "contract": {
+    "packets_sha256": "c5835ab0394f6fece0cacb6162ad1c6ca536e6751cdabe0f1230015a38ea16fd",
+    "sources_in_priority_order": [
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/000",
+        "aggregation_sha256": "fe4151b4c72e099799d5a40608b1c676ce9c278f8b0dfc3945d9bdd67d63c9d8",
+        "assessments_sha256": "eda98ae50f2529cdba0e14c08ff865bd7104e058bb6c17e698b560cd75462a79"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/001/fresh",
+        "aggregation_sha256": "13fabf7d7c89160bebc036a50f58f875d3e3472f9227c91d26c4718bf7349bf0",
+        "assessments_sha256": "4e102d40eaf5a649b3e58a0ab0e5ca2074aec3713de93a2500e0e55c99417f9b"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/002/fresh",
+        "aggregation_sha256": "65f9cb9ee14714f0b0338d07cc182265767bc093586ec3339eb9781e8f7158a9",
+        "assessments_sha256": "b4185c2ff3ed057c773f33a66cc750c4db77b35209788a2697bf740b24039d18"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/003/fresh",
+        "aggregation_sha256": "2441bfaa9a996cbab0137b2bc02e62bdb7606f3835bd85317b46b908c9d97d61",
+        "assessments_sha256": "0a3e199444272255bf8ca782c5b25830cd796d49077df6ed5ce23e939e6ae9ad"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/004/fresh",
+        "aggregation_sha256": "b502cc48302437ae93e5bedca9b477ea709754d96fb1758a44eb49a4c5c5ae01",
+        "assessments_sha256": "21ff33f8e25f66d603cf1703ea23a84d086c12d888bf44349c5e6f45bbb6f4b6"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/005/fresh",
+        "aggregation_sha256": "d0a83d25e0b5b874ea343bacd206cda99e6d335babcbe5a257c73e15ed1c7194",
+        "assessments_sha256": "42758fb1f0b4e6b05992ae55b2792c9279d2e1fe0ad00e4c7939b1126bb29178"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/006/fresh",
+        "aggregation_sha256": "8b825bb00eef3ee55c31a3e0b15622e6d5cbb7556ab8134175128cc0228ee359",
+        "assessments_sha256": "74e287f3066ab952d62f1192d0c291e0741cdb2ed9f1fb71930dd6a096cdb56a"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/007/fresh",
+        "aggregation_sha256": "f0e15cfa8ae7ddbe587b33e5cebab563690b3d68a47c22ec9f14bab1e6883253",
+        "assessments_sha256": "8f9e1f624dc924e2e9e16ad8851867cbbcde96488694ddb2dd950055c7d1c4d4"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-component-ablation/soprano-qa-rag-system/ablation/judge-batches/008/fresh",
+        "aggregation_sha256": "159a47eb3d7d1bf4f967197f12c0182477beea01d5363434240968046a5e4d46",
+        "assessments_sha256": "c81cd45fb1e2bd129deee0a1ca4e48d9cc8e54005a9a2a51afffa3700428a628"
+      }
+    ],
+    "model": "claude-opus-5-5",
+    "workers": 3,
+    "runner_sha256": "bb11e02cdb7815c8f9f8dfe6b557d31ac8ed43183f43d6a1a69bfa1028e9d5a1",
+    "judge_runner_sha256": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+    "policy": "Exact full packet identity only; retain the first valid prior judgment regardless of score."
+  },
+  "packets": 71,
+  "reused": 0,
+  "fresh": 71,
+  "reused_ids": [],
+  "fresh_ids": [
+    "9f95de7300986fe38483",
+    "0b7f087d5e082b830b75",
+    "ea9fe5cd6968c15fb04b",
+    "16c373d98b0c4d340f1b",
+    "2c647d053e0a6a9f0645",
+    "d1df781f88b168f3cec3",
+    "78de039f11a5f333f142",
+    "45006d80d59157b2cfcf",
+    "dc5162dfba4d9df4b780",
+    "45b9f0385f09992145d3",
+    "e8fa5c9f417f44eceee0",
+    "67a607085046e804426d",
+    "b63c180ed5d354c00c5f",
+    "9e8da18b68df9bfb85be",
+    "3b600902586588e16386",
+    "cecce4ab13f722d4044d",
+    "c2ec15fccf0def480b8e",
+    "efa51f151ca95cd2acbe",
+    "a7db290a1eaa84e726c0",
+    "50bcd17de9792e7accf4",
+    "e780bda929d6da456088",
+    "40404a5cb443ebe9f2e3",
+    "d3ff457aebae59d713d4",
+    "720581f985067e986603",
+    "4d064ecd034b6eab924c",
+    "69dfe83f47f52d0e6bd2",
+    "837f384cc34edd709b52",
+    "becf350d43e60a1e0a8f",
+    "feed5c7d4cefdf24d22a",
+    "3c26f869f27809b34f68",
+    "161ecdda3d2e87e99926",
+    "68e49d28f7b4e3808ee7",
+    "6fb084f92571847bcc76",
+    "921e68a759bb49e68c66",
+    "0df27a11d4638d716f54",
+    "aadcd0c9f3d136ee6f92",
+    "34fad821b1846396eea6",
+    "60d563ed9cc0f7e9cd1d",
+    "10242dca172254ed9aeb",
+    "b474f2608b36b7f540c7",
+    "9cf2f982a7500ee6587a",
+    "7b0ba2b34b672b93bb45",
+    "345eb4d48809baf95dec",
+    "9249ac8c2cad5b0521d1",
+    "80cf9d1915dda0f68664",
+    "527d15a85e93e9a3b241",
+    "7850dc9a59b68cec0782",
+    "90ace18c972e3b03446b",
+    "5deb1d3f124316139b1c",
+    "9793aa8a1cb03f71f684",
+    "acad5d126d7015152e20",
+    "567863f6b9a239f1fb2a",
+    "7c530a060e0ae60a76f6",
+    "6fe5d743cebe0b22b503",
+    "9f16aea9360266995889",
+    "d7a22c184f925771ee93",
+    "d1eaefdc6c55b62e90f3",
+    "a32d6176d21cd3b2b675",
+    "9a9b7bd791469eec7c58",
+    "0cdf57ef0310436a71e0",
+    "68348b6088f3cbb152d0",
+    "e1f0588a1ed9a7a3c978",
+    "4c2609055447bfeb850e",
+    "c6bc798c161969f27b38",
+    "36cb92785e7d12faad90",
+    "05459b7e87f682efb64d",
+    "fb18c471c0255d6f201c",
+    "b265b0f03f69ce929fca",
+    "1b748af3bb2dc46419e1",
+    "5f838c81e9df0cfdfd4f",
+    "6071828cb0a39b174a7c"
+  ],
+  "assessment_sha256": "de20cb5dbd0ca297015520c2ab81bee3c8c91b56f479b7a95716105bf1e9383e",
+  "fresh_aggregation_sha256": "a8984de8245043b0868d1001dccfc1489969bbbff2f6e59a72bdf440f346fe69",
+  "note": "Rows retain their original contract/model/timing. Reused assessments are not new CLI calls."
+}

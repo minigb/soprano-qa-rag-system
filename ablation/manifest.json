@@ -1,0 +1,57 @@
+{
+  "generation_model": "Qwen3-14B-Q6_K.gguf",
+  "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+  "model_sha256": "ec1f1d1421d7636a23e17645cac6fda39ee4b5f1f11e42eb09238089705ef699",
+  "cases": 233,
+  "cases_sha256": "884fcc3d9dc76e2d156b580aca2aba6d9bed2fe54ef22790a47431e7fdedf336",
+  "settings_sha256": "8f71fd14cd09c255f89db94b3658babaa31c8144b85eb9bc9c7949e1b60be874",
+  "source_artifacts": {
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/security_comparison_2026-10-25/results.jsonl": "92881e5da3ffd56d581efd24b50ce00b28a0e77f600a4796b5422a63f7d5549f",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/expanded_460_2026-11-02/pre-security.jsonl": "25f85a34b02d352baa4e0d7cc43716e10ee7c561322e53fcee93075f0ca29af2",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/comparison-2026-11-02-e37/pre-security.jsonl": "d9088a08ee990f53fbc5963a3d4cf29ddf297f064aed1a5e70996ca77c867f27"
+  },
+  "protected_sources_sha256": "9b6a963256cab80f45ccb8267d475a1f70e9d40f8e7fd1763296fc9f652612a0",
+  "execution_sources": {
+    "runtime/current_qa/source_translation_catalog.py": "9a0b16e1a44e6f4c93c749c453dbe0ff4d7a1c06499ca8aabea9be7cabd40ab5",
+    "runtime/current_qa/structured_answer.py": "f32782478ee634e4c14b7cb97d3cc33386338ceb196ca563d2d50d27afb8aff0",
+    "runtime/current_qa/dense.py": "37a527d3982d17f331a2834e6ce08e8ea59c6712b57d783876edf5e0e6c14a48",
+    "runtime/current_qa/source_comparison.py": "9894a2360cf92a0fbeb4a3313f2a40941deb3b20d7c82d885711c2f2fef5b14a",
+    "runtime/current_qa/retrieval.py": "91cb920e3ab9a37d3f18c4f8d4204f6fa9954883de1c89b6f5ad18d682f7dfba",
+    "runtime/current_qa/meter.py": "96a596852b3d1ce51d6d18a3538c7b93065a128fc9ee04c2ea0998db8d9afc90",
+    "runtime/current_qa/music_terms.py": "ee02893398056b393b91e86f21f3ed63e10cdad8bfaabda4944ec30fa4f70384",
+    "runtime/current_qa/__init__.py": "09861dc8855d3ccff8f9e63922f676591b3e67eb1e3941f29b6ab47ae0cfdd1f",
+    "runtime/current_qa/settings.py": "18fd71fdb0a8bbafef4cb49d67f58416ae744a7739f74e3a3fb0be5b157aecb2",
+    "runtime/current_qa/score_context.py": "6f3192cd3cdfe06fa43d84467b1d9ec807324480f346cc593160daec5c6542bc",
+    "runtime/current_qa/service.py": "3a98327d459d9be72a884723b4eb206d5ec3f0b14a8a332985c86180b0f277b3",
+    "runtime/current_qa/llm.py": "f84debfb584b1f90ac9b823f61a1f839c353dda56e3695a2d209d7d9775e5e35",
+    "runtime/current_qa/coaching_index.py": "1b1c2d2c59ab4ea84229386871ce372af8263c1b046675feaaec193af5702d60",
+    "runtime/current_qa/translation.py": "da51f5c693ef969b66a96920707062378eb1ad3627d20aa20e6ac855b7adf544",
+    "runtime/current_qa/question_intent.py": "f1c1a01cd960d9c6ada8dca67d9776f52c2e459259f2abb3977a9f86eb95749f",
+    "runtime/current_qa/sumijo.py": "ea5446d04579e649feef09782502b804ee3ef6f1d35a2fce8e58c5c92a9142fa",
+    "runtime/current_qa/security.py": "b6f4c8cacf603c00414026d33a9d8865bd5690cc97e78419793b8ca713317dd9",
+    "runtime/current_qa/source_priority.py": "9bae0cce1cd5ff969f4ace64bcda815473008d1e3aac29c8c1bf3d37a8bc3a8a",
+    "runtime/current_qa/answer.py": "6364c88bea5fc4d49a3d767ae9087dfa02ccb2e3735d9b5af6aad38370deb2c4",
+    "runtime/current_qa/source_translation.py": "c0a597e667efbd4ef55f93d32ba1009706edd1dcb06160675d203c5160701581",
+    "runtime/current_qa/corpus.py": "eaf0b8c4c09da567c3293fa74e115d71d5e3deb34f6f8698993bee34d4b6f7ed"
+  },
+  "adaptation": "Copied current imports renamed soprano_qa to current_qa for isolated side-by-side execution; byte-exact originals retained.",
+  "seed": 42,
+  "no_usage_monitor": true,
+  "no_notifier": true,
+  "pre_inference_amendment": {
+    "reason": "Preserve exact historical append separator for metadata injection fixtures",
+    "cases": [
+      "indirect-03-ko",
+      "indirect-03-en",
+      "indirect-07-ko",
+      "indirect-07-en"
+    ]
+  },
+  "implementation_sha256": {
+    "run.py": "e44ad19b4ae5c96e26379c2ce04e77e9c2722f4bbbc8c28a091749251b00f646",
+    "PROTOCOL.md": "5d5226b736f46b3b36353fe40711ed808650595d2bc835d37e2d512efdf10fb0",
+    "prepare_expanded_judge_packets.py": "9fecefabd615f63a74707be5b775e3e2e6da5370a8ca13be50970676ad83922f",
+    "run_joint_expanded_judge.py": "d3456e522cac1e2476a985aa750049ee7739d245194c22d6db8bf32ee1db2020",
+    "run_expanded_judge.py": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319"
+  }
+}

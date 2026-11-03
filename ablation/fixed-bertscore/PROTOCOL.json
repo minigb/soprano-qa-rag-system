@@ -1,0 +1,19 @@
+{
+  "scope": "Supplementary diagnostic only; no optimization or production quality claim.",
+  "expert_cases": 105,
+  "variants": [
+    "g0s0q0",
+    "security_only",
+    "validation_only",
+    "g0s1q0",
+    "g0s0q1",
+    "warning",
+    "helpful"
+  ],
+  "setting_origin": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "setting_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "text": "Full displayed text including warnings; no trimming, chunking, substitution or reference editing.",
+  "refusals": "Original pipeline unavailable OR Claude refusal receives zero. Metric input retains the original visible text and generation_mode separately.",
+  "length": "Overlength full answers are unscorable and retained as zero contributions; do not call these computed BERTScores.",
+  "interpretation": "Raw encoder/layer-dependent similarity, not a calibrated correctness probability. References derive from the same expert KU corpus; this is not an independent holdout."
+}
