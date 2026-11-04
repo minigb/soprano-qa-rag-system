@@ -14,7 +14,7 @@ import re
 from typing import Any, Callable, Dict, List
 
 from soprano_qa.llm import generate
-from soprano_qa.security import screen_question, screen_text, serialize_untrusted
+from soprano_qa.security import screen_question, screen_text, serialize_untrusted, validate_question_input
 
 
 SUPPORTED_LANGUAGES = ("ko", "en")
@@ -64,10 +64,10 @@ def validate_language(language: str) -> str:
     return language
 
 
-def build_translation_messages(question: str) -> List[Dict[str, str]]:
+def build_translation_messages(question: str, *, prompt_only: bool = False) -> List[Dict[str, str]]:
     """Return the strict chat prompt for one English-to-Korean translation."""
 
-    screen_question(question)
+    (validate_question_input if prompt_only else screen_question)(question)
     return [
         {"role": "system", "content": QUERY_TRANSLATION_SYSTEM_PROMPT},
         {"role": "user", "content": serialize_untrusted({"question": question.strip()})},
@@ -115,9 +115,10 @@ def translate_question_to_korean(
 
     if not question.strip():
         raise QueryTranslationFailed("Cannot translate an empty question")
+    prompt_only = llm_settings.get('pipeline') == 'single_pass'
     raw = generate_fn(
         model_path,
-        build_translation_messages(question),
+        build_translation_messages(question, prompt_only=prompt_only),
         llm_settings,
     )
     translation = _clean_translation(raw)
@@ -125,6 +126,9 @@ def translate_question_to_korean(
         raise QueryTranslationFailed(
             "Question translation returned no Korean text"
         )
-    screen_text(raw, source="translation")
-    screen_question(translation)
+    if prompt_only:
+        validate_question_input(translation)
+    else:
+        screen_text(raw, source="translation")
+        screen_question(translation)
     return translation

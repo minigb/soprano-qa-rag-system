@@ -47,8 +47,9 @@ from soprano_qa.score_context import (
     selected_measure_lyrics,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa import single_pass
 from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
-from soprano_qa.security import SecurityViolation, screen_question, screen_text
+from soprano_qa.security import SecurityViolation, screen_question, screen_text, validate_question_input
 from soprano_qa.translation import (
     translate_question_to_korean,
     validate_language,
@@ -242,6 +243,8 @@ def _ask(
     """Retrieve and compose one answer; the public boundary handles rejection."""
 
     validate_language(language)
+    direct = single_pass.enabled(SETTINGS['llm'])
+    make_messages = single_pass.build_messages if direct else build_messages
     # English questions need the local model for translation even when no
     # answer is generated.
     if generate or language != "ko":
@@ -313,12 +316,13 @@ def _ask(
                 )
             ),
             score_context=score_block,
+            **({'message_builder': make_messages} if direct else {}),
         )
         results = sanitize_generation_results(results)
         if language != "ko":
             # Same frozen evidence bundle; only the system prompt and the
             # displayed question change for the answer language.
-            messages = build_messages(
+            messages = make_messages(
                 piece_id,
                 measures,
                 question,
@@ -350,7 +354,7 @@ def _ask(
         # prevent a separately identified general music explanation.
         generation_results = results if grounded else []
         if not grounded:
-            messages = build_messages(
+            messages = make_messages(
                 piece_id, measures, question, [],
                 score_context=score_block if use_score_context else "", language=language,
             )
@@ -359,7 +363,7 @@ def _ask(
             language=language, generate_fn=generate_llm,
             finalizer_fn=finalize_grounded_generated_answer,
         )
-        answer = getattr(raw_answer, "validated_text", None)
+        answer = str(raw_answer) if direct else getattr(raw_answer, "validated_text", None)
         if answer is None:
             answer = finalize_grounded_generated_answer(
                 raw_answer, generation_results, messages, measure_ranges, language=language,
@@ -398,13 +402,11 @@ def _ask(
                 results=results,
             )
 
-    answer = finalize_user_visible_answer(
-        answer,
-        results,
-        language=answer_language,
-    )
+    if not (direct and generate):
+        answer = finalize_user_visible_answer(answer, results, language=answer_language)
     if (
-        answer == no_corpus_evidence_message(answer_language)
+        not (direct and generate)
+        and answer == no_corpus_evidence_message(answer_language)
         and answer_basis not in {
             "no_corpus_evidence",
             "retrieved_secondary_context",
@@ -462,10 +464,10 @@ def ask(
     top_k: int = 6,
     language: str = "ko",
 ) -> dict:
-    """Provide useful music prose, quality warnings, or service-scope guidance."""
+    """Answer using the configured single-pass or historical reviewed pipeline."""
     validate_language(language)
     try:
-        screen_question(question)
+        (validate_question_input if single_pass.enabled(SETTINGS['llm']) else screen_question)(question)
         screen_text(piece_id, source="piece")
         return _ask(
             piece_id=piece_id, question=question, measure_range=measure_range,
@@ -480,10 +482,11 @@ def ask(
         recovered = None
         if generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
             # Unsafe source material must not deprive a legitimate music
-            # question of a general explanation. Re-check the original task
-            # with no source/translation text in the fallback prompt.
+            # question of a general explanation. Use the original task with
+            # no source/translation text; single-pass still writes only once.
             ranges = [list(measure_range)] if measure_range else []
-            messages = build_messages(piece_id, format_measure_range(ranges) if ranges else '',
+            make_messages = single_pass.build_messages if single_pass.enabled(SETTINGS['llm']) else build_messages
+            messages = make_messages(piece_id, format_measure_range(ranges) if ranges else '',
                                       question, [], language=language)
             try:
                 recovered = compose_music_answer(SETTINGS['model_path'], messages, SETTINGS['llm'], [], ranges,
@@ -516,7 +519,9 @@ def ask(
             "evidence_notices": [],
         }
         if recovered is not None:
-            response.update(answer=str(recovered), generation_mode='llm_general_fallback',
-                answer_basis='general_music_knowledge', unavailable_reason=None,
+            direct = single_pass.enabled(SETTINGS['llm'])
+            response.update(answer=str(recovered),
+                generation_mode=recovered.generation_mode if direct else 'llm_general_fallback',
+                answer_basis=recovered.answer_basis if direct else 'general_music_knowledge', unavailable_reason=None,
                 generation_validation_warning='unsafe_source_excluded')
         return response

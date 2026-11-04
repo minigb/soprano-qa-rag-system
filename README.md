@@ -1,34 +1,28 @@
 # Soprano QA RAG System
 
-Local, measure-aware hybrid retrieval and grounded answer generation for five
-soprano works. Grounded generation sends the complete selected, reviewed
-knowledge-unit answer texts to local Qwen3-14B. Separate local-model checks
-assess task safety before composition and support for the draft before release.
-Answers may include clearly marked general music explanations. These cannot
-establish unknown score facts or borrow a knowledge unit's attribution.
-Admission does not reject a music question solely because its evidence is
-partial or conflicting. A quality-check failure gets one rewrite; if it still
-fails, a separate instruction-safety check can release the generated prose with
-a visible qualification. An empty or unusable answer gets one attempt using
-general music knowledge, without inventing facts about the selected score.
-Unrelated tasks receive an explanation of the music assistant's scope. Exhausted
-safety/backend failures remain explicit service errors. Retrieval confidence
-changes which evidence is supplied without substituting source text for an answer.
+Local, measure-aware hybrid retrieval and answer generation for five soprano
+works. The default `llm.pipeline="single_pass"` uses the existing BM25 + embedding
+retriever, then one Qwen3-14B completion. There is no model-based input admission,
+KU reselection, output review, quality rewrite, or source-text substitution.
+The generation prompt handles service scope and untrusted instructions, asks for
+faithful use of relevant passages, and permits general music knowledge when useful.
+Unrelated requests should receive a friendly explanation of the assistant's scope.
+This prompt is guidance, not a guarantee that every answer is correct or attack-proof.
 
-This implementation is on `codex/helpful-rag-responses`, in
+Implementation: `codex/helpful-rag-responses`, in
 `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
 The pre-injection original remains in the `rag-pre-injection` worktree. The
-generator remains Qwen3-14B-Q6_K; source rendering is configured as `semantic`.
-`soprano_qa/response_policy.py` contains the shared response policy used by the
-library and CLI. `soprano_qa/llm.py` controls the single quality rewrite and the
-separate safety check. This checkout does not update the old Lab backend.
+model remains Qwen3-14B-Q6_K. The current prompt and one-call writer are in
+[`soprano_qa/single_pass.py`](soprano_qa/single_pass.py); the library and CLI
+both enter through `response_policy.compose_music_answer`. The historical
+reviewed path remains available with `llm.pipeline="reviewed"` for comparison.
+This checkout does not switch the old Lab backend to the new implementation.
 
-Classification `topic` metadata remains available to retrieval but is omitted from
-answer-generation inputs and generation evidence. A command hidden in that
-optional field cannot erase an otherwise clean knowledge-unit answer. Source
-answers, source questions, attribution and scope still undergo complete screening;
-they are never trimmed to make an unsafe record pass. Corpus records are not mutated.
-Format-example placeholders are not accepted as useful answers.
+Input shape validation and inexpensive source-text screening remain. No model
+is used for these checks. Classification `topic` metadata stays in retrieval
+but is omitted from generation inputs. Unsafe retrieved material is excluded
+before the one writing call; it does not trigger a second answer-generation
+attempt. The answer itself is not evaluated or rewritten before delivery.
 
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
 sibling dataset repository and is consumed by the sibling demo application.
@@ -173,50 +167,50 @@ result = ask(
 With `language="en"` the question is English and a generated answer is
 English. The extractive `generate=False` path still returns the Korean
 evidence text (`answer_language: "ko"`). English adds a query-translation call.
-A completed answer uses admission assessment, composition, and output review;
-a multi-source bundle may add a relevance-selection call. The optional
-`llm.evidence_translation="segmented"` mode adds a separate source-translation
-call for English source claims. A valid negative output review permits one
-composition retry. A remaining quality failure gets a separate instruction-safety
-review before release with a warning; unusable prose may invoke a bounded general
-knowledge fallback. Early domain denials use fewer calls. Report measured
-end-to-end latency rather than assuming a fixed number of model calls.
+Korean generation makes one writing call; English adds one query translation,
+then one writing call. Both use the same 14B checkpoint. No source-translation
+catalog or separate relevance/quality model runs in the default path.
 
 `ask()` returns a `dict`. The fields to branch on:
 
 | Field | Values |
 | --- | --- |
-| `answer` | User-visible prose, already sanitized (Korean, or English for a generated `language="en"` answer) |
+| `answer` | Generated prose (not quality-reviewed) (Korean, or English for a generated `language="en"` answer) |
 | `language` / `answer_language` | Requested language / language of `answer` |
-| `retrieval_query` | The text used for retrieval, or `null` on a security/answer-validation rejection |
-| `generation_mode` | `llm`, `llm_with_warning`, `llm_general_fallback`, `domain_guidance`, `response_error`; `retrieval_only` / `unavailable` for the extractive path |
+| `retrieval_query` | The text used for retrieval, or `null` when recovery excludes unsafe material |
+| `generation_mode` | `llm_single_pass`, `response_error`; `retrieval_only` / `unavailable` for the extractive path. The historical reviewed path has additional modes |
 | `answer_basis` | Retrieved evidence, score context, general music knowledge (possibly combined), or `service_scope` / `service_status` |
 | `unavailable_reason` | Machine-readable reason for domain guidance, service errors or unavailable extractive results; `null` for a delivered music answer |
-| `generation_validation_warning` | `null`, `output_quality_review`, `answer_validation_warning`, `general_knowledge_fallback`, or `unsafe_source_excluded` |
+| `generation_validation_warning` | `null` or `unsafe_source_excluded` in the default path; legacy quality-warning values only in the historical reviewed path |
 
-`llm_with_warning` contains generated prose followed by a visible qualification.
-`llm_general_fallback` contains general music guidance rather than a claim about
-unknown score details. `domain_guidance` explains the assistant's musical scope;
-`response_error` reports an exhausted response failure without calling it missing
-evidence. The `evidence` bundle retains actual retrieval provenance; it is not a
-replacement answer. Record IDs and evidence labels are not for display.
+`llm_single_pass` identifies generated text, not a quality or scope verdict.
+`answer_basis` describes the supplied context; it does not verify each generated
+claim. Scope explanations are generated by the same writer. Empty model text
+returns `response_error` technical guidance without another generation attempt.
+The `evidence` bundle retains retrieval provenance and is not a replacement answer.
+Record IDs and evidence labels are not intended for end-user display.
 
 `model_status()` and `corpus_stats()` report checkpoint and corpus state.
 `corpus_stats()` initializes the retrieval index, so prefer it at startup.
 
 `GenerationBackendUnavailable`, `DenseRetrievalUnavailable`, and invalid-argument
 `ValueError` exceptions still propagate; the first two indicate a misconfigured
-installation. `ask()` converts security violations and `GeneratedAnswerRejected`
-into useful fallback answers, scope guidance, or explicit service errors. Unsafe
-text is never released merely because quality warnings are allowed; fallback
-generation still passes admission and output checks.
+installation. Unsafe retrieved material can lead to a one-call general music
+answer; invalid inputs remain explicit service errors. Ordinary answer content
+never enters the historical deterministic or model-based output finalizers.
 
-Each local-model completion holds a process-wide lock, so inference is
-serialized within a process. The two guard completions increase generation
-latency. Loaded models are cached for the life of the process, so a long-lived
-process is strongly preferred.
+Each local-model completion holds a process-wide lock, so concurrent requests
+may wait. Loaded models are cached for the process lifetime; a long-lived
+process avoids loading them for every request. Timing reports separate cold
+loading from warmed requests and include English query translation.
 
 ## Configuration
+
+`llm.pipeline="single_pass"` selects the one-call writer. Historical controls
+such as `source_preservation`, `synthesis_prompt`, `synthesis_reasoning` and
+`evidence_translation` belong to the reviewed path; they do not add steps to
+single-pass generation. The model, context length, sampling and token limits
+still use the common `llm` settings.
 
 `config/settings.json` holds corpus, model, retrieval, and generation defaults.
 Its relative paths resolve against the settings file's own directory
@@ -280,9 +274,9 @@ every claim's excerpt verbatim against its stored page or transcript.
 
 For a selected range, the sung text of those bars (model-transcribed,
 labelled unverified in the prompt) is added as score context. It may only
-identify the words sung there; when no evidence grounds the bars and
-retrieval did not deliberately abstain, the model may answer from it alone
-(`answer_basis: "score_context"`).
+identify the words sung there, not establish pitches, rhythm or dynamics.
+The single-pass response metadata describes the supplied retrieval context;
+it does not judge whether a generated claim used lyrics or background knowledge.
 
 Corpus construction is fail-closed: every knowledge unit must have
 `rewrite_status: ready` and a finalized measure status. The reviewed
@@ -290,158 +284,34 @@ Corpus construction is fail-closed: every knowledge unit must have
 source answers, legacy range hints, and editorial notes stay in the dataset
 repository and are never serialized into `data/corpus.json`.
 
-For every grounded request the complete selected curated answers are frozen
-into a JSON payload with separate evidence records and structured score
-measures. Source text cannot create a new record or measure by inserting fake
-field names or newlines. Application instructions stay in the system role;
-the question, retrieved text, and score context have no authority to change
-those instructions. Qwen3-14B first assesses whether every requested task stays
-within the music service and respects its instruction boundary. Evidence
-coverage is left to retrieval, composition, and output review. A multi-passage
-relevance pass retains existing labels that directly help, based on the
-question and actual source text. It may select none, enabling the general
-prompt. Short questions retain the selected work's context. With source
-preservation enabled, explicit general definitions, comparisons, universal-rule
-questions and narrowly recognized general practice scenarios without a local/causal
-referent or selected range can take the general path directly, unless the retriever
-found a complete primary source-question concept match. Practice scenarios that
-name the selected work retain evidence. This conservative rule runs after admission;
-it never grants permission for an unrelated task. The model composes
-typed objects with text and model-selected evidence labels under a JSON schema.
-The application renders those labels into the draft and the output guard
-assesses the rendered prose against the supplied evidence.
-The guards accept only a strict JSON boolean approval. A valid negative output
-verdict permits one fresh composition under the same rules, followed by another
-full check. Admission denials, malformed verdicts, text-screen failures and
-backend failures do not trigger this composition retry. After a second quality
-failure, the independent instruction/domain check may release sanitized prose
-with a warning. Empty or unusable music prose gets one general-knowledge attempt.
-Exhausted safety failures return explicit service-error guidance; unrelated
-requests receive a scope explanation.
+The existing retriever, source priority, measure filters and supplement logic
+select the context. Their BM25 and dense scores are unchanged by the single-pass
+update. No 14B model reranks or selects a second subset. The complete selected
+source answer texts reach the writing prompt along with question, work, scope,
+source type and available attribution. Nonessential internal metadata is omitted.
 
-Each item has a kind: `evidence`, `background`, or (when available) `score_lyrics`.
-Only evidence items use supplied primary labels. General explanations use an
-empty citation array and receive a visible general-knowledge prefix. The
-schema permits up to six items, with kind and labels selected before prose. A single leading
-system message contains both format and grounding rules. These ordering choices
-do not prove factual support. One to four concise items are normally requested;
-additional items must add distinct useful details, preserving source qualifiers
-and conditions. The model may answer the supported part of a music question
-and briefly state what cannot be established. A source-based composition can
-return `{"sentences":[]}` for an explicit abstention. When no primary passage is
-selected, a dedicated general-music prompt requests an explanation or an
-explicit limitation in at least one item. It never requires a factual claim
-about an unknown piece, bar or edition. Both paths retain output review.
-Score-context-only answers use empty citation arrays and remain limited to
-identifying sung words. Structured output prevents omitted or malformed inline
-labels without adding another model call; it does not prove that a sentence
-is supported, so the semantic and deterministic checks still apply.
-The returned `evidence` and grounding flags describe retrieval candidates;
-`answer_basis` distinguishes actual source-based, mixed and general explanations.
-The general prompt and output review share a small bilingual terminology aid
-in `soprano_qa/music_terms.py`. It supplies general definitions, never expert
-attribution or facts about the selected score. It is documented development
-guidance, separate from the frozen expert evaluation references.
+Application instructions occupy the system role; the question, passages and
+score lyrics are serialized as untrusted JSON data in the user role. The writer
+returns Korean or English prose directly, using the initial system's natural-prose
+writing instructions adapted for general music knowledge and task scope. It
+should preserve qualifiers, alternatives,
+notation and attribution, and distinguish conflicting sources. When context is
+insufficient, it can use general music knowledge without inventing facts about
+a specific score. There is no online check of whether it succeeded, no content
+retry, and no BERTScore-based response choice.
 
-The branch configuration sets `llm.source_preservation` to
-`verbatim_or_translation`. For Korean source claims, the model selects one
-source label per item and leaves its text empty. Application code quotes the
-complete actual retrieved answer, verifies its identity, and labels it
-`참고 자료의 원문입니다.`. It preserves the author's conditions, qualifications,
-lyric spellings and register. English uses an exact-source reviewed translation
-when available, or guarded model translation of the selected complete answer;
-translation remains fallible and receives output review. General explanations remain generated, separately labelled, and
-allowed when they help answer the question. This mode does not skip source,
-citation, scope or security checks. It may still choose an irrelevant or
-incomplete set of sources, and quoted source text itself may be inaccurate.
+English questions add one Korean translation before retrieval. The original
+English question remains the writing task; only the search query is translated.
+The output writer translates relevant source content itself in the same call.
 
-The experimental `llm.evidence_translation="segmented"` option selects English
-source labels first, then translates original source sentences in a separate
-call without the user question. `soprano_qa/source_translation.py` protects
-quoted Korean strings, requires every sentence slot and literal token, and
-restores the original quoted spelling. The translation must still pass output
-review against the original sources. Slot coverage and literal identity do not
-prove that every relationship or musical term was translated correctly. The
-translation budget is separately configurable (default 1536 tokens), and its
-extra inference time belongs in end-to-end latency. It is also the fallback
-for new or changed sources under the branch's default reviewed-catalog mode.
-
-The branch default uses `llm.evidence_translation="reviewed_catalog"`.
-All 129 curated expert/performer source answers have versioned English
-translations authored by Codex and assessed separately by Claude Opus 5.5.
-These are not human-expert English annotations. The application matches the
-exact SHA256 of the selected Korean source text, not a question, case ID or
-source ID. Changed or new sources use the segmented translation path; a matching
-translation still undergoes the normal security, citation, scope and output
-checks. General explanations remain generated. Source preparation and review
-are extra offline work and are excluded from request latency. The original
-Korean expert evaluation references remain unchanged. See
-`evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
-full fidelity review and the separately flagged original-source factual errors.
-English source translations are visibly labelled as translated reference text,
-including first-person statements inherited from the source. The service retains a
-narrow route for explicit general practice scenarios without a local referent;
-selected ranges, directly matching source questions and selected-work names
-retain evidence. Explicit definition/comparison questions assess actual source
-relevance even when only one KU is retrieved, so a directly answering definition
-is retained. It also calculates basic explicit beat-unit questions using conventional
-simple/compound meter arithmetic. These answers retain both model security
-checks and are reported as `llm_guarded_calculation`, not model-composed prose.
-Score facts, alternate groupings and performance interpretations do not use this
-shortcut. The service also screens source/output instructions that promote a decoded
-request into the final answer, while permitting ordinary musical notation
-decoding. A bounded source comparison identifies differing explicit opening
-accompaniment markings and shared quiet vocal-entrance advice in two selected
-Korean sources, without inventing a cause. All guards remain mandatory;
-`llm_guarded_source_comparison` identifies the application-rendered answer.
-For source-empty pitch concepts without local score context, a concise question
-view and bounded private reasoning reduce irrelevant examples; strict final
-JSON and full-context output review still apply.
-Its [completed comparison](evaluation/ku_background_2026-10-31/followup-report.md)
-passes the fixed metric target and checks meaning, security, usefulness and latency.
-
-Current policy code is in `soprano_qa/structured_answer.py`, assembled by
-`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current
-Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e37/`; the conservative general
-intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
-is `config/bertscore.json`, with the development choices and limitations in
-`evaluation/ku_background_2026-10-31/development.md`. High reference similarity
-from literal source quotations is not proof of unrestricted generation quality.
-BERTScore 0.90 is a sufficient acceptance floor, not a score-maximization
-objective. Meaning, useful coverage, naturalness, refusals and latency determine
-whether a candidate is acceptable. E37 is selected on this branch; the report
-records resolution of the three false refusals, remaining small theory/practice
-and source-presentation issues, and latency relative to the original system.
-
-English questions (`language="en"`) add one call before retrieval: Qwen3-14B
-translates the question into Korean, and that translation drives the
-Korean-calibrated retrieval and gating, while measure mentions are still read
-from the English question. The same frozen evidence bundle is then answered
-using a compact shared grounding prompt plus Korean or English language
-instructions. Both languages preserve scope, uncertainty, attribution and
-conditions. English translates the Korean evidence faithfully and keeps lyric
-words and foreign terms in their original language. The composition contract
-puts citations in evidence arrays, never in the generated prose. Source
-disagreement may be described with attribution; an unsupported explanation for
-the disagreement must not be invented, even with tentative wording.
-
-Normalized screening checks the original question before translation or model
-loading, and checks the translation, admitted evidence, score context, and
-draft for known control instructions. A narrow output check also rejects
-question-only opaque markers absent from the supplied sources. Ordinary
-two-part catalogue identifiers and conventional pitch spellings are left to
-semantic support review rather than treated as arbitrary markers.
-Retrieval-only requests receive screening
-but do not run the semantic admission or output assessments. These are layered
-mitigations: JSON boundaries, pattern screening, and a judge using the same
-model do not guarantee resistance to adaptive prompt injection. Valid citation
-labels alone do not establish that a claim is supported.
-
-See [docs/rag-llm-pipeline-method.md](docs/rag-llm-pipeline-method.md) for the
-full retrieval, measure-routing, prompt-construction, and generation design,
-and [the security research review](docs/rag-security-research.md) for the threat
-model, related 2024–2026 papers, limitations, and adversarial evaluation plan.
+The previous reviewed implementations and their limitations are recorded in
+[evaluation/helpful_responses_2026-11-04/README.md](evaluation/helpful_responses_2026-11-04/README.md)
+and the frozen E37 experiments. Their multi-call checks, structured citation
+rendering, original-text substitution and translation catalog do not describe
+the new default's unreviewed delivery. The single-pass writer uses the preserved
+initial writing instructions in `soprano_qa/single_pass_prompt.py`, with no
+constrained JSON draft or historical source renderer. Development evaluation is separate from serving: fixed-setting
+BERTScore and offline Claude checks never block or replace a user's answer.
 
 ## Evaluation
 

@@ -3427,6 +3427,7 @@ def retrieve_generation_evidence(
     web_coaching_supplement_gate: str = "always",
     web_coaching_supplement_margin: float = 0.0,
     score_context: str = "",
+    message_builder=None,
 ) -> tuple[List[Any], List[Dict[str, str]]]:
     """Retrieve and freeze the one evidence bundle used for generation.
 
@@ -3442,12 +3443,13 @@ def retrieve_generation_evidence(
     """
 
     from soprano_qa.source_priority import SourcePriorityIndex, merge_evidence
+    make_messages = message_builder or build_messages
     priority_index = index if isinstance(index, SourcePriorityIndex) else None
     if priority_index is not None:
         index = priority_index.base_index
 
     if top_k < 1:
-        return [], build_messages(piece, measures, query, [], score_context=score_context)
+        return [], make_messages(piece, measures, query, [], score_context=score_context)
     candidate_limit = (
         max(top_k, NO_RANGE_STABLE_CANDIDATE_MIN)
         if not measure_ranges
@@ -3466,7 +3468,7 @@ def retrieve_generation_evidence(
         # Re-running broad semantic selection here would silently undo the
         # retriever's fail-closed decision and let a procedural neighbor
         # answer a why-question.
-        return [], build_messages(piece, measures, query, [], score_context=score_context)
+        return [], make_messages(piece, measures, query, [], score_context=score_context)
     rejected_candidates = list(
         getattr(index, "last_answer_candidates", []) or []
     )
@@ -3619,7 +3621,7 @@ def retrieve_generation_evidence(
             topic=topic, top_k=top_k,
         )
         results = merge_evidence(direct, results, top_k)
-    return results, build_messages(
+    return results, make_messages(
         piece, measures, query, results, score_context=score_context
     )
 
@@ -4202,12 +4204,16 @@ def _retrieval_unavailable_reason(
 
 
 def _run_cli(args: argparse.Namespace) -> None:
-    screen_question(args.question)
-    screen_text(args.topic or "", source="topic")
+    from soprano_qa import single_pass
+    from soprano_qa.security import validate_question_input
     settings = load_settings(
         args.settings,
         use_legacy_dataset_env=False,
     ) if args.settings else load_settings(use_legacy_dataset_env=False)
+    direct = single_pass.enabled(settings.get('llm', {}))
+    make_messages = single_pass.build_messages if direct else build_messages
+    (validate_question_input if direct else screen_question)(args.question)
+    screen_text(args.topic or "", source="topic")
     try:
         validate_retrieval_requirements(settings)
         if not args.no_generate:
@@ -4258,19 +4264,20 @@ def _run_cli(args: argparse.Namespace) -> None:
             measures=args.measures,
             topic=args.topic,
             top_k=args.top_k,
+            **({'message_builder': make_messages} if direct else {}),
         )
         results = sanitize_generation_results(results)
         grounded = bool(results) and (not args.measure_ranges or has_primary_grounding(results))
         generation_results = results if grounded else []
         if not grounded:
-            messages = build_messages(args.piece, args.measures, args.question, [])
+            messages = make_messages(args.piece, args.measures, args.question, [])
         from soprano_qa.response_policy import compose_music_answer
         raw_answer = compose_music_answer(
             settings["model_path"], messages, settings["llm"], generation_results, args.measure_ranges,
             language="ko", generate_fn=generate,
             finalizer_fn=finalize_grounded_generated_answer,
         )
-        answer = getattr(raw_answer, "validated_text", None)
+        answer = str(raw_answer) if direct else getattr(raw_answer, "validated_text", None)
         if answer is None:
             answer = finalize_grounded_generated_answer(
                 raw_answer, generation_results, messages, args.measure_ranges,
@@ -4280,9 +4287,11 @@ def _run_cli(args: argparse.Namespace) -> None:
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "general_music_knowledge")
 
-    answer = finalize_user_visible_answer(answer, results)
+    if not (direct and not args.no_generate):
+        answer = finalize_user_visible_answer(answer, results)
     if (
-        answer == NO_CORPUS_EVIDENCE_MESSAGE
+        not (direct and not args.no_generate)
+        and answer == NO_CORPUS_EVIDENCE_MESSAGE
         and answer_basis not in {
             "no_corpus_evidence",
             "retrieved_secondary_context",
@@ -4401,8 +4410,10 @@ def main() -> None:
         from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
         recovered = None
         if not args.no_generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
-            settings = load_settings()
-            messages = build_messages(args.piece, args.measures, args.question, [])
+            from soprano_qa import single_pass
+            settings = load_settings(args.settings, use_legacy_dataset_env=False) if args.settings else load_settings(use_legacy_dataset_env=False)
+            make_messages = single_pass.build_messages if single_pass.enabled(settings['llm']) else build_messages
+            messages = make_messages(args.piece, args.measures, args.question, [])
             try:
                 recovered = compose_music_answer(settings['model_path'], messages, settings['llm'], [], args.measure_ranges,
                     language='ko', generate_fn=generate)
@@ -4410,12 +4421,13 @@ def main() -> None:
                 if isinstance(fallback_error, SecurityViolation):
                     reason = fallback_error.reason
         domain = is_scope_rejection(reason)
+        direct_recovery = recovered is not None and single_pass.enabled(settings['llm'])
         guidance = str(recovered) if recovered is not None else domain_guidance("ko") if domain else failure_guidance("ko")
         if args.json:
             print(json.dumps({
                 "answer": guidance,
-                "generation_mode": "llm_general_fallback" if recovered is not None else "domain_guidance" if domain else "response_error",
-                "answer_basis": "general_music_knowledge" if recovered is not None else "service_scope" if domain else "service_status",
+                "generation_mode": recovered.generation_mode if direct_recovery else "llm_general_fallback" if recovered is not None else "domain_guidance" if domain else "response_error",
+                "answer_basis": recovered.answer_basis if direct_recovery else "general_music_knowledge" if recovered is not None else "service_scope" if domain else "service_status",
                 "unavailable_reason": None if recovered is not None else reason,
                 "generation_validation_warning": "unsafe_source_excluded" if recovered is not None else None,
                 "results": [],

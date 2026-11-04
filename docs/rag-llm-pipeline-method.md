@@ -1,5 +1,45 @@
 # RAG+LLM pipeline
 
+## Current default: single-pass generation (2026-11-04)
+
+On `codex/helpful-rag-responses`, `llm.pipeline="single_pass"` now selects the
+existing hybrid retriever followed by one Qwen3-14B writing call. English adds
+one Korean query-translation call. There is no model-based admission, KU
+reselection, output assessment, quality retry, or source-text replacement.
+
+```mermaid
+flowchart LR
+    A[Question and optional bars] --> B[Input shape validation]
+    B --> C[English only: Korean query translation]
+    B --> D[Existing BM25 + embedding retrieval]
+    C --> D
+    D --> E[Source screening and prompt preparation]
+    E --> F[One 14B answer-generation call]
+    F --> G[Deliver generated prose]
+```
+
+The question's scope and handling of untrusted instructions are described in
+the generation prompt in `soprano_qa/single_pass.py`. The model may supplement
+incomplete retrieval with general music knowledge and should explain the
+assistant's scope for unrelated requests. Prompt guidance is fallible.
+Retrieved source text and conditions are preserved as context. Existing
+source-derived meaning hints and the narrow opening-dynamics comparison
+instructions remain prompt aids; neither assesses an answer nor selects KUs.
+No reference answers or evaluation scores enter the serving path.
+
+Input length/type checks, cheap source screening and technical error handling
+remain. Blank model output produces an explicit technical-error message with
+no second writing attempt. The initial natural-prose writing instructions are
+preserved in `single_pass_prompt.py`, adapted for general knowledge and direct
+delivery. No JSON schema, citation validator, source-text renderer or content
+quality filter runs; only existing private-reasoning tag removal remains. Development
+regression evaluation occurs separately and does not delay user requests.
+
+The old reviewed path is retained explicitly for historical comparisons. The
+following sections describe that older implementation, not the default above.
+
+## Historical reviewed pipeline (E25/E37)
+
 The system answers a soprano-performance question from finalized expert
 knowledge units and eligible supporting evidence. Retrieval selects the
 evidence, and a local instruction-following model composes the natural answer,

@@ -10,6 +10,64 @@ The stable method description remains in
 [`rag-llm-pipeline-method.md`](rag-llm-pipeline-method.md). This file is the
 chronological engineering record, including unsuccessful approaches.
 
+## Single-pass service and stage timing (2026-11-04)
+
+The user requested existing hybrid retrieval, prompt-based task scope, a fixed
+14B generator, and no online output assessment. Work stays on
+`codex/helpful-rag-responses`; `f71d5fe` preserves the preceding implementation.
+The initial pre-injection worktree and both main repositories are unchanged.
+
+Before changing the service, 20 fixed questions were measured twice with actual
+completion timers. The initial observer attached to a differently keyed cached
+model instance; that capture is explicitly invalidated and retained. The valid
+`baseline-measured` capture uses identical cache arguments and asserts that
+inference is observed. Ordinary questions average 8.720 s: 6.322 s writing,
+0.422 s admission, 0.339 s extra KU selection, 1.556 s output assessment,
+0.033 s retrieval, and 0.049 s other work. All five prior refusals trigger the
+slow path (23.289 s average, usually seven completions). This enriched cohort
+is diagnostic, not a traffic-weighted latency estimate.
+
+`single_pass.py` removes model-based admission, second KU selection, output
+review and retries from the default service/CLI. Korean uses one writing call;
+English retains the existing query translation and one writing call. Retrieval
+and the 14B checkpoint are unchanged. Plain prose is not replaced by source
+quotes, scores or a canned musical answer. Legacy paths remain explicit.
+
+Candidates and all observed failures are retained under
+`evaluation/single_pass_2026-11-04`. A simplified writing prompt produced excess
+general commentary; shorter B improved latency but merged dynamics notation.
+C restored existing source-derived meaning hints. D (directory
+`single-pass-final`, a superseded name) fixed bar/verse wording but expanded p
+incorrectly and invented a preference between source accounts. Its profile
+and partial expert run are preserved; the name does not make it a final result.
+E also retains the previous comparison-writing instructions inside the sole
+generation call. It adds no source selector, output reviewer or retry.
+
+E's plain-prose version was also rejected: the profile included a cookie recipe
+under a direct injection, and expert review found source contradictions such as
+breathing inside a word where the source warns against doing so. Its full 109
+expert/regression outputs and first Claude judgments are retained. F therefore
+keeps the previous semantic composition/comparison instructions and structured
+draft format, with a prompt-based task boundary. The application only joins
+generated text fields; it does not validate citations or evaluate the answer,
+and it never substitutes a source text. There is still exactly one writing call.
+
+F's profile still produced long repetitive source-like paragraphs and substantial
+writing latency despite one call. It was not adopted. G restores the initial
+free-prose writing instructions from `f307470`, adapting their source-only and
+internal-citation restrictions to the user's general-knowledge/direct-delivery
+requirements. Its source-disagreement and meaning hints remain input preparation
+only. One G timing capture was invalidated because an orphaned F process briefly
+overlapped it; `single-pass-g-clean` starts after confirming the GPU is free.
+All invalid and unsuccessful captures remain separately labelled.
+
+G's offline checks cover the unchanged expert 105 plus four additional former
+refusal paraphrases, and the prior 74 bilingual challenge fixtures. BERTScore
+settings and references stay fixed. These are regression checks, not a fresh
+holdout or a new 460-case demo capture. The final report records measured
+latency, quality differences and limitations; no test result is used to alter
+an individual delivered answer.
+
 ## Active experiment: bounded general knowledge (2026-10-31)
 
 Development checkpoints on `codex/ku-background-knowledge`:

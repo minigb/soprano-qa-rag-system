@@ -40,6 +40,10 @@ def is_scope_rejection(reason):
 
 def compose_music_answer(model_path, messages, llm_settings, results, measure_ranges,
                          *, language, generate_fn, finalizer_fn=None):
+    from soprano_qa import single_pass
+    if single_pass.enabled(llm_settings):
+        return single_pass.compose(model_path, messages, llm_settings, results,
+                                   language=language, generate_fn=generate_fn)
     # Local imports avoid answer.py -> llm.py -> response_policy import cycles.
     from soprano_qa import answer as validation
     from soprano_qa.structured_answer import GENERAL_MUSIC_SYSTEM_PROMPT, GENERAL_MUSIC_FORMAT_POLICY
