@@ -1,0 +1,345 @@
+[
+  {
+    "id": "39421c187be4260c46dc",
+    "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다. 다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다. 특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있습니다. 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다. 대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있습니다. 반주가 끝날 때까지 소리를 지속하기도 하며, 이를 통해 노래를 마무리하는 느낌을 만들어내는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a4e97feec591309a7045",
+    "question": "마지막 음의 지속 시간은 어떻게 정하면 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다. 다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다. 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있습니다. 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다. 대중적인 곡이나 가벼운 가요의 경우, 반주가 끝날 때까지 소리를 지속하면서 노래를 마무리하는 느낌을 만들어내는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7d89f695c691c217e8bc",
+    "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다. 다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다. 특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있습니다. 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다. 대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있습니다. 클래식의 경우 작곡가의 의도가 들어가 있다고 생각하고 악보에 적힌 것을 지키려고 노력하지만, 대중적인 곡이거나 가벼운 가요의 경우 반주가 끝날 때까지 소리를 지속하기도 하며, 이를 통해 노래를 마무리하는 느낌을 만들어내는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "93b349fd2b55b6e95b0b",
+    "question": "《Die Forelle》에서 다이나믹을 어떻게 활용해 이야기와 메시지를 표현해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-013",
+        "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b24d19d21e03c84d80a1",
+    "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. 다만 이 곡의 장르적 특성과 연주 환경을 고려하면, 마지막 음을 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 호흡을 맞추어 자연스럽게 종결감을 만들 수 있습니다. 대중적인 레파토리에서는 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 마무리하는 경우가 많습니다. 이는 클래식과 달리 대중적인 곡이나 가벼운 가요에서는 반주가 끝날 때까지 소리를 지속하며 노래를 마무리하는 느낌을 주는 경우가 많기 때문입니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

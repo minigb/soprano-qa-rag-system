@@ -1,0 +1,64 @@
+{
+  "pilot-a": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 4,
+      "minor_drift": 1
+    },
+    "refusals": 0,
+    "naturalness_mean": 2.6
+  },
+  "pilot-b": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 4,
+      "minor_drift": 1
+    },
+    "refusals": 0,
+    "naturalness_mean": 3.2
+  },
+  "pilot-c": {
+    "cases": 460,
+    "generated": 0
+  },
+  "pilot-d": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 5
+    },
+    "refusals": 0,
+    "naturalness_mean": 3.0
+  },
+  "pilot-e": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 5
+    },
+    "refusals": 0,
+    "naturalness_mean": 3.0
+  },
+  "pilot-f": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 2,
+      "material_drift": 1,
+      "minor_drift": 2
+    },
+    "refusals": 0,
+    "naturalness_mean": 3.0
+  },
+  "pilot-g": {
+    "cases": 5,
+    "generated": 5,
+    "fidelity": {
+      "faithful": 5
+    },
+    "refusals": 0,
+    "naturalness_mean": 3.0
+  }
+}

@@ -1,3 +1,48 @@
+# 완료 — 답변 제공 정책 적용 및 최신 데모 갱신 (2026-11-04)
+
+현재 작업 위치는 `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`,
+브랜치는 `codex/helpful-rag-responses`입니다. 구현 커밋은 `2f01ba7`, 분류 메타데이터 보완 커밋은 `e9d523c`입니다.
+원본/main과 이전 작업 브랜치의 백엔드는 보존했습니다. 생성 모델은 Qwen3-14B입니다.
+
+전체 460건 재생성·Claude 평가·고정 BERTScore와 한국어/영어 보안 74건을 완료했습니다.
+기존 거절 5건은 실제 전체 실행에서 모두 답변됐고 Claude의 의미 보존 판정은 5/5입니다.
+자연스러움은 모두 3/4이며, 초기의 같은 5건 평균 3.6/4까지 회복한 것은 아닙니다.
+전문가 105문항 BERTScore는 0.945026입니다. 원문 대입·설정 재탐색·답변 잘림은 없습니다.
+674개 테스트, 920개 답변/점수 매핑, 브라우저 기능과 모바일 화면 검사도 통과했습니다.
+
+11/03 대비 답변 미제공 5→0, 중대한 의미 변경 18→17, 새 중대한 의미 변경 0입니다.
+전체 자연스러움 평균은 3.5239→3.5522지만, 원래 답변하던 455건만 보면
+3.5626→3.5582이고 2건은 하락했습니다. 다른 1건의 정보 누락·1건의 귀속 약화,
+공격 자료 제외 후 영문 일반 지식 오류 2건 등 한계를 보고서에 남겼습니다.
+449개 동일 평가 packet은 계약 확인 후 기존 Claude 판정을 재사용했고 변경 11건은 새로 평가했습니다.
+
+[최종 보고서](evaluation/helpful_responses_2026-11-04/report.md),
+[직접 비교](evaluation/helpful_responses_2026-11-04/manual-review.json),
+[검증](evaluation/helpful_responses_2026-11-04/verification.json),
+[재현 방법](evaluation/helpful_responses_2026-11-04/README.md)을 먼저 읽으세요.
+최종 실행은 `security-hardened/`, `full-final/`입니다. 완료된 평가는 다시 돌리지 않습니다.
+후속 수정은 새 snapshot/output으로 진행하며 기존의 불리한 결과도 보존합니다.
+이전 `security-final/`은 74건 중 자료 제외 후 의미 역전 1건을 발견한 기록이고,
+`full/`은 그 문제를 보완하려고 18건에서 중단한 예비 실행입니다. 둘 다 최종 결과가 아닙니다.
+`source-recovery-probe*`는 실패 후보까지 보존했습니다. 최종 L은 공격성 topic을
+생성 입력에서 제외하고 정상 KU 본문을 유지해 한·영 모두 의미 보존으로 복구했습니다.
+일반 지식 프롬프트 변경·추가 reasoning 후보는 채택하지 않았습니다.
+최신 데모는 이 checkout의 `sites/answer-review/dist`이며 기존 작업 데모 세 곳에도
+정적 파일만 반영했습니다. 초기·E37·11/03 기록과 메모 키는 보존했습니다.
+기존 Lab 백엔드는 새 구현으로 전환하지 않았습니다.
+
+```bash
+python -m http.server 8766 --bind 127.0.0.1 \
+  --directory /home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/sites/answer-review/dist
+```
+
+<http://localhost:8766/?evaluation=helpful-14b-20261104>에서 ‘이전 거절 5건’을 선택하면 됩니다.
+서버는 사용자가 직접 띄우며 Discord/notifier 및 사용량/reset 중지 조건을 사용하지 않습니다.
+
+---
+
+아래는 이전 작업의 기록입니다.
+
 # 460개 답변 비교 localhost 데모 추가
 
 사용자가 답변을 직접 확인할 웹 데모를 요청했고, 이후 **localhost 사용**을 지정했다.

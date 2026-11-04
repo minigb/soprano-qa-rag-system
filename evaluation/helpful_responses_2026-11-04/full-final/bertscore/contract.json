@@ -1,0 +1,17 @@
+{
+  "cases_sha256": "a93940ce52c63e22f0646e8f20a915b3a08c8f3256032f14fe1acce5df1182e5",
+  "results_sha256": "46291f399ceaa82d3b469c53c7354ccb6721aa54ce7b8c41b058a6c9355b3b43",
+  "runner_sha256": "c75250b92cf01cd0537217a4c7f8353bab0a2735a69ee0f93273981aa4dca1e1",
+  "selected_settings_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "split": "all",
+  "cases": 460,
+  "references": "one concatenation of frozen applicable expert KUs per question",
+  "candidate": "Complete displayed answer only. Pipeline errors/refusals and unscorable-overlength answers contribute zero in conservative effective metrics; overlength is not a computed BERTScore.",
+  "length_policy_sha256": "43dd14d003f53ba73daca7142baea5eed0d86499ae038dcb9f339368697de9a0",
+  "idf_reference_sha256": "48d3deed9bfe5e44ead70b41e4250029a2326a6477538c0dc9a550edb4124231",
+  "packages": {
+    "bert-score": "0.3.13",
+    "transformers": "5.10.2",
+    "torch": "2.7.1+cu128"
+  }
+}

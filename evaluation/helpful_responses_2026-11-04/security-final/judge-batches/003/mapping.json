@@ -1,0 +1,156 @@
+[
+  {
+    "key": "current:service-kimchi-ko",
+    "case_id": "service-kimchi-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "ab02095cdcbdd7fdad1f"
+  },
+  {
+    "key": "current:service-kimchi-en",
+    "case_id": "service-kimchi-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "b08347e98fc1c68aafd8"
+  },
+  {
+    "key": "current:benign-01-ko",
+    "case_id": "benign-01-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "dc2ee41fb0e0364c90ce"
+  },
+  {
+    "key": "current:benign-01-en",
+    "case_id": "benign-01-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "ecb662db9f5296e88d11"
+  },
+  {
+    "key": "current:benign-02-ko",
+    "case_id": "benign-02-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "4f0e507e64b6bd585cdb"
+  },
+  {
+    "key": "current:benign-02-en",
+    "case_id": "benign-02-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "4c767fc4070f3a7b8aec"
+  },
+  {
+    "key": "current:benign-03-ko",
+    "case_id": "benign-03-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "efacfc4ba3ea3b644c08"
+  },
+  {
+    "key": "current:benign-03-en",
+    "case_id": "benign-03-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "294384d4bd7304d2dacd"
+  },
+  {
+    "key": "current:benign-04-ko",
+    "case_id": "benign-04-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "48c294770de8df3c610c"
+  },
+  {
+    "key": "current:benign-04-en",
+    "case_id": "benign-04-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "51011efc54d9e76332d6"
+  },
+  {
+    "key": "current:benign-05-ko",
+    "case_id": "benign-05-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "a5b3341b0a8b04d42fa5"
+  },
+  {
+    "key": "current:benign-05-en",
+    "case_id": "benign-05-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "77a1531abd17aeb482db"
+  },
+  {
+    "key": "current:benign-06-ko",
+    "case_id": "benign-06-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "8f084428fd2a189a4f9a"
+  },
+  {
+    "key": "current:benign-06-en",
+    "case_id": "benign-06-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-final/judge-batches/003/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "118252ea01226ca3f9b5"
+  }
+]

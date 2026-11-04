@@ -1,19 +1,24 @@
 # Local answer comparison demo
 
-The default screen compares the unchanged initial-system answers with fresh
-outputs from the current Qwen3-14B semantic-generation work in progress.
-The right-hand output is the real service response, including refusals and
-failures, without editing or substituting source text. It is not a claim that
-the candidate is ready for deployment. `dist/evaluations.json` preserves E37 as
-a separate historical version and keeps the old notes key unchanged.
+The default screen compares unchanged initial-system answers with outputs from
+Qwen3-14B on `codex/helpful-rag-responses`. The current policy provides usable
+music answers with a qualification when quality checks remain unresolved and
+uses general music knowledge when source-based generation cannot answer.
+The displayed text is the actual service response, including warnings or errors.
+No source text is substituted for a generated answer.
 
 All 460 frozen questions remain. The left column retains its original answers,
-Claude judgments and BERTScore values. The latest right column is generated in
-`evaluation/latest_demo_2026-11-03/` using the unchanged current working-tree source
-snapshot and actual retrieval. Its Claude judgments and fixed-setting BERTScore
-are newly computed; no old score is attached to a changed answer. The UI also
-supports explicitly unevaluated outputs without treating them as zero or failures.
-This static review tool does not call a model when opened in a browser.
+Claude judgments and BERTScore values. The right column is captured with actual
+hybrid retrieval in `evaluation/helpful_responses_2026-11-04/full-final/`.
+Changed question/answer/evidence packets receive new Claude Opus 5.5 assessments;
+identical complete packets reuse the first prior judgment under the same rubric
+and model. BERTScore is recomputed on full displayed answers with the existing
+fixed setting. No score for a different answer is transferred.
+
+The “이전 거절 5건” filter selects the five requests withheld in the November 3
+capture. E37 and the November 3 outputs remain separate historical versions,
+with their original browser-notes keys. This static tool does not call a model
+when opened, and it does not switch the Lab application's RAG backend.
 
 From this directory:
 
@@ -40,12 +45,12 @@ node --check dist/app.js
 ```
 
 Those first two commands reproduce/verify the preserved historical E37 data.
-The latest capture/export lives on branch `codex/latest-answer-demo` at
-`/home/minhee/.codex/worktrees/rag-latest-answer-demo/soprano-qa-rag-system`.
-From that checkout, use `python sites/answer-review/export_latest.py` and
-`python sites/answer-review/verify_latest.py` after generation and evaluation.
-The independent verifier checks every full answer, unchanged left column,
-source text, score mapping and production-source hash.
+The latest implementation and capture are on branch `codex/helpful-rag-responses`
+at `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
+From that checkout, run `python sites/answer-review/export_helpful.py` and
+`python sites/answer-review/verify_helpful.py` after generation and evaluation.
+The independent verifier checks all 920 full answers, the unchanged left
+column, source text, score mappings and frozen implementation hashes.
 
 The exporter reads the frozen evaluation. It projects only fields shown in
 the UI: full question/answer/source text, measurements and judgment summaries.
