@@ -1,0 +1,10 @@
+{
+  "command": "PYTHONDONTWRITEBYTECODE=1 /home/minhee/miniconda3/envs/soprano-qa/bin/python -m unittest discover -s tests",
+  "tests": 684,
+  "seconds": 23.43,
+  "result": "passed",
+  "log": "unit-tests.txt",
+  "source_contract_sha256": "d3f8aac050034266c69d761bf0859027ba8677f31e9c86672dc7b69586b119b5",
+  "note": "Candidate config is explicit and hash-identical to the evaluated single-pass setting. Validated default config restored byte-for-byte. Historical reviewed behavior plus ten new integration/default-preservation tests pass.",
+  "log_sha256": "4ecb5910cd1334adc230e6751263a80ca5f2a02055ff1f44e6d5803dc1d65781"
+}

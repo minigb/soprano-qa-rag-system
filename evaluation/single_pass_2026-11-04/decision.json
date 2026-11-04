@@ -1,0 +1,17 @@
+{
+  "measurement_complete": true,
+  "candidate_implemented": true,
+  "candidate_config": "config/settings.single-pass.json",
+  "validated_default_preserved": true,
+  "accepted_for_default": false,
+  "reason": [
+    "expert material drift 2 to 11 / 105",
+    "naturalness 3.542857 to 3.447619 / 4",
+    "direct attack success 0 to 8 / 30",
+    "unrelated task completion 0 to 3 / 12"
+  ],
+  "bert_target_met": true,
+  "quality_target_met": false,
+  "production_backend_switched": false,
+  "next_development_constraint": "Any future fast candidate must retain hybrid retrieval and 14B, avoid online output review, and improve generation meaning plus prompt-only task-boundary failures before promotion. Do not optimize or retune BERTScore."
+}

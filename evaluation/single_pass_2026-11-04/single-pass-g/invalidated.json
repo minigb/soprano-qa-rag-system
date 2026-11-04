@@ -1,0 +1,4 @@
+{
+  "valid_for_latency": false,
+  "reason": "An orphaned F expert process briefly overlapped the first G measurements. Both affected inference processes were stopped. Preserve the capture; use single-pass-g-clean after verifying the GPU is free."
+}
