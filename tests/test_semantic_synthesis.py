@@ -12,6 +12,18 @@ from tests.test_security_integration import completion, evidence
 
 
 class SemanticSynthesisTests(unittest.TestCase):
+    def test_format_placeholder_is_not_released_as_a_music_answer(self):
+        from soprano_qa.response_policy import compose_music_answer
+        messages = answer.build_messages('die-forelle', '', 'How can I practise phrasing?', [], language='en')
+        generator = Mock(side_effect=['General explanation: Your answer in the requested language.',
+            'You can first speak the text in phrases, then sing it while keeping those connections.'])
+        result = compose_music_answer('fake', messages, {}, [], [], language='en',
+            generate_fn=generator, finalizer_fn=lambda draft, *args, **kwargs: str(draft))
+        self.assertEqual(result.generation_mode, 'llm_general_fallback')
+        self.assertNotIn('Your answer in the requested language', result)
+        self.assertIn('speak the text', result)
+        self.assertTrue(generator.call_args.kwargs['general_answer_fallback'])
+
     def test_general_fallback_policy_reaches_the_actual_writer_after_routing(self):
         self.prepare()
         messages = answer.build_messages('die-forelle', '', '편하게 호흡하려면 어떻게 연습하나요?', [])

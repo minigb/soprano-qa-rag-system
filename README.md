@@ -23,6 +23,13 @@ generator remains Qwen3-14B-Q6_K; source rendering is configured as `semantic`.
 library and CLI. `soprano_qa/llm.py` controls the single quality rewrite and the
 separate safety check. This checkout does not update the old Lab backend.
 
+Classification `topic` metadata remains available to retrieval but is omitted from
+answer-generation inputs and generation evidence. A command hidden in that
+optional field cannot erase an otherwise clean knowledge-unit answer. Source
+answers, source questions, attribution and scope still undergo complete screening;
+they are never trimmed to make an unsafe record pass. Corpus records are not mutated.
+Format-example placeholders are not accepted as useful answers.
+
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
 sibling dataset repository and is consumed by the sibling demo application.
 

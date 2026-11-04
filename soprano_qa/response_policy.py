@@ -46,6 +46,10 @@ def compose_music_answer(model_path, messages, llm_settings, results, measure_ra
     from soprano_qa.security import SECURITY_SYSTEM_POLICY, serialize_untrusted
 
     def usable(text):
+        plain = str(text).replace('General explanation:', '').replace('일반적인 음악 설명입니다.', '').strip().casefold()
+        if plain in {'your answer in the requested language.', 'your answer.',
+                     '자료에 근거한 답변', '필요할 때 보충하는 일반적인 설명'}:
+            return False
         return (bool(text.strip()) and text != validation.no_corpus_evidence_message(language)
                 and not validation.is_grounded_insufficiency_answer(text))
 

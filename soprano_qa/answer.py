@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import json
 import os
@@ -65,6 +66,7 @@ from soprano_qa.security import (
     SECURITY_SYSTEM_POLICY,
     SecurityViolation,
     screen_question,
+    screen_evidence_record,
     screen_text,
     serialize_untrusted,
 )
@@ -2258,6 +2260,18 @@ def select_generation_evidence(
     ]
 
 
+def sanitize_generation_results(results: List[Any]) -> List[Any]:
+    """Keep safe source bodies when only optional category metadata was unsafe."""
+    cleaned = []
+    for result in results:
+        record = screen_evidence_record(result.record)
+        if record is not result.record:
+            result = copy.copy(result)
+            result.record = record
+        cleaned.append(result)
+    return cleaned
+
+
 def generation_evidence_payload(
     results: List[Any], measure_ranges: List[List[int]],
 ) -> List[Dict[str, Any]]:
@@ -2270,8 +2284,7 @@ def generation_evidence_payload(
     evidence = []
     primary = primary_grounding_results(results)
     for idx, result in enumerate(results, start=1):
-        record = result.record
-        screen_text(json.dumps(record, ensure_ascii=False), source="evidence")
+        record = screen_evidence_record(result.record)
         item = {
             "citation_label": "E%d" % idx if result in primary else None,
             "evidence_type": record.get("evidence_type", "unknown"),
@@ -4246,6 +4259,7 @@ def _run_cli(args: argparse.Namespace) -> None:
             topic=args.topic,
             top_k=args.top_k,
         )
+        results = sanitize_generation_results(results)
         grounded = bool(results) and (not args.measure_ranges or has_primary_grounding(results))
         generation_results = results if grounded else []
         if not grounded:

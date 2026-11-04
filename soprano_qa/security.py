@@ -203,6 +203,20 @@ def screen_question(question: str) -> None:
     screen_text(question)
 
 
+def screen_evidence_record(record: dict) -> dict:
+    """Keep classification metadata out of the answer-generation boundary.
+
+    ``topic`` belongs to retrieval and is not needed to establish a musical claim.
+    Omit the complete field regardless of its wording, including semantic attacks
+    that have no known control phrase. Answer text, source
+    questions, attribution and scope are never trimmed to make a record pass.
+    Validate the complete remaining record, and never mutate the corpus object.
+    """
+    cleaned = {key: value for key, value in record.items() if key != 'topic'} if 'topic' in record else record
+    screen_text(json.dumps(cleaned, ensure_ascii=False), source='evidence')
+    return cleaned
+
+
 def screen_generated_answer(answer: str, payload: dict[str, Any]) -> None:
     """Screen prose without treating the user's requested marker as evidence."""
     screen_text(answer, source="answer")

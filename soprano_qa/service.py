@@ -20,6 +20,7 @@ from soprano_qa.answer import (
     is_underspecified_ranged_query,
     no_corpus_evidence_message,
     retrieve_generation_evidence,
+    sanitize_generation_results,
 )
 from soprano_qa.llm import (
     generate as generate_llm,
@@ -313,6 +314,7 @@ def _ask(
             ),
             score_context=score_block,
         )
+        results = sanitize_generation_results(results)
         if language != "ko":
             # Same frozen evidence bundle; only the system prompt and the
             # displayed question change for the answer language.
