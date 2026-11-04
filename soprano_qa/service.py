@@ -354,10 +354,14 @@ def _ask(
         raw_answer = generate_llm(
             SETTINGS["model_path"], messages, SETTINGS["llm"],
             security_context=json.loads(messages[1]["content"]),
+            finalizer=lambda draft: finalize_grounded_generated_answer(
+                draft, generation_results, messages, measure_ranges, language=language),
         )
-        answer = finalize_grounded_generated_answer(
-            raw_answer, generation_results, messages, measure_ranges, language=language,
-        )
+        answer = getattr(raw_answer, "validated_text", None)
+        if answer is None:
+            answer = finalize_grounded_generated_answer(
+                raw_answer, generation_results, messages, measure_ranges, language=language,
+            )
         generation_mode = getattr(raw_answer, "generation_mode", "llm")
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "score_context")

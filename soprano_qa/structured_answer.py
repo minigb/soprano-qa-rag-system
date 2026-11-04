@@ -40,6 +40,170 @@ is possible, return {"sentences":[]}.
 """
 
 
+SEMANTIC_ANSWER_POLICY = """Write the answer yourself using the retrieved passages as evidence.
+Your task is to answer the user's question, not display or translate complete
+source records. Start with the relevant answer or practical recommendation.
+Write a connected, concise explanation in the requested language and register.
+Combine repeated advice once, retaining the conditions of every claim you use.
+Include useful explanations and alternatives; omit passages that do not answer
+the question. Do not list sources one after another or announce that you are
+presenting reference text. For Korean, use natural, consistent 합니다체.
+
+Preserve the musical meaning, not the source's paragraph structure. Check who
+does what, negation, the condition under which advice applies, alternatives,
+certainty, and the specific musical location or situation. A possibility or
+interpretation must not become a definite fact or composer's intention. Clarify
+a source's 'this part' using the supplied musical situation; if the situation
+cannot be identified, state that limitation instead of generalizing its advice.
+Retain quoted lyric words, pronunciation spellings and musical symbols exactly.
+These short quotations do not require quoting the surrounding source paragraph.
+For conflicting accounts, distinguish their claims and preserve uncertainty
+about the cause; do not invent a reconciliation or call unique advice shared.
+
+Return one JSON object with the following structure and no extra keys:
+{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"Your direct, source-supported answer."}]}
+Write nonempty text in every item. Use evidence items for supported source
+claims, selecting the labels of the passages supporting those claims. Use
+background items with evidence=[] for useful general musical knowledge or
+optional practice advice that the sources do not supply. Keep that provenance
+separate; background must not invent a fact about a piece, edition or expert,
+contradict a source, or explain an unknown source disagreement. score_lyrics
+items may identify only sung words actually supplied in the score context.
+Use 1-4 items, up to 6 if the question needs it. Each item can contain connected
+sentences, at most 2000 characters. Do not print IDs, headings, citation labels,
+or internal field names in the text. The application handles citations.
+If no useful authorized answer can be given, return {"sentences":[]}.
+/no_think
+""" + MUSIC_TERMINOLOGY
+
+
+def concise_synthesis_policy(language: str) -> str:
+    language_rule = ("한국어 합니다체로 자연스럽게 답합니다." if language == "ko" else
+                     "Answer in natural English; retain exact lyric words and pronunciation spellings in their original script.")
+    return """당신은 성악과 음악에 관한 질문에 답하는 도우미입니다.
+질문에 바로 답하고, 제공된 자료에서 필요한 내용만 연결하여 짧고 명확하게 설명합니다.
+자료 목록이나 원문 모음을 반환하지 않습니다. 반복되는 내용은 한 번만 설명합니다.
+관련 자료가 부족하면 정확한 일반 음악 지식과 선택적인 연습 제안도 사용할 수 있습니다.
+자료만으로 충분히 답했다면 일반론을 덧붙이지 않습니다. 출처별 항목이 아니라
+질문의 요점별로 문장을 연결합니다. 한 항목에 여러 출처를 함께 사용할 수 있습니다.
+서로 연결되는 자료 내용은 evidence 라벨을 함께 넣은 한 항목으로 통합합니다.
+같은 주장의 동의어 문장을 반복하지 말고 질문에 필요한 설명만 남깁니다.
+
+자료의 문장 표현은 바꿀 수 있지만 다음 의미는 바꾸지 않습니다.
+각 자료의 meaning_constraints는 원문에서 주의할 표현을 발췌한 것입니다.
+해당 내용을 답변에 사용할 때 원문의 논리 관계를 반드시 유지합니다.
+source_disagreements가 있으면 같은 대상에 대한 설명이 자료마다 다른 것입니다.
+각각 누구의 설명인지 구분하고, 두 표기가 모두 확정된 사실인 것처럼 쓰지 않습니다.
+- ‘볼 수 있다’, ‘해석하는 것이 일반적이다’는 가능한 해석입니다.
+  이를 확정된 원인이나 ‘작곡가가 그렇게 의도했다’는 사실로 바꾸지 않습니다.
+  질문이 작곡가의 의도를 단정하더라도 자료가 뒷받침하지 않으면 그대로 단정하지 않습니다.
+- ‘A보다 B가 좋다’는 B를 권장한다는 뜻입니다. 뒤에 C라는 보조 방법이 있어도
+  B를 피해야 한다거나 C만 써야 한다는 뜻이 아닙니다.
+- 부정, 조건, 선택지, 권고의 강도, 적용되는 상황과 주체를 유지합니다.
+  ‘또는’을 ‘그리고’로 바꾸거나, 가끔 나타나는 현상을 의무로 바꾸지 않습니다.
+- 가사·발음 예시·음악 기호는 정확히 유지합니다. 내용을 모르는 구간·판본·작곡 의도를
+  추측하지 않습니다. 서로 다른 자료의 설명은 구분하고 차이의 원인을 꾸며내지 않습니다.
+- 일반 설명과 자료의 주장을 구분합니다. 일반 지식을 특정 전문가의 말처럼 인용하지 않습니다.
+
+마디가 선택되어 있으면 selected_range_support만 그 마디의 사실을 뒷받침합니다.
+일반 조언은 원래의 조건을 유지합니다. 마디 선택이 없으면 국소적 예시는 그 상황에
+한해서 설명하며, 곡 전체의 법칙으로 확장하지 않습니다. 내부 마디 메타데이터를
+출력하지 않고 원문에 있는 ‘첫머리’, ‘무반주 구간’ 같은 상황을 유지합니다.
+악보 가사 문맥은 제공된 가사를 확인하는 용도이며 음정·리듬·표현법의 증거는 아닙니다.
+
+출력은 다음 형식의 JSON 한 개입니다. 설명문이나 Markdown으로 감싸지 않습니다.
+{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"질문에 직접 답하는 문장입니다."}]}
+자료가 뒷받침하는 문장은 kind=evidence, evidence에는 해당 자료의 라벨을 넣습니다.
+일반 음악 설명이나 선택적인 연습 제안은 kind=background, evidence=[]입니다.
+제공된 가사만 확인하는 문장은 kind=score_lyrics, evidence=[]입니다.
+1–4개 항목으로 간결하게 쓰고 필요한 경우에만 최대 6개를 씁니다. text는 비우지 않습니다.
+본문에 라벨·내부 용어·자료 반환 안내·제목을 쓰지 않습니다. 출처별로 문단을 나열하지 않습니다.
+유용한 답변이 전혀 불가능할 때만 {"sentences":[]}를 반환합니다.
+
+다음은 문장 관계를 지키는 예시입니다. 예시의 내용은 실제 답변의 근거가 아닙니다.
+예시 1: 질문은 ‘작곡가는 왜 중간에 쉼을 넣었나요?’이고 자료 E1은
+‘그 쉼은 인물의 망설임을 표현한 것으로 볼 수 있다. 쉼 뒤의 시작을 부드럽게 준비한다.’입니다.
+올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"그 쉼은 인물의 망설임을 표현하는 것으로 해석할 수 있습니다. 쉼 뒤에는 부드럽게 시작할 수 있도록 준비합니다."}]}
+‘작곡가는 망설임을 표현하려고 쉼을 넣었습니다’는 원문보다 강한 단정이므로 쓰지 않습니다.
+예시 2: 자료 E1은 ‘빠르게 반복하기보다 천천히 연습하는 것이 좋다.
+박자가 흔들릴 때는 손뼉을 치는 것도 도움이 될 수 있다.’입니다.
+올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"천천히 연습하는 것이 좋습니다. 박자가 흔들린다면 손뼉을 치며 연습하는 방법도 도움이 될 수 있습니다."}]}
+‘천천히 연습하지 말고 반드시 손뼉을 쳐야 합니다’는 권고와 보조 방법을 뒤집으므로 쓰지 않습니다.
+예시 3: 자료 E1은 ‘혼자 연습하거나 반주가 없는 경우 녹음으로 확인할 수 있다.’입니다.
+올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"혼자 연습할 때나 반주가 없을 때는 녹음해서 확인하는 방법도 있습니다."}]}
+‘혼자 무반주로 연습할 때’는 두 조건을 모두 요구하므로 원문과 다릅니다.
+예시 4: 자료 E1은 ‘첫 부분은 빠른 템포다. 호흡을 미리 준비한다.’이고
+자료 E2는 ‘첫 부분은 보통 템포다. 호흡을 미리 준비하고 입모양도 준비한다.’입니다.
+올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1","E2"],"text":"첫 부분의 템포에 대해서는 빠르다는 설명과 보통이라는 설명이 있습니다. 두 자료 모두 호흡을 미리 준비하도록 권합니다. 두 번째 자료는 입모양도 준비하도록 덧붙입니다."}]}
+자료만으로 차이의 원인을 알 수 없다면 판본이나 연주자의 선택 때문이라고 추측하지 않습니다.
+""" + language_rule + "\n/no_think\n"
+
+
+def source_meaning_constraints(text: str) -> list[dict[str, str]]:
+    """Surface literal source operators without adding musical facts."""
+    hints = []
+    for sentence in re.split(r"(?<=[.!?。！？])\s+|\n+", text):
+        if not sentence.strip():
+            continue
+        if re.search(r"것(?:으)?로\s*볼\s*수|보는\s*것이\s*일반적|(?:could|may)\s+be\s+(?:interpreted|seen)", sentence, re.I):
+            hints.append({"relation": "interpretation_not_established_intention", "source_excerpt": sentence})
+        contrast = re.search(r"보다(?:는)?\s+(?P<preferred>.+?(?:좋|적절|낫|권장)[^.!?。！？]*)", sentence)
+        if contrast:
+            hints.append({"relation": "preferred_alternative", "source_excerpt": sentence,
+                          "preferred_clause": contrast.group("preferred")})
+        if re.search(r"거나|또는|\bor\b", sentence, re.I):
+            hint = {"relation": "alternatives_not_joint_requirements", "source_excerpt": sentence}
+            condition = re.search(r"(?P<a>.+?)거나\s*(?P<b>.+?(?:경우|때))(?:에는|는|에)", sentence)
+            if condition:
+                hint.update(logic="OR", condition_fragment_1=condition["a"],
+                            condition_fragment_2=condition["b"])
+            hints.append(hint)
+    return hints
+
+
+def source_comparison_policy(language: str) -> str:
+    """Generate a question-focused comparison from conflicting source facts."""
+    return """서로 다른 연주 자료를 비교해 성악 질문에 간결하고 자연스럽게 답합니다.
+공통으로 뒷받침되는 가창 방향을 먼저 설명하고, 표기에 대한 서로 다른 설명을 구분합니다.
+source_disagreements의 accounts는 실제 자료에서 추출한 시작 반주의 표기입니다.
+반주의 표기를 성악부에 적힌 기호로 바꾸지 않습니다. 어느 설명이 실제 악보와 일치하는지는
+이 자료만으로 결정하지 않습니다. 차이의 원인을 묻는 경우, 원인을 확정할 근거가 없으면
+그 한계를 짧게 말합니다. 판본, 작곡가 의도, 연주자 선택을 원인으로 추측하지 않습니다.
+작곡가 의도에 관한 일반적인 주의 문구는 이 특정 차이의 원인을 설명하지 않습니다.
+두 자료가 공통으로 말하는 내용과 한 자료만 덧붙이는 조언을 구분합니다.
+공통 조언이 있다고 해서 두 표기가 같다는 뜻은 아닙니다. 고유한 호흡·울림 조언을
+모두의 공통 권고로 바꾸지 않습니다. 기호 뜻은 질문에 필요한 경우에만 설명합니다.
+원문 전체를 나열하지 말고 질문의 요점에 맞춰 직접 문장을 작성합니다.
+본문에서는 '한 자료', '다른 자료' 같은 자연스러운 표현을 쓰며 E1·E2 같은 내부 라벨을
+쓰지 않습니다. 서로 다른 설명을 함께 비교하는 문장에는 두 자료를 함께 인용할 수 있습니다.
+JSON 한 개를 반환합니다:
+{"sentences":[{"kind":"evidence","evidence":["E1","E2"],"text":"질문에 맞춰 작성한 비교 설명입니다."}]}
+1–3개 항목으로 쓰며 text는 비우지 않습니다. 출처의 주장은 evidence 항목에만 쓰고
+출처 라벨은 evidence 배열에만 넣습니다. 근거 없는 원인을 background 항목으로 만들지 않습니다.
+""" + ("한국어 합니다체로 답합니다." if language == "ko" else "Answer in natural English.") + "\n/no_think\n"
+
+
+def synthesis_evidence_view(payload: dict[str, Any]) -> dict[str, Any]:
+    """Keep claims/scope, omitting teaching-question premises after selection."""
+    records = []
+    for record in payload.get("Retrieved evidence", []):
+        item = {key: value for key, value in record.items() if key != "question"}
+        hints = source_meaning_constraints(record.get("answer", ""))
+        if hints:
+            item["meaning_constraints"] = hints
+        records.append(item)
+    view = {**payload, "Retrieved evidence": records}
+    # Delay this import because the legacy comparison renderer imports this
+    # module. Only source-derived labels/symbols enter the writing input; no
+    # canned answer or evaluation-specific question is supplied.
+    from soprano_qa.source_comparison import opening_dynamics_accounts
+    accounts = opening_dynamics_accounts(payload)
+    if accounts:
+        view["source_disagreements"] = [{"topic": "opening accompaniment dynamic",
+                                        "accounts": accounts, "cause_established": False}]
+    return view
+
+
 SOURCE_PRESERVATION_POLICY = """Return one JSON object with the existing sentences/kind/evidence/text fields.
 Select only passages that directly answer the actual question, preserving useful
 complementary advice. An evidence item must select exactly ONE citation label;

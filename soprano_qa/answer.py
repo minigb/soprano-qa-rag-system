@@ -39,6 +39,7 @@ from soprano_qa.dense import (
     validate_retrieval_requirements,
 )
 from soprano_qa.llm import (
+    GenerationFinalizationRejected,
     GenerationBackendUnavailable,
     generate,
     validate_generation_requirements,
@@ -150,11 +151,13 @@ removes them for display. Do not write inline citations or a citation footer.
 Start with the direct answer. Select the source passages that answer the question,
 then retain their relevant explanation, conditions and alternatives. Do not shorten
 away why or how the recommendation works, or the situation to which it applies.
-Keep the source's wording when it already answers the question; change only what
-is needed for the answer language and polite grammar. Do not paraphrase just for
-variety. A complete relevant paragraph is preferable to a compressed restatement
-that loses qualifications. Do not summarize every retrieved record or add another
-passage's advice merely because it appears in the evidence.
+Write a natural answer to this question using the source's meaning. Retain
+necessary explanations, conditions and alternatives, while removing repeated
+advice and connecting related points. Quote exact lyric words and musical
+symbols when needed; do not replace the answer with complete source paragraphs.
+Do not summarize every retrieved record or add another passage's advice merely
+because it appears in the evidence. Do not announce that you are showing source
+text or describe the retrieval process to the user.
 For a general definition or comparison of musical concepts, explain those concepts
 directly. The selected piece is context, not an obligation to discuss it. If no
 reviewed answer directly explains the requested concept, use background items;
@@ -253,7 +256,7 @@ EVIDENCE_FOOTER_LABEL_RE = re.compile(
 )
 
 
-class GeneratedAnswerRejected(RuntimeError):
+class GeneratedAnswerRejected(GenerationFinalizationRejected):
     """Raised when a generated draft fails grounding or presentation checks."""
 
 
@@ -1320,6 +1323,12 @@ def _claim_has_piece_wide_generalization(claim: str) -> bool:
     claim = _SCOPED_FREQUENCY_CLAUSE.sub(
         lambda match: match.group().replace(match.group('frequency'), '', 1), claim,
     )
+    # "음표가 많은 부분은" identifies a passage by its note density;
+    # "많은 부분에서" asserts occurrence in many passages. Remove only the
+    # former relative-clause marker, keeping any separate global assertion.
+    claim = _SCOPED_DENSITY_CLAUSE.sub(
+        lambda match: match.group().replace(match.group('density'), '', 1), claim,
+    )
     for match in LOCAL_SCOPE_GENERALIZATION_RE.finditer(claim):
         before = claim[max(0, match.start() - 12) : match.start()]
         after = claim[match.end() : match.end() + 56]
@@ -1428,6 +1437,11 @@ _SCOPED_FREQUENCY_CLAUSE = re.compile(
     r"(?P<scope>[가-힣A-Za-z·]+[이가]\s+(?P<frequency>자주|흔히|빈번하게)\s+"
     r"(?:나타나|등장하|반복되|사용되)는\s+(?:프레이즈|구간|부분|대목))"
     r"(?:에서는|에서)(?=\s|[,.;!?])"
+)
+
+_SCOPED_DENSITY_CLAUSE = re.compile(
+    r"[가-힣A-Za-z·]+[이가]\s+(?P<density>많은)\s*(?:프레이즈|구간|부분|대목)"
+    r"(?:에서는|에서|은|을)(?=\s|[,.;!?])"
 )
 
 
@@ -4026,6 +4040,25 @@ def finalize_grounded_generated_answer(
             RenderedAnswer(plain_parts, language), results, messages, measure_ranges, language=language,
         )
         return "Translated reference text:\n" + checked
+    if isinstance(answer, RenderedAnswer) and any(p["kind"] == "score_lyrics" for p in answer.parts):
+        # A lyric transcription has its own provenance. Requiring a KU label
+        # for these words falsely rejects a valid mixed answer, or encourages
+        # the writer to misattribute score text to an expert. The output guard
+        # has reviewed each typed part under the existing lyrics-only policy.
+        payload = json.loads(messages[1]["content"])
+        if not payload.get("Score context"):
+            raise GeneratedAnswerRejected("Score lyric text has no supplied score context")
+        lyrics = "\n".join(p["text"] for p in answer.parts if p["kind"] == "score_lyrics")
+        if _claim_has_unauthorized_measure_locator(lyrics, results, set(), measure_ranges):
+            raise GeneratedAnswerRejected("Score lyric text includes an unselected measure")
+        visible_lyrics = finalize_user_visible_answer(lyrics, results, language=language)
+        if visible_lyrics == no_corpus_evidence_message(language):
+            raise GeneratedAnswerRejected("Invalid score lyric presentation")
+        remaining = [p for p in answer.parts if p["kind"] != "score_lyrics"]
+        source = finalize_grounded_generated_answer(
+            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
+        ) if remaining else ""
+        return "\n\n".join(part for part in (source, visible_lyrics) if part)
     if isinstance(answer, RenderedAnswer) and answer.background_text:
         # Provenance comes from validated structured output, not a guessed
         # heading in model prose. Source claims retain all existing checks.
@@ -4220,10 +4253,14 @@ def _run_cli(args: argparse.Namespace) -> None:
         raw_answer = generate(
             settings["model_path"], messages, settings["llm"],
             security_context=json.loads(messages[1]["content"]),
+            finalizer=lambda draft: finalize_grounded_generated_answer(
+                draft, generation_results, messages, args.measure_ranges),
         )
-        answer = finalize_grounded_generated_answer(
-            raw_answer, generation_results, messages, args.measure_ranges,
-        )
+        answer = getattr(raw_answer, "validated_text", None)
+        if answer is None:
+            answer = finalize_grounded_generated_answer(
+                raw_answer, generation_results, messages, args.measure_ranges,
+            )
         generation_mode = getattr(raw_answer, "generation_mode", "llm")
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "general_music_knowledge")

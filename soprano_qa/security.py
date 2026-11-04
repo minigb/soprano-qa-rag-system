@@ -438,6 +438,14 @@ def select_question_evidence(
             raise ValueError("Invalid selection")
     except (TypeError, ValueError, KeyError, RecursionError):
         raise SecurityViolation("security_guard_invalid_response") from None
+    if llm_settings.get("source_preservation") == "semantic" and not assess_single:
+        # Contradicting accounts are not redundant copies of quiet-entry
+        # advice. If one is relevant, retain the other explicit account so
+        # the writer can describe the disagreement instead of hiding it.
+        from soprano_qa.source_comparison import opening_dynamics_accounts
+        accounts = opening_dynamics_accounts(payload)
+        if accounts and any(a["evidence"] in labels for a in accounts):
+            labels = list(dict.fromkeys([*labels, *(a["evidence"] for a in accounts)]))
     # Preserve original labels and record order. A filtered E3 never becomes E1.
     return {**payload, "Retrieved evidence": [r for r in primary if r["citation_label"] in labels]}
 

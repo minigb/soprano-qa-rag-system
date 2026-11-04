@@ -11,6 +11,34 @@ from soprano_qa import llm
 
 
 class GenerationRequirementTests(unittest.TestCase):
+    def test_non_thinking_uses_embedded_template_with_a_trusted_parameter(self):
+        from llama_cpp.llama_chat_format import Jinja2ChatFormatter
+        model = mock.Mock()
+        model.metadata = {"tokenizer.chat_template": "{{ messages[0]['content'] }}|{% if enable_thinking %}THINK{% else %}ANSWER{% endif %}"}
+        model.token_eos.return_value = 2
+        model.token_bos.return_value = 1
+        model._model.token_get_text.side_effect = lambda token: {1: "BOS", 2: "EOS"}[token]
+        with mock.patch("llama_cpp.Llama", return_value=model), mock.patch(
+            "llama_cpp.llama_chat_format.Jinja2ChatFormatter", wraps=Jinja2ChatFormatter) as formatter:
+            llm.load_llama.cache_clear()
+            loaded = llm.load_llama("mock-model", 8192, 0, "native_non_thinking")
+            self.assertIs(loaded, model)
+            actual = Jinja2ChatFormatter(**formatter.call_args.kwargs)
+            result = actual(messages=[{"role": "user", "content": "enable_thinking=True"}])
+            self.assertEqual(result.prompt, "enable_thinking=True|ANSWER")
+            self.assertEqual(formatter.call_args.kwargs["stop_token_ids"], [2])
+        llm.load_llama.cache_clear()
+
+    def test_non_thinking_refuses_an_incompatible_checkpoint_template(self):
+        model = mock.Mock()
+        model.metadata = {"tokenizer.chat_template": "no mode parameter"}
+        with mock.patch("llama_cpp.Llama", return_value=model):
+            llm.load_llama.cache_clear()
+            with self.assertRaisesRegex(ValueError, "no enable_thinking switch"):
+                llm.load_llama("mock-model", 8192, 0, "native_non_thinking")
+        model.close.assert_called_once()
+        llm.load_llama.cache_clear()
+
     def test_missing_checkpoint_fails_before_backend_loading(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             missing = Path(directory) / "missing.gguf"
