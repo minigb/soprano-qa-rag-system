@@ -12,6 +12,56 @@ from tests.test_security_integration import completion, evidence
 
 
 class SemanticSynthesisTests(unittest.TestCase):
+    def test_general_fallback_policy_reaches_the_actual_writer_after_routing(self):
+        self.prepare()
+        messages = answer.build_messages('die-forelle', '', '편하게 호흡하려면 어떻게 연습하나요?', [])
+        payload = json.loads(messages[1]['content'])
+        model = Mock()
+        model.create_chat_completion.side_effect = [completion('{"task":"music_question"}'),
+            completion(json.dumps({'sentences': [{'kind': 'background', 'evidence': [],
+                'text': '편안한 음역에서 짧게 노래하며 호흡이 고르게 이어지는지 살펴볼 수 있습니다.'}]})),
+            completion('{"allow":true}')]
+        with patch.object(llm, 'load_llama', return_value=model):
+            result = llm.generate('fake', messages, self.settings, security_context=payload,
+                                  general_answer_fallback=True)
+        self.assertIn('호흡이 고르게', result)
+        actual_prompt = model.create_chat_completion.call_args_list[1].kwargs['messages'][0]['content']
+        self.assertIn('Do not stop at saying information is missing', actual_prompt)
+        self.assertIn('Do not invent a local score fact', actual_prompt)
+
+    def test_quality_denial_can_return_safety_checked_prose_after_one_rewrite(self):
+        self.prepare()
+        prose = "반주가 없는 구간에서는 자신의 음정을 주의 깊게 듣는 것이 좋습니다."
+        draft = completion(json.dumps({"sentences": [{"kind": "evidence", "evidence": ["E1"], "text": prose}]}))
+        model = Mock()
+        model.create_chat_completion.side_effect = [completion('{"task":"music_question"}'),
+            draft, completion('{"allow":false}'), draft, completion('{"allow":false}'),
+            completion('{"allow":true}')]
+        relaxed = Mock(return_value=prose + " 일부 세부 내용은 추가 확인이 필요합니다.")
+        with patch.object(llm, "load_llama", return_value=model):
+            result = llm.generate("fake", self.messages, self.settings, security_context=self.payload,
+                                  warning_finalizer=relaxed)
+        self.assertEqual(result.generation_mode, "llm_with_warning")
+        self.assertEqual(result.generation_validation_warning, "output_quality_review")
+        self.assertIn(prose, result.validated_text)
+        self.assertEqual(model.create_chat_completion.call_count, 6)
+        self.assertIn("Review ONLY", model.create_chat_completion.call_args.kwargs['messages'][0]['content'])
+
+    def test_repeated_scope_failure_keeps_safe_answer_and_warning(self):
+        self.prepare()
+        prose = "조건에 따라 반주의 흐름에 맞춰 마지막 음을 마무리합니다."
+        draft = completion(json.dumps({"sentences": [{"kind": "evidence", "evidence": ["E1"], "text": prose}]}))
+        model = Mock()
+        model.create_chat_completion.side_effect = [completion('{"task":"music_question"}'),
+            draft, completion('{"allow":true}'), draft, completion('{"allow":true}'), completion('{"allow":true}')]
+        finalizer = Mock(side_effect=answer.GeneratedAnswerRejected("Generated answer overgeneralizes local evidence"))
+        with patch.object(llm, "load_llama", return_value=model):
+            result = llm.generate("fake", self.messages, self.settings, security_context=self.payload,
+                                  finalizer=finalizer, warning_finalizer=lambda draft: prose + " 일부 세부 내용은 추가 확인이 필요합니다.")
+        self.assertEqual(finalizer.call_count, 2)
+        self.assertEqual(result.generation_validation_warning, "answer_validation_warning")
+        self.assertIn(prose, result.validated_text)
+
     def test_native_reasoning_is_writer_only_and_prefilled_thoughts_stay_private(self):
         self.prepare()
         self.settings = {**self.settings, "chat_format": "native_controlled", "synthesis_reasoning": True}

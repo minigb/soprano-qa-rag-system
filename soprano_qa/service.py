@@ -46,6 +46,7 @@ from soprano_qa.score_context import (
     selected_measure_lyrics,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
 from soprano_qa.security import SecurityViolation, screen_question, screen_text
 from soprano_qa.translation import (
     translate_question_to_korean,
@@ -351,11 +352,10 @@ def _ask(
                 piece_id, measures, question, [],
                 score_context=score_block if use_score_context else "", language=language,
             )
-        raw_answer = generate_llm(
-            SETTINGS["model_path"], messages, SETTINGS["llm"],
-            security_context=json.loads(messages[1]["content"]),
-            finalizer=lambda draft: finalize_grounded_generated_answer(
-                draft, generation_results, messages, measure_ranges, language=language),
+        raw_answer = compose_music_answer(
+            SETTINGS["model_path"], messages, SETTINGS["llm"], generation_results, measure_ranges,
+            language=language, generate_fn=generate_llm,
+            finalizer_fn=finalize_grounded_generated_answer,
         )
         answer = getattr(raw_answer, "validated_text", None)
         if answer is None:
@@ -363,6 +363,7 @@ def _ask(
                 raw_answer, generation_results, messages, measure_ranges, language=language,
             )
         generation_mode = getattr(raw_answer, "generation_mode", "llm")
+        generation_validation_warning = getattr(raw_answer, "generation_validation_warning", None)
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "score_context")
 
@@ -459,14 +460,7 @@ def ask(
     top_k: int = 6,
     language: str = "ko",
 ) -> dict:
-    """Answer only supported music questions, withholding rejected drafts.
-
-    Known control attacks are rejected before model loading, translation or
-    retrieval. Generated answers pass scope/answerability and semantic support
-    checks in the local backend plus deterministic citation/scope validation.
-    Guard errors and rejected drafts return a fixed refusal with no evidence
-    payload. Backend installation errors still propagate.
-    """
+    """Provide useful music prose, quality warnings, or service-scope guidance."""
     validate_language(language)
     try:
         screen_question(question)
@@ -481,7 +475,22 @@ def ask(
             if isinstance(exc, SecurityViolation)
             else "answer_validation_failed"
         )
-        return {
+        recovered = None
+        if generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
+            # Unsafe source material must not deprive a legitimate music
+            # question of a general explanation. Re-check the original task
+            # with no source/translation text in the fallback prompt.
+            ranges = [list(measure_range)] if measure_range else []
+            messages = build_messages(piece_id, format_measure_range(ranges) if ranges else '',
+                                      question, [], language=language)
+            try:
+                recovered = compose_music_answer(SETTINGS['model_path'], messages, SETTINGS['llm'], [], ranges,
+                    language=language, generate_fn=generate_llm)
+            except (SecurityViolation, GeneratedAnswerRejected) as fallback_error:
+                if isinstance(fallback_error, SecurityViolation):
+                    reason = fallback_error.reason
+        domain = is_scope_rejection(reason)
+        response = {
             "piece_id": piece_id,
             "scope": "range" if measure_range else "whole_piece",
             "measure_range": list(measure_range) if measure_range else None,
@@ -489,9 +498,9 @@ def ask(
             "answer_language": language,
             "evidence_language": "ko",
             "retrieval_query": None,
-            "answer": no_corpus_evidence_message(language),
-            "generation_mode": "unavailable",
-            "answer_basis": "no_corpus_evidence",
+            "answer": domain_guidance(language) if domain else failure_guidance(language),
+            "generation_mode": "domain_guidance" if domain else "response_error",
+            "answer_basis": "service_scope" if domain else "service_status",
             "unavailable_reason": reason,
             "generation_validation_warning": None,
             "score_context": None,
@@ -504,3 +513,8 @@ def ask(
             "evidence": [],
             "evidence_notices": [],
         }
+        if recovered is not None:
+            response.update(answer=str(recovered), generation_mode='llm_general_fallback',
+                answer_basis='general_music_knowledge', unavailable_reason=None,
+                generation_validation_warning='unsafe_source_excluded')
+        return response

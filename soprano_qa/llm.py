@@ -164,6 +164,8 @@ def generate(
     security_context: Dict[str, Any] | None = None,
     response_schema: Dict[str, Any] | None = None,
     finalizer: Callable[[str], str] | None = None,
+    warning_finalizer: Callable[[str], str] | None = None,
+    general_answer_fallback: bool = False,
 ) -> str:
     # Public answer paths supply the frozen question/evidence bundle. Guard
     # calls omit this argument, so they cannot recursively invoke themselves.
@@ -262,6 +264,9 @@ def generate(
                 view = {"question": security_context["question"],
                         "answer_language": security_context.get("answer_language", "ko")}
                 messages[1] = {"role": "user", "content": serialize_untrusted(view)}
+            if general_answer_fallback:
+                from soprano_qa.response_policy import GENERAL_FALLBACK_INSTRUCTIONS
+                general_policy += "\n" + GENERAL_FALLBACK_INSTRUCTIONS
             messages = [{"role": "system", "content": general_policy + "\n" + SECURITY_SYSTEM_POLICY},
                         *messages[1:]]
         # Citation IDs are selected by the model in constrained data, then
@@ -369,6 +374,23 @@ def generate(
             if finalizer is not None:
                 answer.validated_text = finalizer(answer)
         except (SecurityViolation, GenerationFinalizationRejected) as exc:
+            if attempt and warning_finalizer is not None and (
+                isinstance(exc, GenerationFinalizationRejected)
+                or isinstance(exc, SecurityViolation) and exc.reason == "security_output_rejected"
+            ):
+                # Quality review can request a rewrite, but cannot erase the
+                # last usable answer. Release it only after a distinct safety
+                # check, then apply presentation sanitization and a visible warning.
+                from soprano_qa.security import instruction_guard
+                instruction_guard(model_path, llm_settings,
+                    {**security_context, "draft": str(answer)}, generate_fn=generate)
+                answer.validated_text = warning_finalizer(answer)
+                answer.generation_mode = "llm_with_warning"
+                answer.generation_validation_warning = (
+                    "output_quality_review" if isinstance(exc, SecurityViolation)
+                    else "answer_validation_warning"
+                )
+                return answer
             if attempt or (isinstance(exc, SecurityViolation)
                            and exc.reason != "security_output_rejected"):
                 raise
@@ -401,6 +423,30 @@ def generate(
                     completion_options["response_format"] = {
                         "type": "json_object", "schema": answer_schema(security_context),
                     }
+            if (warning_finalizer is not None and synthesize_sources and not general_only
+                    and isinstance(exc, SecurityViolation)):
+                # Repeating the full initial prompt can reproduce the same
+                # unhelpful summary. Keep the same evidence and trust boundary,
+                # but give the single revision a direct writing task.
+                revision_policy = """질문에 바로 답하는 성악 도우미의 답변을 새로 작성합니다.
+자료의 핵심 권고를 자신의 문장으로 연결합니다. 조건, 부정, 선택지, 주체,
+적용 범위, 불확실성을 그대로 유지합니다. 서로 다른 자료가 충돌하면 구분합니다.
+질문이 방법을 묻는데 자료가 방향만 말한다면, 그 방향을 실제로 연습할 수 있는
+구체적인 일반 연습 방법도 제안합니다. 그 방법을 전문가의 말이나 이 곡의
+확정된 사실로 쓰지 않습니다. 모르는 악보 표기, 마디 사실, 작곡 의도를 꾸미지 않습니다.
+자료의 문장을 옮겨 적거나 같은 뜻을 반복하는 것으로 답변을 끝내지 않습니다.
+짧고 자연스럽게 설명하되 질문에 답하는 핵심 조건과 세부 내용은 남깁니다.
+자료가 이미 구체적인 답을 주면 그 답을 설명하는 것으로 충분합니다.
+질문에 필요하지 않은 일반론이나 원문과 다른 지침을 덧붙이지 않습니다.
+자료에 근거한 설명은 kind=evidence와 실제 라벨을 사용합니다.
+일반 지식이나 연습 제안은 별도의 kind=background, evidence=[] 항목으로 씁니다.
+출력은 {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"자료에 근거한 답변"},
+{"kind":"background","evidence":[],"text":"필요할 때 보충하는 일반적인 설명"}]} 형식입니다.
+필요한 항목만 사용하고 내부 라벨이나 형식 설명을 본문에 쓰지 않습니다.
+"""
+                revision_policy += ("한국어 합니다체로 답합니다.\n" if security_context.get('answer_language', 'ko') == 'ko'
+                                    else "Write all answer text in natural English.\n")
+                messages[0] = {'role': 'system', 'content': revision_policy + SECURITY_SYSTEM_POLICY}
             messages = [
                 {**messages[0], "content": messages[0]["content"] + "\n"
                  "The previous composition did not pass review. Compose a new answer "
@@ -431,6 +477,31 @@ def generate(
                     "Do not print internal labels or metadata in prose. Use 마디 for score measures."
                 )
                 messages[0]["content"] += "\n" + detail
+            if warning_finalizer is not None:
+                messages[0]["content"] += """
+Write the revised answer as a short, connected explanation in your own words.
+Use about 2-4 sentences, adding more only to preserve a necessary condition or
+alternative. Merge overlapping recommendations and explain each point once.
+Do not concatenate or lightly edit entire source paragraphs. Avoid restating
+the same advice as both a recommendation and its explanation. Preserve the
+sources' uncertainty and contrast between situations while making this concise.
+Keep the detail that directly answers the question, such as a duration's endpoint
+or a condition for using a technique, even when shortening the explanation.
+한국어에서는 같은 조언을 반복하지 말고, 질문에 바로 답하는 짧은 합니다체 설명으로 연결합니다.
+"""
+                if isinstance(exc, SecurityViolation):
+                    messages[0]["content"] += """
+For a 'how' question, merely repeating that one should use a technique is not
+enough. Add a concrete, optional practice step from general music knowledge in
+a background item when the source gives only a broad recommendation. Clearly
+introduce that step as a general practice suggestion, not as the expert's advice
+or as a fact about the piece. Do not invent an exact score detail, an expert
+quotation, or a specific composer's intention.
+방법을 묻는 질문인데 자료에는 구체적인 실행 방법 없이 방향만 제시되어 있다면,
+자료의 권고를 한 문장으로 설명한 뒤 일반적으로 해 볼 수 있는 연습 방법을
+kind=background, evidence=[]인 별도 항목에 한두 문장으로 제안합니다.
+방향만 되풀이하고 끝내지 말고, 무엇을 해 보면 되는지 설명합니다.
+"""
             continue
         return answer
     raise AssertionError("Composition loop ended without a verdict")

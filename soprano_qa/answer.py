@@ -4250,11 +4250,11 @@ def _run_cli(args: argparse.Namespace) -> None:
         generation_results = results if grounded else []
         if not grounded:
             messages = build_messages(args.piece, args.measures, args.question, [])
-        raw_answer = generate(
-            settings["model_path"], messages, settings["llm"],
-            security_context=json.loads(messages[1]["content"]),
-            finalizer=lambda draft: finalize_grounded_generated_answer(
-                draft, generation_results, messages, args.measure_ranges),
+        from soprano_qa.response_policy import compose_music_answer
+        raw_answer = compose_music_answer(
+            settings["model_path"], messages, settings["llm"], generation_results, args.measure_ranges,
+            language="ko", generate_fn=generate,
+            finalizer_fn=finalize_grounded_generated_answer,
         )
         answer = getattr(raw_answer, "validated_text", None)
         if answer is None:
@@ -4262,6 +4262,7 @@ def _run_cli(args: argparse.Namespace) -> None:
                 raw_answer, generation_results, messages, args.measure_ranges,
             )
         generation_mode = getattr(raw_answer, "generation_mode", "llm")
+        generation_validation_warning = getattr(raw_answer, "generation_validation_warning", None)
         answer_basis = getattr(raw_answer, "answer_basis",
                                "retrieved_evidence" if grounded else "general_music_knowledge")
 
@@ -4383,13 +4384,26 @@ def main() -> None:
             if isinstance(exc, SecurityViolation)
             else "answer_validation_failed"
         )
+        from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
+        recovered = None
+        if not args.no_generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
+            settings = load_settings()
+            messages = build_messages(args.piece, args.measures, args.question, [])
+            try:
+                recovered = compose_music_answer(settings['model_path'], messages, settings['llm'], [], args.measure_ranges,
+                    language='ko', generate_fn=generate)
+            except (SecurityViolation, GeneratedAnswerRejected) as fallback_error:
+                if isinstance(fallback_error, SecurityViolation):
+                    reason = fallback_error.reason
+        domain = is_scope_rejection(reason)
+        guidance = str(recovered) if recovered is not None else domain_guidance("ko") if domain else failure_guidance("ko")
         if args.json:
             print(json.dumps({
-                "answer": NO_CORPUS_EVIDENCE_MESSAGE,
-                "generation_mode": "unavailable",
-                "answer_basis": "no_corpus_evidence",
-                "unavailable_reason": reason,
-                "generation_validation_warning": None,
+                "answer": guidance,
+                "generation_mode": "llm_general_fallback" if recovered is not None else "domain_guidance" if domain else "response_error",
+                "answer_basis": "general_music_knowledge" if recovered is not None else "service_scope" if domain else "service_status",
+                "unavailable_reason": None if recovered is not None else reason,
+                "generation_validation_warning": "unsafe_source_excluded" if recovered is not None else None,
                 "results": [],
                 "evidence_notices": [],
                 "retrieval": {},
@@ -4397,7 +4411,7 @@ def main() -> None:
                 "has_selected_range_grounding": False if args.measure_ranges else None,
             }, ensure_ascii=False, indent=2))
         else:
-            print(NO_CORPUS_EVIDENCE_MESSAGE)
+            print(guidance)
 
 
 if __name__ == "__main__":

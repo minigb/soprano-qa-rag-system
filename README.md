@@ -7,8 +7,21 @@ assess task safety before composition and support for the draft before release.
 Answers may include clearly marked general music explanations. These cannot
 establish unknown score facts or borrow a knowledge unit's attribution.
 Admission does not reject a music question solely because its evidence is
-partial or conflicting. Rejected answers are withheld. Retrieval confidence changes
-which evidence is supplied without selecting a different answer renderer.
+partial or conflicting. A quality-check failure gets one rewrite; if it still
+fails, a separate instruction-safety check can release the generated prose with
+a visible qualification. An empty or unusable answer gets one attempt using
+general music knowledge, without inventing facts about the selected score.
+Unrelated tasks receive an explanation of the music assistant's scope. Exhausted
+safety/backend failures remain explicit service errors. Retrieval confidence
+changes which evidence is supplied without substituting source text for an answer.
+
+This implementation is on `codex/helpful-rag-responses`, in
+`/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
+The pre-injection original remains in the `rag-pre-injection` worktree. The
+generator remains Qwen3-14B-Q6_K; source rendering is configured as `semantic`.
+`soprano_qa/response_policy.py` contains the shared response policy used by the
+library and CLI. `soprano_qa/llm.py` controls the single quality rewrite and the
+separate safety check. This checkout does not update the old Lab backend.
 
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
 sibling dataset repository and is consumed by the sibling demo application.
@@ -157,8 +170,9 @@ A completed answer uses admission assessment, composition, and output review;
 a multi-source bundle may add a relevance-selection call. The optional
 `llm.evidence_translation="segmented"` mode adds a separate source-translation
 call for English source claims. A valid negative output review permits one
-composition retry, which must pass all checks again. Early rejections use fewer
-calls; an explicit empty composition skips output review. Report measured
+composition retry. A remaining quality failure gets a separate instruction-safety
+review before release with a warning; unusable prose may invoke a bounded general
+knowledge fallback. Early domain denials use fewer calls. Report measured
 end-to-end latency rather than assuming a fixed number of model calls.
 
 `ask()` returns a `dict`. The fields to branch on:
@@ -168,18 +182,17 @@ end-to-end latency rather than assuming a fixed number of model calls.
 | `answer` | User-visible prose, already sanitized (Korean, or English for a generated `language="en"` answer) |
 | `language` / `answer_language` | Requested language / language of `answer` |
 | `retrieval_query` | The text used for retrieval, or `null` on a security/answer-validation rejection |
-| `generation_mode` | `llm` / `retrieval_only` / `unavailable` |
-| `answer_basis` | `retrieved_evidence` / `retrieved_secondary_context` / `score_context` / `no_corpus_evidence` |
-| `unavailable_reason` | Machine-readable reason for an unavailable answer, including security or validation rejection |
-| `generation_validation_warning` | Compatibility field; `null`. Rejected drafts are withheld rather than returned with warnings |
+| `generation_mode` | `llm`, `llm_with_warning`, `llm_general_fallback`, `domain_guidance`, `response_error`; `retrieval_only` / `unavailable` for the extractive path |
+| `answer_basis` | Retrieved evidence, score context, general music knowledge (possibly combined), or `service_scope` / `service_status` |
+| `unavailable_reason` | Machine-readable reason for domain guidance, service errors or unavailable extractive results; `null` for a delivered music answer |
+| `generation_validation_warning` | `null`, `output_quality_review`, `answer_validation_warning`, `general_knowledge_fallback`, or `unsafe_source_excluded` |
 
-`generation_mode: "llm"` identifies a released generated answer;
-`answer_basis` distinguishes retrieved evidence from the limited score-context
-case described below. `unavailable` means no answer was released. A security
-or answer-validation rejection returns the fixed no-evidence message, a generic
-reason code, and empty evidence; it does not expose the rejected draft. Other
-fields provide audit metadata, including the ordered `evidence` bundle with
-ranges and provenance. Record IDs and evidence labels are not for display.
+`llm_with_warning` contains generated prose followed by a visible qualification.
+`llm_general_fallback` contains general music guidance rather than a claim about
+unknown score details. `domain_guidance` explains the assistant's musical scope;
+`response_error` reports an exhausted response failure without calling it missing
+evidence. The `evidence` bundle retains actual retrieval provenance; it is not a
+replacement answer. Record IDs and evidence labels are not for display.
 
 `model_status()` and `corpus_stats()` report checkpoint and corpus state.
 `corpus_stats()` initializes the retrieval index, so prefer it at startup.
@@ -187,8 +200,9 @@ ranges and provenance. Record IDs and evidence labels are not for display.
 `GenerationBackendUnavailable`, `DenseRetrievalUnavailable`, and invalid-argument
 `ValueError` exceptions still propagate; the first two indicate a misconfigured
 installation. `ask()` converts security violations and `GeneratedAnswerRejected`
-into an unavailable result. Guard inference errors and invalid guard responses
-also fail closed without releasing the draft.
+into useful fallback answers, scope guidance, or explicit service errors. Unsafe
+text is never released merely because quality warnings are allowed; fallback
+generation still passes admission and output checks.
 
 Each local-model completion holds a process-wide lock, so inference is
 serialized within a process. The two guard completions increase generation
@@ -292,8 +306,11 @@ assesses the rendered prose against the supplied evidence.
 The guards accept only a strict JSON boolean approval. A valid negative output
 verdict permits one fresh composition under the same rules, followed by another
 full check. Admission denials, malformed verdicts, text-screen failures and
-backend failures do not trigger this retry. Persistently rejected drafts and
-failed guards produce `unavailable` / `no_corpus_evidence`.
+backend failures do not trigger this composition retry. After a second quality
+failure, the independent instruction/domain check may release sanitized prose
+with a warning. Empty or unusable music prose gets one general-knowledge attempt.
+Exhausted safety failures return explicit service-error guidance; unrelated
+requests receive a scope explanation.
 
 Each item has a kind: `evidence`, `background`, or (when available) `score_lyrics`.
 Only evidence items use supplied primary labels. General explanations use an

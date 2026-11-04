@@ -492,7 +492,7 @@ class EnglishServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value="송어에 대해 알려 주세요.",
+                side_effect=lambda *a, **k: "A song can portray a scene through phrasing and changes in dynamics." if "security_context" in k else "송어에 대해 알려 주세요.",
             ) as generate,
         ):
             for generate_flag in (True, False):
@@ -506,12 +506,12 @@ class EnglishServiceTests(unittest.TestCase):
                     )
                     self.assertEqual(
                         result["answer"],
-                        NO_CORPUS_EVIDENCE_MESSAGE_EN,
+                        "A song can portray a scene through phrasing and changes in dynamics." if generate_flag else NO_CORPUS_EVIDENCE_MESSAGE_EN,
                     )
                     self.assertEqual(result["answer_language"], "en")
                     self.assertEqual(
                         result["answer_basis"],
-                        "no_corpus_evidence",
+                        "general_music_knowledge" if generate_flag else "no_corpus_evidence",
                     )
         # One translation per request, plus a general-answer attempt for generation.
         self.assertEqual(generate.call_count, 3)
