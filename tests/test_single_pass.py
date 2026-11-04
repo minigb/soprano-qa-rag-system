@@ -4,6 +4,7 @@ import copy
 import io
 import json
 import unittest
+from pathlib import Path
 from unittest import mock
 
 from soprano_qa import answer, llm, security, service, single_pass
@@ -39,10 +40,13 @@ class SinglePassTests(unittest.TestCase):
         return service.ask(**{'piece_id': 'die-forelle', 'question': '어떻게 연습하나요?',
                               'measure_range': None, 'generate': True, **kwargs})
 
-    def test_shipped_configuration_uses_single_pass_and_14b(self):
-        settings = load_settings()
+    def test_candidate_configuration_uses_single_pass_and_14b(self):
+        settings = load_settings(str(Path(__file__).resolve().parents[1] / 'config/settings.single-pass.json'))
         self.assertTrue(single_pass.enabled(settings['llm']))
         self.assertIn('Qwen3-14B-Q6_K', settings['model_path'])
+
+    def test_validated_default_is_preserved_after_quality_regression(self):
+        self.assertFalse(single_pass.enabled(load_settings()['llm']))
 
     def test_all_retrieved_passages_reach_one_writer_without_reviewer(self):
         second = copy.deepcopy(self.results[0])
@@ -116,7 +120,7 @@ class SinglePassTests(unittest.TestCase):
         self.assertEqual(result['answer'], 'Try a short phrase while keeping your breath steady.')
 
     def test_cli_also_writes_once_without_the_content_finalizer(self):
-        settings = load_settings()
+        settings = load_settings(str(Path(__file__).resolve().parents[1] / 'config/settings.single-pass.json'))
         output = io.StringIO()
         with (
             mock.patch('sys.argv', ['ask.py', '--piece', 'die-forelle', '--question', '호흡을 어떻게 이어가나요?', '--json']),

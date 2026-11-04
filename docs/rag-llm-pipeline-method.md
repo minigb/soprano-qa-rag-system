@@ -1,8 +1,9 @@
 # RAG+LLM pipeline
 
-## Current default: single-pass generation (2026-11-04)
+## Experimental single-pass generation (2026-11-04)
 
-On `codex/helpful-rag-responses`, `llm.pipeline="single_pass"` now selects the
+On `codex/helpful-rag-responses`, the opt-in `config/settings.single-pass.json`
+sets `llm.pipeline="single_pass"` and selects the
 existing hybrid retriever followed by one Qwen3-14B writing call. English adds
 one Korean query-translation call. There is no model-based admission, KU
 reselection, output assessment, quality retry, or source-text replacement.
@@ -36,7 +37,9 @@ quality filter runs; only existing private-reasoning tag removal remains. Develo
 regression evaluation occurs separately and does not delay user requests.
 
 The old reviewed path is retained explicitly for historical comparisons. The
-following sections describe that older implementation, not the default above.
+following sections describe that older implementation. The tested default
+configuration is retained because the single-pass candidate has meaning regressions;
+see `evaluation/single_pass_2026-11-04/report.md`.
 
 ## Historical reviewed pipeline (E25/E37)
 

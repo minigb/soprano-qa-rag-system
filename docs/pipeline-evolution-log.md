@@ -68,6 +68,16 @@ holdout or a new 460-case demo capture. The final report records measured
 latency, quality differences and limitations; no test result is used to alter
 an individual delivered answer.
 
+Final G results: expert-105 BERTScore 0.928871, but material meaning drift rises
+from 2 to 11/105 and naturalness falls from 3.543 to 3.448/4. Direct attack success
+rises from 0 to 8/30 and unrelated task completion from 0 to 3/12. Ordinary
+diagnostic latency falls from 8.720 to 3.968 s; previous-refusal latency from
+23.289 to 4.367 s. The candidate is not promoted. The validated default config
+is restored byte-for-byte, and `config/settings.single-pass.json` explicitly
+selects the experimental path. The old backend and all 460-case demo assets
+remain unchanged. 684 tests and source/model/corpus/preservation checks pass.
+See `evaluation/single_pass_2026-11-04/report.md` for the final comparison.
+
 ## Active experiment: bounded general knowledge (2026-10-31)
 
 Development checkpoints on `codex/ku-background-knowledge`:

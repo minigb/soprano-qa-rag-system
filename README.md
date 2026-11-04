@@ -1,7 +1,7 @@
 # Soprano QA RAG System
 
 Local, measure-aware hybrid retrieval and answer generation for five soprano
-works. The default `llm.pipeline="single_pass"` uses the existing BM25 + embedding
+works. The experimental `llm.pipeline="single_pass"` uses the existing BM25 + embedding
 retriever, then one Qwen3-14B completion. There is no model-based input admission,
 KU reselection, output review, quality rewrite, or source-text substitution.
 The generation prompt handles service scope and untrusted instructions, asks for
@@ -12,7 +12,7 @@ This prompt is guidance, not a guarantee that every answer is correct or attack-
 Implementation: `codex/helpful-rag-responses`, in
 `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
 The pre-injection original remains in the `rag-pre-injection` worktree. The
-model remains Qwen3-14B-Q6_K. The current prompt and one-call writer are in
+model remains Qwen3-14B-Q6_K. The candidate prompt and one-call writer are in
 [`soprano_qa/single_pass.py`](soprano_qa/single_pass.py); the library and CLI
 both enter through `response_policy.compose_music_answer`. The historical
 reviewed path remains available with `llm.pipeline="reviewed"` for comparison.
@@ -31,6 +31,18 @@ It is a Python library with a CLI, not a deployable service: HTTP transport,
 process management, and authentication are the caller's responsibility.
 Answer inference runs locally, and two GGUF checkpoints totalling about 12.8 GB must
 be on disk before a grounded request can be served.
+
+The validated default configuration is preserved. The single-pass candidate
+is opt-in through `config/settings.single-pass.json`: its speed improved, but
+expert meaning errors increased in offline regression checks. The following
+single-pass behavior describes that candidate, not a replacement of the tested
+reviewed default. See [the timing and quality report](evaluation/single_pass_2026-11-04/report.md).
+
+To try the candidate with the CLI, add
+`--settings config/settings.single-pass.json`. For the Python API, set
+`SOPRANO_QA_SETTINGS` to that file's absolute path **before** importing the service.
+The previous default and its evaluations are documented in
+[evaluation/helpful_responses_2026-11-04/README.md](evaluation/helpful_responses_2026-11-04/README.md).
 
 ## Setup
 
@@ -169,7 +181,7 @@ English. The extractive `generate=False` path still returns the Korean
 evidence text (`answer_language: "ko"`). English adds a query-translation call.
 Korean generation makes one writing call; English adds one query translation,
 then one writing call. Both use the same 14B checkpoint. No source-translation
-catalog or separate relevance/quality model runs in the default path.
+catalog or separate relevance/quality model runs in the candidate path.
 
 `ask()` returns a `dict`. The fields to branch on:
 
@@ -181,7 +193,7 @@ catalog or separate relevance/quality model runs in the default path.
 | `generation_mode` | `llm_single_pass`, `response_error`; `retrieval_only` / `unavailable` for the extractive path. The historical reviewed path has additional modes |
 | `answer_basis` | Retrieved evidence, score context, general music knowledge (possibly combined), or `service_scope` / `service_status` |
 | `unavailable_reason` | Machine-readable reason for domain guidance, service errors or unavailable extractive results; `null` for a delivered music answer |
-| `generation_validation_warning` | `null` or `unsafe_source_excluded` in the default path; legacy quality-warning values only in the historical reviewed path |
+| `generation_validation_warning` | `null` or `unsafe_source_excluded` in the candidate path; legacy quality-warning values only in the historical reviewed path |
 
 `llm_single_pass` identifies generated text, not a quality or scope verdict.
 `answer_basis` describes the supplied context; it does not verify each generated
@@ -308,7 +320,7 @@ The previous reviewed implementations and their limitations are recorded in
 [evaluation/helpful_responses_2026-11-04/README.md](evaluation/helpful_responses_2026-11-04/README.md)
 and the frozen E37 experiments. Their multi-call checks, structured citation
 rendering, original-text substitution and translation catalog do not describe
-the new default's unreviewed delivery. The single-pass writer uses the preserved
+the single-pass candidate's unreviewed delivery. The single-pass writer uses the preserved
 initial writing instructions in `soprano_qa/single_pass_prompt.py`, with no
 constrained JSON draft or historical source renderer. Development evaluation is separate from serving: fixed-setting
 BERTScore and offline Claude checks never block or replace a user's answer.
