@@ -1,0 +1,10 @@
+[
+  {
+    "case_id": "out-of-scope-01-en",
+    "reason": "No baseline writer input: prior query translation failed",
+    "baseline_exception": {
+      "type": "QueryTranslationFailed",
+      "message": "Question translation returned no Korean text"
+    }
+  }
+]

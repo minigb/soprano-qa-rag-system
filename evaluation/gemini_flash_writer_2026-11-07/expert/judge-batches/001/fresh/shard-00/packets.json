@@ -1,0 +1,481 @@
+[
+  {
+    "id": "cab9c95764b3dca298fd",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "힘들거나 숨이 부족한 프레이즈 그 자체에서 원인을 찾기보다는, 그 직전 프레이즈에서 불필요하게 많은 에너지를 쓰지 않았는지 먼저 확인해야 합니다. \n\n고음이나 도약음에서 힘을 너무 주거나 숨을 지나치게 많이 사용하면 그 순간에는 소리를 낼 수 있어도 이후 프레이즈에 필요한 호흡이 소진되어 숨이 모자라거나 제대로 쉴 수 없게 됩니다. 따라서 고음이나 음의 끝을 힘주어 끊지 말고 부드럽고 자연스럽게 풀어주며, 음표 사이에 있는 쉼표를 충분히 활용하여 다음 프레이즈를 위한 호흡을 준비해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-040-ku-01",
+        "text": "고음이나 도약음에서 지나치게 숨을 많이 사용하면 그 순간에는 음을 낼 수 있더라도 이후 프레이즈에 필요한 호흡을 소진하게 되죠. 따라서 문제의 원인이 힘들거나 숨이 부족한 프레이즈 그 자체에 있다고 보기보다는 그 직전 프레이즈에서 불필요하게 많은 에너지를 사용하고 있지는 않은지를 먼저 확인해야 합니다.\n\n예를 들어 직전 프레이즈의 첫음인 2분음표의 끝을 힘주어 끊기보다는 자연스럽게 풀어주고, 이어서는 3박자의 4분쉼표를 충분히 활용하여 다음 프레이즈를 위한 호흡을 준비하는 것이 맞습니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ba7bda9e43460c0a8c70",
+    "question": "소리가 자꾸 끊기는 부분은 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      95,
+      96
+    ],
+    "language": "ko",
+    "answer": "해당 구간처럼 꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있습니다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습을 적용해 볼 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 95,
+          "voice": "sung",
+          "lyric_lines": [
+            "men- -tre il"
+          ]
+        },
+        {
+          "measure": 96,
+          "voice": "sung",
+          "lyric_lines": [
+            "cor vi-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-010",
+        "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            29,
+            30
+          ],
+          [
+            95,
+            96
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              29,
+              30
+            ],
+            [
+              95,
+              96
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "064402eb3d39ab17c7c7",
+    "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              14
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              88,
+              88
+            ],
+            [
+              95,
+              95
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c73f5702980253af7a14",
+    "question": "유튜브 영상에서 guidar 뒤에 portamento로 ma를 내는 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      67,
+      67
+    ],
+    "language": "ko",
+    "answer": "67마디에서 guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식은 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화하기 때문입니다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dar. Ma se mi",
+            "spurn; But if you"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-019",
+        "text": "유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            67
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.\n유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-018"
+        },
+        {
+          "reference_id": "R002",
+          "text": "유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              67
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "60cf7ba9aa5b34e31987",
+    "question": "이 곡을 이중창이나 삼중창으로 부르려면 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이미 이중창이나 삼중창으로 편곡된 악보가 있는지 먼저 확인하고, 있다면 그 악보를 사용하는 것이 좋습니다.\n\n독창 악보를 그대로 나누어 불러야 한다면 각 사람이 한 부분씩 돌아가며 독창을 한 뒤 후반부에서 함께 같은 멜로디를 부르거나, 3도나 5도 화음을 얹어서 노래하는 방법을 선택할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-011",
+        "text": "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5b3605e6947f2cb90e6e",
+    "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 대중적인 곡이나 가벼운 곡의 특성을 고려할 때, 마지막 음을 악보의 길이대로 기계적으로 끊지 않고 반주가 끝날 때까지 소리를 지속하여 곡을 마무리하는 느낌을 만들기도 합니다. 반주의 흐름과 함께 호흡하며 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 끝내는 방식도 가능합니다. \n\n따라서 음을 무조건 길게 끄는 것 자체가 중요하다기보다는, 마지막 음이 반주와 함께 자연스럽게 사라지면서 곡의 정서가 완결되도록 표현하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

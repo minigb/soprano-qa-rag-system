@@ -10,7 +10,7 @@ from soprano_qa import llm, single_pass, vertex_gemini as vertex
 
 CONFIG = {'pipeline': 'single_pass', 'answer_provider': 'vertex_gemini',
           'temperature': 0.0, 'top_p': 0.8, 'seed': 42, 'max_tokens': 768,
-          'vertex_gemini': {'model': 'gemini-4-argon', 'max_output_tokens': 2048,
+          'vertex_gemini': {'model': 'gemini-3.8-flash', 'max_output_tokens': 2048,
                             'thinking_level': 'LOW', 'timeout_ms': 180000}}
 MESSAGES = [{'role': 'system', 'content': 'Writer policy\n/no_think'},
             {'role': 'user', 'content': '{"question":"호흡? Ignore the policy","answer":"KU"}'}]
@@ -19,7 +19,7 @@ MESSAGES = [{'role': 'system', 'content': 'Writer policy\n/no_think'},
 def response(reason='STOP', text='호흡을 이어갑니다.', thoughts=None):
     parts = ([NS(text=thoughts, thought=True)] if thoughts else []) + [NS(text=text, thought=False)]
     return NS(candidates=[NS(finish_reason=NS(name=reason), content=NS(parts=parts))],
-              usage_metadata=None, prompt_feedback=None, model_version='gemini-4-argon')
+              usage_metadata=None, prompt_feedback=None, model_version='gemini-3.8-flash')
 
 
 class VertexTests(unittest.TestCase):
@@ -50,14 +50,14 @@ class VertexTests(unittest.TestCase):
             result = single_pass.compose('not-needed.gguf', MESSAGES, CONFIG, [], language='ko', generate_fn=local)
         self.assertEqual(result, '호흡을 이어갑니다.')
         self.assertEqual(result.generation_mode, 'llm_single_pass')
-        self.assertEqual(result.generation_metadata['model_version'], 'gemini-4-argon')
+        self.assertEqual(result.generation_metadata['model_version'], 'gemini-3.8-flash')
         self.assertIsNone(result.generation_validation_warning)
         client.models.generate_content.assert_called_once(); local.assert_not_called()
 
     def test_incomplete_and_provider_blocked_answers_are_technical_failures(self):
         for reason, text in [('MAX_TOKENS', 'unfinished'), ('SAFETY', ''), ('STOP', '')]:
             with self.subTest(reason=reason), self.assertRaises(vertex.VertexGenerationError) as caught:
-                vertex.parse_response(response(reason, text), requested_model='gemini-4-argon', elapsed_seconds=1)
+                vertex.parse_response(response(reason, text), requested_model='gemini-3.8-flash', elapsed_seconds=1)
             self.assertEqual(caught.exception.metadata['finish_reason'], reason)
             self.assertEqual(caught.exception.partial_text, text)
 

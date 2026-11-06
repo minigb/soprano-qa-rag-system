@@ -1,0 +1,226 @@
+[
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-08__m32-32",
+    "case_id": "expert-kim-una-voce-poco-fa-08__m32-32",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "exception",
+    "generation_mode": null,
+    "review_id": null,
+    "exception": {
+      "type": "ServerError",
+      "message": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+    }
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-13__m62-62",
+    "case_id": "expert-kim-una-voce-poco-fa-13__m62-62",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "2d7cb29002d9fb7affa9"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-15__m92-93",
+    "case_id": "expert-kim-una-voce-poco-fa-15__m92-93",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "5f88f578d912ad710900"
+  },
+  {
+    "key": "current:expert-yeon-nella-fantasia-02__no-range",
+    "case_id": "expert-yeon-nella-fantasia-02__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a70622abdc6d4188e4ed"
+  },
+  {
+    "key": "current:expert-yeon-la-capinera-12__no-range",
+    "case_id": "expert-yeon-la-capinera-12__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "5cbaee54bfdcfdd7934a"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-03__m16-16",
+    "case_id": "expert-kim-la-capinera-03__m16-16",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "394b655209895cf9d421"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-03__no-range",
+    "case_id": "expert-kim-una-voce-poco-fa-03__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "f9186739faa3ecd69e66"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-16__m103-103",
+    "case_id": "expert-kim-la-capinera-16__m103-103",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "20b4d652d3d98056d9cf"
+  },
+  {
+    "key": "current:expert-yeon-nella-fantasia-01__no-range",
+    "case_id": "expert-yeon-nella-fantasia-01__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "07cf887e59b32c512779"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-09__no-range",
+    "case_id": "expert-kim-una-voce-poco-fa-09__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "79f223fbd672e89d0c3e"
+  },
+  {
+    "key": "current:expert-yeon-die-forelle-04__m28-40",
+    "case_id": "expert-yeon-die-forelle-04__m28-40",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "f17d3d424183df1091ab"
+  },
+  {
+    "key": "current:expert-kim-nella-fantasia-08__no-range",
+    "case_id": "expert-kim-nella-fantasia-08__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "1924a613d6d96e834801"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-18__no-range",
+    "case_id": "expert-kim-la-capinera-18__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "7bd29e606b03b15aeed4"
+  },
+  {
+    "key": "current:expert-kim-nella-fantasia-07__no-range",
+    "case_id": "expert-kim-nella-fantasia-07__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "39bc5d7ac06d47e36364"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-06__m20-24",
+    "case_id": "expert-kim-la-capinera-06__m20-24",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "fd4ebfd62325c6c2e2ca"
+  },
+  {
+    "key": "current:expert-yeon-die-forelle-04__no-range",
+    "case_id": "expert-yeon-die-forelle-04__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "1b75f20e9f2767a7aed2"
+  },
+  {
+    "key": "current:expert-kim-die-forelle-02__no-range",
+    "case_id": "expert-kim-die-forelle-02__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "cdd94a07f7681f086ab2"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-07__m28-35",
+    "case_id": "expert-kim-la-capinera-07__m28-35",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "d388e0634ccd8df1585b"
+  },
+  {
+    "key": "current:expert-yeon-la-capinera-11__no-range",
+    "case_id": "expert-yeon-la-capinera-11__no-range",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "00dab7f173d8d3963b7b"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-13__m80-80",
+    "case_id": "expert-kim-la-capinera-13__m80-80",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/expert/judge-batches/004/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "737ce0ec56c9e865d1eb"
+  }
+]

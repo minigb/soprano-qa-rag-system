@@ -1,0 +1,103 @@
+{
+  "cohort_status": "Expert complete; full comparison results are in summary.json",
+  "expert105": {
+    "qwen14b_j": {
+      "count": 105,
+      "assessed": 105,
+      "technical_errors": 0,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 63,
+        "minor_drift": 38,
+        "material_drift": 4
+      },
+      "refusals": 0,
+      "material_drift": 4,
+      "naturalness_effective_mean": 3.4857142857142858,
+      "naturalness_conditional_mean": 3.4857142857142858,
+      "adequately_complete": 92,
+      "factual_error_flags": 4,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    },
+    "gemini": {
+      "count": 105,
+      "assessed": 99,
+      "technical_errors": 6,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 93,
+        "minor_drift": 6
+      },
+      "refusals": 0,
+      "material_drift": 0,
+      "naturalness_effective_mean": 3.5619047619047617,
+      "naturalness_conditional_mean": 3.7777777777777777,
+      "adequately_complete": 97,
+      "factual_error_flags": 0,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    }
+  },
+  "successful_pairs": {
+    "qwen14b_j": {
+      "count": 99,
+      "assessed": 99,
+      "technical_errors": 0,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 60,
+        "minor_drift": 35,
+        "material_drift": 4
+      },
+      "refusals": 0,
+      "material_drift": 4,
+      "naturalness_effective_mean": 3.494949494949495,
+      "naturalness_conditional_mean": 3.494949494949495,
+      "adequately_complete": 88,
+      "factual_error_flags": 4,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    },
+    "gemini": {
+      "count": 99,
+      "assessed": 99,
+      "technical_errors": 0,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 93,
+        "minor_drift": 6
+      },
+      "refusals": 0,
+      "material_drift": 0,
+      "naturalness_effective_mean": 3.7777777777777777,
+      "naturalness_conditional_mean": 3.7777777777777777,
+      "adequately_complete": 97,
+      "factual_error_flags": 0,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    }
+  },
+  "bertscore": {
+    "local105": 0.9399432505880083,
+    "local_paired99": 0.9404589630136586,
+    "gemini105_effective": 0.8973787937845502,
+    "gemini99_conditional": 0.9517653873472502,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "truncated_texts": 0,
+    "overlength": 0
+  },
+  "result_sha256": "5b6f08123026cedf3d8b66923381426bc966525e9f6a004b3f4d78c7c7e455b6"
+}

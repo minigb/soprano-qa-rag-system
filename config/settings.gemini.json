@@ -51,7 +51,7 @@
     "evidence_translation_max_tokens": 1536,
     "answer_provider": "vertex_gemini",
     "vertex_gemini": {
-      "model": "gemini-4-argon",
+      "model": "gemini-3.8-flash",
       "thinking_level": "LOW",
       "max_output_tokens": 2048,
       "timeout_ms": 180000

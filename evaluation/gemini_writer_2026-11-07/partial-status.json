@@ -1,0 +1,15 @@
+{
+  "status": "partial_not_selected",
+  "attempted": 87,
+  "successes": 80,
+  "technical_errors": 7,
+  "expert_inventory": 109,
+  "challenge_not_started": true,
+  "reason": "Repeated Vertex capacity429 and deadline504 failures with long request waits even after reducing concurrency; choose Notion-example Gemini3.8Flash for the complete comparison. No answer/prompt/metric changes.",
+  "stopped_task_owned_waiter_pids": [
+    1707867,
+    1712251,
+    1711031
+  ],
+  "latency_confound": "Later read-only process inspection found a separate YouTube Gemini workload using the same Vertex project throughout the capture. Capacity errors/latencies cannot be attributed to Argon intrinsically; it was not retained as the primary service candidate under observed conditions."
+}

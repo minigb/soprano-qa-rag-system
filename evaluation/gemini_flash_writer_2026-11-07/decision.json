@@ -1,0 +1,35 @@
+{
+  "status": "comparison_complete_and_verified; full105 BERTScore target unmet",
+  "comparison": "Gemini3.8Flash LOW versus frozen Qwen3-14B J only",
+  "expert105_bertscore_target": 0.9,
+  "expert105_effective_f1": 0.8973787937845502,
+  "expert105_target_met": false,
+  "returned_expert99_conditional_f1": 0.9517653873472502,
+  "default_configuration_changed": false,
+  "optional_gemini_configuration": "config/settings.gemini.json",
+  "decision": "Retain local/default configurations. Offer the evaluated Gemini writer as opt-in. Returned-answer meaning and naturalness improve on this development set, while API availability and latency remain material limitations. Full105 BERTScore target is unmet.",
+  "limitations": [
+    "Six expert responses unavailable, including one abandoned account4 setup error. Missing cases cannot be declared semantically correct.",
+    "Previous five-refusal subset naturalness worsened3.6->3.2 despite all five faithful answers.",
+    "Shared YouTube API workload remained running; latency is observational.",
+    "Only one generation API model in the active comparison. No further API-model search.",
+    "Reused development questions, offline LLM judge, different tokenizers/reasoning/budgets; not independent expert adjudication or a model-size-only causal test."
+  ],
+  "account_policy": "Account3 only after user withdrew account4. No further account fallback.",
+  "original_main_and_460demo_preserved": true,
+  "verification_passed": true,
+  "real_service_smoke": {
+    "ko": {
+      "passed": true,
+      "local_generation_calls": 0,
+      "seconds": 5.5529965369496495
+    },
+    "en": {
+      "passed": true,
+      "local_calls": [
+        "local_query_translation"
+      ],
+      "seconds": 8.843186870974023
+    }
+  }
+}

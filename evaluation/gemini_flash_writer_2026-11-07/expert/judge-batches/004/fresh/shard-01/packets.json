@@ -1,0 +1,517 @@
+[
+  {
+    "id": "737ce0ec56c9e865d1eb",
+    "question": "‘l’erbe ed i fior’의 가사를 음정에 어떻게 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      80,
+      80
+    ],
+    "language": "ko",
+    "answer": "80마디의 ‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있습니다. 또한 ‘ed’의 d 발음은 가능하면 다음 단어 ‘i’에 가깝게 붙여서 발음합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 80,
+          "voice": "sung",
+          "lyric_lines": [
+            "l’er- -be ed i"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-007",
+        "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            80,
+            80
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              80,
+              80
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f9186739faa3ecd69e66",
+    "question": "로시니가 일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "<<Una voce poco fa>>에서 일반적인 부점 대신 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적인 해석입니다. 작곡가의 확정된 의도로 밝혀진 것은 아니지만, 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 권장됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5f88f578d912ad710900",
+    "question": "악센트가 첫 박이 아닌 곳에 표시된 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      92,
+      93
+    ],
+    "language": "ko",
+    "answer": "해당 구간에서 피아노 및 오케스트라 파트가 스타카토의 경쾌한 리듬으로 연주되고, 멜로디 파트의 첫 박자는 트릴과 유사한 형태에 이음줄이 연결된 음형을 이룹니다. 이러한 요소들을 고려할 때, 첫 박이 아닌 곳의 악센트는 로지나라는 인물의 조금 더 발랄하고 경쾌한 이미지를 표현하기 위한 것으로 해석하고 노래하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 92,
+          "voice": "sung",
+          "lyric_lines": [
+            "toc- -ca- -no dov'- -è‿il mio",
+            "cross my will, or what I"
+          ]
+        },
+        {
+          "measure": 93,
+          "voice": "sung",
+          "lyric_lines": [
+            "de- -bo- -le, sa- -rò‿u- -na",
+            "do take ill, like an- -y"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "00dab7f173d8d3963b7b",
+    "question": "테크닉이나 기교가 들어갈 때 가사는 어떻게 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "테크닉이 필요하거나 스케일, 트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있습니다. 이때는 구절의 특성에 따라 '아-'로 부르거나 해당 단어의 모음으로 선율을 이어갈 수 있습니다. \n\n단어의 모음으로 이어서 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음하여 마무리해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-028",
+        "text": "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다.\n",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-028"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2d7cb29002d9fb7affa9",
+    "question": "dolce amorosa를 이어 발음할 때 모음은 언제 어떻게 바꿀까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      62,
+      62
+    ],
+    "language": "ko",
+    "answer": "긴 음정에서는 모음 변환이 수월한 편이지만, 62마디처럼 빠르게 변화하는 3연음부 안에서 모음이 바뀌는 경우에는 까다로울 수 있습니다. 이러한 상황에서는 리듬을 정확하게 나누어 모음을 전환해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "dol- -ce,‿a- -mo-",
+            "all soft e-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-017",
+        "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "39bc5d7ac06d47e36364",
+    "question": "음이 갑자기 올라갈 때 어떻게 부르는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요합니다. 단숨에 힘을 주기보다는 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나도록 해야 합니다. 또한 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 합니다. \n\n레가토를 유지하기 위해서는 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 권장합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              17
+            ],
+            [
+              28,
+              34
+            ],
+            [
+              40,
+              46
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

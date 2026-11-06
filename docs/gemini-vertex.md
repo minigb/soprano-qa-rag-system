@@ -1,7 +1,7 @@
 # Vertex Gemini answer backend
 
 The optional `config/settings.gemini.json` replaces only the single-pass answer
-writer with `gemini-4-argon` over Google Cloud Vertex AI. It uses the existing J
+writer with `gemini-3.8-flash` over Google Cloud Vertex AI. It uses the existing J
 writing prompt and hybrid BM25 + Qwen embedding retrieval. English search-query
 translation still uses Qwen3-14B, so changing the answer model does not also change
 the retrieval model. Korean requests need only the local embedding checkpoint.
@@ -48,7 +48,7 @@ unchanged for the controlled comparison, including the Qwen `/no_think` suffix.
 Gemini's API reasoning setting is authoritative for its behavior.
 
 The common configuration still supplies temperature 0, top_p .8 and seed42.
-**Google documents that Argon ignores temperature/top_p/top_k.** Their presence
+**Google documents that Gemini 3.8 Flash ignores temperature/top_p/top_k.** Their presence
 does not make this a matched-decoding or deterministic comparison; seeds are
 also not comparable across providers. This is a provider/model swap with fixed
 task context, not an isolation of model size or quantization.
@@ -62,11 +62,24 @@ retries. This finish-status handling does not evaluate the answer's meaning.
 ## Sources and comparison
 
 - [User-supplied Vertex setup document](https://app.notion.com/p/Google-Cloud-Vertex-AI-Gemini-4014423f16758055bde1e54732d6c9d0?source=copy_link)
-- [Official Argon configuration guide](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-argon)
+- [Official Gemini 3.8 Flash configuration guide](https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-3-8-flash)
 - [Google Gen AI Python SDK](https://googleapis.github.io/python-genai/)
-- [Frozen writer evaluation](../evaluation/gemini_writer_2026-11-07/README.md)
+- [Frozen writer evaluation](../evaluation/gemini_flash_writer_2026-11-07/README.md)
 
 The comparison keeps all 109 expert/regression cases and the 74-case bilingual
 challenge inventory. One historical English query-translation failure has no
 baseline writer input, so only 73 challenge cases can be paired. Offline Claude
 judging and the frozen BERTScore configuration are separate from serving.
+
+The active comparison uses only this one Gemini model and the frozen Qwen3-14B
+candidate J. Prior Argon partial captures are archived; they are not resumed or
+substituted for Flash results. Only account 3 is authorized for further requests.
+Account 4 setup attempts failed and were abandoned at the user's request.
+Shared YouTube API work continues unchanged, so observed API delays and 429s
+cannot be attributed to model speed alone.
+
+The [completed comparison](../evaluation/gemini_flash_writer_2026-11-07/report.md)
+found better source fidelity on returned answers, but six missing expert responses
+and slower API timings under shared load. Full105 effective BERTScore0.897379
+did not meet the0.90 target; returned99 answers scored0.951765. The default
+configuration remains local/reviewed, and this Gemini backend is opt-in.

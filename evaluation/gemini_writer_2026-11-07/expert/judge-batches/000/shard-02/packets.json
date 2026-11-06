@@ -1,0 +1,463 @@
+[
+  {
+    "id": "78faf7d32deb708e2bf4",
+    "question": "악보의 페르마타 표기와 음원에서 들리는 음의 길이가 다르면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      1,
+      2
+    ],
+    "language": "ko",
+    "answer": "1~2마디(곡 첫머리)에서 페르마타가 있는 경우와 없는 경우 모두 허용됩니다. 이 구간의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있으므로, 어느 쪽으로든 연주할 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 1,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 2,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f699c85dfe1f88e65f0a",
+    "question": "첫 소리가 잘 나지 않으면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "ko",
+    "answer": "프레이즈 시작에 높은 음이 나와 노래하기 쉽지 않을 때는, ‘환한속에 구름처럼’에서 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며 많은 성악가가 택하는 선택지입니다. \n\n만약 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              19,
+              21
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "273f28f6bf5c3e72862c",
+    "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작해 12/8박과 3/4박으로 바뀌며 극적 효과를 고조시킨 뒤, 다시 2/4박으로 돌아오면서 처음의 경쾌한 분위기를 되살립니다.\n\n해설에서는 이 곡에 4/4박 대신 2/4박을 사용한 것을 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다고 설명합니다. 일반적으로 ‘강-약-중강-약’ 구조를 지니는 4/4박과 달리 2/4박은 매 마디가 ‘강-약’으로 이루어지므로, 연속된 두 마디에 서로 대조되는 음형이 나올 때 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러납니다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "efab28e3f4ea18e3348a",
+    "question": "음이 높지 않은데도 이 곡을 부르기 어려운 이유는 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만, 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많기 때문에 결코 쉬운 곡은 아닙니다.\n\n따라서 노래할 때는 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "fe7cdd456c3ae7fabab7",
+    "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡에서 피아노 파트의 음형이 바뀌며 분위기가 전환되는 구간에서는, 바뀌는 음형이 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려내어 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 이러한 점을 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 분위기 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e6f64c65bb79271bdba3",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      44,
+      52
+    ],
+    "language": "ko",
+    "answer": "44~52마디 구간에서는 고음이나 도약음 등을 부를 때 힘을 너무 주면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉬지 못하는 상황이 생깁니다. 이를 막으려면 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 숨을 쉴 수 있도록 합니다.\n\n또한 이 곡 전반에서 호흡을 할 때는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 단어 중간에서 숨을 쉬는 것을 경계하고, 온전한 한 단어가 잘 들리게 노래하는 것이 중요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "sung",
+          "lyric_lines": [
+            "nu -vo -le che"
+          ]
+        },
+        {
+          "measure": 45,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo -la"
+          ]
+        },
+        {
+          "measure": 46,
+          "voice": "sung",
+          "lyric_lines": [
+            "-no pien' d'u"
+          ]
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma ni"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ta"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "in fon do,al"
+          ]
+        },
+        {
+          "measure": 50,
+          "voice": "sung",
+          "lyric_lines": [
+            "l'a -ni"
+          ]
+        },
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

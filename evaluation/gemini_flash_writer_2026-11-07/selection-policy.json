@@ -1,0 +1,9 @@
+{
+  "comparison": "Gemini3.8Flash only versus frozen Qwen3-14B J baseline",
+  "user_instruction": "Stop trying different API models; compare Gemini vs local LLM.",
+  "generation_inputs": "Identical frozen J messages, retrieval and original questions. No more model/prompt/sampling/metric variants.",
+  "metrics": "Source meaning and naturalness first; fixed expert BERTScore target>=.90, false refusals, attacks, latency and API failures reported separately.",
+  "prior_model_attempt": "Historical Argon partial capture retained only; no more requests.",
+  "result_policy": "Preserve all stored first answers and technical errors. Never regenerate for a better quality score.",
+  "account_policy": "Only account3 for further calls; no account4 fallback. YouTube jobs untouched."
+}

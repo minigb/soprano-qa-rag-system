@@ -1,0 +1,12 @@
+{
+  "reason": "Bounded parallel replay to avoid sequential long-tail API waiting; no input, model, prompt, evaluator or sampling setting changed.",
+  "max_concurrency": 3,
+  "sequential_prefix_count": 34,
+  "prefix_sha256": "83f0b1a94c6c0755b859a08105ed603ad38e7ac12df536b7d518619dc9bb83f9",
+  "interrupted_unobserved_call": {
+    "case_id": "expert-kim-die-forelle-02__m41-54",
+    "started_at": "2026-11-06T16:53:13.286209+00:00"
+  },
+  "policy": "Preserve every stored success and failure; only the unobserved interrupted request may be retried. Server may still complete/bill it. Do not count this planned interruption as a model failure. Request timing in the parallel tail includes concurrency effects.",
+  "interrupted_at_utc": "2026-11-06T16:54:07Z"
+}

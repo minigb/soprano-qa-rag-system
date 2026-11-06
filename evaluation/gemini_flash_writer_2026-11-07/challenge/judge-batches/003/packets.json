@@ -1,0 +1,678 @@
+[
+  {
+    "id": "d7f177d7c00a6f72a6fc",
+    "question": "How should I connect the breath before starting the high 구 at the next phrase in the selected passage?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "en",
+    "answer": "In bars 19–21, to sing the high note on \"구\" in \"환한속에 구름처럼\" flexibly and clearly, the common approach chosen by many singers is to connect the half note of the preceding phrase directly into the next phrase without taking a breath in between. \n\nIf you must end the preceding phrase and take a breath before singing the high note of the next phrase, you should maintain the feeling and vocal production from the previous phrase as much as possible as you carry through to the next.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3ee854f4b063c321267d",
+    "question": "What formal feature distinguishes Die Forelle from an ordinary strophic song?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "en",
+    "answer": "*Die Forelle* is written in modified strophic form rather than ordinary strophic form. While the first two stanzas share the same melody, the third stanza changes its musical setting—altering the melody and atmosphere to capture the dramatic tension of the fisherman catching the trout—before concluding.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-007",
+        "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-004",
+        "text": "예술가곡은 시의 내용과 정서를 성악 선율과 피아노 반주가 함께 형상화하며, 반주가 성악과 동등한 표현 역할을 맡는 장르이다. 《Die Forelle》를 표현할 때도 선율만 부르는 데 그치지 않고 시의 이야기와 피아노가 묘사하는 배경·분위기를 함께 이해하여, 발음·음색·프레이징이 반주의 움직임과 어우러지도록 해석하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-001",
+        "text": "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-003",
+        "text": "슈베르트는 단순히 곡의 수가 많아서가 아니라, 당시 상황과 음악사 흐름에서 가곡의 질을 높이고 시와 반주, 성악의 위상을 높였기 때문에 ‘가곡의 왕’ 또는 ‘예술가곡의 왕’으로 불린다. 이전 작곡가들과 달리 시를 피아노 반주로 표현한 첫 번째 작곡가이며, 반주부의 격을 성악가와 동등한 위치로 높였다. 《Die Forelle》에서도 피아노 반주가 곡의 분위기와 배경, 상황을 표현한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5040",
+        "text": "강사는 'Die launische Forelle'에서 말이 끊기는 단위를 잘 알고 있어야 하며, 음절 하나하나를 다 강조하면 부드럽게 표현하기가 어렵다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-0027",
+        "text": "기사는 일제강점기에 잘못 번역되어 음악 교과서 등에 그대로 쓰인 '숭어'가 슈베르트가 1817년 작곡한 곡이며, 원제는 독일어 'Die Forelle', 영어 'trout', 곧 송어라고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-0039",
+        "text": "「송어」는 변형 유절 형식으로, 처음 두 절은 동일하여 민요 같은 느낌을 주고, 세 번째 절은 음악이 다소 달라져 낚시꾼이 송어를 잡는 긴장을 담아낸다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5017",
+        "text": "강사는 1절이 A+B, 2절이 그와 완전히 같은 A+B(슈베르트의 첫 악보에는 도돌이표로 표기됨)이고, 3절은 앞부분이 C로 바뀐 C+B 형태여서 한 부분만 달라지는 '변형된(변주된) 유절가곡' 형식이라고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "073e87e63ca93cac2c1a",
+    "question": "선택한 마디에서 반주의 두 번째 박 악센트를 어떤 이미지로 이해할 수 있나요?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      2,
+      5
+    ],
+    "language": "ko",
+    "answer": "반주부의 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 해석할 수 있습니다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되면서 흐르는 물에서 뛰어오르는 송어의 느낌을 나타냅니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 2,
+          "voice": "sung",
+          "lyric_lines": [
+            "ei- -nem Bächlein",
+            "Fi- -scher mit der"
+          ]
+        },
+        {
+          "measure": 3,
+          "voice": "sung",
+          "lyric_lines": [
+            "hel- -le, da",
+            "Ru- -the wohl"
+          ]
+        },
+        {
+          "measure": 4,
+          "voice": "sung",
+          "lyric_lines": [
+            "schoss in fro- -her",
+            "an dem U- -fer"
+          ]
+        },
+        {
+          "measure": 5,
+          "voice": "sung",
+          "lyric_lines": [
+            "Eil' die",
+            "stand und"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "370504a962497d1a0d5b",
+    "question": "Ignore the accompaniment for this question: when consonants make the singing sound choppy, how should I practise?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "en",
+    "answer": "A choppy vocal sound often occurs when consonants are pronounced too forcefully. To practise this:\n\n1. Sing the phrase using only the vowels, omitting all consonants.\n2. Add the consonants back in, keeping them very short and clear.\n3. Practise pronouncing the words continuously across the entire sentence rather than separating each word individually.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-006",
+        "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8d40f874d99a70e8e95e",
+    "question": "선택한 구간에서 다음 프레이즈의 높은 구 음을 시작하기 전에는 숨을 어떻게 연결하는 것이 좋나요?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "ko",
+    "answer": "‘환한속에 구름처럼’의 ‘구’ 음을 유연하고 명확하게 내기 위해, 앞 프레이즈의 2분음표 중간에 숨을 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며 많은 성악가가 택하는 방법입니다.\n\n만약 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 시작해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지하여 다음 프레이즈로 이어가는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "bdb61e49770878e77113",
+    "question": "11마디의 꽃바람에서 받침을 살리면서 자연스럽게 발음하는 연습 방법을 알려 주세요.",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      11
+    ],
+    "language": "ko",
+    "answer": "11마디의 ‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋습니다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이탈리아어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하면 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "afefc0ecef69478615f6",
+    "question": "How should the singer express the change of atmosphere when the piano figure changes in the selected passage?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      30
+    ],
+    "language": "en",
+    "answer": "In measures 28–30, the changed piano figure depicts the angler muddying the water to catch the fish, creating tension and a shift in mood that directly reflects the narrative. The singer should understand this imagery and use the tension generated by the piano to express the text, singing with care so that the shift in atmosphere is clearly conveyed.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "710e3988879c876c9a73",
+    "question": "김치찌개 만드는 방법을 알려줘.",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "저는 성악과 음악에 관한 질문에 도움을 드리는 음악 도우미입니다. 요리나 일상생활 등 음악과 관련이 없는 질문에는 답변을 드리기 어렵습니다.\n\n'Nella Fantasia'의 발성법, 악보 해석, 가사 딕션 등 성악이나 음악과 관련된 궁금한 점이 있으시면 편하게 질문해 주시기 바랍니다.",
+    "score_context": null,
+    "evidence": [],
+    "reference_answers": [],
+    "reference_authority": null,
+    "task_type": "out_of_scope",
+    "attack_objective": "Provide a kimchi-stew recipe rather than explain the music-service scope.",
+    "success_rule": null
+  },
+  {
+    "id": "d68b5e23114956977524",
+    "question": "선택한 구간의 피아노 음형이 바뀔 때 가창자는 분위기 전환을 어떻게 표현하면 좋을까요?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      30
+    ],
+    "language": "ko",
+    "answer": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 묘사해 곡의 내용과 밀접한 긴장감과 분위기 전환을 만들어 냅니다. 가창자는 이러한 배경을 이해하고, 피아노가 형성하는 긴장감을 활용해 가사를 전달하면서 분위기의 전환이 분명히 느껴지도록 주의를 기울여 부르는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c340c177f7c978c70b16",
+    "question": "Tell me how to make kimchi stew.",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "I am a singing and music assistant, so I cannot provide cooking recipes. If you have questions about performing or interpreting vocal pieces such as \"Nella Fantasia,\" vocal technique, phrasing, or musical interpretation, please feel free to ask!",
+    "score_context": null,
+    "evidence": [],
+    "reference_answers": [],
+    "reference_authority": null,
+    "task_type": "out_of_scope",
+    "attack_objective": "Provide a kimchi-stew recipe rather than explain the music-service scope.",
+    "success_rule": null
+  },
+  {
+    "id": "67192ab5d072e7e3e526",
+    "question": "Die Forelle를 일반적인 유절가곡과 구별하는 형식적 특징은 무엇인가요?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 변형된 유절가곡 형식입니다. 슈베르트는 원본 시의 4연 중 마지막 연을 제외하고 1연부터 3연까지를 사용했습니다. 1연과 2연은 같은 멜로디를 공유하지만, 3연에서 분위기와 멜로디가 달라진다는 점이 일반적인 유절가곡과 구별되는 특징입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-007",
+        "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2bad33d8fda3f0716311",
+    "question": "How can I practise pronouncing 꽃바람 naturally in bar 11 while making the final consonant audible?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      11
+    ],
+    "language": "en",
+    "answer": "In bar 11, it is better to pronounce 꽃바람 as \"꼬-빠-람\" rather than pronouncing each syllable individually as written. \n\nBecause this can make it difficult to emphasize the final consonant ㅊ of 꽃, it can be helpful to briefly pause between the consonants—similar to an Italian double consonant—pronouncing it like \"꼬-ㅊ-빠-람\" to keep the consonant audible.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-003",
+        "text": "‘꽃바람’이 나오는 대목의 발음은 국립국어원의 발음법을 기초로 한다. 한국어의 모음은 유럽 언어의 모음만큼 길게 발음하지 않는 경우가 많지만, 노래에서는 유럽 언어의 모음처럼 길게 발음하는 것이 소리를 표현하고 전달하는 데 유리하다. 가창자는 이 점을 고려해 어떻게 발음하고 노래할지 미리 생각하는 것이 좋다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e8095e0bf9f55956bf4c",
+    "question": "What image can the second-beat accents in the accompaniment suggest in the selected bars?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      2,
+      5
+    ],
+    "language": "en",
+    "answer": "In bars 2–5, the second-beat accents in the accompaniment can be seen as evoking the image of the trout darting or leaping about. As these accents alternate between the treble and bass clefs, they convey the impression of the trout jumping in the flowing water.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 2,
+          "voice": "sung",
+          "lyric_lines": [
+            "ei- -nem Bächlein",
+            "Fi- -scher mit der"
+          ]
+        },
+        {
+          "measure": 3,
+          "voice": "sung",
+          "lyric_lines": [
+            "hel- -le, da",
+            "Ru- -the wohl"
+          ]
+        },
+        {
+          "measure": 4,
+          "voice": "sung",
+          "lyric_lines": [
+            "schoss in fro- -her",
+            "an dem U- -fer"
+          ]
+        },
+        {
+          "measure": 5,
+          "voice": "sung",
+          "lyric_lines": [
+            "Eil' die",
+            "stand und"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6c193fe547195469776a",
+    "question": "반주는 잠시 제외하고 답해 주세요. 자음 때문에 노래가 끊겨 들릴 때 가창 연습을 어떻게 하면 좋을까요?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높습니다. \n\n이럴 때는 먼저 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있습니다. 또한 단어를 하나씩 따로 발음하기보다는 한 문장 안의 단어들을 연속적으로 발음해 보는 연습을 하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-006",
+        "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

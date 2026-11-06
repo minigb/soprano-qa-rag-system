@@ -123,7 +123,7 @@ class SinglePassTests(unittest.TestCase):
         from soprano_qa import vertex_gemini
         from tests.test_vertex_gemini import CONFIG
         remote = vertex_gemini.VertexText('반주의 끝을 들으면서 음을 이어갈 수도 있습니다.')
-        remote.generation_metadata = {'provider': 'vertex_gemini', 'model_version': 'gemini-4-argon'}
+        remote.generation_metadata = {'provider': 'vertex_gemini', 'model_version': 'gemini-3.8-flash'}
         with mock.patch.dict(service.SETTINGS['llm'], CONFIG), \
              mock.patch.dict('os.environ', {'GOOGLE_CLOUD_PROJECT': 'test'}), \
              mock.patch.object(vertex_gemini, 'generate', return_value=remote) as write:

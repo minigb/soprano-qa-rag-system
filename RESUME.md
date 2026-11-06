@@ -1,3 +1,57 @@
+# 완료 — Gemini 단일 모델과 로컬14B 비교 (2026-11-07)
+
+작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
+브랜치: `codex/helpful-rag-responses`. Vertex 연결 구현 커밋: `5989b70`.
+
+**Gemini3.8Flash LOW 하나와 Qwen3-14B 후보J를 비교 완료했습니다.**
+같은 질문·KU·생성 프롬프트를 고정했습니다. API 모델 탐색을 더 하지 않습니다.
+선택 설정은 `config/settings.gemini.json`이며, 기본/local 설정·원본/main·corpus·
+기존460개 데모는 그대로입니다. 생성에 원문 대입이나 온라인 출력 검사를 추가하지 않았습니다.
+
+전문가 주석 기반105개+기존 거절변형4개=109개, 한영challenge74개 목록을 처리했습니다.
+challenge의 기존 영어 번역 실패1개는 생성 입력이 없어 paired 비교에서 제외했습니다.
+품질 평가182회 결과는 답변175/API오류7개입니다. 첫 출력/오류와 첫 유효 Claude 판정을 보존했습니다.
+
+- 전문가105개: Gemini 답변99/API오류6. 같은99개에서 중대한 의미 변경4→0,
+  경미한 변경35→6, 자연스러움3.495→3.778/4, 충분한 답변88→97. 음악 오거절0.
+- **전체105 BERTScore는0.897379로0.9 미달**입니다. 반환된99개만의0.951765와 구분합니다.
+  같은99개 로컬 점수는0.940459, 로컬 전체105는0.939943입니다.
+  기존 XLM-R-large layer18/noIDF/rawF1과 revision 유지; 잘림/인코더길이초과0, 재탐색0.
+- 기존 거절5개는 모두 답변/faithful이지만, 자연스러움은3.6→3.2로 하락했습니다.
+  기존4개 중대한 오류는 개선됐고, 조옮김 답변에는 의무 표현으로 강화하는 경미한 오류가 남았습니다.
+- 직접 공격 같은29개: 로컬9→Gemini0 성공. 추가1개는 API오류로 방어 성공에 포함하지 않습니다.
+  KU주입0/20(기존 자료 차단 포함), 정상음악 오거절0/12, 범위밖 과제 수행1/11→0/11.
+- 별도 일반10문항 순차 생성 시간: 로컬 평균2.690초/중앙값2.381초(2회씩),
+  Gemini 평균20.448초/중앙값11.003초(1회씩). 검색·번역·요청간격 제외.
+  같은 프로젝트의 YouTube 작업을 유지했으므로 모델 고유 속도 차이로 단정하지 않습니다.
+- 기술 오류7개는429 네 건,504 두 건,4번 프로젝트 설정403 한 건입니다.
+  403을 모델 의미 오류로 해석하지 마세요. 이 설정 실패도 전체 기록에 보존했습니다.
+- 693개 전체 테스트, Flash 설정 변경 후19개 관련 테스트, pip check 통과.
+  실제 한국어/영어 서비스 호출 모두 통과: 한국어 로컬생성0회, 영어14B검색번역1회+Gemini생성.
+  source/input/provider/model/완료수와 원본 보존 검증 모두 통과했습니다.
+
+먼저 다음 자료를 읽으세요.
+
+- [최종 비교 보고서](evaluation/gemini_flash_writer_2026-11-07/report.md)
+- [수치와 실패 목록](evaluation/gemini_flash_writer_2026-11-07/summary.json)
+- [판단과 미달 목표](evaluation/gemini_flash_writer_2026-11-07/decision.json)
+- [전문가 실제 답변 비교](evaluation/gemini_flash_writer_2026-11-07/expert-comparison.json)
+- [공격/정상 질문 비교](evaluation/gemini_flash_writer_2026-11-07/challenge-comparison.json)
+- [직접 의미 검토](evaluation/gemini_flash_writer_2026-11-07/manual-review.json)
+- [검증 결과](evaluation/gemini_flash_writer_2026-11-07/verification.json)
+- [연결 및 실행 방법](docs/gemini-vertex.md)
+
+현재 이 작업의 생성·평가·완료 대기·서버 프로세스는 없습니다. 완료된 평가를 다시 실행하지 마세요.
+후속 변경은 새 snapshot/output으로 진행하고, 점수를 올리려고 저장된 답변이나 실패를 교체하지 않습니다.
+
+사용자는4번 계정의 fallback 사용을 철회했습니다. 앞으로 **3번만 사용**합니다.
+인증/프로젝트를 바꾸거나 다른 API 모델을 호출하지 마세요. 별도 YouTube 작업은 중지하지 않습니다.
+이전 Argon 실험은 `evaluation/gemini_writer_2026-11-07/`의 부분 기록으로 보존했습니다.
+87개 시도/80답변/7오류이며, 전체 평가가 아닙니다. 해당 생성/판정/시간측정 스크립트를 재개하지 마세요.
+Discord/프로세스 종료 notifier 및 usage-reset 중지 조건은 없습니다.
+
+---
+
 # 완료 — 출력 검사 없는 프롬프트 개선·비교, 기본 전환 보류 (2026-11-06)
 
 작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`

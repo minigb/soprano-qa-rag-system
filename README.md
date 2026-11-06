@@ -11,7 +11,7 @@ This prompt is guidance, not a guarantee that every answer is correct or attack-
 
 An optional [Vertex Gemini writer](docs/gemini-vertex.md) is available through
 `config/settings.gemini.json`. It preserves the same retrieval and prompt while
-using `gemini-4-argon` for answer generation. The local configurations remain
+using `gemini-3.8-flash` for answer generation. The local configurations remain
 available; English retrieval-query translation still uses Qwen3-14B.
 
 Implementation: `codex/helpful-rag-responses`, in

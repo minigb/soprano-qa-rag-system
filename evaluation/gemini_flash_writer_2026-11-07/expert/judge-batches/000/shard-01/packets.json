@@ -1,0 +1,595 @@
+[
+  {
+    "id": "b30a56d23308d67e5656",
+    "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "피아노 파트에서 음형이 바뀌며 낚시꾼이 물을 흐트러뜨려 물고기를 잡는 모습을 묘사해 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 활용해 가사를 표현하며, 분위기의 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "875bed1ce1f441d183d3",
+    "question": "‘vieni a’의 발음을 음정에 어떻게 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      20,
+      20
+    ],
+    "language": "ko",
+    "answer": "20마디의 ‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음하여 부릅니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              20,
+              20
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ea46e0c207530097bac2",
+    "question": "‘꽃바람’을 음원에서는 스타카토로 부르는 경우가 많지만 악보에 표시가 없다면 무엇을 따라야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      12
+    ],
+    "language": "ko",
+    "answer": "해당 11~12마디 성악 도입부의 ‘꽃바람 꽃바람’은 악보에 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부릅니다. \n\n더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기로 노래합니다. 이때 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 편이 좋으며, ‘ㅊ’ 받침을 강조하기 위해 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        },
+        {
+          "measure": 12,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-002",
+        "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.\n‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              12
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-002"
+        },
+        {
+          "reference_id": "R002",
+          "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              11
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8a2d7d099d7bbefcc772",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      44,
+      52
+    ],
+    "language": "ko",
+    "answer": "해당 구간에서는 고음이나 도약음 등을 부를 때 힘을 너무 주면 다음 프레이즈에서 숨이 모자라거나 제대로 쉴 수 없게 됩니다. 따라서 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용하여 숨을 쉬도록 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "sung",
+          "lyric_lines": [
+            "nu -vo -le che"
+          ]
+        },
+        {
+          "measure": 45,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo -la"
+          ]
+        },
+        {
+          "measure": 46,
+          "voice": "sung",
+          "lyric_lines": [
+            "-no pien' d'u"
+          ]
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma ni"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ta"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "in fon do,al"
+          ]
+        },
+        {
+          "measure": 50,
+          "voice": "sung",
+          "lyric_lines": [
+            "l'a -ni"
+          ]
+        },
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7d640a8f13d5607f95d9",
+    "question": "악보의 페르마타 표기와 음원에서 들리는 음의 길이가 다르면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보에 페르마타가 표기되어 있더라도 음원과 길이가 다른 상황은 악보 판본이나 편곡의 차이 때문일 수 있습니다. 예를 들어 이흥렬의 《꽃구름 속에》 곡 첫머리처럼 페르마타가 있는 경우와 없는 경우가 악보에 따라 나뉘기도 하며, 두 방식 모두 허용됩니다.\n\n일반적으로 페르마타(늘임표)는 음표의 길이를 연주자의 음악적 판단이나 곡의 흐름, 지휘자의 신호에 따라 본래 박자보다 늘여서 연주하는 기호입니다. 따라서 음원마다 지속 시간이나 적용 방식이 다를 수 있으며, 특정 음원의 연주 길이를 그대로 맞추기보다는 보고 있는 악보의 표기와 편곡 방식을 기준으로 삼거나 연주자의 음악적 해석에 맞추어 길이를 조절하여 부르면 됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "177c4d1ca182244acf11",
+    "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      34,
+      35
+    ],
+    "language": "ko",
+    "answer": "대중적인 곡이나 가벼운 가요에서는 반주가 끝날 때까지 소리를 지속하기도 하며, 이를 통해 노래를 마무리하는 느낌을 만들어내는 경우가 많습니다. 반면 클래식 곡으로 접근할 때는 작곡가의 의도가 담겨 있다고 보고 악보에 적힌 길이를 지키려고 노력합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "no"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "933c6602f5d2a0e69500",
+    "question": "페르마타는 어느 정도 끌어야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 합니다. \n\n‘La capinera’에서 ‘l’amor’에 나오는 페르마타에서도 같은 방식으로 부르면서, 악센트가 놓인 ‘mor’를 강조합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-013",
+        "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]
