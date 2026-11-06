@@ -103,7 +103,14 @@ class SinglePassAnswer(str):
 def compose(model_path, messages, settings, results, *, language, generate_fn):
     # The raw writer returns final prose in one completion. No schema, quality
     # finalizer, second composition, or source-text substitution is invoked.
-    raw = generate_fn(model_path, messages, settings)
+    provider = settings.get('answer_provider', 'local')
+    if provider == 'vertex_gemini':
+        from soprano_qa.vertex_gemini import generate
+        raw = generate(messages, settings)
+    elif provider == 'local':
+        raw = generate_fn(model_path, messages, settings)
+    else:
+        raise ValueError('Unknown answer_provider: ' + str(provider))
     text = raw.strip() if isinstance(raw, str) else ''
     mode = 'llm_single_pass'
     basis = 'retrieved_evidence' if results else 'general_music_knowledge'
@@ -115,4 +122,6 @@ def compose(model_path, messages, settings, results, *, language, generate_fn):
     value.generation_mode = mode
     value.answer_basis = basis
     value.generation_validation_warning = None
+    if hasattr(raw, 'generation_metadata'):
+        value.generation_metadata = raw.generation_metadata
     return value

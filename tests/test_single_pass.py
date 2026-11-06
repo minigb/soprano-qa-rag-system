@@ -119,6 +119,36 @@ class SinglePassTests(unittest.TestCase):
         self.assertEqual(final_payload['question'], question)
         self.assertEqual(result['answer'], 'Try a short phrase while keeping your breath steady.')
 
+    def test_vertex_service_writes_remotely_with_hybrid_results(self):
+        from soprano_qa import vertex_gemini
+        from tests.test_vertex_gemini import CONFIG
+        remote = vertex_gemini.VertexText('반주의 끝을 들으면서 음을 이어갈 수도 있습니다.')
+        remote.generation_metadata = {'provider': 'vertex_gemini', 'model_version': 'gemini-4-argon'}
+        with mock.patch.dict(service.SETTINGS['llm'], CONFIG), \
+             mock.patch.dict('os.environ', {'GOOGLE_CLOUD_PROJECT': 'test'}), \
+             mock.patch.object(vertex_gemini, 'generate', return_value=remote) as write:
+            result = self.ask()
+        self.assertEqual(result['answer'], remote)
+        self.assertEqual(result['model']['backend'], 'vertex_gemini')
+        self.assertEqual(result['generation_metadata'], remote.generation_metadata)
+        payload = json.loads(write.call_args.args[0][1]['content'])
+        self.assertEqual(payload['Retrieved evidence'][0]['answer'], self.results[0].record['answer'])
+        self.model.create_chat_completion.assert_not_called()
+        write.assert_called_once()
+
+    def test_vertex_keeps_english_retrieval_translation_local(self):
+        from soprano_qa import vertex_gemini
+        from tests.test_vertex_gemini import CONFIG
+        self.model.create_chat_completion.return_value = completion('호흡을 어떻게 이어가나요?')
+        with mock.patch.dict(service.SETTINGS['llm'], CONFIG), \
+             mock.patch.dict('os.environ', {'GOOGLE_CLOUD_PROJECT': 'test'}), \
+             mock.patch.object(vertex_gemini, 'generate', return_value='Keep the breath steady.') as write:
+            result = self.ask(question='How should I connect my breath?', language='en')
+        self.model.create_chat_completion.assert_called_once()
+        write.assert_called_once()
+        self.assertEqual(self.retrieval_calls[0]['query'], '호흡을 어떻게 이어가나요?')
+        self.assertEqual(result['answer'], 'Keep the breath steady.')
+
     def test_cli_also_writes_once_without_the_content_finalizer(self):
         settings = load_settings(str(Path(__file__).resolve().parents[1] / 'config/settings.single-pass.json'))
         output = io.StringIO()

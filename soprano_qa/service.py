@@ -111,6 +111,12 @@ def _get_index() -> SearchIndex:
 
 def model_status() -> dict:
     model_path = Path(SETTINGS["model_path"])
+    if SETTINGS['llm'].get('answer_provider') == 'vertex_gemini':
+        from soprano_qa.vertex_gemini import options
+        model, _, location, level, _, _ = options(SETTINGS['llm'])
+        return {"backend": "vertex_gemini", "model": model, "location": location,
+                "thinking_level": level, "query_translation_backend": "llama-cpp-python",
+                "query_translation_model": str(model_path)}
     return {
         "path": str(model_path),
         "checkpoint_exists": model_path.is_file(),
@@ -443,6 +449,8 @@ def _ask(
         ),
         "pipeline": "soprano_qa",
         "model": status,
+        **({"generation_metadata": raw_answer.generation_metadata}
+           if generate and hasattr(raw_answer, 'generation_metadata') else {}),
         "retrieval": retrieval_diagnostics(index),
         "evidence": [
             _result_to_evidence(
@@ -524,4 +532,6 @@ def ask(
                 generation_mode=recovered.generation_mode if direct else 'llm_general_fallback',
                 answer_basis=recovered.answer_basis if direct else 'general_music_knowledge', unavailable_reason=None,
                 generation_validation_warning='unsafe_source_excluded')
+            if hasattr(recovered, 'generation_metadata'):
+                response['generation_metadata'] = recovered.generation_metadata
         return response

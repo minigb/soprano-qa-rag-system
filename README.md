@@ -9,6 +9,11 @@ faithful use of relevant passages, and permits general music knowledge when usef
 Unrelated requests should receive a friendly explanation of the assistant's scope.
 This prompt is guidance, not a guarantee that every answer is correct or attack-proof.
 
+An optional [Vertex Gemini writer](docs/gemini-vertex.md) is available through
+`config/settings.gemini.json`. It preserves the same retrieval and prompt while
+using `gemini-4-argon` for answer generation. The local configurations remain
+available; English retrieval-query translation still uses Qwen3-14B.
+
 Implementation: `codex/helpful-rag-responses`, in
 `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
 The pre-injection original remains in the `rag-pre-injection` worktree. The
