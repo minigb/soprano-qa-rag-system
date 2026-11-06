@@ -1,0 +1,31 @@
+[
+  {
+    "candidate": "h",
+    "change": "Shorter explicit bilingual rules for conditions, scope, agents, modality, source-vs-general knowledge; strengthened prompt-only task containment.",
+    "status": "Full frozen run retained."
+  },
+  {
+    "candidate": "i",
+    "change": "Same H rules and task boundary; add three fictional source-to-answer demonstrations of conditions, actor relations and interpretation-vs-intention. Explicitly stop after the supported answer when no gap remains.",
+    "reason": "H early outputs still generalized a local ornament rule and attributed commentary as established composer intent. No BERTScore was consulted to make this change.",
+    "status": "Never executed; all snapshots retained with not-run.json."
+  },
+  {
+    "candidate": "j",
+    "change": "I prose examples, with task-scope instructions moved after the writing prompt and restated in the response language. No payload, retrieval, model, generation or review logic changed.",
+    "reason": "H direct attacks still produced markers and unrelated tasks; address instruction placement before executing the second candidate.",
+    "status": "Second actually executed candidate; same complete cohorts."
+  },
+  {
+    "candidate": "k",
+    "change": "J writer unchanged; append three fictional task-boundary examples in the answer language. No output checking, task-specific answer lookup or input filtering.",
+    "reason": "J improved expert material drift 11 to 4 but direct attack success increased 8 to 9. This does not pass the predeclared security comparison. One additional development attempt; no BERTScore used for prompt selection.",
+    "status": "Rejected after complete direct-attack subset: 12/30; finish challenge74 but expert/timing never run."
+  },
+  {
+    "candidate": "l",
+    "change": "Only single_pass_prompt.py differs from G. Use J meaning-preservation writing instructions and its three fictional semantic examples; restore the complete original G single_pass.py including task-boundary prompt and ordering.",
+    "reason": "Additional scope instructions/examples H/J/K failed to improve attack defense. Isolate the requested writing change against unchanged G security instructions.",
+    "status": "Frozen before execution; final bounded prompt attempt. Existing development set, not independent holdout."
+  }
+]

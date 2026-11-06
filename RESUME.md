@@ -1,3 +1,52 @@
+# 완료 — 출력 검사 없는 프롬프트 개선·비교, 기본 전환 보류 (2026-11-06)
+
+작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
+브랜치: `codex/helpful-rag-responses`, 구현 커밋 `9da2bda`.
+현재 소스는 의미 보존 우선 후보 J입니다. `config/settings.single-pass.json`으로 실행합니다.
+**기본 `config/settings.json`과 기존460개 데모는 이전 검증 상태 그대로입니다.**
+원본/main/Lab 백엔드도 보존했습니다. 출력 검사는 새 후보에 추가하지 않았습니다.
+
+14B·hybrid·corpus·생성 설정을 고정하고 동일 전문가 기반105개+거절 변형4개,
+한국어/영어 challenge74개, 고정20문항×2회 지연을 비교했습니다.
+
+- J 전문가105개: 중대한 의미 변경 **11→4**, 자연스러움 **3.448→3.486/4**, 오거절0.
+- 새 중대한 오류3개가 생겼고 기존1개가 남았습니다. 완전 해결은 아닙니다.
+- 충분한 답변 판정94→92개. 자연스러움18개 상승/73동일/14하락.
+- 기존 거절5개 모두 답변·의미 보존5/5, 자연스러움3.6/4.
+- 일반 음악10문항×2회: **3.976→2.769초**. 입력/KU/출력 모델 판정0회.
+- 한국어 생성1회, 영어 검색 번역+생성2회. 14B 유지.
+- 직접 공격 성공 **8/30→9/30**, 자료 주입0/20, 정상 대조 오거절0/12.
+- 범위 밖1/11 과제 수행 + 영어 질문 번역 실패1건. 실패를 방어 성공으로 세지 않습니다.
+- 고정 BERTScore 전문가105개 **0.939943**, 전체109개0.939042. 설정 재탐색·답변 잘림0.
+- 684개 테스트, 소스/model/corpus/retrieval/기존 checkout/demo 해시 검증 통과.
+
+생성 프롬프트는 조건·주체·범위·확실성을 구체적으로 유지하고 불필요한 부연을 줄이며,
+가상 작성 예시를 사용합니다. 일반 음악 지식 보충은 허용합니다. 원문 대입은 없습니다.
+페르마타 m1–2/col canto/p와PP 구분은 J에서 개선됐습니다. 꽃바람 발음, 겹자음,
+조옮김→편곡 확장, 기교 가사의 조건 누락4건과 다른 경미한 문제는 남아 있습니다.
+
+프롬프트만으로 보안과 품질을 모두 해결한 기본 전환을 달성하지는 못했습니다.
+추가 보안 문구 H/K는 회귀했습니다. 보안 문구를 그대로 둔 작성-only L은
+의미 오류8개·자연스러움3.571·직접 공격8/30·BERTScore0.932087이지만,
+페르마타/p-PP 세부 의미가 J보다 나빠 검토용 후보는 J를 남겼습니다.
+H/J/L 전체 출력, K challenge 출력, 실행하지 않은 I 및 K expert/timing 상태도 보존했습니다.
+
+먼저 다음 자료를 읽으세요.
+
+- [최종 비교 보고서](evaluation/prompt_fidelity_2026-11-06/report.md)
+- [선택과 한계](evaluation/prompt_fidelity_2026-11-06/decision.json)
+- [실제 답변 비교](evaluation/prompt_fidelity_2026-11-06/answer-comparison-j.json)
+- [직접 의미 검토](evaluation/prompt_fidelity_2026-11-06/manual-review-j.json)
+- [검증 결과](evaluation/prompt_fidelity_2026-11-06/verification.json)
+- [재현/실행 기록](evaluation/prompt_fidelity_2026-11-06/README.md)
+
+요청한 프롬프트 개선과 비교 작업은 완료했습니다. 실행 중인 생성/평가/서버 작업은 없습니다.
+완료된 답변이나 첫 유효 Claude 판정을 좋은 점수가 나올 때까지 재실행하지 않습니다.
+후속 요청은 새 snapshot/output으로 진행합니다. 새 holdout 평가가 아닙니다.
+Discord/notifier 및 사용량/reset 중지 조건은 사용하지 않습니다.
+
+---
+
 # 단계별 지연 측정 완료 — 단일 생성 후보는 미채택 (2026-11-05)
 
 작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`

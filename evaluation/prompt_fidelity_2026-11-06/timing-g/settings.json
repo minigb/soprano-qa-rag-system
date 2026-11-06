@@ -1,0 +1,67 @@
+{
+  "dataset_root": "/home/minhee/soprano-qa-dataset",
+  "corpus_path": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/prompt_fidelity_2026-11-06/timing-g/runtime/data/corpus.json",
+  "stats_path": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/prompt_fidelity_2026-11-06/timing-g/runtime/data/corpus_stats.json",
+  "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/prompt_fidelity_2026-11-06/timing-g/runtime/feature_overrides.json",
+  "web_export_files": [
+    "research-open.jsonl",
+    "research-conditional.jsonl"
+  ],
+  "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+  "model_filename": "Qwen3-14B-Q6_K.gguf",
+  "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+  "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+  "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+  "embedding_model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+  "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/prompt_fidelity_2026-11-06/timing-g/runtime/soprano-corpus-qwen3-embedding-cache.json",
+  "retrieval": {
+    "mode": "hybrid",
+    "dense_min_score": 0.44,
+    "dense_min_content_score": 0.43,
+    "dense_max_alias_gap": 0.2,
+    "dense_candidate_k": 24,
+    "lexical_weight": 0.35,
+    "dense_weight": 0.65,
+    "rrf_k": 60,
+    "query_cache_size": 128,
+    "n_ctx": 2048,
+    "n_batch": 2048,
+    "embedding_batch_size": 8,
+    "n_gpu_layers": -1,
+    "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+    "source_priority": true
+  },
+  "llm": {
+    "pipeline": "single_pass",
+    "n_ctx": 8192,
+    "n_gpu_layers": -1,
+    "temperature": 0.0,
+    "top_p": 0.8,
+    "max_tokens": 768,
+    "source_preservation": "semantic",
+    "synthesis_prompt": "concise",
+    "synthesis_reasoning": false,
+    "synthesis_reasoning_max_tokens": 4096,
+    "reasoning_temperature": 0.6,
+    "reasoning_top_p": 0.95,
+    "reasoning_top_k": 20,
+    "reasoning_min_p": 0.0,
+    "seed": 42,
+    "evidence_translation": "reviewed_catalog",
+    "evidence_translation_max_tokens": 1536
+  },
+  "web_coaching": {
+    "enabled": true,
+    "generation_supplement": 4,
+    "generation_supplement_gate": "dense_margin",
+    "generation_supplement_margin": 0.05
+  },
+  "score_context": {
+    "lyrics": true
+  },
+  "sumijo": {
+    "enabled": true,
+    "dense_min_score": 0.6,
+    "dense_margin": 0.04
+  }
+}

@@ -1,0 +1,441 @@
+{
+  "scope": "20 fixed questions, two passes in forward/reverse order; cold load and one warmup excluded. Slow-path-enriched diagnostic set, not a traffic estimate. Separate sequential runs, not randomized interleaving.",
+  "runs": {
+    "timing-g": {
+      "groups": {
+        "general_or_english": {
+          "requests": 6,
+          "unique_questions": 3,
+          "mean_seconds": 4.442355319333728,
+          "median_seconds": 4.343684764520731,
+          "min_seconds": 4.209568295977078,
+          "max_seconds": 5.072632188966963,
+          "llm_calls": {
+            "1": 2,
+            "2": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.6774048624987095,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0.6441602365036184
+          },
+          "retrieval_mean_seconds": 0.07495911732742873,
+          "remaining_mean_seconds": 0.0458311030039719,
+          "writer_completion_tokens_mean": 127.33333333333333,
+          "writer_prompt_tokens_mean": 2264
+        },
+        "ordinary_music": {
+          "requests": 20,
+          "unique_questions": 10,
+          "mean_seconds": 3.9755007317551643,
+          "median_seconds": 3.8849635220249183,
+          "min_seconds": 1.7194836270064116,
+          "max_seconds": 8.234938619018067,
+          "llm_calls": {
+            "1": 20
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.8967488476017023,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.03273628190218005,
+          "remaining_mean_seconds": 0.04601560225128196,
+          "writer_completion_tokens_mean": 168.75,
+          "writer_prompt_tokens_mean": 2459.2
+        },
+        "previous_refusal": {
+          "requests": 10,
+          "unique_questions": 5,
+          "mean_seconds": 4.363510853413027,
+          "median_seconds": 4.426238040527096,
+          "min_seconds": 3.2998735710280016,
+          "max_seconds": 4.899697838991415,
+          "llm_calls": {
+            "1": 10
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 4.260917849006364,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.05669045280083083,
+          "remaining_mean_seconds": 0.04590255160583183,
+          "writer_completion_tokens_mean": 186.6,
+          "writer_prompt_tokens_mean": 2443.4
+        },
+        "scope_or_attack": {
+          "requests": 4,
+          "unique_questions": 2,
+          "mean_seconds": 2.6336679445084883,
+          "median_seconds": 2.6333226679998916,
+          "min_seconds": 2.572753863001708,
+          "max_seconds": 2.695272579032462,
+          "llm_calls": {
+            "1": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.5260322325193556,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.0613609779975377,
+          "remaining_mean_seconds": 0.046274733991594985,
+          "writer_completion_tokens_mean": 93.5,
+          "writer_prompt_tokens_mean": 2818.5
+        }
+      },
+      "loading": {
+        "measurements": 40,
+        "results_sha256": "1ad57c8d6862a2e406e92f9ee0d908cfbf26d0b135492cc64ad38d8acb81ce7b",
+        "contract_sha256": "dcf445ffba0f6c4cdc1bb7bd1449edaae6cfd93ea9e490c458409697ab975e9a",
+        "cold_load_seconds": 4.933671725040767,
+        "excluded_warmup_seconds": 4.08293195796432,
+        "completed_at": "2026-11-06T14:57:19.636216+00:00",
+        "accounting": "Request wall time = low-level 14B completion time + retrieval/prompt time + remaining CPU/I/O. Inclusive wrapper spans are diagnostic only; do not sum them again."
+      },
+      "repeated_answer_changes": 7,
+      "same_retrieved_ids_as_baseline": 40,
+      "one_writer_no_model_review_verified": true
+    },
+    "timing-h": {
+      "groups": {
+        "general_or_english": {
+          "requests": 6,
+          "unique_questions": 3,
+          "mean_seconds": 3.910589712827156,
+          "median_seconds": 3.8686796970141586,
+          "min_seconds": 3.6548859489848837,
+          "max_seconds": 4.392136962967925,
+          "llm_calls": {
+            "1": 2,
+            "2": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.1480366014972483,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0.6435504229933334
+          },
+          "retrieval_mean_seconds": 0.07398268381560531,
+          "remaining_mean_seconds": 0.04502000452096885,
+          "writer_completion_tokens_mean": 127.5,
+          "writer_prompt_tokens_mean": 1316
+        },
+        "ordinary_music": {
+          "requests": 20,
+          "unique_questions": 10,
+          "mean_seconds": 3.666606397551368,
+          "median_seconds": 3.164484341017669,
+          "min_seconds": 2.282707584963646,
+          "max_seconds": 6.851005733013153,
+          "llm_calls": {
+            "1": 20
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.5885341201501433,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.03264722365420312,
+          "remaining_mean_seconds": 0.04542505374702159,
+          "writer_completion_tokens_mean": 158.65,
+          "writer_prompt_tokens_mean": 1845.2
+        },
+        "previous_refusal": {
+          "requests": 10,
+          "unique_questions": 5,
+          "mean_seconds": 3.8253194577002434,
+          "median_seconds": 3.7957265360164456,
+          "min_seconds": 3.6223440910107456,
+          "max_seconds": 4.121613813971635,
+          "llm_calls": {
+            "1": 10
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.7237077912082897,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.05645914299529977,
+          "remaining_mean_seconds": 0.045152523496653885,
+          "writer_completion_tokens_mean": 165.9,
+          "writer_prompt_tokens_mean": 1829.4
+        },
+        "scope_or_attack": {
+          "requests": 4,
+          "unique_questions": 2,
+          "mean_seconds": 2.88881103375752,
+          "median_seconds": 2.954132834507618,
+          "min_seconds": 2.447673972987104,
+          "max_seconds": 3.1993044930277392,
+          "llm_calls": {
+            "1": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.781500737502938,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.06108375274925493,
+          "remaining_mean_seconds": 0.046226543505326845,
+          "writer_completion_tokens_mean": 109.5,
+          "writer_prompt_tokens_mean": 2204.5
+        }
+      },
+      "loading": {
+        "measurements": 40,
+        "results_sha256": "c465ba4f667eac06019e03bd593b4d1368ea30d8a43545afc729449e616e1ad3",
+        "contract_sha256": "551f538c5e68a187f25dca20f0424507e105db427643207d250006cc7820a541",
+        "cold_load_seconds": 4.591321852989495,
+        "excluded_warmup_seconds": 3.8093913990305737,
+        "completed_at": "2026-11-06T14:59:55.128863+00:00",
+        "accounting": "Request wall time = low-level 14B completion time + retrieval/prompt time + remaining CPU/I/O. Inclusive wrapper spans are diagnostic only; do not sum them again."
+      },
+      "repeated_answer_changes": 11,
+      "same_retrieved_ids_as_baseline": 40,
+      "one_writer_no_model_review_verified": true
+    },
+    "timing-j": {
+      "groups": {
+        "general_or_english": {
+          "requests": 6,
+          "unique_questions": 3,
+          "mean_seconds": 3.411140987339119,
+          "median_seconds": 3.348221250518691,
+          "min_seconds": 2.7070111710345373,
+          "max_seconds": 3.998525012983009,
+          "llm_calls": {
+            "1": 2,
+            "2": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.6478169106703717,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0.6440528361611845
+          },
+          "retrieval_mean_seconds": 0.07458821282489225,
+          "remaining_mean_seconds": 0.044683027682670705,
+          "writer_completion_tokens_mean": 94.66666666666667,
+          "writer_prompt_tokens_mean": 1644
+        },
+        "ordinary_music": {
+          "requests": 20,
+          "unique_questions": 10,
+          "mean_seconds": 2.768762314700871,
+          "median_seconds": 2.4605874455010053,
+          "min_seconds": 1.1177066520322114,
+          "max_seconds": 5.159225032955874,
+          "llm_calls": {
+            "1": 20
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.6902411493560066,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.03290773625485599,
+          "remaining_mean_seconds": 0.04561342909000814,
+          "writer_completion_tokens_mean": 110.8,
+          "writer_prompt_tokens_mean": 2295.2
+        },
+        "previous_refusal": {
+          "requests": 10,
+          "unique_questions": 5,
+          "mean_seconds": 3.805243740795413,
+          "median_seconds": 4.661239395500161,
+          "min_seconds": 1.9073738000006415,
+          "max_seconds": 4.673838743008673,
+          "llm_calls": {
+            "1": 10
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.7041326023987495,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.05632899229531176,
+          "remaining_mean_seconds": 0.044782146101351825,
+          "writer_completion_tokens_mean": 161.7,
+          "writer_prompt_tokens_mean": 2279.4
+        },
+        "scope_or_attack": {
+          "requests": 4,
+          "unique_questions": 2,
+          "mean_seconds": 2.4205210934887873,
+          "median_seconds": 2.4202129165059887,
+          "min_seconds": 2.282195203995798,
+          "max_seconds": 2.559463336947374,
+          "llm_calls": {
+            "1": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.314132394240005,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.060863721737405285,
+          "remaining_mean_seconds": 0.045524977511377074,
+          "writer_completion_tokens_mean": 85,
+          "writer_prompt_tokens_mean": 2654.5
+        }
+      },
+      "loading": {
+        "measurements": 40,
+        "results_sha256": "cbe3d26d82fe6458b4965854656bc467a7a081d55a346001e7e9e13e16ce4045",
+        "contract_sha256": "7e2862c3a65e982e0b504ddcb30a41361862e5748e85a3eb4cdbe19b16f472e7",
+        "cold_load_seconds": 4.6624535960145295,
+        "excluded_warmup_seconds": 2.904647779010702,
+        "completed_at": "2026-11-06T15:12:48.733390+00:00",
+        "accounting": "Request wall time = low-level 14B completion time + retrieval/prompt time + remaining CPU/I/O. Inclusive wrapper spans are diagnostic only; do not sum them again."
+      },
+      "repeated_answer_changes": 6,
+      "same_retrieved_ids_as_baseline": 40,
+      "one_writer_no_model_review_verified": true
+    },
+    "timing-l": {
+      "groups": {
+        "general_or_english": {
+          "requests": 6,
+          "unique_questions": 3,
+          "mean_seconds": 3.674341882831262,
+          "median_seconds": 3.6079966404940933,
+          "min_seconds": 3.030918959993869,
+          "max_seconds": 4.111433163983747,
+          "llm_calls": {
+            "1": 2,
+            "2": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.9103657113349377,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0.6447705533355474
+          },
+          "retrieval_mean_seconds": 0.07411695649110091,
+          "remaining_mean_seconds": 0.04508866166967588,
+          "writer_completion_tokens_mean": 111.83333333333333,
+          "writer_prompt_tokens_mean": 1475.6666666666667
+        },
+        "ordinary_music": {
+          "requests": 20,
+          "unique_questions": 10,
+          "mean_seconds": 3.0992090918996835,
+          "median_seconds": 2.6953370484989136,
+          "min_seconds": 1.7164065490360372,
+          "max_seconds": 7.19617863104213,
+          "llm_calls": {
+            "1": 20
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.02138868861075,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.03249119764950592,
+          "remaining_mean_seconds": 0.04532920563942753,
+          "writer_completion_tokens_mean": 129.75,
+          "writer_prompt_tokens_mean": 2080.2
+        },
+        "previous_refusal": {
+          "requests": 10,
+          "unique_questions": 5,
+          "mean_seconds": 3.3329280639998613,
+          "median_seconds": 3.1547368630126584,
+          "min_seconds": 2.8822371420101263,
+          "max_seconds": 3.8405554729979485,
+          "llm_calls": {
+            "1": 10
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 3.2318192009988707,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.05623791980324313,
+          "remaining_mean_seconds": 0.04487094319774769,
+          "writer_completion_tokens_mean": 140.3,
+          "writer_prompt_tokens_mean": 2064.4
+        },
+        "scope_or_attack": {
+          "requests": 4,
+          "unique_questions": 2,
+          "mean_seconds": 2.5372587959718658,
+          "median_seconds": 2.5363392289727926,
+          "min_seconds": 2.37800048396457,
+          "max_seconds": 2.698356241977308,
+          "llm_calls": {
+            "1": 4
+          },
+          "stage_mean_seconds": {
+            "input_admission": 0,
+            "ku_selection": 0,
+            "answer_generation": 2.430520501511637,
+            "output_review": 0,
+            "instruction_review": 0,
+            "question_translation": 0
+          },
+          "retrieval_mean_seconds": 0.060748777745175175,
+          "remaining_mean_seconds": 0.04598951671505347,
+          "writer_completion_tokens_mean": 91,
+          "writer_prompt_tokens_mean": 2439.5
+        }
+      },
+      "loading": {
+        "measurements": 40,
+        "results_sha256": "8a8ee0b6b073819955d74faa020fbba89782e1fece877255a2a6aa10ff78ed20",
+        "contract_sha256": "8e92b9a2b0baa6ccc2af666c227bdfbbebb1b380d8342f4628bcda8d852518a2",
+        "cold_load_seconds": 4.611649639031384,
+        "excluded_warmup_seconds": 2.957837303983979,
+        "completed_at": "2026-11-06T15:32:09.271028+00:00",
+        "accounting": "Request wall time = low-level 14B completion time + retrieval/prompt time + remaining CPU/I/O. Inclusive wrapper spans are diagnostic only; do not sum them again."
+      },
+      "repeated_answer_changes": 10,
+      "same_retrieved_ids_as_baseline": 40,
+      "one_writer_no_model_review_verified": true
+    }
+  }
+}

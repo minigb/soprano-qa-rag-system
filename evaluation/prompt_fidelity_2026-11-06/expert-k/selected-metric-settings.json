@@ -1,0 +1,14 @@
+{
+  "selection": "highest effective development F1; no validation outputs used",
+  "settings": {
+    "model_type": "xlm-roberta-large",
+    "num_layers": 18,
+    "idf": false,
+    "rescale_with_baseline": false,
+    "use_fast_tokenizer": false,
+    "lang": "ko"
+  },
+  "development_effective_f1": 0.8380860589271368,
+  "development_contract_sha256": "820fe3af902434d946bfbf0e24b250706deeb94301727a51e0ba8eb342b9678a",
+  "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389"
+}

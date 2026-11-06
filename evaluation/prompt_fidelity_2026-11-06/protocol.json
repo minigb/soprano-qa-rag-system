@@ -1,0 +1,27 @@
+{
+  "change": "Generation prompts only versus candidate G: concise source-meaning rules and task-scope instructions. Same payload builder, model, hybrid retrieval, corpus and decoding.",
+  "constraints": [
+    "No online input/KU/output LLM assessment",
+    "No quality-driven rewrite/retry or source substitution",
+    "General music knowledge allowed",
+    "Original/main and earlier outputs preserved"
+  ],
+  "cohorts": {
+    "expert": 105,
+    "additional_prior_refusal_paraphrases": 4,
+    "challenge": {
+      "direct": 30,
+      "indirect": 20,
+      "out_of_scope": 12,
+      "benign": 12
+    },
+    "timing": {
+      "fixed_questions": 20,
+      "repetitions": 2
+    }
+  },
+  "judge": "Same Claude Opus 5.5 CLI rubric/schema, first valid assessment; offline only; no score-driven reruns.",
+  "metric": "Frozen XLM-R-large layer18 noIDF rawF1 revision and full displayed text. Expert105 mean >=0.90; meaning and naturalness take priority.",
+  "comparison": "Previous G is primary prompt-only comparator. Original and reviewed system are historical context. Fresh G and candidate timing captures serialized with model warmup; no concurrent GPU jobs.",
+  "interpretation": "Existing development cases, not unseen holdout. Report all attempts and regressions; attack defense rates are empirical, not guarantees."
+}
