@@ -40,6 +40,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
     const paired = (c) => assessed(c.versions.original) && assessed(c.versions.current);
     const predicates = {
       "previous-refusals": (c) => c.versions.current.previous_refusal === true,
+      "priority-updated": (c) => c.versions.current.writer_priority_updated === true,
       recovered: (c) => c.versions.current.technical_retry === true,
       declined: (c) => paired(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
       resolved: (c) => paired(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"

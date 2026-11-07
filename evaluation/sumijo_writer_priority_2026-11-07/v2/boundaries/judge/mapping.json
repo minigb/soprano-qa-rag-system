@@ -1,0 +1,68 @@
+[
+  {
+    "key": "current:same_scope-ko",
+    "case_id": "same_scope-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a5fcd1f7e5f6780f8bb5"
+  },
+  {
+    "key": "current:same_scope-en",
+    "case_id": "same_scope-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "2e2a369a79f4d6aa0258"
+  },
+  {
+    "key": "current:different_condition-ko",
+    "case_id": "different_condition-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "98ac4cb52298892f9ca8"
+  },
+  {
+    "key": "current:different_condition-en",
+    "case_id": "different_condition-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "818b26f3bbd794daa3d2"
+  },
+  {
+    "key": "current:different_actor-ko",
+    "case_id": "different_actor-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e1fcffeb0de4fb72489f"
+  },
+  {
+    "key": "current:different_actor-en",
+    "case_id": "different_actor-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v2/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "77f1ef69c9de724a54fb"
+  }
+]

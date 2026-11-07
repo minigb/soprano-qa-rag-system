@@ -1,0 +1,114 @@
+{
+  "case_id": "different_actor-en",
+  "variant": "synthetic-boundary",
+  "status": "response",
+  "elapsed_seconds": 1.3525986559689045,
+  "response": {
+    "answer": "The singer is advised to sing the first vocal note *f* (forte) in this fictional practice piece.",
+    "evidence": [
+      {
+        "id": "fictional-different_actor-en-expert_annotation",
+        "piece_id": "nella-fantasia",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "The singer is advised to sing the first vocal note f in this fictional practice piece.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      },
+      {
+        "id": "fictional-different_actor-en-sumijo_feedback",
+        "piece_id": "nella-fantasia",
+        "kind": "sumijo",
+        "evidence_type": "sumijo_feedback",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "The pianist is advised to play the opening accompaniment pp in this fictional practice piece.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": {
+          "speaker": "Sumi Jo"
+        },
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "generation_mode": "llm_single_pass",
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-3.8-flash",
+      "model_version": "gemini-3.8-flash",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 1.3524300609715283,
+      "usage": {
+        "candidates_token_count": 22,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 22
+          }
+        ],
+        "prompt_token_count": 1670,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1670
+          }
+        ],
+        "total_token_count": 1692,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  }
+}

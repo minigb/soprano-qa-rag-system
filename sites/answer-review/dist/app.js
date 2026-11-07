@@ -19,6 +19,7 @@ const numberText = (n, digits) => Number.isFinite(n) ? (digits == null ? String(
 const filters = [
   ["all", "전체 문항", () => true],
   ["previous-refusals", "이전 거절 5건", (c) => c.versions.current.previous_refusal === true],
+  ["priority-updated", "이번 변경 문항", (c) => c.versions.current.writer_priority_updated === true],
   ["recovered", "API 오류 후 재시도", (c) => c.versions.current.technical_retry === true],
   ["declined", "자연스러움 하락", (c) => pairedAssessment(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness],
   ["resolved", "중대한 의미 변경 해소", (c) => pairedAssessment(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift" && usefulVersion(c.versions.current)],
@@ -153,6 +154,7 @@ function makeAnswer(c, version) {
   const timeLabel = state.evaluation.latencyLabels?.[version];
   meta.append(el("span", "", "저장된 답변 전문"), el("span", "", `${[...v.answer].length}자 · ${timeLabel ? timeLabel + " " : ""}${v.latency_seconds.toFixed(2)}초`));
   body.append(answer, meta);
+  if (v.writer_priority_updated) body.append(el("p", "secondary-note", "조수미 우선 참고 지침을 적용해 다시 생성한 답변입니다."));
   if (v.technical_retry) body.append(el("p", "secondary-note retry-note", "최초 API 호출 오류 후 같은 입력으로 1회 재시도한 답변입니다. 표시 시간은 성공한 재시도 호출만 포함합니다."));
   if (v.status && v.status !== "response") body.append(el("p", "secondary-note", "실행 오류로 생성된 답변이 없습니다."));
   else if (!usefulVersion(v)) body.append(el("p", "secondary-note", "이 음악 질문에 답변을 제공하지 못했습니다."));

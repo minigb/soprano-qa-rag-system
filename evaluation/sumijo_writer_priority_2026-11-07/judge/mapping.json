@@ -1,0 +1,178 @@
+[
+  {
+    "key": "before:expert-kim-nella-fantasia-05__no-range",
+    "case_id": "expert-kim-nella-fantasia-05__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "8e02c9d6164837e00094"
+  },
+  {
+    "key": "before:expert-kim-nella-fantasia-09__no-range",
+    "case_id": "expert-kim-nella-fantasia-09__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "cab9c95764b3dca298fd"
+  },
+  {
+    "key": "before:expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "5b3605e6947f2cb90e6e"
+  },
+  {
+    "key": "before:expert-kim-nella-fantasia-03__no-range",
+    "case_id": "expert-kim-nella-fantasia-03__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "b0d1d1de6a765ca3c69a"
+  },
+  {
+    "key": "before:expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e6b8ddd6217c0828ab77"
+  },
+  {
+    "key": "before:expert-yeon-nella-fantasia-07__no-range",
+    "case_id": "expert-yeon-nella-fantasia-07__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "58a7bc1f8def83d306c0"
+  },
+  {
+    "key": "before:expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "1e94e1ce9832b38842de"
+  },
+  {
+    "key": "before:expert-kim-nella-fantasia-10__no-range",
+    "case_id": "expert-kim-nella-fantasia-10__no-range",
+    "variant": "before",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/before.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "8aae58b497948de3e4a2"
+  },
+  {
+    "key": "after:expert-kim-nella-fantasia-05__no-range",
+    "case_id": "expert-kim-nella-fantasia-05__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "76c4cc3d8c7f0b307751"
+  },
+  {
+    "key": "after:expert-kim-nella-fantasia-09__no-range",
+    "case_id": "expert-kim-nella-fantasia-09__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "aefcd668dbef6debbe22"
+  },
+  {
+    "key": "after:expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "dfc369095514e4bff131"
+  },
+  {
+    "key": "after:expert-kim-nella-fantasia-03__no-range",
+    "case_id": "expert-kim-nella-fantasia-03__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "ab61cf20aad371105120"
+  },
+  {
+    "key": "after:expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "97f143f45792726b7ed6"
+  },
+  {
+    "key": "after:expert-yeon-nella-fantasia-07__no-range",
+    "case_id": "expert-yeon-nella-fantasia-07__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "434aec40fa6222142995"
+  },
+  {
+    "key": "after:expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "case_id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "0801de4853b520a228d3"
+  },
+  {
+    "key": "after:expert-kim-nella-fantasia-10__no-range",
+    "case_id": "expert-kim-nella-fantasia-10__no-range",
+    "variant": "sumijo-priority-v1",
+    "source_file": "evaluation/sumijo_writer_priority_2026-11-07/after.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "f97140aceea5f8f133be"
+  }
+]

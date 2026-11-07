@@ -1,0 +1,152 @@
+{
+  "model": "gemini-3.8-flash",
+  "affected_existing_cases": {
+    "before": {
+      "cases": 8,
+      "material_drifts": 0,
+      "minor_drifts": 0,
+      "naturalness": 3.25,
+      "refusals": 0,
+      "completeness": 2
+    },
+    "after": {
+      "cases": 8,
+      "material_drifts": 0,
+      "minor_drifts": 0,
+      "naturalness": 3.75,
+      "refusals": 0,
+      "completeness": 2
+    }
+  },
+  "naturalness_declines": [
+    "expert-yeon-nella-fantasia-07__no-range"
+  ],
+  "naturalness_improvements": [
+    "expert-kim-nella-fantasia-05__no-range",
+    "expert-kim-nella-fantasia-09__no-range",
+    "expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "expanded-kim-nella-fantasia-10-syn-03__no-range"
+  ],
+  "unchanged_existing_music_prompts_and_answers": 101,
+  "unchanged_existing_attack_control_prompts": 73,
+  "expert105_bertscore": {
+    "before": 0.9509922112737383,
+    "after": 0.9506246992519923,
+    "fresh_scores": 5,
+    "reused_scores": 100,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "truncated_texts": 0
+  },
+  "synthetic_boundary_checks": {
+    "same_scope-ko": {
+      "id": "a5fcd1f7e5f6780f8bb5",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "It is a single clear, natural Korean sentence.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "부드럽고 여리게 시작하도록 권합니다",
+      "source_excerpt": "부드럽고 여리게 시작하도록 권합니다",
+      "rationale": "As the reference requires, the answer follows the Sumi Jo-type passage in this same-scope conflict. It keeps the advice as a recommendation and does not present it as a verified score marking."
+    },
+    "same_scope-en": {
+      "id": "2e2a369a79f4d6aa0258",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "It is a concise, fluent instruction.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "Begin the first sung note softly and gently.",
+      "source_excerpt": "Begin the first sung note of this fictional practice piece softly and gently.",
+      "rationale": "The answer follows the preferred Sumi Jo-type passage, as the reference specifies. It does not claim to have verified the score or call the other source wrong."
+    },
+    "different_condition-ko": {
+      "id": "98ac4cb52298892f9ca8",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The two Korean sentences read clearly, and '반면' makes the contrast between the two conditions explicit.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "반면 마이크를 사용하는 작은 공간에서는",
+      "source_excerpt": "마이크를 사용하는 작은 공간에서는 자연스럽고 친밀한 음색을 사용할 수 있습니다.",
+      "rationale": "The answer gives the vocal approach for the condition asked about and keeps the hedge '필요할 수 있습니다'. It mentions the small-space microphone advice only as a clearly marked contrast and does not apply it to the large hall."
+    },
+    "different_condition-en": {
+      "id": "818b26f3bbd794daa3d2",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The answer is one fluent sentence that keeps the hedged wording.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "you may need to use classical vocal production",
+      "source_excerpt": "classical vocal production with sufficient resonance and breath support may be needed",
+      "rationale": "The answer uses the large-hall, no-microphone guidance and keeps the hedge 'may need', so a possibility doesn't become a requirement. It does not mix in the advice meant for a small space with a microphone."
+    },
+    "different_actor-ko": {
+      "id": "e1fcffeb0de4fb72489f",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 3,
+      "naturalness_rationale": "The answer reads clearly, but the second sentence about the accompaniment is extra information the user did not ask for.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "성악부의 첫 소리는 f로 부르도록 권합니다",
+      "source_excerpt": "성악부의 첫 소리를 f로 부르도록 권합니다",
+      "rationale": "The answer gives f as the dynamic for the vocal part's first note and keeps the pp recommendation with the accompaniment. It does not move the accompaniment's pp to the voice part, which matches the reference."
+    },
+    "different_actor-en": {
+      "id": "77f1ef69c9de724a54fb",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "A single clear sentence answers the question directly and correctly expands f to forte.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "sing the first vocal note *forte* (*f*)",
+      "source_excerpt": "The singer is advised to sing the first vocal note f",
+      "rationale": "The answer gives the singer's recommended dynamic as f, which matches the expert annotation. It does not carry over the pianist's pp advice for the accompaniment."
+    }
+  },
+  "latest_generation_latency": {
+    "mean_seconds": 5.36436972397496,
+    "median_seconds": 2.934432978508994,
+    "scope": "8 serial generation API calls only; no controlled speed comparison"
+  },
+  "limitations": "Eight affected development questions, not a fresh holdout. 101 unchanged prompts/results reused, not regenerated. Six artificial boundary fixtures excluded from expert metrics. LLM judgments are not expert reannotations. v1 regression retained separately."
+}

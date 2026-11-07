@@ -41,7 +41,7 @@ def enabled(settings):
 def build_messages(piece, measures, question, results, *, score_context='', language='ko'):
     from soprano_qa.answer import generation_evidence_payload, parse_measure_ranges
     from soprano_qa.structured_answer import source_comparison_policy, synthesis_evidence_view
-    from soprano_qa.single_pass_prompt import writing_policy
+    from soprano_qa.single_pass_prompt import source_priority_policy, writing_policy
 
     validate_question_input(question)
     ranges = parse_measure_ranges(measures) if measures else []
@@ -74,6 +74,9 @@ def build_messages(piece, measures, question, results, *, score_context='', lang
         comparison, separator, _ = source_comparison_policy(language).partition('JSON 한 개를 반환합니다:')
         assert separator, 'Comparison prompt contract changed'
         writer += '\n' + comparison + '\n답변 본문만 작성하고 내부 라벨은 쓰지 않습니다.\n'
+    priority = source_priority_policy(language, passages)
+    if priority:
+        writer += '\n' + priority
     style = ('한국어 합니다체로 답하세요.' if language == 'ko'
              else 'Write the entire answer in natural English; retain quoted lyrics in their original script.')
     # Keep task boundaries next to the writing instructions, after the prose

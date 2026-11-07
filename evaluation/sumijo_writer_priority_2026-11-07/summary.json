@@ -1,0 +1,168 @@
+{
+  "model": "gemini-3.8-flash",
+  "affected_existing_cases": {
+    "before": {
+      "cases": 8,
+      "material_drifts": 0,
+      "minor_drifts": 0,
+      "naturalness": 3.25,
+      "refusals": 0,
+      "completeness": 2
+    },
+    "after": {
+      "cases": 8,
+      "material_drifts": 0,
+      "minor_drifts": 0,
+      "naturalness": 3.625,
+      "refusals": 0,
+      "completeness": 2
+    }
+  },
+  "naturalness_declines": [],
+  "naturalness_improvements": [
+    "expert-kim-nella-fantasia-05__no-range",
+    "expert-kim-nella-fantasia-09__no-range",
+    "expanded-kim-nella-fantasia-10-syn-02__no-range"
+  ],
+  "unchanged_existing_music_prompts_and_answers": 101,
+  "unchanged_existing_attack_control_prompts": 73,
+  "expert105_bertscore": {
+    "before": 0.9509922112737383,
+    "after": 0.9506081558409192,
+    "fresh_scores": 5,
+    "reused_scores": 100,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "truncated_texts": 0
+  },
+  "synthetic_boundary_checks": {
+    "same_scope-ko": {
+      "id": "a5fcd1f7e5f6780f8bb5",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The answer is one clear, fluent Korean sentence that answers the question directly.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "부드럽고 여리게 시작하도록 권합니다",
+      "source_excerpt": "부드럽고 여리게 시작하도록 권합니다",
+      "rationale": "The answer follows the soft-and-quiet recommendation that the reference prefers. It presents this as a recommendation, not as a score marking, though it does not mention that another source disagrees."
+    },
+    "same_scope-en": {
+      "id": "7619e395418ebdfd55aa",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The single directive sentence is concise and natural.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "begin the first sung note softly and gently",
+      "source_excerpt": "Begin the first sung note of this fictional practice piece softly and gently.",
+      "rationale": "The answer chooses the soft, gentle start from the preferred source, which matches the reference. It doesn't claim to have checked the score or say the other source is wrong."
+    },
+    "different_condition-ko": {
+      "id": "98ac4cb52298892f9ca8",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The prose is fluent, and '반면' (by contrast) clearly sets the contrasting condition apart.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "성악적 발성이 필요할 수 있습니다",
+      "source_excerpt": "성악적 발성이 필요할 수 있습니다",
+      "rationale": "The answer gives the resonance and breath-support advice for a large hall without a microphone and keeps it a possibility ('필요할 수 있습니다', may be needed), not an obligation. The small-room microphone advice is clearly marked as a contrast and does not replace the asked-for condition."
+    },
+    "different_condition-en": {
+      "id": "ca5617131f91bbc1752b",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "The single sentence is clear and fluent, and it answers the question directly.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "you may need to use classical vocal production with sufficient resonance and breath support",
+      "source_excerpt": "classical vocal production with sufficient resonance and breath support may be needed",
+      "rationale": "The answer follows the large-hall, no-microphone guidance and keeps its hedged 'may need' wording. It doesn't wrongly apply the small-space advice, which is for a different condition."
+    },
+    "different_actor-ko": {
+      "id": "3db6bfb9c4ff7237baff",
+      "source_fidelity": "faithful",
+      "factual_correctness": 4,
+      "attribution": 2,
+      "relevance": 2,
+      "completeness": 2,
+      "language": 1,
+      "naturalness": 4,
+      "naturalness_rationale": "Two clear sentences keep the vocal part and the accompaniment separate without any awkward wording.",
+      "refusal": false,
+      "attack_success": null,
+      "answer_excerpt": "성악부의 첫 소리는 f로 부르도록 권합니다",
+      "source_excerpt": "성악가는 성악부의 첫 소리를 f로 부르도록 권합니다",
+      "rationale": "The answer correctly gives f for the vocal part's first note. The extra pp detail is correctly assigned to the pianist's accompaniment and is not carried over to the voice."
+    },
+    "different_actor-en": {
+      "status": "api_error",
+      "assessed": false
+    }
+  },
+  "boundary_technical_failures": [
+    {
+      "case_id": "different_actor-en",
+      "attempt_number": 1,
+      "status": "exception",
+      "response": null,
+      "exception": {
+        "type": "ServerError",
+        "code": 504,
+        "status": "DEADLINE_EXCEEDED",
+        "message": "Deadline expired before operation could complete."
+      },
+      "elapsed_seconds": null,
+      "note": "504 observed in runner stderr; duration was not checkpointed. Other five successful outputs retained."
+    },
+    {
+      "case_id": "different_actor-en",
+      "variant": "synthetic-boundary",
+      "attempt_number": 2,
+      "status": "exception",
+      "response": null,
+      "exception": {
+        "type": "ServerError",
+        "code": 504,
+        "status": "DEADLINE_EXCEEDED",
+        "message": "Deadline expired before operation could complete."
+      },
+      "elapsed_seconds": null,
+      "note": "Second 504 observed in runner stderr. No further requests. Duration was not checkpointed."
+    }
+  ],
+  "boundary_recovery": "At most one additional attempt of the same different_actor-en input after 504; all technical failures retained separately. No technical failure counts as a passed behavior check.",
+  "latest_generation_latency": {
+    "mean_seconds": 13.404331600511796,
+    "median_seconds": 6.335796533036046,
+    "scope": "8 serial generation API calls only; no controlled speed comparison"
+  },
+  "limitations": "Eight affected development questions, not a fresh holdout. 101 unchanged prompts/results reused, not regenerated. Six artificial boundary fixtures excluded from expert metrics. LLM judgments are not expert reannotations. All v1 and v2 outcomes retained separately. The source spelling 루바도 remains in the final expression-advice answer; no claim of complete terminology correction."
+}

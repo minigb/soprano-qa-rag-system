@@ -25,8 +25,7 @@ def jsonl(path):
 
 def main():
     catalog = read(SITE / 'dist/evaluations.json')
-    assert catalog['default'] == 'gemini-20261107'
-    entry = next(e for e in catalog['evaluations'] if e['id'] == catalog['default'])
+    entry = next(e for e in catalog['evaluations'] if e['id'] == 'gemini-20261107')
     data = read(SITE / 'dist' / entry['data'])
     original = {c['id']: c for c in read(SITE / 'dist/data.json')['cases']}
     baseline = {c['id']: c for c in read(REPO / 'evaluation/expanded_460_2026-11-02/cases.json')['cases']}
@@ -84,7 +83,8 @@ def main():
     for name, digest in before['worktree_assets'].items():
         if name.startswith('data'):
             assert sha(SITE / 'dist' / name) == digest, name
-    for historical in catalog['evaluations'][1:]:
+    for historical in catalog['evaluations']:
+        if historical['id'].startswith('gemini'): continue
         assert len(read(SITE / 'dist' / historical['data'])['cases']) == 460
     serialized = (SITE / 'dist' / entry['data']).read_text()
     assert not any(s in serialized for s in ['/home/minhee/', 'private_trace_attempt_id', 'batch_usage', 'model_path', 'access_token', 'refresh_token', 'client_secret'])

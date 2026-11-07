@@ -1,3 +1,42 @@
+# 완료 — 적용 범위가 같은 충돌에서 조수미 KU 우선 참고 (2026-11-07)
+
+작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
+브랜치: `codex/helpful-rag-responses`.
+
+`single_pass_prompt.py:104`의 `source_priority_policy()`를 `single_pass.py:77`에서
+조건부로 추가했습니다. 조수미 KU와 다른 출처가 함께 제공될 때만 적용합니다.
+같은 질문·대상·구간·상황·조건에서 실제 충돌하면 조수미 자료를 우선 참고하고,
+다른 범위/주체/조건이나 불확실한 악보 사실은 구분합니다. 한국어·영어 모두 적용됩니다.
+검색과 KU 선택, 모델 설정, 단일 생성 호출은 유지했습니다. 온라인 출력 검사는 없습니다.
+
+- 기존 Gemini 109문항의 프롬프트를 현재 코드로 재구성해 8개만 변경됨을 확인했습니다.
+  해당 8개만 같은 질문/KU/설정으로 재생성하고, 나머지 101개는 기존 결과를 재사용했습니다.
+  기존 한영 공격/정상 대조군의 생성 가능한 73개 프롬프트도 변경되지 않았습니다.
+- 최종 v3의 Claude Opus 5.5 블라인드 비교: 8개 모두 faithful, 오거절 0.
+  자연스러움 평균 3.25→3.625/4, 개선 3·동일 5·하락 0. 직전 Gemini와의 비교입니다.
+- 전문가 105문항 BERTScore **0.950608**. 변경된 전문가 5개만 새로 계산하고
+  동일 입력의 100개 점수는 재사용했습니다. 기존 XLM-R-large/18층/noIDF/raw F1 유지, 잘림 0.
+- 별도 가상 한영 경계 사례 6개 중 5개는 행동 검증 통과. `different_actor-en`은
+  최초/1회 기술 재시도 모두 API 504라 미평가입니다. 성공으로 세지 않습니다.
+  실제 전문가 문항 실패는 없습니다. 추가 API 재시도/다른 모델 탐색은 하지 않습니다.
+- v1/v2와 그 판정도 모두 보존했습니다. v3 출력 8개를 전부 채택했습니다.
+  표현 방법 답변의 ‘루바도’ 표기는 남아 있습니다. 표준 용어 교정 완료라고 주장하지 않습니다.
+- 관련 테스트 50개, 최종/과거 데모 브라우저 검사, 원본·근거·입력 보존 검증 통과.
+- 데모 기본 버전은 `gemini-priority-20261107`. ‘이번 변경 문항’ 필터 8개.
+  변경 전 Gemini와 이전 460문항 버전은 보존했고, 기존 정적 복사본 3곳도 갱신했습니다.
+  서버는 시작하지 않았습니다.
+
+결과: `evaluation/sumijo_writer_priority_2026-11-07/report.md`, `summary.json`,
+`verification.json`, `comparison.md`, `v3/comparison.json`을 읽으세요.
+실제 최종 결과는 `v3/`이며, `v2/summary.json`은 중간 결과입니다.
+완료된 생성 스크립트를 재실행하지 말고, 후속 실험은 새 디렉터리에서 수행하세요.
+
+데모: `http://localhost:8766/?evaluation=gemini-priority-20261107`
+실행 명령은 아래 이전 데모 안내와 같습니다. `export_gemini_priority.py`로
+저장된 결과만 재내보낼 수 있습니다. Discord/notifier와 usage-reset 중지 조건은 없습니다.
+
+---
+
 # 완료 — 원본 / 최신 Gemini 답변 비교 데모 (2026-11-07)
 
 작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
