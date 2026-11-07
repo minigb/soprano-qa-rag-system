@@ -6,7 +6,7 @@ RUN=SITE.parents[1]/'evaluation/latest_demo_2026-11-03'
 def read(p):return json.loads(p.read_text())
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    catalog=read(SITE/'dist/evaluations.json');active=next(e for e in catalog['evaluations'] if e['id']==catalog['default'])
+    catalog=read(SITE/'dist/evaluations.json');active=next(e for e in catalog['evaluations'] if e['id']=='latest-14b-20261103')
     data=read(SITE/'dist'/active['data']);old=read(SITE/'dist/data.json')
     raw={r['case_id']:r for r in map(json.loads,(RUN/'current.jsonl').read_text().splitlines())}
     cases={c['id']:c for c in read(RUN/'cases.json')['cases']}

@@ -1,3 +1,42 @@
+# 완료 — 원본 / 최신 Gemini 답변 비교 데모 (2026-11-07)
+
+작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
+브랜치: `codex/helpful-rag-responses`.
+
+사용자 요청에 따라 기존 localhost 답변 비교 데모의 기본 버전을
+`gemini-20261107`로 갱신했습니다. 왼쪽은 보안 적용 전 원본, 오른쪽은
+복구 완료된 Gemini3.8Flash의 실제 생성 답변입니다. 후보 J를 원본으로 표시하지 않습니다.
+
+- 최신 결과가 존재하는 음악 109문항(전문가 기반 105 + 추가 회귀 4)을 표시합니다.
+  나머지 351문항은 Gemini로 실행하지 않았습니다. 이전 460문항 버전 3개는 선택 목록에 보존됩니다.
+- 원본 답변/근거/판정/점수와 기존 데이터 JSON 3개는 변경하지 않았습니다.
+  원문 대입, 답변 편집, 재생성, 재평가, 추가 API 호출은 없습니다.
+- 전문가 105문항의 최신 BERTScore는 저장된 0.950992를 그대로 표시합니다.
+  양쪽 평가 참조와 BERTScore 참조문을 구분하며, 요약은 표시된 109문항 기준입니다.
+  원본 전체 응답 시간과 Gemini 생성 호출 시간은 직접 속도 비교가 불가함을 표시합니다.
+- 음악 API 오류 6건의 재시도 여부를 별도 표시합니다. 이전 거절 5건 필터,
+  전체 답변/근거 열람, 버전별 메모, 자연스러움 하락 필터를 유지했습니다.
+- 데이터 검증 및 최신 109/과거 460 화면의 브라우저 검사 통과.
+  문항 수, 답변 전문, 평가 참조, 필터, 메모 저장/내보내기, 버전 전환,
+  없는 문항 안내, 4가지 화면 너비를 확인했습니다.
+- 기존 background-knowledge 작업트리의 정적 데모 복사본 3곳도 동기화했습니다.
+  메인/원본/백엔드는 변경하지 않았고 서버도 시작하지 않았습니다.
+
+실행 (사용자가 직접):
+
+```bash
+python3 -m http.server 8766 --bind 127.0.0.1 --directory /home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/sites/answer-review/dist
+```
+
+URL: `http://localhost:8766/?evaluation=gemini-20261107`
+이전 URL에 다른 `evaluation=` 값이 있으면 해당 과거 버전이 계속 열립니다.
+`sites/answer-review/README.md`와 `evaluation/gemini_demo_2026-11-07/`에
+실행/검증/동기화 기록이 있습니다. 데이터만 재내보내려면
+`python sites/answer-review/export_gemini.py` 후 `verify_gemini.py`를 실행합니다.
+이 데모 갱신을 위해 모델을 다시 호출할 필요는 없습니다.
+
+---
+
 # 완료 — 새 계정으로 누락 답변7건 복구 (2026-11-07, Asia/Seoul)
 
 작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`

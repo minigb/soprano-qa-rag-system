@@ -1,24 +1,33 @@
 # Local answer comparison demo
 
-The default screen compares unchanged initial-system answers with outputs from
-Qwen3-14B on `codex/helpful-rag-responses`. The current policy provides usable
-music answers with a qualification when quality checks remain unresolved and
-uses general music knowledge when source-based generation cannot answer.
-The displayed text is the actual service response, including warnings or errors.
-No source text is substituted for a generated answer.
+The default screen compares the **pre-security original system** on the left
+with the latest **Gemini3.8Flash** generated answers on the right. It contains
+the 109 music cases for which both results exist: 105 expert-based cases and
+4 additional regression cases. The remaining 351 music questions have not been
+run with Gemini. All three historical 460-case versions remain in the version
+selector, with their existing browser-notes keys.
 
-All 460 frozen questions remain. The left column retains its original answers,
-Claude judgments and BERTScore values. The right column is captured with actual
-hybrid retrieval in `evaluation/helpful_responses_2026-11-04/full-final/`.
-Changed question/answer/evidence packets receive new Claude Opus 5.5 assessments;
-identical complete packets reuse the first prior judgment under the same rubric
-and model. BERTScore is recomputed on full displayed answers with the existing
-fixed setting. No score for a different answer is transferred.
+Answers are exported verbatim from
+`evaluation/gemini_flash_recovery_2026-11-07/combined/expert.jsonl`.
+Six initial API errors were recovered with one retry of the same input; those
+answers have a separate disclosure and an “API 오류 후 재시도” filter.
+No source text is substituted for a generated answer. The original answer,
+retrieved evidence, Claude judgment and BERTScore for each case stay unchanged.
+The right column uses the saved Claude and BERTScore results for that exact
+answer. Expert-case BERTScore is 0.950992 with the frozen metric setting.
+
+Summary cards cover the displayed 109 pairs (BERTScore: 105 expert cases).
+This is a whole-system result comparison: the left column is the initial
+system, not the more recent Qwen3-14B candidate J used in the controlled model
+comparison. Original and current evaluation references are shown separately
+because some references changed. The recorded timings also have different
+scopes: original full response vs Gemini generation call only. They do not
+constitute a controlled latency comparison. Retry timings include only the
+successful call, not the first failed call or waiting time.
 
 The “이전 거절 5건” filter selects the five requests withheld in the November 3
-capture. E37 and the November 3 outputs remain separate historical versions,
-with their original browser-notes keys. This static tool does not call a model
-when opened, and it does not switch the Lab application's RAG backend.
+capture. This static tool does not call a model when opened, and it does not
+switch the Lab application's RAG backend.
 
 From this directory:
 
@@ -26,7 +35,9 @@ From this directory:
 python -m http.server 8766 --bind 127.0.0.1 --directory dist
 ```
 
-Open <http://localhost:8766/>. To share a particular case locally, use its
+Open <http://localhost:8766/?evaluation=gemini-20261107>. An existing URL with
+an older `evaluation=` parameter still opens that older version; select the
+latest Gemini entry or use this URL. To share a particular case locally, use its
 “링크 복사” button. The hostname, port and browser must match to reuse local
 notes. Notes and bookmarks stay in browser localStorage and can be exported
 as JSON; they are not sent to the server. Keep the server running while using
@@ -38,19 +49,23 @@ The same static files are mirrored to the Lab worktree at
 
 ## Data and validation
 
+The implementation and demo are on branch `codex/helpful-rag-responses`
+at `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
+From that checkout:
+
 ```bash
-python export_data.py
-python verify_data.py
-node --check dist/app.js
+python sites/answer-review/export_gemini.py
+python sites/answer-review/verify_gemini.py
+node --check sites/answer-review/dist/app.js
 ```
 
-Those first two commands reproduce/verify the preserved historical E37 data.
-The latest implementation and capture are on branch `codex/helpful-rag-responses`
-at `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
-From that checkout, run `python sites/answer-review/export_helpful.py` and
-`python sites/answer-review/verify_helpful.py` after generation and evaluation.
-The independent verifier checks all 920 full answers, the unchanged left
-column, source text, score mappings and frozen implementation hashes.
+The independent verifier checks all 218 full answers, the unchanged left
+column and historical datasets, exact reference and evidence texts, score
+mappings, retry markers and source hashes. Exporting does not regenerate or
+rescore any answers. `verify_data.py`, `verify_latest.py` and `verify_helpful.py`
+still validate their respective historical datasets, independent of the new
+default. Running the older exporters changes the default to their own version;
+do not run them to refresh this Gemini view.
 
 The exporter reads the frozen evaluation. It projects only fields shown in
 the UI: full question/answer/source text, measurements and judgment summaries.

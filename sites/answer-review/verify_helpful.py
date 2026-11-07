@@ -1,12 +1,12 @@
 """Verify all current answers and the unchanged historical left column independently."""
 from pathlib import Path
-import hashlib,json
+import hashlib,json,subprocess
 SITE=Path(__file__).resolve().parent
 RUN=SITE.parents[1]/'evaluation/helpful_responses_2026-11-04/full-final'
 def read(p):return json.loads(p.read_text())
 def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
 def main():
-    catalog=read(SITE/'dist/evaluations.json');active=next(e for e in catalog['evaluations'] if e['id']==catalog['default'])
+    catalog=read(SITE/'dist/evaluations.json');active=next(e for e in catalog['evaluations'] if e['id']=='helpful-14b-20261104')
     data=read(SITE/'dist'/active['data']);old=read(SITE/'dist/data.json')
     raw={r['case_id']:r for r in map(json.loads,(RUN/'current.jsonl').read_text().splitlines())}
     cases={c['id']:c for c in read(RUN/'cases.json')['cases']}
@@ -63,7 +63,9 @@ def main():
     assert len({e['storageKey'] for e in catalog['evaluations']})==len(catalog['evaluations'])
     provenance=read(RUN/'provenance.json')
     for rel,digest in provenance['source_files'].items():
-        assert sha(Path(provenance['source_root'])/rel)==digest
+        # This is now a historical capture; later branch changes are expected.
+        captured=subprocess.check_output(['git','show',f"{provenance['source_head']}:{rel}"],cwd=SITE.parents[1])
+        assert hashlib.sha256(captured).hexdigest()==digest
     print(json.dumps({'cases':460,'full_answers_verified':920,'left':'unchanged','right':'exact current 14B service outputs',
-                      'implementation':'verified against frozen source hashes','stale_scores':'excluded','notes':'separate version keys'}))
+                      'implementation':'capture commit verified against frozen source hashes','stale_scores':'excluded','notes':'separate version keys'}))
 if __name__=='__main__':main()
