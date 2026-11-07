@@ -184,6 +184,30 @@ class SinglePassTests(unittest.TestCase):
         self.assertEqual(self.retrieval_calls[0]['query'], '호흡을 어떻게 이어가나요?')
         self.assertEqual(result['answer'], 'Keep the breath steady.')
 
+    def test_vertex_query_translation_can_be_remote_for_the_web(self):
+        from soprano_qa import vertex_gemini
+        from tests.test_vertex_gemini import CONFIG
+        remote = {**CONFIG, 'query_translation_provider': 'vertex_gemini'}
+        with mock.patch.dict(service.SETTINGS['llm'], remote), \
+             mock.patch.dict('os.environ', {'GOOGLE_CLOUD_PROJECT': 'test'}), \
+             mock.patch.object(vertex_gemini, 'generate',
+                               side_effect=['호흡을 어떻게 이어가나요?', 'Keep the breath steady.']) as write:
+            result = self.ask(question='How should I connect my breath?', language='en')
+        self.model.create_chat_completion.assert_not_called()
+        self.assertEqual(write.call_count, 2)
+        translation_messages = write.call_args_list[0].args[0]
+        self.assertIn('translate', translation_messages[0]['content'])
+        self.assertEqual(self.retrieval_calls[0]['query'], '호흡을 어떻게 이어가나요?')
+        self.assertEqual(result['answer'], 'Keep the breath steady.')
+        self.assertEqual(result['model']['query_translation_backend'], 'vertex_gemini')
+
+    def test_web_settings_differ_from_gemini_settings_only_in_translation(self):
+        root = Path(__file__).resolve().parents[1] / 'config'
+        gemini = json.loads((root / 'settings.gemini.json').read_text(encoding='utf-8'))
+        web = json.loads((root / 'settings.web.json').read_text(encoding='utf-8'))
+        self.assertEqual(web['llm'].pop('query_translation_provider'), 'vertex_gemini')
+        self.assertEqual(web, gemini)
+
     def test_cli_also_writes_once_without_the_content_finalizer(self):
         settings = load_settings(str(Path(__file__).resolve().parents[1] / 'config/settings.single-pass.json'))
         output = io.StringIO()

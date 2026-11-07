@@ -51,6 +51,7 @@ from soprano_qa import single_pass
 from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
 from soprano_qa.security import SecurityViolation, screen_question, screen_text, validate_question_input
 from soprano_qa.translation import (
+    query_translation_generate_fn,
     translate_question_to_korean,
     validate_language,
 )
@@ -114,9 +115,11 @@ def model_status() -> dict:
     if SETTINGS['llm'].get('answer_provider') == 'vertex_gemini':
         from soprano_qa.vertex_gemini import options
         model, _, location, level, _, _ = options(SETTINGS['llm'])
+        remote_translation = SETTINGS['llm'].get('query_translation_provider') == 'vertex_gemini'
         return {"backend": "vertex_gemini", "model": model, "location": location,
-                "thinking_level": level, "query_translation_backend": "llama-cpp-python",
-                "query_translation_model": str(model_path)}
+                "thinking_level": level,
+                "query_translation_backend": "vertex_gemini" if remote_translation else "llama-cpp-python",
+                "query_translation_model": model if remote_translation else str(model_path)}
     return {
         "path": str(model_path),
         "checkpoint_exists": model_path.is_file(),
@@ -280,7 +283,7 @@ def _ask(
             question,
             model_path=SETTINGS["model_path"],
             llm_settings=SETTINGS["llm"],
-            generate_fn=generate_llm,
+            generate_fn=query_translation_generate_fn(SETTINGS["llm"], generate_llm),
         )
         if language == "en"
         else question

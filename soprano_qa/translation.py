@@ -98,6 +98,32 @@ def _clean_translation(text: str) -> str:
     return cleaned
 
 
+def query_translation_generate_fn(
+    llm_settings: Dict[str, Any],
+    local_generate: Callable[..., str] = generate,
+) -> Callable[..., str]:
+    """Return the generator used to translate English questions.
+
+    The default is the local model, also when the answer writer is remote.
+    ``query_translation_provider: "vertex_gemini"`` sends the same translation
+    prompt to the configured Vertex model instead, for hosts without the local
+    GGUF such as the web demo.
+    """
+
+    provider = llm_settings.get("query_translation_provider", "local")
+    if provider == "local":
+        return local_generate
+    if provider == "vertex_gemini":
+        from soprano_qa.vertex_gemini import generate as vertex_generate
+
+        def remote(_model_path: str, messages: List[Dict[str, str]],
+                   settings: Dict[str, Any]) -> str:
+            return vertex_generate(messages, settings)
+
+        return remote
+    raise ValueError("Unknown query_translation_provider: " + str(provider))
+
+
 def translate_question_to_korean(
     question: str,
     *,
