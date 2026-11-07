@@ -1,0 +1,334 @@
+{
+  "policy": "Exactly one additional attempt per original technical failure. Keep all first-attempt results and scores; never regenerate successful answers. Same model, prompt, inputs, metric and rubric.",
+  "model": {
+    "model": "gemini-3.8-flash",
+    "thinking_level": "LOW",
+    "max_output_tokens": 2048,
+    "timeout_ms": 180000
+  },
+  "retry_project": "project-44e5d3cc-7919-41c0-bb5",
+  "retry_attempts": 7,
+  "retry_answers": 7,
+  "retry_errors": 0,
+  "original_primary_artifacts_unchanged": true,
+  "expert105": {
+    "local": {
+      "count": 105,
+      "assessed": 105,
+      "technical_errors": 0,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 63,
+        "minor_drift": 38,
+        "material_drift": 4
+      },
+      "refusals": 0,
+      "material_drift": 4,
+      "naturalness_effective_mean": 3.4857142857142858,
+      "naturalness_conditional_mean": 3.4857142857142858,
+      "adequately_complete": 92,
+      "factual_error_flags": 4,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    },
+    "first_attempt": {
+      "count": 105,
+      "assessed": 99,
+      "technical_errors": 6,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 93,
+        "minor_drift": 6
+      },
+      "refusals": 0,
+      "material_drift": 0,
+      "naturalness_effective_mean": 3.5619047619047617,
+      "naturalness_conditional_mean": 3.7777777777777777,
+      "adequately_complete": 97,
+      "factual_error_flags": 0,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    },
+    "after_one_technical_retry": {
+      "count": 105,
+      "assessed": 105,
+      "technical_errors": 0,
+      "excluded": 0,
+      "source_fidelity": {
+        "faithful": 98,
+        "minor_drift": 7
+      },
+      "refusals": 0,
+      "material_drift": 0,
+      "naturalness_effective_mean": 3.761904761904762,
+      "naturalness_conditional_mean": 3.761904761904762,
+      "adequately_complete": 101,
+      "factual_error_flags": 0,
+      "attack_successes": 0,
+      "attack_assessed": 0,
+      "attack_success_rate_assessed": null
+    }
+  },
+  "bertscore": {
+    "expert105_first_attempt": 0.8973787937845502,
+    "expert105_after_retry": 0.9509922112737383,
+    "expert105_scored_after_retry": 105,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "truncated_texts": 0,
+    "overlength_after_retry": 0,
+    "score_reuse": "No IDF: retain all99 existing per-answer scores verbatim; score only6 previously missing expert answers with identical encoder/settings/packages.",
+    "target_after_retry_met": true
+  },
+  "challenge": {
+    "benign": {
+      "local": {
+        "count": 12,
+        "assessed": 12,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 8,
+          "minor_drift": 4
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.5833333333333335,
+        "naturalness_conditional_mean": 3.5833333333333335,
+        "adequately_complete": 11,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 0,
+        "attack_success_rate_assessed": null
+      },
+      "first_attempt": {
+        "count": 12,
+        "assessed": 12,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 12
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.8333333333333335,
+        "naturalness_conditional_mean": 3.8333333333333335,
+        "adequately_complete": 12,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 0,
+        "attack_success_rate_assessed": null
+      },
+      "after_one_technical_retry": {
+        "count": 12,
+        "assessed": 12,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 12
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.8333333333333335,
+        "naturalness_conditional_mean": 3.8333333333333335,
+        "adequately_complete": 12,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 0,
+        "attack_success_rate_assessed": null
+      }
+    },
+    "direct_attack": {
+      "local": {
+        "count": 30,
+        "assessed": 30,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 12,
+          "minor_drift": 10,
+          "not_applicable": 4,
+          "material_drift": 4
+        },
+        "refusals": 0,
+        "material_drift": 4,
+        "naturalness_effective_mean": 2.966666666666667,
+        "naturalness_conditional_mean": 2.966666666666667,
+        "adequately_complete": 23,
+        "factual_error_flags": 9,
+        "attack_successes": 9,
+        "attack_assessed": 30,
+        "attack_success_rate_assessed": 0.3
+      },
+      "first_attempt": {
+        "count": 30,
+        "assessed": 29,
+        "technical_errors": 1,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 22,
+          "not_applicable": 5,
+          "minor_drift": 2
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.6666666666666665,
+        "naturalness_conditional_mean": 3.793103448275862,
+        "adequately_complete": 29,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 29,
+        "attack_success_rate_assessed": 0.0
+      },
+      "after_one_technical_retry": {
+        "count": 30,
+        "assessed": 30,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "faithful": 23,
+          "not_applicable": 5,
+          "minor_drift": 2
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.7666666666666666,
+        "naturalness_conditional_mean": 3.7666666666666666,
+        "adequately_complete": 30,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 30,
+        "attack_success_rate_assessed": 0.0
+      }
+    },
+    "indirect_attack": {
+      "local": {
+        "count": 20,
+        "assessed": 20,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 4,
+          "minor_drift": 10,
+          "material_drift": 2,
+          "faithful": 4
+        },
+        "refusals": 0,
+        "material_drift": 2,
+        "naturalness_effective_mean": 3.35,
+        "naturalness_conditional_mean": 3.35,
+        "adequately_complete": 12,
+        "factual_error_flags": 5,
+        "attack_successes": 0,
+        "attack_assessed": 20,
+        "attack_success_rate_assessed": 0.0
+      },
+      "first_attempt": {
+        "count": 20,
+        "assessed": 20,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 8,
+          "faithful": 12
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.65,
+        "naturalness_conditional_mean": 3.65,
+        "adequately_complete": 17,
+        "factual_error_flags": 3,
+        "attack_successes": 0,
+        "attack_assessed": 20,
+        "attack_success_rate_assessed": 0.0
+      },
+      "after_one_technical_retry": {
+        "count": 20,
+        "assessed": 20,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 8,
+          "faithful": 12
+        },
+        "refusals": 0,
+        "material_drift": 0,
+        "naturalness_effective_mean": 3.65,
+        "naturalness_conditional_mean": 3.65,
+        "adequately_complete": 17,
+        "factual_error_flags": 3,
+        "attack_successes": 0,
+        "attack_assessed": 20,
+        "attack_success_rate_assessed": 0.0
+      }
+    },
+    "out_of_scope": {
+      "local": {
+        "count": 11,
+        "assessed": 11,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 11
+        },
+        "refusals": 10,
+        "material_drift": 0,
+        "naturalness_effective_mean": 0.18181818181818182,
+        "naturalness_conditional_mean": 3.8181818181818183,
+        "adequately_complete": 0,
+        "factual_error_flags": 0,
+        "attack_successes": 1,
+        "attack_assessed": 11,
+        "attack_success_rate_assessed": 0.09090909090909091
+      },
+      "first_attempt": {
+        "count": 11,
+        "assessed": 11,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 11
+        },
+        "refusals": 11,
+        "material_drift": 0,
+        "naturalness_effective_mean": 0.0,
+        "naturalness_conditional_mean": 4,
+        "adequately_complete": 0,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 11,
+        "attack_success_rate_assessed": 0.0
+      },
+      "after_one_technical_retry": {
+        "count": 11,
+        "assessed": 11,
+        "technical_errors": 0,
+        "excluded": 0,
+        "source_fidelity": {
+          "not_applicable": 11
+        },
+        "refusals": 11,
+        "material_drift": 0,
+        "naturalness_effective_mean": 0.0,
+        "naturalness_conditional_mean": 4,
+        "adequately_complete": 0,
+        "factual_error_flags": 0,
+        "attack_successes": 0,
+        "attack_assessed": 11,
+        "attack_success_rate_assessed": 0.0
+      }
+    }
+  },
+  "latency_policy": "No repeat latency benchmark. These7 requests were selected because the original requests failed and used a different project/time; their latency is not a controlled speed comparison.",
+  "runtime_source_changes": false,
+  "default_configuration_changed": false
+}

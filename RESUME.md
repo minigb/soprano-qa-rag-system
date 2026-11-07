@@ -1,3 +1,36 @@
+# 완료 — 새 계정으로 누락 답변7건 복구 (2026-11-07, Asia/Seoul)
+
+작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`
+브랜치: `codex/helpful-rag-responses`.
+
+사용자가 새 Google API 계정을 설정하고 필요하면 사용하도록 허용했습니다.
+`~/gemini-vertex-4`의 ADC가 이제4번 프로젝트와 일치하고3번 계정과도 달라졌음을 확인했습니다.
+이 최신 승인은 아래 과거의 ‘3번만 사용’ 제한을 새 계정 사용에 대해 갱신합니다.
+
+같은 Gemini3.8Flash로 기술 실패7건(전문가6+영어직접공격1)만1회씩 재시도했고 모두 답변됐습니다.
+기존 성공175개 답변·판정·최초평가464개 파일은 그대로 보존했습니다. 추가 API 호출은7회입니다.
+
+- 전문가105개 모두 확보. 중대한 의미 오류 로컬4→Gemini0, 경미한 오류38→7.
+- 자연스러움3.486→3.762/4, 충분한 답변92→101/105, 음악 오거절0.
+- **재시도 후 전체105 BERTScore0.950992로0.9 충족.** 첫 시도0.897379는 별도로 보존합니다.
+  기존99개 점수 유지, 누락6개만 같은 noIDF 설정/encoder revision으로 점수 계산. 잘림0.
+- 직접 공격 전체30개: 로컬9→Gemini0 성공. 나머지 기존 답변은 모두 그대로입니다.
+- 기존5거절 문항의 자연스러움3.6→3.2 하락도 그대로 유지; 새 크레센도 답변의 범위 확대는 minor입니다.
+- 새 모델·새 프롬프트·성공 답변 재생성·지연 벤치마크 재실행·서빙 코드 변경은 없습니다.
+- 기존 자료와 입력/응답 모델/근거/metric/packages 보존 검증 통과. 현재 실행 중인 이 평가 작업은 없습니다.
+
+먼저 [복구 후 보고서](evaluation/gemini_flash_recovery_2026-11-07/report.md),
+[전체 수치](evaluation/gemini_flash_recovery_2026-11-07/summary.json),
+[실제 답변 비교](evaluation/gemini_flash_recovery_2026-11-07/expert-comparison.json),
+[검증](evaluation/gemini_flash_recovery_2026-11-07/verification.json)을 읽으세요.
+
+첫 시도와 재시도 후 지표를 혼동하지 마세요. 기존20.448초는 이전 공유 API 환경의 관측이고,
+이번 계정의 대표 지연을 다시 측정한 것은 아닙니다. 자동 재시도나 계정 fallback을 서빙에 추가하지 않았습니다.
+기본/원본/main/기존460데모 보존. YouTube 작업은 건드리지 않았습니다.
+완료된 답변을 다시 생성하거나 다른 API 모델을 탐색하지 마세요. 알림/notifier를 재설치하지 마세요.
+
+---
+
 # 완료 — Gemini 단일 모델과 로컬14B 비교 (2026-11-07)
 
 작업 위치: `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`

@@ -73,13 +73,21 @@ judging and the frozen BERTScore configuration are separate from serving.
 
 The active comparison uses only this one Gemini model and the frozen Qwen3-14B
 candidate J. Prior Argon partial captures are archived; they are not resumed or
-substituted for Flash results. Only account 3 is authorized for further requests.
-Account 4 setup attempts failed and were abandoned at the user's request.
+substituted for Flash results. The original comparison used account3 after an unsuccessful account4 setup.
+The user subsequently configured and authorized the new account4 credentials.
+The seven missing answers were recovered there with the same Flash model; see the
+[recovery supplement](../evaluation/gemini_flash_recovery_2026-11-07/report.md).
 Shared YouTube API work continues unchanged, so observed API delays and 429s
 cannot be attributed to model speed alone.
 
-The [completed comparison](../evaluation/gemini_flash_writer_2026-11-07/report.md)
+The [original first-attempt comparison](../evaluation/gemini_flash_writer_2026-11-07/report.md)
 found better source fidelity on returned answers, but six missing expert responses
-and slower API timings under shared load. Full105 effective BERTScore0.897379
+and slower API timings under shared load. First-attempt full105 BERTScore0.897379
 did not meet the0.90 target; returned99 answers scored0.951765. The default
 configuration remains local/reviewed, and this Gemini backend is opt-in.
+
+After the newly authorized account4 retry, all105 expert answers are available
+and fixed BERTScore is0.950992. The original first-attempt score and failures
+remain unchanged. Source `~/gemini-vertex-4/env.sh` before starting a fresh process
+to use the newly authenticated account; this does not change the chosen model or
+add automatic account fallback. No new latency benchmark was run.
