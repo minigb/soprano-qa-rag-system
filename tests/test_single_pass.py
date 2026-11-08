@@ -201,6 +201,27 @@ class SinglePassTests(unittest.TestCase):
         self.assertEqual(result['answer'], 'Keep the breath steady.')
         self.assertEqual(result['model']['query_translation_backend'], 'vertex_gemini')
 
+    def test_english_question_for_a_korean_answer_is_translated_for_retrieval(self):
+        from soprano_qa import vertex_gemini
+        from tests.test_vertex_gemini import CONFIG
+        remote = {**CONFIG, 'query_translation_provider': 'vertex_gemini'}
+        with mock.patch.dict(service.SETTINGS['llm'], remote), \
+             mock.patch.dict('os.environ', {'GOOGLE_CLOUD_PROJECT': 'test'}), \
+             mock.patch.object(vertex_gemini, 'generate',
+                               side_effect=['호흡을 어떻게 이어가나요?', '호흡을 고르게 이어 보세요.']) as write:
+            result = self.ask(question='How should I connect my breath?', language='ko')
+        self.assertEqual(write.call_count, 2)
+        self.assertEqual(self.retrieval_calls[0]['query'], '호흡을 어떻게 이어가나요?')
+        self.assertEqual(result['answer'], '호흡을 고르게 이어 보세요.')
+        self.assertEqual(result['answer_language'], 'ko')
+
+    def test_korean_question_for_a_korean_answer_is_not_translated(self):
+        self.model.create_chat_completion.return_value = completion('호흡을 고르게 이어 보세요.')
+        result = self.ask(question='호흡을 어떻게 이어가나요?', language='ko')
+        self.model.create_chat_completion.assert_called_once()
+        self.assertEqual(self.retrieval_calls[0]['query'], '호흡을 어떻게 이어가나요?')
+        self.assertEqual(result['answer'], '호흡을 고르게 이어 보세요.')
+
     def test_web_settings_differ_from_gemini_settings_only_in_translation(self):
         root = Path(__file__).resolve().parents[1] / 'config'
         gemini = json.loads((root / 'settings.gemini.json').read_text(encoding='utf-8'))

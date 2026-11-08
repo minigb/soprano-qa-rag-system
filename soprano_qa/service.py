@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import threading
 from pathlib import Path
 from typing import Optional
@@ -65,6 +66,8 @@ _corpus_signature: Optional[
     tuple[tuple[int, int], tuple[int, int], Optional[tuple[int, int]]]
 ] = None
 
+
+HANGUL_RE = re.compile(r"[가-힣]")
 
 def _file_identity(path: str) -> tuple[int, int]:
     stat = Path(path).stat()
@@ -254,9 +257,12 @@ def _ask(
     validate_language(language)
     direct = single_pass.enabled(SETTINGS['llm'])
     make_messages = single_pass.build_messages if direct else build_messages
-    # English questions need the local model for translation even when no
-    # answer is generated.
-    if generate or language != "ko":
+    # Korean-oriented retrieval and gating always see Korean text: English
+    # questions are translated, and so is a question without Hangul asked for
+    # a Korean answer (the web page's language toggle can pair them).
+    translate_query = language == "en" or not HANGUL_RE.search(question)
+    # Translation needs the model even when no answer is generated.
+    if generate or translate_query:
         validate_generation_requirements(
             SETTINGS["model_path"],
             SETTINGS["llm"],
@@ -277,7 +283,6 @@ def _ask(
     measures = format_measure_range(measure_ranges) if measure_ranges else ""
 
     index = _get_index()
-    # Korean-oriented retrieval and gating always see Korean text.
     retrieval_query = (
         translate_question_to_korean(
             question,
@@ -285,7 +290,7 @@ def _ask(
             llm_settings=SETTINGS["llm"],
             generate_fn=query_translation_generate_fn(SETTINGS["llm"], generate_llm),
         )
-        if language == "en"
+        if translate_query
         else question
     )
     # The extractive path returns Korean evidence text in either language.
