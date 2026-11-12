@@ -1,0 +1,429 @@
+[
+  {
+    "id": "512105adbf5d6226ef0c",
+    "question": "ff와 pp가 대비되는 대목에서 새소리의 메아리 같은 분위기를 어떻게 표현해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      51,
+      58
+    ],
+    "language": "ko",
+    "answer": "ff와 pp의 대비는 산속 새소리의 메아리 같은 분위기를 표현하기 위해 강하게 드러내야 합니다. 성악가는 멜로디뿐 아니라 피아노나 오케스트라의 표기도 주의 깊게 살펴 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam La la"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 53,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-030",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            51,
+            58
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              51,
+              58
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-030"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "42208a3c191f0e75a396",
+    "question": "가창할 때 트릴은 어떤 식으로 처리해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보에 표시된 트릴은 충분히 연주한 뒤 제시된 대로 마무리하는 것이 중요합니다. 느린 템포로 연습하는 것도 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-019",
+        "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            137,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              137,
+              137
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "baa80ed4fee7496410af",
+    "question": "ff와 pp를 대비시키면 음악적으로 어떤 효과가 나타날까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      117,
+      124
+    ],
+    "language": "ko",
+    "answer": "ff와 pp가 빠르게 번갈아 나오면 산새의 경쾌함과 메아리 같은 반향 효과를 표현할 수 있습니다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 표기된 강약 기호도 주의해서 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 117,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam. La la"
+          ]
+        },
+        {
+          "measure": 118,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 119,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 120,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 121,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 122,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 123,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 124,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              117,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "92276438b9b0f4db41c8",
+    "question": "악보마다 단어를 나누는 방식이 다를 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보마다 단어를 나누는 방식이 다를 때는 원곡의 가사를 확인하고, 원곡의 단어 구분에 따라 노래하는 것이 좋습니다. 단어 구분에 따라 강세나 강조할 단어, 자음·모음이 달라지므로 유럽 언어의 경우 알파벳 하나의 차이로 뜻이 완전히 달라질 수 있어 주의가 필요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-005",
+        "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a5d2629c2b1693ea5940",
+    "question": "col canto와 a piacere는 느리게 해야 할까? 어느 정도가 적절할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "col canto와 a piacere는 일정한 속도만큼 느리게 하라는 지시가 아니라, 프레이즈와 꾸밈음에 따라 유연하게 템포를 조절하는 것을 의미합니다. 반주자와의 협의를 통해 적절한 범위에서 조절하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-021",
+        "text": "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-022",
+        "text": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다.\ncol canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-021"
+        },
+        {
+          "reference_id": "R002",
+          "text": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-022"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2176ac1a813581b83ea1",
+    "question": "이 노래의 음역이 너무 높게 느껴질 때 조정하거나 편곡해도 될까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 조성이 자신의 음역대에 맞지 않는다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-007",
+        "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

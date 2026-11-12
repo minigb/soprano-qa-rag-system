@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-10-31T14:04:19.084377+00:00",
+  "experiment": "E12 source-aware general routing and musical-task admission clarification",
+  "reason": "Reject E11 as final release: the general-intent rule discarded a directly answering expert KU for D.S. al Coda, producing a materially wrong explanation. Known singing-breath and recording-pitch questions are also falsely denied at admission.",
+  "failed_case": "expert-kim-nella-fantasia-12__no-range",
+  "failed_response_sha256": "76ae76f5002c1830426b9c37340f14d1f4b8430af0e77a0ef4982c9610e96e94",
+  "proposed_changes": [
+    "Retain evidence when the existing retriever reports a complete source-question concept match; that signal changes only composition routing, never safety approval. No case IDs, fixed answers, piece names or term whitelist.",
+    "Clarify in English and Korean that singing breath/effort and pitch/key/tempo comparisons across performances or recordings are musical tasks. Availability of a recording is an answerability issue.",
+    "Clarify that a faithfully qualified source interpretation may partially answer a why-question without proving composer intention. All output checks remain."
+  ],
+  "metric": "Keep the original B-selected XLM-R large layer18 raw/no-IDF setting, full answers, service refusals/errors zero. No metric retuning.",
+  "data_disclosure": "E11 validation requests have now been inspected to diagnose actual regressions. E12 uses the same frozen development and validation question-group split, but validation is now reused internal evaluation, not an untouched test set. Previously inspected E9 validation F1 was0.865924. The report must disclose this and retain failed E11 outputs.",
+  "next": "Complete current E11 candidate inference, retain its metrics, then use a fresh E12 comparison contract for candidate and the three unchanged baselines.",
+  "paused_e11_parent_pid": 1645431,
+  "scheduling": "Allow its frozen candidate child to finish all290. Terminate this paused parent at the boundary because E11 is rejected; retain E11 candidate metrics separately. Run the unchanged baselines only under the fresh final comparison."
+}

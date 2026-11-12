@@ -20,3 +20,12 @@ evaluation/*_pre_*.json
 
 # Generated corpora for evaluation conditions (config/experiments/)
 data/experiments/
+
+# Isolated model snapshots/caches and unreleased drafts for this evaluation.
+evaluation/ku_background_2026-10-31/runtime/
+evaluation/ku_background_2026-10-31/**/*.private-traces.jsonl
+evaluation/ku_background_2026-10-31/**/*.private-failure.json
+
+# Private model traces from the expanded paired evaluation.
+evaluation/expanded_460_2026-11-02/**/*.private-traces.jsonl
+evaluation/expanded_460_2026-11-02/**/*.private-failure.json

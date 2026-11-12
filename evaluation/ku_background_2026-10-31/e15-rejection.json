@@ -1,0 +1,21 @@
+{
+  "candidate": "E15",
+  "decision": "Rejected",
+  "development_bertscore_f1": 0.9720738308374272,
+  "reason": "Score met the floor but actual English outputs introduced three material fidelity errors among nine known translation cases.",
+  "examples": [
+    {
+      "case_id": "static-21-en",
+      "issue": "Pronunciation preference reverses the original 꼬빠람 recommendation."
+    },
+    {
+      "case_id": "static-17-en",
+      "issue": "Musical rest is translated as comma."
+    },
+    {
+      "case_id": "static-23-en",
+      "issue": "Each measure becomes each phrase."
+    }
+  ],
+  "next_candidate": "E16: reviewed source-wide English translations with exact source hash matching, unchanged question/reference/metric contracts."
+}

@@ -1,0 +1,36 @@
+{
+  "cases": 460,
+  "unique_request_inputs": 459,
+  "families": {
+    "paraphrase": 306,
+    "original": 105,
+    "ku_derived": 49
+  },
+  "pieces": {
+    "die-forelle": 58,
+    "una-voce-poco-fa": 135,
+    "nella-fantasia": 75,
+    "in-flowery-clouds": 74,
+    "la-capinera": 118
+  },
+  "language": {
+    "ko": 460
+  },
+  "original_source_questions": 79,
+  "paraphrase_formulations": 237,
+  "ku_derived_formulations": 36,
+  "original_metric_splits": {
+    "development": 43,
+    "validation": 62
+  },
+  "source_input_sha256": {
+    "evaluation/qualitative.json": "4ea771d1bc06a2bc27e05f73af35d6062181aee260271fe203cb2d47d807d3ef",
+    "evaluation/synthesized_question_results.json": "09f4ed3e3bc1c5e6f577fc86a8c1f052663857a21ccc235e33cfb8bb162736ce",
+    "data/corpus.json": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+    "evaluation/ku_background_2026-10-31/expert_cases.json": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
+    "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba"
+  },
+  "reference_provenance": "Exact applicable finalized expert KUs, verified equal to archived reference text. Never prior model answers.",
+  "question_provenance": "79 human-source questions; 237 paraphrase formulations; 36 machine-authored KU-derived formulations. Range conditions expand them to460 cases.",
+  "holdout_status": "Reused internal benchmark; neither unseen questions nor independent expert English references."
+}

@@ -1,0 +1,85 @@
+{
+  "created_at": "2026-11-02T01:00:32.944127Z",
+  "contract_id": "ee620954c4f11084250893e04c619bdfd11d96a483451ba005e2173ac5ca1b75",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "c01ce89a8ba7fcfc339f8d8e634e076f2023b7982084524fee9903556e7da11f",
+    "helper_sha256": "271890735ea22725a888db58fbe4d28f5444eeac803733d51fcecd5b22c399eb",
+    "source_sha256": "e8aedeb99961079f1182bfd5341973fd1e1711ffa235af5c93a999b3255ffc21",
+    "settings_sha256": "0d29d01f676a71020a369afcbd5a5e297de217fecff4e6d66c397c72a4540f85",
+    "cases_sha256": "f5fb9c35fdc431a2e4b638a89099ebc08c97f17b6e2a1d629a56900a921726c3",
+    "variant": "hardened",
+    "warmup_case": null,
+    "usage_rollout": null
+  },
+  "sessions": [
+    {
+      "started_at": "2026-11-02T01:00:32.944174Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/probe-e31.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/data/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/data/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/config/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+          "model_filename": "Qwen3-14B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/soprano-corpus-qwen3-embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768,
+            "source_preservation": "verbatim_or_translation",
+            "evidence_translation": "reviewed_catalog",
+            "evidence_translation_max_tokens": 1536
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 14B Instruct"
+      },
+      "status": "complete",
+      "finished_at": "2026-11-02T01:04:10.445501Z"
+    }
+  ]
+}

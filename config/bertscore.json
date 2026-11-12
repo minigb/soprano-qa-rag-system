@@ -1,0 +1,20 @@
+{
+  "settings": {
+    "model_type": "xlm-roberta-large",
+    "num_layers": 18,
+    "idf": false,
+    "rescale_with_baseline": false,
+    "use_fast_tokenizer": false,
+    "lang": "ko"
+  },
+  "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+  "selection": "Frozen from the 18-setting development-B sweep; no validation tuning.",
+  "selection_artifact": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "target": {
+    "metric": "mean BERTScore F1 on all expert-reference requests",
+    "minimum": 0.9,
+    "errors_and_withheld_answers": 0,
+    "text": "complete displayed answer and complete frozen reference",
+    "rescaling": "raw; no Korean baseline fabricated"
+  }
+}

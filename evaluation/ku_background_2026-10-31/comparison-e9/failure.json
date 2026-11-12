@@ -1,0 +1,7 @@
+{
+  "stage": "pre-security startup",
+  "error": "ModuleNotFoundError: No module named soprano_qa.source_priority",
+  "candidate_requests_completed": 290,
+  "baseline_requests_completed": 0,
+  "resolution": "Runner now imports source_priority only when present. Ordered fixed contexts use the native pre-security service. Failed contract retained; no measured row is replaced or excluded."
+}

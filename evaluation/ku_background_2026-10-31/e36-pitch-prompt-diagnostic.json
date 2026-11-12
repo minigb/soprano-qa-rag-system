@@ -1,0 +1,44 @@
+[
+  {
+    "version": "lean",
+    "case_id": "background-transpose-en",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in en. Distinguish what changes and what remains the same. No unrequested examples.\n\n/think",
+    "answer": "No. **Transposing a song** involves shifting **all notes** (melody, harmony, chords) by a consistent interval (e.g., up a major third or down a semitone), changing the **key** while preserving the **interval relationships** and structure.  \n\n**Lowering a few notes by an octave** only alters the **pitch height** of specific notes (e.g., moving a C to a C an octave lower), without changing the **key** or the **interval relationships** between notes.  \n\n**What changes**:  \n- Transposing: The **key** and **pitch level** of the entire piece.  \n- Lowering by octave: The **absolute pitch** of individual notes.  \n\n**What remains the same**:  \n- Transposing: The **interval structure** (e.g., chord progressions, melodic contours).  \n- Lowering by octave: The **note names** and **functional roles** (e.g., a root note remains a root note).",
+    "seconds": 14.127866209993954
+  },
+  {
+    "version": "lean",
+    "case_id": "followup-transpose-ko",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in ko. Distinguish what changes and what remains the same. No unrequested examples.\n\n/think",
+    "answer": "노래 전체의 조옮김(예: C장조에서 G장조로)은 **모든 음을 동일한 간격만큼 올리거나 내리며 조를 바꾸는 것**입니다. 이 경우 **조(키)는 바뀌지만 음의 간격(화성, 멜로디 구조)은 유지됩니다**.  \n\n반면, **몇 음만 옥타브 아래로 바꾸는 것**은 **특정 음의 높이만 낮추는 것**으로, **조는 그대로 유지되며 음의 간격이나 화성 구조는 변하지 않습니다**.  \n\n**변화점**:  \n- 조옮김: 조(키)가 바뀜.  \n- 옥타브 조정: 조는 그대로, 특정 음의 높이만 달라짐.  \n\n**변하지 않는 점**:  \n- 조옮김: 음의 간격(화성, 멜로디 구조)은 유지됨.  \n- 옥타브 조정: 조와 음의 간격은 그대로 유지됨.",
+    "seconds": 10.040163518002373
+  },
+  {
+    "version": "lean",
+    "case_id": "followup-transpose-paraphrase",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in en. Distinguish what changes and what remains the same. No unrequested examples.\n\n/think",
+    "answer": "No, lowering only the highest notes by an octave does not transpose the entire song.  \n\n**What changes**: The pitch of the highest notes is altered (shifted down by 12 semitones).  \n**What remains the same**: The rest of the notes retain their original pitches, intervals, and harmonic relationships.  \n\nA full transposition requires **all notes** to be shifted by the same interval (e.g., all notes down an octave). Modifying only a subset of notes disrupts the consistent pitch relationship required for a true transposition.",
+    "seconds": 13.319911407998006
+  },
+  {
+    "version": "lean_with_definitions",
+    "case_id": "background-transpose-en",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in en. Distinguish what changes and what remains the same. No unrequested examples.\nGeneral pitch terminology; use only what answers the question.\nChromatic transposition moves every note in a passage by the same directed\ninterval, preserving intervals within that passage. A non-octave transposition\ncan change the key; transposition by a whole octave retains the pitch classes.\nMoving only selected notes by an octave changes their register and can change\nthe intervals to surrounding notes, but retains those notes' pitch classes.\nThat alone does not change the song's key or necessarily damage its harmony.\nEnharmonic respelling changes note names, not sounding pitch in twelve-tone\nequal temperament. It is not a change of key or an octave displacement.\n한국어: 조옮김은 구절의 모든 음을 같은 방향·같은 음정만큼 옮깁니다.\n몇 음만 옥타브로 바꾸면 그 음들의 음역과 주변 음과의 간격이 달라질 수\n있지만 음고류는 그대로입니다. 이것만으로 조성이 바뀌거나 화성이 망가진다고\n하지 않습니다. 모든 음을 옥타브만큼 옮기는 조옮김도 음고류와 조성을 유지합니다.\n평균율에서 이명동음은 같은 높이의 음을 다르게 적은 것이며 조옮김이 아닙니다.\nNo unrequested note-name examples, claims about artistic quality or score facts.\n\n/think",
+    "answer": "No. Transposing a song involves shifting **all notes** by the same interval, preserving intervals and key. Lowering **only some notes** by an octave changes their **register** and may alter intervals with surrounding notes, but does not uniformly shift the entire passage. Transposition retains pitch classes and key (if transposed by octave), while selective octave changes can disrupt harmonic relationships and key.",
+    "seconds": 11.309005073002481
+  },
+  {
+    "version": "lean_with_definitions",
+    "case_id": "followup-transpose-ko",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in ko. Distinguish what changes and what remains the same. No unrequested examples.\nGeneral pitch terminology; use only what answers the question.\nChromatic transposition moves every note in a passage by the same directed\ninterval, preserving intervals within that passage. A non-octave transposition\ncan change the key; transposition by a whole octave retains the pitch classes.\nMoving only selected notes by an octave changes their register and can change\nthe intervals to surrounding notes, but retains those notes' pitch classes.\nThat alone does not change the song's key or necessarily damage its harmony.\nEnharmonic respelling changes note names, not sounding pitch in twelve-tone\nequal temperament. It is not a change of key or an octave displacement.\n한국어: 조옮김은 구절의 모든 음을 같은 방향·같은 음정만큼 옮깁니다.\n몇 음만 옥타브로 바꾸면 그 음들의 음역과 주변 음과의 간격이 달라질 수\n있지만 음고류는 그대로입니다. 이것만으로 조성이 바뀌거나 화성이 망가진다고\n하지 않습니다. 모든 음을 옥타브만큼 옮기는 조옮김도 음고류와 조성을 유지합니다.\n평균율에서 이명동음은 같은 높이의 음을 다르게 적은 것이며 조옮김이 아닙니다.\nNo unrequested note-name examples, claims about artistic quality or score facts.\n\n/think",
+    "answer": "아니요. 노래 전체를 옥타브만큼 조옮김하면 음고류와 조성은 그대로 유지됩니다. 그러나 몇 음만 옥타브 아래로 옮기면 해당 음들의 음역은 낮아지고, 주변 음과의 간격이 달라질 수 있어 화성 구조가 달라질 수 있습니다. 다만, 이 경우에도 음고류는 변하지 않으며, 조성은 유지됩니다. 두 경우 모두 조성은 변하지 않지만, 음역 변화의 범위와 화성 영향에 차이가 있습니다.",
+    "seconds": 7.412124977003259
+  },
+  {
+    "version": "lean_with_definitions",
+    "case_id": "followup-transpose-paraphrase",
+    "policy": "Explain the requested music theory accurately and briefly. Answer in en. Distinguish what changes and what remains the same. No unrequested examples.\nGeneral pitch terminology; use only what answers the question.\nChromatic transposition moves every note in a passage by the same directed\ninterval, preserving intervals within that passage. A non-octave transposition\ncan change the key; transposition by a whole octave retains the pitch classes.\nMoving only selected notes by an octave changes their register and can change\nthe intervals to surrounding notes, but retains those notes' pitch classes.\nThat alone does not change the song's key or necessarily damage its harmony.\nEnharmonic respelling changes note names, not sounding pitch in twelve-tone\nequal temperament. It is not a change of key or an octave displacement.\n한국어: 조옮김은 구절의 모든 음을 같은 방향·같은 음정만큼 옮깁니다.\n몇 음만 옥타브로 바꾸면 그 음들의 음역과 주변 음과의 간격이 달라질 수\n있지만 음고류는 그대로입니다. 이것만으로 조성이 바뀌거나 화성이 망가진다고\n하지 않습니다. 모든 음을 옥타브만큼 옮기는 조옮김도 음고류와 조성을 유지합니다.\n평균율에서 이명동음은 같은 높이의 음을 다르게 적은 것이며 조옮김이 아닙니다.\nNo unrequested note-name examples, claims about artistic quality or score facts.\n\n/think",
+    "answer": "No. Transposing the entire song requires moving **every note** by the same directed interval. Lowering **only selected notes** (e.g., the highest ones) by an octave changes their **register** and may alter **intervals** with surrounding notes, but it does not constitute a full transposition. The key and pitch classes of the moved notes remain unchanged, but the overall passage is not transposed.",
+    "seconds": 10.346208224997099
+  }
+]

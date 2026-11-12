@@ -1,0 +1,13 @@
+{
+  "recorded_at": "2026-10-31T13:32:52.576614+00:00",
+  "experiment": "E11 development only",
+  "motivation": "E10 preserves Korean source text and reaches development F1 0.972074, but rejects 3/10 general questions and selects unrelated local advice for a fermata definition. E9 manual source comparison finds 11 material drifts among 41 targeted cases.",
+  "changes": [
+    "Keep E10 complete native-language quotation / full English translation mode.",
+    "For explicit general definitions, comparisons and universal rules without a local or causal referent or measure range, discard unrelated retrieved passages after admission. Ambiguous short score questions retain evidence selection.",
+    "Clarify tenuto mark placement and omit unrequested symbol shapes."
+  ],
+  "data_policy": "Use the same frozen 55 development requests and unchanged B-selected metric. E9 validation metric files now exist because its driver resumed, but no validation metric values or validation subset judgments were consulted for this change. Earlier known historical meaning cases informed source-preservation development; the split is not independently collected.",
+  "evaluation_runner_fix": "The actual pre-security snapshot has no source_priority module. Import it only when present. Explicitly ordered fixed contexts need no synthetic priority policy. Its failed startup produced no measured rows; retain the failed manifest/log. Use a fresh comparison contract after this fix.",
+  "report_fix": "Include recent-fresh-benign in the targeted meaning group (41 requests, not 40); all290 overall coverage unchanged."
+}

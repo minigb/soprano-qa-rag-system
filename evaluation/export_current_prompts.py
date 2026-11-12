@@ -1,0 +1,109 @@
+"""Export the exact assembled system policies without replacing earlier snapshots."""
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import json
+from pathlib import Path
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+
+from soprano_qa.answer import system_prompt
+from soprano_qa.security import (
+    _GUARD_SYSTEM, _ADMISSION_SYSTEM, _ADMISSION_RULES, _OUTPUT_RULES, _COMPARISON_REVIEW_RULES, _SELECTION_SYSTEM,
+    SECURITY_SYSTEM_POLICY,
+)
+from soprano_qa.structured_answer import (
+    STRUCTURED_ANSWER_POLICY, GENERAL_MUSIC_FORMAT_POLICY,
+    GENERAL_MUSIC_SYSTEM_PROMPT, SOURCE_PRESERVATION_POLICY, SOURCE_SELECTION_POLICY, GENERAL_PRACTICE_SYSTEM_PROMPT, GENERAL_PRACTICE_SYSTEM_PROMPT_KO, answer_schema,
+)
+from soprano_qa.source_translation import SOURCE_TRANSLATION_POLICY
+from soprano_qa.translation import QUERY_TRANSLATION_SYSTEM_PROMPT
+from soprano_qa.structured_answer import concise_concept_system_prompt
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, required=True)
+    parser.add_argument('--check', action='store_true')
+    args = parser.parse_args()
+    retry = [node.value for node in ast.walk(ast.parse((ROOT/'soprano_qa/llm.py').read_text()))
+             if isinstance(node, ast.Constant) and isinstance(node.value, str)
+             and node.value.lstrip('\n').startswith('The previous composition did not pass review.')]
+    if len(retry) != 1:
+        raise ValueError('Cannot identify the exact retry instruction')
+    prompts = {
+        'answer-ko.txt': STRUCTURED_ANSWER_POLICY + '\n' + system_prompt('ko'),
+        'answer-en.txt': STRUCTURED_ANSWER_POLICY + '\n' + system_prompt('en'),
+        'answer-preserve-ko.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('ko'),
+        'answer-preserve-en.txt': SOURCE_PRESERVATION_POLICY + '\n' + system_prompt('en'),
+        'answer-select-for-translation-en.txt': SOURCE_SELECTION_POLICY + '\n' + system_prompt('en'),
+        'source-translation-en.txt': SOURCE_TRANSLATION_POLICY,
+        'answer-general.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_MUSIC_SYSTEM_PROMPT
+                              + '\n' + SECURITY_SYSTEM_POLICY,
+        'answer-concept-ko.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + concise_concept_system_prompt('ko') + '\n' + SECURITY_SYSTEM_POLICY + '\n/think',
+        'answer-concept-en.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + concise_concept_system_prompt('en') + '\n' + SECURITY_SYSTEM_POLICY + '\n/think',
+        'answer-practice.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_PRACTICE_SYSTEM_PROMPT + '\n' + SECURITY_SYSTEM_POLICY,
+        'guard-admission.txt': _ADMISSION_SYSTEM + _ADMISSION_RULES,
+        'guard-output.txt': _GUARD_SYSTEM + _OUTPUT_RULES,
+        'guard-comparison.txt': _GUARD_SYSTEM + _OUTPUT_RULES + _COMPARISON_REVIEW_RULES + '\n/no_think',
+        'answer-practice-ko.txt': GENERAL_MUSIC_FORMAT_POLICY + '\n' + GENERAL_PRACTICE_SYSTEM_PROMPT_KO + '\n' + SECURITY_SYSTEM_POLICY,
+        'evidence-selection.txt': _SELECTION_SYSTEM,
+        'query-translation.txt': QUERY_TRANSLATION_SYSTEM_PROMPT,
+        'retry-suffix.txt': retry[0],
+    }
+    hashes = {name: hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+              for name in ('soprano_qa/answer.py', 'soprano_qa/security.py',
+                           'soprano_qa/translation.py', 'soprano_qa/llm.py',
+                           'soprano_qa/structured_answer.py', 'soprano_qa/music_terms.py',
+                           'soprano_qa/source_translation.py', 'soprano_qa/source_translation_catalog.py')}
+    for name in ('soprano_qa/question_intent.py', 'soprano_qa/meter.py', 'soprano_qa/source_comparison.py'):
+        hashes[name] = hashlib.sha256((ROOT/name).read_bytes()).hexdigest()
+    metadata = {
+        'source_commit': subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip(),
+        'source_sha256': hashes,
+        'note': 'Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.',
+        'assembly': 'soprano_qa.answer.build_messages -> soprano_qa.llm.generate',
+        'concise_concept': 'After selection finds no answering source, a non-practice pitch-concept question without selected range or score context uses answer-concept-ko/en.txt and question/answer_language JSON. Max1536 tokens, no first-token grammar; remove private thinking, parse strict final JSON. Admission/output checks still see the full original bundle. No stored answer or new textbook prompt is used.',
+        'calculated_music_rule': 'soprano_qa.meter.basic_meter_explanation; basic conventional meter arithmetic only, with admission/output review and llm_guarded_calculation metadata. It is not model-composed prose.',
+        'comparison': 'soprano_qa.source_comparison.opening_dynamics_comparison deterministically extracts two explicit opening-accompaniment markings and quiet vocal-entrance suggestions from selected Korean source text. It attributes differing values, states that the cause is not established, and expresses only the shared suggestion. Unrecognized/ambiguous/local cases retain ordinary source preservation. Admission, evidence selection and output/citation/scope checks remain mandatory; generation_mode=llm_guarded_source_comparison. No comparison LLM, question/answer cache or cached guard verdict.',
+        'retry': 'Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.',
+        'prompts': {name: {'characters': len(value), 'sha256': hashlib.sha256(value.encode()).hexdigest()}
+                    for name, value in prompts.items()},
+    }
+    # The commit containing this export changes when the export is committed;
+    # checking compares source hashes and the saved source commit, not HEAD.
+    manifest_path = args.output/'manifest.json'
+    if args.check and manifest_path.exists():
+        metadata['source_commit'] = json.loads(manifest_path.read_text())['source_commit']
+    prompts['manifest.json'] = json.dumps(metadata, ensure_ascii=False, indent=2) + '\n'
+    for name, payload in [('schema-general.json', {'Retrieved evidence': []}),
+                          ('schema-example-source.json', {'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-preserve-ko.json', {'source_preservation': True, 'answer_language': 'ko',
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-preserve-en.json', {'source_preservation': True, 'answer_language': 'en',
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]}),
+                          ('schema-select-for-translation-en.json', {'source_preservation': True, 'answer_language': 'en',
+                                                       'separate_source_translation': True,
+                                                       'Retrieved evidence': [{'citation_label': 'E1'}]})]:
+        prompts[name] = json.dumps(answer_schema(payload), ensure_ascii=False, indent=2) + '\n'
+    if not args.check:
+        args.output.mkdir(parents=True, exist_ok=True)
+    for name, value in prompts.items():
+        path = args.output/name
+        if args.check:
+            if not path.exists() or path.read_text() != value:
+                raise ValueError('Prompt snapshot mismatch: ' + str(path))
+        else:
+            if path.exists() and path.read_text() != value:
+                raise ValueError('Refusing to replace frozen prompt: ' + str(path))
+            path.write_text(value)
+    print(('Checked' if args.check else 'Exported'), len(prompts), 'prompt/schema/manifest files')
+
+
+if __name__ == '__main__':
+    main()

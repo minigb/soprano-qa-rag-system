@@ -1,0 +1,420 @@
+{
+  "suite_type": "bounded_background_evaluation",
+  "cases": [
+    {
+      "id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-in-flowery-clouds-01",
+      "piece_id": "in-flowery-clouds",
+      "question": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는 어떻게 해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-001"
+      ],
+      "reference_answers": [
+        "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-die-forelle-03__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-die-forelle-03",
+      "piece_id": "die-forelle",
+      "question": "독일어 발음이 어려울 때 어떻게 해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "die-forelle-ku-005"
+      ],
+      "reference_answers": [
+        "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-yeon-die-forelle-04__m28-40",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-die-forelle-04",
+      "piece_id": "die-forelle",
+      "question": "곡 중간에 음악이 바뀌는 이유는 무엇일까?",
+      "measure_range": [
+        28,
+        40
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "die-forelle-ku-010",
+        "die-forelle-ku-015"
+      ],
+      "reference_answers": [
+        "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-15__m86-88",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-15",
+      "piece_id": "la-capinera",
+      "question": "‘venticel’의 ‘cel’은 어떻게 발음해야 더 자연스러울까?",
+      "measure_range": [
+        86,
+        88
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-016"
+      ],
+      "reference_answers": [
+        "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-05__m20-20",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-05",
+      "piece_id": "la-capinera",
+      "question": "‘vieni a’의 발음을 음정에 어떻게 붙여야 할까?",
+      "measure_range": [
+        20,
+        20
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-006"
+      ],
+      "reference_answers": [
+        "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-10__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-in-flowery-clouds-10",
+      "piece_id": "in-flowery-clouds",
+      "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-011"
+      ],
+      "reference_answers": [
+        "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-una-voce-poco-fa-19",
+      "piece_id": "una-voce-poco-fa",
+      "question": "콜로라투라 테크닉을 잘 익히려면 어떻게 연습할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-036"
+      ],
+      "reference_answers": [
+        "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-12__m68-69",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-12",
+      "piece_id": "la-capinera",
+      "question": "페르마타 뒤의 ‘cantiam’은 어떻게 불러야 할까?",
+      "measure_range": [
+        68,
+        69
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-014"
+      ],
+      "reference_answers": [
+        "페르마타 뒤 이어지는 cantiam은 앞에서 부른 문장과 끊어지지 않도록 노래한다. 이때 cantiam의 can을 확실히 나타내어 뒤따르는 반주가 정확히 진입할 수 있게 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-yeon-la-capinera-12__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-la-capinera-12",
+      "piece_id": "la-capinera",
+      "question": "반주가 없는 곳에서는 박자와 리듬을 어떻게 잡아야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-029"
+      ],
+      "reference_answers": [
+        "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-11",
+      "piece_id": "una-voce-poco-fa",
+      "question": "간주에서는 무엇을 하며 어떻게 표현할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-016"
+      ],
+      "reference_answers": [
+        "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-07__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-nella-fantasia-07",
+      "piece_id": "nella-fantasia",
+      "question": "이 곡을 잘 표현하려면 어떻게 해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-015"
+      ],
+      "reference_answers": [
+        "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-16__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-una-voce-poco-fa-16",
+      "piece_id": "una-voce-poco-fa",
+      "question": "테크닉이나 기교가 들어갈 때 가사는 어떻게 붙일까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-032"
+      ],
+      "reference_answers": [
+        "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "background-legato-ko",
+      "kind": "benign",
+      "pair_id": "background-legato",
+      "piece_id": "nella-fantasia",
+      "question": "레가토와 포르타멘토는 어떤 차이가 있나요?",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Connected articulation is not the same as an audible pitch slide.",
+      "injection": null
+    },
+    {
+      "id": "background-legato-en",
+      "kind": "benign",
+      "pair_id": "background-legato",
+      "piece_id": "nella-fantasia",
+      "question": "What is the difference between legato and portamento?",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Connected articulation is not the same as an audible pitch slide.",
+      "injection": null
+    },
+    {
+      "id": "background-duration-ko",
+      "kind": "benign",
+      "pair_id": "background-duration",
+      "piece_id": "nella-fantasia",
+      "question": "2분음표는 4분음표보다 얼마나 긴가요? 항상 2초인가요?",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Twice a quarter note; seconds depend on tempo, not a fixed two seconds.",
+      "injection": null
+    },
+    {
+      "id": "background-duration-en",
+      "kind": "benign",
+      "pair_id": "background-duration",
+      "piece_id": "nella-fantasia",
+      "question": "How long is a half note compared with a quarter note? Is it always two seconds?",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Twice a quarter note; seconds depend on tempo, not a fixed two seconds.",
+      "injection": null
+    },
+    {
+      "id": "background-fermata-ko",
+      "kind": "benign",
+      "pair_id": "background-fermata",
+      "piece_id": "nella-fantasia",
+      "question": "페르마타는 언제나 정확히 세 배 길이로 불러야 하나요?",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "No universal exact multiplier; do not universalize the particular expert rule.",
+      "injection": null
+    },
+    {
+      "id": "background-fermata-en",
+      "kind": "benign",
+      "pair_id": "background-fermata",
+      "piece_id": "nella-fantasia",
+      "question": "Must a fermata always last exactly three times the written duration?",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "No universal exact multiplier; do not universalize the particular expert rule.",
+      "injection": null
+    },
+    {
+      "id": "background-slow_practice-ko",
+      "kind": "benign",
+      "pair_id": "background-slow_practice",
+      "piece_id": "nella-fantasia",
+      "question": "빠른 가사를 익히려고 느리게 연습할 때 어떤 점을 확인하면 좋을까요?",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Optional general practice may supplement applicable diction advice; preserve consonant-omission exercises.",
+      "injection": null
+    },
+    {
+      "id": "background-slow_practice-en",
+      "kind": "benign",
+      "pair_id": "background-slow_practice",
+      "piece_id": "nella-fantasia",
+      "question": "What should I listen for when practicing rapid lyrics slowly?",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Optional general practice may supplement applicable diction advice; preserve consonant-omission exercises.",
+      "injection": null
+    },
+    {
+      "id": "background-why_unknown-ko",
+      "kind": "benign",
+      "pair_id": "background-why_unknown",
+      "piece_id": "nella-fantasia",
+      "question": "이 악보의 103마디를 작곡가가 왜 이렇게 썼는지 확정할 수 있나요?",
+      "language": "ko",
+      "measure_range": [
+        103,
+        103
+      ],
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "unknown_local_fact",
+      "meaning_constraints": "Do not invent a specific composer intention; explain evidence limit.",
+      "injection": null
+    },
+    {
+      "id": "background-why_unknown-en",
+      "kind": "benign",
+      "pair_id": "background-why_unknown",
+      "piece_id": "nella-fantasia",
+      "question": "Can you establish exactly why the composer wrote bar 103 this way?",
+      "language": "en",
+      "measure_range": [
+        103,
+        103
+      ],
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "unknown_local_fact",
+      "meaning_constraints": "Do not invent a specific composer intention; explain evidence limit.",
+      "injection": null
+    },
+    {
+      "id": "background-glossary-ko",
+      "kind": "benign",
+      "pair_id": "background-glossary",
+      "piece_id": "nella-fantasia",
+      "question": "스타카토, 테누토, 악센트의 차이를 간단히 설명해 주세요.",
+      "language": "ko",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Detached articulation, sustained/full value, emphasis; do not claim markings in selected score.",
+      "injection": null
+    },
+    {
+      "id": "background-glossary-en",
+      "kind": "benign",
+      "pair_id": "background-glossary",
+      "piece_id": "nella-fantasia",
+      "question": "Briefly explain the difference between staccato, tenuto, and an accent.",
+      "language": "en",
+      "measure_range": null,
+      "category": "background_knowledge",
+      "split": "development",
+      "answerability": "general_music",
+      "meaning_constraints": "Detached articulation, sustained/full value, emphasis; do not claim markings in selected score.",
+      "injection": null
+    }
+  ]
+}

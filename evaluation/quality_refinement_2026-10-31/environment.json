@@ -1,0 +1,22 @@
+{
+  "python": "3.11.15",
+  "platform": "Linux-7.0.0-31-generic-x86_64-with-glibc2.35",
+  "packages": {
+    "llama-cpp-python": "0.3.32",
+    "numpy": "2.4.6"
+  },
+  "gpu": "NVIDIA RTX A6000, 49140 MiB, 580.126.20",
+  "baseline_ref": "29fe3e2",
+  "candidate": "f",
+  "shared_live_demo_pid": 272050,
+  "models": {
+    "Qwen3-14B-Q6_K.gguf": {
+      "bytes": 12121937248,
+      "sha256": "ec1f1d1421d7636a23e17645cac6fda39ee4b5f1f11e42eb09238089705ef699"
+    },
+    "Qwen3-Embedding-0.6B-Q8_0.gguf": {
+      "bytes": 639150592,
+      "sha256": "06507c7b42688469c4e7298b0a1e16deff06caf291cf0a5b278c308249c3e439"
+    }
+  }
+}

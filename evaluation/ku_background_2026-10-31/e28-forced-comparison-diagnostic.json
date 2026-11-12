@@ -1,0 +1,42 @@
+[
+  {
+    "case_id": "fixed-observed-p-pp-1",
+    "answer": "첫 번째 자료는 반주의 다이나믹을 PP로 설명하며, 노래 역시 부드러운 어택으로 시작하는 것이 적절하다고 말했습니다. 두 번째 자료는 반주의 다이나믹을 p로 설명하고, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다고 했습니다.\n제공된 자료만으로는 두 설명이 다른 이유를 확정할 수 없습니다.\n첫 소리를 크지 않게 시작하는 것이 중요합니다",
+    "parts": [
+      {
+        "kind": "evidence",
+        "text": "첫 번째 자료는 반주의 다이나믹을 PP로 설명하며, 노래 역시 부드러운 어택으로 시작하는 것이 적절하다고 말했다. 두 번째 자료는 반주의 다이나믹을 p로 설명하고, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다고 했다.",
+        "evidence": [
+          "E1",
+          "E2"
+        ]
+      },
+      {
+        "kind": "evidence",
+        "text": "제공된 자료만으로는 두 설명이 다른 이유를 확정할 수 없습니다.",
+        "evidence": [
+          "E1",
+          "E2"
+        ]
+      },
+      {
+        "kind": "evidence",
+        "text": "첫 소리를 크지 않게 시작하는 것이 중요하다",
+        "evidence": [
+          "E1",
+          "E2"
+        ]
+      }
+    ]
+  },
+  {
+    "case_id": "fixed-observed-p-pp-2",
+    "error": "SecurityViolation",
+    "reason": "security_output_rejected"
+  },
+  {
+    "case_id": "followup-comparison-en",
+    "error": "SecurityViolation",
+    "reason": "security_policy_violation"
+  }
+]

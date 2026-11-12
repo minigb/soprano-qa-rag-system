@@ -1,0 +1,26 @@
+{
+  "selected_at": "2026-10-31T12:36:00.969540+00:00",
+  "source_commit": "efa6968211d7e5209741fca83cec8b8970d08a4d",
+  "source_sha256": "da647dc2f71a7fda0a70baf1486c3242b5e5eb62f5aada8a9ef4da7880866d8e",
+  "config_sha256": "ae1b37b0ef3a182f5b307ab50a8d5c464090c308b900fbcd82185eddaf63359a",
+  "metric_selection_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "development": {
+    "expert_requests": 43,
+    "expert_delivered": 42,
+    "effective_bertscore_f1": 0.9340698025947394,
+    "expert_material_drift": 0,
+    "expert_substantial_factual_errors": 0,
+    "expert_effective_quality_percent": 92.38900634249468,
+    "general_delivered_of_10": 8,
+    "general_mixed_or_uncertain_factual": 1
+  },
+  "decision": "Choose E9 for preserved expert meaning and effective expert F1. Reject E8 despite its passing numeric score. General-answer coverage remains limited and is reported, not excluded.",
+  "validation_started": false,
+  "validation_outputs_used_for_selection": false,
+  "no_changes_during_comparison": "candidate, cases, metric setting, source corpus, judge rubric and runners",
+  "tests": {
+    "standalone_rag": 572,
+    "lab_rag": 572,
+    "lab_demo": 44
+  }
+}

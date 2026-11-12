@@ -1,0 +1,616 @@
+[
+  {
+    "id": "a33008216aef74cf00ee",
+    "question": "Can you establish exactly why the composer wrote bar 103 this way?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      103,
+      103
+    ],
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "aa5cbd93b6b26be607c5",
+    "question": "What should I listen for when practicing rapid lyrics slowly?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "Focus on maintaining a smooth, connected legato phrasing by sustaining long breaths and ensuring the melody flows as a single line without breaks between notes. Sumi Jo emphasizes the importance of stable breathing to prevent disruptions in the musical flow during phrases.\nThe piece requires careful attention to legato throughout, with a focus on singing the lyrical lines in a soft and flexible manner. Experts note that many singers struggle with breath support, so practicing steady breathing is crucial to maintaining the seamless phrasing.\nWhen encountering melodic leaps, prioritize natural vowel shaping and resonance while avoiding excessive tension. Practicing the lower mid-range notes more thoroughly can help achieve smoother legato, and ensuring adequate breath space at the start of phrases is recommended.",
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-038-ku-01",
+        "text": "음역 자체가 특별히 높거나 빠른 곡은 아니지만 긴 호흡을 유지하면서 하나의 긴 선으로 프레이즈를 연결하는 능력이 가장 중요해요. 마치 한 번에 하나의 큰 선을 그리듯이 음과 음 사이가 끊어지지 않고 부드럽고 유연하게 연결되는 것이 중요하다고 봅니다.\n\n특히 호흡이 부족해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록 안정적인 호흡을 먼저 확보해야 할 거예요. 그리고 또 단순히 음정과 가사를 정확하게 익힌 것뿐만이 아니라 이 음악적인 긴장과 방향성을 유지해 연습을 하면서 그 뜻을 또 잘 공부를 하는 것이 필요하다고 생각됩니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b96713b4a3e2e56c5d0b",
+    "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닙니다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러납니다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적입니다.",
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5311eb291026867e5e44",
+    "question": "2분음표는 4분음표보다 얼마나 긴가요? 항상 2초인가요?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8f696a798c6287e58031",
+    "question": "Must a fermata always last exactly three times the written duration?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "109b3c23c4c5a6d4c401",
+    "question": "반주가 없는 곳에서는 박자와 리듬을 어떻게 잡아야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있습니다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 합니다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있습니다.",
+    "evidence": [
+      {
+        "id": "la-capinera-ku-029",
+        "text": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            135,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d1530f5df2212065b42a",
+    "question": "테크닉이나 기교가 들어갈 때 가사는 어떻게 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있습니다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 합니다.",
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-032",
+        "text": "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "테크닉이 많거나 스케일과 트릴을 붙이는 부분은 경우에 따라 ‘아-’ 또는 해당 단어의 모음으로 스케일을 이어 갈 수 있다. 단어의 모음으로 부를 때에는 가급적 프레이즈가 끝나기 전에 반드시 단어의 끝맺음을 지어야 한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d3709412d84b210d7df0",
+    "question": "‘vieni a’의 발음을 음정에 어떻게 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      20,
+      20
+    ],
+    "language": "ko",
+    "answer": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음합니다.",
+    "evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "60c782bd6cb10d4fbc79",
+    "question": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때에는, 이는 악보에 따른 편곡의 차이일 수 있으며, 페르마타가 있는 경우와 없는 경우 모두 허용됩니다.",
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7f5fbacfef9335a04a0f",
+    "question": "What is the difference between legato and portamento?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e6e61451cf01a86027af",
+    "question": "Briefly explain the difference between staccato, tenuto, and an accent.",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8b6076e8ae0b2eac0491",
+    "question": "빠른 가사를 익히려고 느리게 연습할 때 어떤 점을 확인하면 좋을까요?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "느리게 연습할 때는 음과 음 사이가 끊어지지 않고 부드럽고 유연하게 연결되는 레가토를 유지하는 것이 중요합니다. 안정적인 호흡을 통해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록 연습해야 하며, 음악적인 긴장과 방향성을 유지하면서 연습하는 것이 필요합니다.\n《Nella fantasia》는 높거나 빠른 음이 아니지만, 긴 호흡으로 전체적인 레가토를 유지하는 것이 중요합니다. 서정적인 라인을 부드럽고 유연하게 불러야 하며, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요합니다.\n음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요합니다. 충분한 시간을 두고 자연스럽게 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 연습해야 합니다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있습니다.\n\n일반적인 음악 설명입니다.\n가사를 느리게 익히는 것은 음악적인 흐름과 레가토를 자연스럽게 연결하는 데 도움이 됩니다. 호흡을 조절하고, 음과 음 사이의 연결을 부드럽게 하여 전체적인 선을 유지하는 연습이 필요합니다.",
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-038-ku-01",
+        "text": "음역 자체가 특별히 높거나 빠른 곡은 아니지만 긴 호흡을 유지하면서 하나의 긴 선으로 프레이즈를 연결하는 능력이 가장 중요해요. 마치 한 번에 하나의 큰 선을 그리듯이 음과 음 사이가 끊어지지 않고 부드럽고 유연하게 연결되는 것이 중요하다고 봅니다.\n\n특히 호흡이 부족해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록 안정적인 호흡을 먼저 확보해야 할 거예요. 그리고 또 단순히 음정과 가사를 정확하게 익힌 것뿐만이 아니라 이 음악적인 긴장과 방향성을 유지해 연습을 하면서 그 뜻을 또 잘 공부를 하는 것이 필요하다고 생각됩니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9bd74ef6364a9938df60",
+    "question": "이 악보의 103마디를 작곡가가 왜 이렇게 썼는지 확정할 수 있나요?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      103,
+      103
+    ],
+    "language": "ko",
+    "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5ad9d139de1c38fdae85",
+    "question": "이 곡을 잘 표현하려면 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡을 잘 표현하려면 긴 호흡을 유지하면서 프레이즈를 하나의 선으로 유연하게 연결하는 것이 중요합니다. 호흡이 안정되어야 음악적인 흐름이 끊어지지 않도록 하되, 단순히 음정과 가사를 정확히 익히는 것뿐만 아니라 음악적인 긴장과 방향성을 유지하며 연습하는 것이 필요합니다.\n악보에 표기된 리듬을 기준으로 하되, 언어의 억양과 자연스러운 프레이징을 고려해 미세한 루바도를 활용할 수 있습니다. 다만, 셋잇단음표와 같은 곡의 특징적인 리듬은 정확하게 인식하고 지켜야 하며, 전체적인 서정성과 레가토를 유지하는 것이 중요합니다.\n성악적인 표현에서는 한 단어를 임의로 분절하지 않는 것이 중요합니다. 대중음악에서는 가사의 자연스러운 전달을 위해 단어 중간에서 숨을 쉬는 경우가 있지만, 특별한 의도가 없는 한 그러한 분절은 피하는 것이 좋습니다.\n《Nella fantasia》는 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이며, 서정적인 라인을 부드럽고 유연하게 불러야 합니다. 많은 성악가가 호흡 부족으로 프레이즈를 끊는 경우가 많아, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요합니다.",
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-038-ku-01",
+        "text": "음역 자체가 특별히 높거나 빠른 곡은 아니지만 긴 호흡을 유지하면서 하나의 긴 선으로 프레이즈를 연결하는 능력이 가장 중요해요. 마치 한 번에 하나의 큰 선을 그리듯이 음과 음 사이가 끊어지지 않고 부드럽고 유연하게 연결되는 것이 중요하다고 봅니다.\n\n특히 호흡이 부족해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록 안정적인 호흡을 먼저 확보해야 할 거예요. 그리고 또 단순히 음정과 가사를 정확하게 익힌 것뿐만이 아니라 이 음악적인 긴장과 방향성을 유지해 연습을 하면서 그 뜻을 또 잘 공부를 하는 것이 필요하다고 생각됩니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "sumijo-nella-fantasia-041-ku-01",
+        "text": "대중음악은 처음부터 오선보의 정확한 리듬에서 출발하기보다는 코드 진행이나 멜로디의 구상에서 시작되는 경우가 대부분이고, 또 그 이후 악보로 옮겨지는 과정에서 실제 가창의 미세한 타이밍까지 완전히 표기하기에는 어려운 경우가 많죠.\n\n따라서 기본적으로는 악보에 표기된 리듬을 기준으로 하되, 실제 노래를 할 때는 언어의 억양과 자연스러운 프레이징을 고려하여 정박보다 약간 앞이나 뒤에서 발음하는 미세한 루바도를 활용할 수 있어요.\n\n다만 이러한 자유는 리듬을 무시한다는 의미가 아니고, 전체적인 서정성과 레가토를 유지하면서도 특히 셋잇단음표와 같이 곡의 특징을 형성하는 리듬은 정확하게 인식하고 또 지켜 가야 합니다. 그러니까, 즉, 기본 리듬은 명확하고 정확하게 유지되되, 그 안에서 가사의 자연스러움과 음악적 표현을 유연하게 조절하는 것이 바람직합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "sumijo-nella-fantasia-040-ku-02",
+        "text": "또한 대중음악에서는 가사의 자연스러운 전달을 위해 단어 중간에서 숨을 쉬는 경우도 있지만 성악적인 표현에서는 특별한 의도가 없는 한 한 단어를 임의로 분절하지 않는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "779a4bee9894a0bb657f",
+    "question": "‘venticel’의 ‘cel’은 어떻게 발음해야 더 자연스러울까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      86,
+      88
+    ],
+    "language": "ko",
+    "answer": "‘venticel’의 ‘cel’은 이태리어 발음 규칙에 따라 e가 충분히 발음되도록 c를 최대한 앞으로, l을 최대한 뒤로 위치시켜 발음해야 합니다. 이는 모음의 중요성과 e 발음의 길이가 길어질수록 공명과 좋은 소리를 전달할 수 있기 때문입니다.",
+    "evidence": [
+      {
+        "id": "la-capinera-ku-016",
+        "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            86,
+            88
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "de64543135cd8fa01221",
+    "question": "How long is a half note compared with a quarter note? Is it always two seconds?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f4b58606b92481833970",
+    "question": "스타카토, 테누토, 악센트의 차이를 간단히 설명해 주세요.",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "560bcd46f349dbed07e5",
+    "question": "콜로라투라 테크닉을 잘 익히려면 어떻게 연습할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "콜로라투라 테크닉을 익히려면 부분적으로 끊어 연습하는 것이 좋습니다. 악센트나 스타카토, 부점 등 다양한 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 효과적입니다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있습니다.",
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-036",
+        "text": "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "412ff805f7dc507eecfd",
+    "question": "독일어 발음이 어려울 때 어떻게 해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "독일어 발음은 자음의 명확성과 모음의 흐름을 중요하게 여기며, 성악가에게는 노래 속에서 이 두 요소를 조화롭게 유지하는 것이 어려울 수 있습니다. 느리게 연습한 후 점차 속도를 높이고, 음정 없이 발음만 연습하는 방법이 도움이 될 수 있습니다.",
+    "evidence": [
+      {
+        "id": "die-forelle-ku-005",
+        "text": "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6c8df7b386202b8ed333",
+    "question": "페르마타는 언제나 정확히 세 배 길이로 불러야 하나요?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Nella fantasia》에서는 페르마타가 항상 세 배 길이로 지켜야 한다는 규정은 없으며, 전체적인 레가토를 유지하면서 서정적인 라인을 부드럽고 유연하게 부르는 것이 중요합니다.\n셋잇단음표 리듬은 정확히 지켜야 하지만, 페르마타의 길이는 유연하게 조절하여 레가토를 유지하는 것이 중요합니다.\n음의 도약이 있는 부분에서는 자연스러운 모음과 울림을 위해 충분한 시간을 두고 부르되, 레가토를 유지하기 위해 고음보다 직전의 중저음을 연습하는 것이 도움이 됩니다.\n\n일반적인 음악 설명입니다.\n페르마타의 길이는 일반적으로 지휘자나 연주자의 해석에 따라 달라질 수 있으며, 악보에 명시된 경우가 많지 않습니다. 따라서 페르마타의 길이를 일률적으로 세 배로 정하는 것은 일반적인 관행이 아니며, 음악의 표현을 위해 유연하게 조절하는 것이 중요합니다.",
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-015",
+        "text": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-016",
+        "text": "《Nella fantasia》에서 전체적으로 서정적이고 레가토인 라인을 유지하더라도, 그 안의 셋잇단음표 리듬은 유의하여 정확히 지켜야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            7,
+            11
+          ],
+          [
+            25,
+            26
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            36,
+            38
+          ],
+          [
+            41,
+            42
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-003",
+        "text": "대중음악은 처음 작곡할 때 악보가 아니라 코드 진행에서 출발하는 경우가 많아 멜로디의 정확한 리듬을 표기하기 어려울 때가 많다. 따라서 가사를 어떤 음정에 붙여야 하는지 판단하기 어려울 수 있다. 대부분 악보를 참고하여 부르지만, 자연스럽고 부드럽게 가사를 전달하기 위해 정박보다 조금 앞이나 뒤에서 발음하는 경우가 일반적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b72c9a35c05342c12a05",
+    "question": "곡 중간에 음악이 바뀌는 이유는 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다.",
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a693704f4dd528fa8d2a",
+    "question": "레가토와 포르타멘토는 어떤 차이가 있나요?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+    "evidence": [],
+    "reference_answers": [],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b1195c6911af5050243b",
+    "question": "페르마타 뒤의 ‘cantiam’은 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      68,
+      69
+    ],
+    "language": "ko",
+    "answer": "페르마타 뒤의 ‘cantiam’은 앞에서 부른 문장과 끊어지지 않도록 부르되, ‘can’을 확실히 표현하여 반주가 정확히 진입할 수 있도록 합니다.",
+    "evidence": [
+      {
+        "id": "la-capinera-ku-014",
+        "text": "페르마타 뒤 이어지는 cantiam은 앞에서 부른 문장과 끊어지지 않도록 노래한다. 이때 cantiam의 can을 확실히 나타내어 뒤따르는 반주가 정확히 진입할 수 있게 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "페르마타 뒤 이어지는 cantiam은 앞에서 부른 문장과 끊어지지 않도록 노래한다. 이때 cantiam의 can을 확실히 나타내어 뒤따르는 반주가 정확히 진입할 수 있게 한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8a5bbf77fba3e6dcd447",
+    "question": "간주에서는 무엇을 하며 어떻게 표현할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "간주에서는 이야기의 흐름이나 캐릭터의 감정 변화를 표현하기 위해 표정, 시선, 움직임 등을 통해 극적 전환을 이끌어내야 합니다.",
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

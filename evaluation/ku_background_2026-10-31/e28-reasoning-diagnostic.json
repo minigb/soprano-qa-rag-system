@@ -1,0 +1,23 @@
+[
+  {
+    "stage": "relationship",
+    "final": "{\"relationship\":\"disagreement\"}"
+  },
+  {
+    "case_id": "fixed-observed-p-pp-1",
+    "final": "{\n  \"contrast\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"text\": \"E1은 반주부가 PP로 시작하여 부드러운 어택을 권장한다고 설명하는 반면, E2는 악보에 반주부가 p로 표기되어 있으므로 크지 않게 시작하는 것이 좋다고 기술하고 있다.\"\n  },\n  \"shared_guidance\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"support\": {\n      \"E1\": \"부드러운 어택으로 시작하는 것이 적절해요\",\n      \"E2\": \"크지 않게 시작하는 것이 좋아 보인다\"\n    },\n    \"text\": \"소프트한 다이나믹으로 시작하는 것이 공통적으로 권장된다\"\n  },\n  \"cause\": null\n}",
+    "error": "SecurityViolation",
+    "reason": "security_output_rejected"
+  },
+  {
+    "case_id": "fixed-observed-p-pp-2",
+    "final": "{\n  \"contrast\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"text\": \"E1은 반주부의 PP 표기와 호흡의 지지에 주목해 '부드러운 어택으로 시작'해야 한다고 설명하는 반면, E2는 악보의 p 표기를 근거로 '크지 않게 시작'하는 것이 적절하다고 단순히 제시한다.\"\n  },\n  \"shared_guidance\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"support\": {\n      \"E1\": \"부드러운 어택으로 시작하는 것이 적절해요\",\n      \"E2\": \"크지 않게 시작하는 것이 좋아 보인다\"\n    },\n    \"text\": \"첫 소리의 다이나믹은 작게 시작하는 것이 공통적으로 권장된다\"\n  },\n  \"cause\": null\n}",
+    "answer": "첫 번째 자료는 반주부의 PP 표기와 호흡의 지지에 주목해 '부드러운 어택으로 시작'해야 한다고 설명하는 반면, 두 번째 자료는 악보의 p 표기를 근거로 '크지 않게 시작'하는 것이 적절하다고 단순히 제시합니다.\n제공된 자료만으로는 두 설명이 다른 이유를 확정할 수 없습니다.\n첫 소리의 다이나믹은 작게 시작하는 것이 공통적으로 권장됩니다"
+  },
+  {
+    "case_id": "followup-comparison-en",
+    "final": "{\n  \"contrast\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"text\": \"E1 describes the accompaniment beginning with PP (pianissimo), advising a soft attack to match the accompaniment's 'delicate atmosphere,' while E2 describes the accompaniment beginning with p (piano), noting the score's marking and suggesting not to start 'too loudly.'\"\n  },\n  \"shared_guidance\": {\n    \"evidence\": [\"E1\", \"E2\"],\n    \"support\": {\n      \"E1\": \"부드러운 어택으로 시작하는 것이 적절해요\",\n      \"E2\": \"크지 않게 시작하는 것이 좋아 보인다\"\n    },\n    \"text\": \"both recommend beginning softly, emphasizing control over volume to align with the accompaniment's initial dynamic.\"\n  },\n  \"cause\": null\n}",
+    "error": "SecurityViolation",
+    "reason": "security_output_rejected"
+  }
+]

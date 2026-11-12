@@ -1,0 +1,35 @@
+127.0.0.1 - "GET /api/results HTTP/1.1" 200 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 200 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 200 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 404 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 404 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 200 -
+usage: python -m unittest [-h] [--port PORT] [--original-only]
+                          [--original-results-file ORIGINAL_RESULTS_FILE]
+                          [--synthesized-results-file SYNTHESIZED_RESULTS_FILE]
+                          [--quality-review-file QUALITY_REVIEW_FILE]
+python -m unittest: error: --original-results-file must point to an existing result artifact
+127.0.0.1 - "GET /api/results HTTP/1.1" 200 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /api/results HTTP/1.1" 500 -
+127.0.0.1 - "GET /red-flags HTTP/1.1" 200 -
+127.0.0.1 - "GET /red-flags.html HTTP/1.1" 200 -
+127.0.0.1 - "GET / HTTP/1.1" 200 -
+usage: python -m unittest [-h] [--dataset-root DATASET_ROOT] [--output OUTPUT]
+                          [--piece {die-forelle,in-flowery-clouds,la-capinera,nella-fantasia,una-voce-poco-fa}]
+                          [--limit LIMIT] [--top-k TOP_K]
+python -m unittest: error: unrecognized arguments: --generate
+----------------------------------------------------------------------
+Ran 542 tests in 23.646s
+
+OK
+Downloading example/embedding-repository/embedding.gguf
+Embedding model ready: /tmp/tmp6hy_1ui_/models/embedding.gguf
+Downloading example/repository/model.gguf
+Model ready: /tmp/tmp7nzrn73x/models/model.gguf

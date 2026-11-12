@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-28T03:54:09.617438Z",
+  "contract_id": "9cad763a597e1c847df7800fb3dc82cbe9c268184b8644dae572016d3501a129",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "7db33cd14b171b7fd14d61924369d43047b0afddc1edd95647fddf7762949b5b",
+    "helper_sha256": "a2655e1d73599802b2959b3750915a59443f77962639d07461de889dfd732483",
+    "source_sha256": "39b71fda231d7e15f56201d9252532987dc32ef724ee7334849ac575459d0df4",
+    "settings_sha256": "545e606b62c041212613bc6e9f1e5ed1046dd36de38733dc88c2c4829aa0f9fe",
+    "cases_sha256": "c53112fa6f2e2050092059868d072a0c67153a28037e9040b40bc3dad8965676",
+    "variant": "hardened",
+    "warmup_case": "benign-03-ko",
+    "usage_rollout": "/home/minhee/.codex/sessions/2026/10/25/rollout-2026-10-25T11-54-50-01a17132-6472-7672-888d-3f2666e24d71.jsonl"
+  },
+  "sessions": [
+    {
+      "started_at": "2026-10-28T03:54:09.617560Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/dev_candidate_a.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/candidate/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/candidate/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/config/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+          "model_filename": "Qwen3-14B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/runtime/candidate/embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 14B Instruct"
+      },
+      "status": "complete",
+      "finished_at": "2026-10-28T03:57:37.019657Z"
+    }
+  ]
+}

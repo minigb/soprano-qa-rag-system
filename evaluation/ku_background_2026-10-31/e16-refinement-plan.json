@@ -1,0 +1,12 @@
+{
+  "recorded_at": "2026-11-01T15:05:06.989088+00:00",
+  "candidate": "E16",
+  "reason": "E15 still passes the unchanged development metric (0.972074) but introduces three material English drifts in the nine known translation examples. Reject it as a final candidate.",
+  "design": "Prepare application-maintained English translations for every expert_annotation and sumijo_feedback source answer in the frozen corpus (129 records, 19212 Korean characters), not a question/answer cache. Bind each translation to the exact source-text SHA256. Select sources at request time, preserve original Korean sources, and retain all normal security/output checks.",
+  "review": "Translations authored and manually checked by Codex, then independently assessed with Claude Opus 5.5 against original Korean source text. These are NOT human expert annotations and do not replace frozen BERTScore references.",
+  "coverage": "All 129 source answers in those two curated source types, including sources outside the evaluation questions. No evaluation question or case ID participates in lookup.",
+  "fallback": "Sources without an exact catalog match continue through the existing guarded source-translation path; changed or injected text cannot borrow a cached translation by reusing an ID.",
+  "tradeoff": "Adds a versioned source-preparation artifact and review work. Report offline preparation separately from request latency. The goal is stable meaning and practical latency, not a higher Korean BERTScore.",
+  "metric": "No changes to references, split, scorer or target. The target is a sufficient floor of 0.90.",
+  "validation_disclosure": "Reused internal evaluation, not a new independent test."
+}

@@ -1,0 +1,82 @@
+{
+  "created_at": "2026-10-31T11:41:06.873471Z",
+  "contract_id": "e195be611a28090c2cee498cc42552fdeeb5a9759f74f205b69f7f8a09b77f17",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "2b99cd406c31fe4378d380ef45126f36a743ca3348a7981c094fe9f246457761",
+    "helper_sha256": "3fd7bb6d9e683d0b724cde841f2733bffc891d4c08acf2f1d7e26adda0f7e5af",
+    "source_sha256": "225617def667ce2c0c76e64dac2dcea576f7c7e572f8ad043f972ceadfc26171",
+    "settings_sha256": "cb460d626b3ca18d5a6d92b927449c86554853ad5edc37e00dac7fe5063f23bf",
+    "cases_sha256": "004c3615e35e987b9a42c371bd6604464c46278ad3d5fde8b3126f49af488db6",
+    "variant": "hardened",
+    "warmup_case": "expert-kim-die-forelle-03__no-range",
+    "usage_rollout": null
+  },
+  "sessions": [
+    {
+      "started_at": "2026-10-31T11:41:06.873527Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/development-e5.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e5/snapshots/hardened/data/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e5/snapshots/hardened/data/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e5/snapshots/hardened/data/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+          "model_filename": "Qwen3-14B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e5/snapshots/hardened/data/embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 14B Instruct"
+      },
+      "status": "complete",
+      "finished_at": "2026-10-31T11:51:13.524551Z"
+    }
+  ]
+}

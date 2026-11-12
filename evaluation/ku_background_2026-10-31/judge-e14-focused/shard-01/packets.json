@@ -1,0 +1,193 @@
+[
+  {
+    "id": "08b03d14a5db5da16029",
+    "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "en",
+    "answer": "It is not easy to sing a high note at the beginning of a phrase. It is common to connect the half note of the previous phrase without pausing in the middle to flexibly and clearly produce the ‘환한속에 구름처럼’ of ‘구’, which is a choice many vocalists take. If you are forced to end the previous phrase and take a breath before singing the high note of the next phrase, it is better to maintain the feeling and vocalization used in the previous phrase as much as possible to carry it over to the next phrase.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "73d21b043f7d58b9ee44",
+    "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "When singing popular songs, you should consider the situation and environment. 『Nella fantasia』 can be sung with classical vocal techniques, but it is more appropriate to classify vocal techniques based on the presence or absence of a microphone, vocal range, and vocal methods such as falsetto, head voice, and chest voice, rather than by the song itself. When singing with a microphone or in a small space, it is better to sing with a comfortable timbre, but when singing without a microphone, a vocal technique is required. Depending on the atmosphere of the performance venue or requests, it may also be sung without a microphone. Regarding whether this song is included in the classical genre, although it cannot be classified as orthodox classical music when viewed as a song genre, it is often sung with classical vocal techniques. This song is more popular and free compared to other art songs or orthodox classical music. In addition, depending on the atmosphere or requests of the performance venue, it may also be sung without a microphone. The meaning of the lyrics and the overall message are consistently lyrical and hopeful. Therefore, from the singer's perspective, to express it more academically, it is recommended to deeply consider musical expressions such as breath connection and dynamics.\n『Nella fantasia』 is a more popular and free song compared to other art songs or orthodox classical music, and cannot be classified as orthodox classical music in terms of genre.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-004",
+        "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-001",
+        "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-014",
+        "text": "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+      "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "1e7be2a7ed190bf8ec95",
+    "question": "What musical effect does the contrast between ff and pp express?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      117,
+      124
+    ],
+    "language": "en",
+    "answer": "The passage where fortissimo (ff) and pianissimo (pp) alternate rapidly can be seen as the composer's intention to convey the briskness of birdsong and the echoing reverberation effect. Vocalists should also pay attention to such symbols placed not only in the melody but also in the piano/orchestra, to convey the musical atmosphere and feeling.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 117,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam. La la"
+          ]
+        },
+        {
+          "measure": 118,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 119,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 120,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 121,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 122,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 123,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 124,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

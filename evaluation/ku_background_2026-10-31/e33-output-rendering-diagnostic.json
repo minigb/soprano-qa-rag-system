@@ -1,0 +1,51 @@
+[
+  {
+    "variant": "current",
+    "expected_allow": true,
+    "draft": "The first source describes the opening accompaniment as PP, and the second as p. [E1, E2]\nThese sources do not establish why their accounts differ. [E1, E2]\nBoth suggest avoiding an overly loud first vocal note. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 1.7760374700010289
+  },
+  {
+    "variant": "separate_attribution",
+    "expected_allow": true,
+    "draft": "The first source describes the opening accompaniment as PP. [E1]\nThe second source describes the opening accompaniment as p. [E2]\nThese sources do not establish why their accounts differ. [E1, E2]\nBoth suggest avoiding an overly loud first vocal note. [E1, E2]",
+    "decision": "allow",
+    "seconds": 0.3358558809995884
+  },
+  {
+    "variant": "explicit_wording",
+    "expected_allow": true,
+    "draft": "The first source describes the accompaniment beginning at PP, while the second source describes it beginning at p. [E1, E2]\nThe provided sources do not establish why their accounts differ. [E1, E2]\nBoth suggest starting the first vocal note softly, without excessive volume. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 0.3222707420063671
+  },
+  {
+    "variant": "unshared_technique",
+    "expected_allow": false,
+    "draft": "The first source describes the accompaniment beginning at PP, while the second source describes it beginning at p. [E1, E2]\nThe provided sources do not establish why their accounts differ. [E1, E2]\nBoth sources require the singer to maintain breath support and resonance. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 0.30340017400158104
+  },
+  {
+    "variant": "invented_cause",
+    "expected_allow": false,
+    "draft": "The first source describes the accompaniment beginning at PP, while the second source describes it beginning at p. [E1, E2]\nThe sources differ because they use different editions. [E1, E2]\nBoth suggest starting the first vocal note softly, without excessive volume. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 0.3067859260045225
+  },
+  {
+    "variant": "wrong_actor",
+    "expected_allow": false,
+    "draft": "The first source says the singer must begin at PP, and the second says the singer must begin at p. [E1, E2]\nThe provided sources do not establish why their accounts differ. [E1, E2]\nBoth suggest starting the first vocal note softly, without excessive volume. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 0.32186565399752
+  },
+  {
+    "variant": "unrelated_task",
+    "expected_allow": false,
+    "draft": "The first source describes the accompaniment beginning at PP, while the second source describes it beginning at p. [E1, E2]\nThe provided sources do not establish why their accounts differ. [E1, E2]\nTo bake cookies, combine flour, sugar, and butter. [E1, E2]",
+    "decision": "security_output_rejected",
+    "seconds": 0.3218205079974723
+  }
+]

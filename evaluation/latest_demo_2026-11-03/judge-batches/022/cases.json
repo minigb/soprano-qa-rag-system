@@ -1,0 +1,1441 @@
+{
+  "cases": [
+    {
+      "id": "expanded-kim-una-voce-poco-fa-13-syn-03__m62-62",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-13",
+      "piece_id": "una-voce-poco-fa",
+      "question": "dolce amorosa의 발음을 이을 때 모음은 언제 어떤 방식으로 바꿀까?",
+      "measure_range": [
+        62,
+        62
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-017"
+      ],
+      "reference_answers": [
+        "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                62,
+                62
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-13-syn-03__m62-62",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-una-voce-poco-fa-13",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-13"
+      ]
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-20__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-20",
+      "piece_id": "una-voce-poco-fa",
+      "question": "악보 전반의 부점은 어떻게 처리할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-004",
+        "una-voce-poco-fa-ku-005"
+      ],
+      "reference_answers": [
+        "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "supporting",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                18,
+                19
+              ],
+              [
+                22,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+          },
+          {
+            "reference_id": "R002",
+            "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                17,
+                19
+              ],
+              [
+                21,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ],
+              [
+                63,
+                63
+              ],
+              [
+                111,
+                111
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-20__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-una-voce-poco-fa-20",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-20"
+      ]
+    },
+    {
+      "id": "expanded-kim-la-capinera-09-syn-02__m41-43",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-09",
+      "piece_id": "la-capinera",
+      "question": "‘l’amor la gioventu’를 부를 때는 어떻게 하는 것이 좋을까?",
+      "measure_range": [
+        41,
+        43
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-011"
+      ],
+      "reference_answers": [
+        "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                41,
+                43
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-011"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-la-capinera-09-syn-02__m41-43",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-la-capinera-09",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-la-capinera-09"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-06-syn-01__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-06",
+      "piece_id": "nella-fantasia",
+      "question": "판본마다 가사의 단어 구분이 다르면 어느 기준에 맞춰 불러야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-005"
+      ],
+      "reference_answers": [
+        "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "unspecified",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-06-syn-01__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-06",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "native_no_range",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-06"
+      ]
+    },
+    {
+      "id": "expanded-kim-la-capinera-16-syn-03__m103-103",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-16",
+      "piece_id": "la-capinera",
+      "question": "악보에서 ‘vuò(vuo’)’를 어떻게 해석해야 할까?",
+      "measure_range": [
+        103,
+        103
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-017"
+      ],
+      "reference_answers": [
+        "vuò(vuo’)는 vuoi를 뜻하는 나폴리를 비롯한 남부 지방의 말이다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "vuò(vuo’)는 vuoi를 뜻하는 나폴리를 비롯한 남부 지방의 말이다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                103,
+                103
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-017"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-la-capinera-16-syn-03__m103-103",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-la-capinera-16",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-la-capinera-16"
+      ]
+    },
+    {
+      "id": "expanded-in-flowery-clouds-ku-023-derived-q01__m78-78",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "in-flowery-clouds-ku-023-derived-q01",
+      "piece_id": "in-flowery-clouds",
+      "question": "‘지게’가 놓인 어려운 음역을 편하게 부르려면 모음을 어떻게 조절할 수 있을까?",
+      "measure_range": [
+        78,
+        78
+      ],
+      "category": "expert_reference",
+      "split": "expansion",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-023"
+      ],
+      "reference_answers": [
+        "‘지게’는 발성적으로 어려울 수 있는 음역대이므로, ‘지게’의 입 모양을 정확하게 만들기보다 ‘아’, ‘어’처럼 열린 공간을 생각하며 모음을 살짝 변형하는 것도 도움이 된다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "ku_derived",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "‘지게’는 발성적으로 어려울 수 있는 음역대이므로, ‘지게’의 입 모양을 정확하게 만들기보다 ‘아’, ‘어’처럼 열린 공간을 생각하며 모음을 살짝 변형하는 것도 도움이 된다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                78,
+                78
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "in-flowery-clouds-ku-023"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "in-flowery-clouds-ku-023-derived-q01__m78-78",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "in-flowery-clouds-ku-023-derived-q01",
+      "question_provenance": "knowledge_unit_derived",
+      "case_kind": "knowledge_unit_derived_representative_range",
+      "source_annotation_ids": [
+        "yeon-in-flowery-clouds-13"
+      ]
+    },
+    {
+      "id": "expanded-kim-una-voce-poco-fa-10-syn-02__m37-37",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-10",
+      "piece_id": "una-voce-poco-fa",
+      "question": "마지막 음표까지 lo의 이음줄을 연결하지 않은 까닭은 무엇일까?",
+      "measure_range": [
+        37,
+        37
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-015"
+      ],
+      "reference_answers": [
+        "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                16,
+                16
+              ],
+              [
+                20,
+                20
+              ],
+              [
+                24,
+                24
+              ],
+              [
+                37,
+                37
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-015"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-10-syn-02__m37-37",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-una-voce-poco-fa-10",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-10"
+      ]
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "yeon-una-voce-poco-fa-19",
+      "piece_id": "una-voce-poco-fa",
+      "question": "콜로라투라 테크닉을 잘 익히려면 어떻게 연습할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-036"
+      ],
+      "reference_answers": [
+        "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-036"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "yeon-una-voce-poco-fa-19__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "yeon-una-voce-poco-fa-19",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "native_no_range",
+      "source_annotation_ids": [
+        "yeon-una-voce-poco-fa-19"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-09-syn-03__m44-52",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-09",
+      "piece_id": "nella-fantasia",
+      "question": "노래하기 어렵거나 호흡이 달릴 때 어떻게 하면 좋을까?",
+      "measure_range": [
+        44,
+        52
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-008",
+        "nella-fantasia-ku-009"
+      ],
+      "reference_answers": [
+        "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                15,
+                23
+              ],
+              [
+                32,
+                35
+              ],
+              [
+                44,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-008"
+          },
+          {
+            "reference_id": "R002",
+            "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-009"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-09-syn-03__m44-52",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-09",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-09"
+      ]
+    },
+    {
+      "id": "expanded-kim-una-voce-poco-fa-20-syn-01__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-20",
+      "piece_id": "una-voce-poco-fa",
+      "question": "악보 전체에 반복되는 부점은 어떤 방식으로 처리해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-004",
+        "una-voce-poco-fa-ku-005"
+      ],
+      "reference_answers": [
+        "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "supporting",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                18,
+                19
+              ],
+              [
+                22,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+          },
+          {
+            "reference_id": "R002",
+            "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                17,
+                19
+              ],
+              [
+                21,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ],
+              [
+                63,
+                63
+              ],
+              [
+                111,
+                111
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-20-syn-01__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-una-voce-poco-fa-20",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-20"
+      ]
+    },
+    {
+      "id": "expanded-kim-una-voce-poco-fa-09-syn-02__m31-34",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-09",
+      "piece_id": "una-voce-poco-fa",
+      "question": "빠른 발음을 짧은 음표가 많은 부분에서 익히려면 어떻게 해야 할까?",
+      "measure_range": [
+        31,
+        34
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-012",
+        "una-voce-poco-fa-ku-013",
+        "una-voce-poco-fa-ku-014"
+      ],
+      "reference_answers": [
+        "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.\n짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.\n16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                31,
+                34
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-012"
+          },
+          {
+            "reference_id": "R002",
+            "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-013"
+          },
+          {
+            "reference_id": "R003",
+            "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-014"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-09-syn-02__m31-34",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-una-voce-poco-fa-09",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-09"
+      ]
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-08__m56-59",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-in-flowery-clouds-08",
+      "piece_id": "in-flowery-clouds",
+      "question": "반주부에 보이는 표시는 무엇일까?",
+      "measure_range": [
+        56,
+        59
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-009"
+      ],
+      "reference_answers": [
+        "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                56,
+                59
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "in-flowery-clouds-ku-009"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-in-flowery-clouds-08__m56-59",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-in-flowery-clouds-08",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-in-flowery-clouds-08"
+      ]
+    },
+    {
+      "id": "expanded-kim-la-capinera-02-syn-01__m22-22",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-02",
+      "piece_id": "la-capinera",
+      "question": "리듬에 맞게 사선이 그어진 꾸밈음을 어떻게 불러야 할까?",
+      "measure_range": [
+        22,
+        22
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-003"
+      ],
+      "reference_answers": [
+        "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                14
+              ],
+              [
+                22,
+                22
+              ],
+              [
+                29,
+                30
+              ],
+              [
+                80,
+                80
+              ],
+              [
+                88,
+                88
+              ],
+              [
+                95,
+                95
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-003"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-la-capinera-02-syn-01__m22-22",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-la-capinera-02",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-la-capinera-02"
+      ]
+    },
+    {
+      "id": "expert-kim-nella-fantasia-07__m11-17",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-07",
+      "piece_id": "nella-fantasia",
+      "question": "음이 갑자기 올라갈 때 어떻게 부르는 것이 좋을까?",
+      "measure_range": [
+        11,
+        17
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "reference_answers": [
+        "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                11,
+                17
+              ],
+              [
+                28,
+                34
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-006"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-07__m11-17",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-nella-fantasia-07",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-07"
+      ]
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-07__m25-25",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-07",
+      "piece_id": "una-voce-poco-fa",
+      "question": "셋잇단음표에서 모음은 어디에 붙일까?",
+      "measure_range": [
+        25,
+        25
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-010"
+      ],
+      "reference_answers": [
+        "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                23,
+                23
+              ],
+              [
+                25,
+                25
+              ],
+              [
+                29,
+                29
+              ],
+              [
+                36,
+                36
+              ],
+              [
+                38,
+                38
+              ],
+              [
+                58,
+                58
+              ],
+              [
+                62,
+                62
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-07__m25-25",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-una-voce-poco-fa-07",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-07"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-09-syn-01__m44-52",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-09",
+      "piece_id": "nella-fantasia",
+      "question": "노래하기 벅차거나 호흡이 부족해질 때는 어떻게 대처해야 할까?",
+      "measure_range": [
+        44,
+        52
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-008",
+        "nella-fantasia-ku-009"
+      ],
+      "reference_answers": [
+        "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                15,
+                23
+              ],
+              [
+                32,
+                35
+              ],
+              [
+                44,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-008"
+          },
+          {
+            "reference_id": "R002",
+            "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-009"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-09-syn-01__m44-52",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-09",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-09"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-07-syn-03__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-07",
+      "piece_id": "nella-fantasia",
+      "question": "갑작스러운 상행 도약을 자연스럽게 소화하려면 어떻게 해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-006"
+      ],
+      "reference_answers": [
+        "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                11,
+                17
+              ],
+              [
+                28,
+                34
+              ],
+              [
+                40,
+                46
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-006"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-07-syn-03__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-07",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-07"
+      ]
+    },
+    {
+      "id": "expanded-in-flowery-clouds-ku-005-derived-q01__m21-21",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "in-flowery-clouds-ku-005-derived-q01",
+      "piece_id": "in-flowery-clouds",
+      "question": "‘마-을’이나 ‘불-어-오라’ 같은 부점 대목을 자연스러운 한국어로 들리게 하려면 어떻게 불러야 할까?",
+      "measure_range": [
+        21,
+        21
+      ],
+      "category": "expert_reference",
+      "split": "expansion",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-005"
+      ],
+      "reference_answers": [
+        "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "ku_derived",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                13,
+                13
+              ],
+              [
+                15,
+                15
+              ],
+              [
+                21,
+                21
+              ],
+              [
+                33,
+                34
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "in-flowery-clouds-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "in-flowery-clouds-ku-005-derived-q01__m21-21",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "in-flowery-clouds-ku-005-derived-q01",
+      "question_provenance": "knowledge_unit_derived",
+      "case_kind": "knowledge_unit_derived_representative_range",
+      "source_annotation_ids": [
+        "kim-in-flowery-clouds-04"
+      ]
+    },
+    {
+      "id": "expert-kim-la-capinera-04__m17-19",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-04",
+      "piece_id": "la-capinera",
+      "question": "dim.은 왜 있을까?",
+      "measure_range": [
+        17,
+        19
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-005"
+      ],
+      "reference_answers": [
+        "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                17,
+                19
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-la-capinera-04__m17-19",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-la-capinera-04",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-la-capinera-04"
+      ]
+    },
+    {
+      "id": "expanded-la-capinera-ku-022-derived-q01__m114-114",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "la-capinera-ku-022-derived-q01",
+      "piece_id": "la-capinera",
+      "question": "가창이 시작되는 마지막 8분음표에 들어갈 때 무엇에 주의해야 할까?",
+      "measure_range": [
+        114,
+        114
+      ],
+      "category": "expert_reference",
+      "split": "expansion",
+      "gold_evidence_ids": [
+        "la-capinera-ku-022"
+      ],
+      "reference_answers": [
+        "가창이 시작되는 마지막 8분음표의 정확한 진입 시점에 주의해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "ku_derived",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "가창이 시작되는 마지막 8분음표의 정확한 진입 시점에 주의해야 한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                28,
+                28
+              ],
+              [
+                36,
+                36
+              ],
+              [
+                40,
+                40
+              ],
+              [
+                44,
+                44
+              ],
+              [
+                48,
+                48
+              ],
+              [
+                94,
+                94
+              ],
+              [
+                102,
+                102
+              ],
+              [
+                106,
+                106
+              ],
+              [
+                110,
+                110
+              ],
+              [
+                114,
+                114
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-022"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "la-capinera-ku-022-derived-q01__m114-114",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "la-capinera-ku-022-derived-q01",
+      "question_provenance": "knowledge_unit_derived",
+      "case_kind": "knowledge_unit_derived_representative_range",
+      "source_annotation_ids": [
+        "yeon-la-capinera-04"
+      ]
+    }
+  ]
+}

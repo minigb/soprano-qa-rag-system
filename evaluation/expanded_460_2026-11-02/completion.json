@@ -1,0 +1,27 @@
+{
+  "status": "complete",
+  "recorded_at": "2026-11-02T09:39:26.262635+00:00",
+  "branch": "codex/ku-background-knowledge",
+  "evaluated_production_commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+  "generation_requests": 920,
+  "fresh_unique_claude_packets": 918,
+  "targeted_secondary_reviews": 20,
+  "active_evaluation_workers": [],
+  "production_changed_for_this_evaluation": false,
+  "bert_score_floor_met": true,
+  "overall_quality_preserved": false,
+  "remaining_quality_work": "Naturalness and two minor contextual scope issues are findings, not fixes made in this evaluation. See decision.json.",
+  "automated_controller_state": "analysis-state.json",
+  "artifacts_sha256": {
+    "report.md": "ed366afbdfa89dc1c4ed72566f6432fb267a34497e77e32f8a8d0ecb8215cfa2",
+    "decision.json": "fbbf6364ebe8a2e050a96bc5dab09784847429619b0628577fae62b4b8a317a2",
+    "verification.json": "374de72a918fcd71dd8b7ab66302477aae9ad8d9569277802bd3185dceb38f31",
+    "manual-review.json": "11725cc669743acd0b27241cbe8f33a47451b32a65e2d007907cf14e5a43f2ad",
+    "review/review.html": "f2245ac94253f59a4b0483227f6a8adfa696acd87237f3383ca56bc5d3023dd2",
+    "review/summary.json": "b6026492ca55328a1cab972f239eb32ae2fbb48d92c33564f90f39df80bd0fa5",
+    "review/supplement.json": "650c92b2611ada37867550b43dd04f8a4f41ee1b672802f87e76edb8f74f2523",
+    "analysis-state.json": "0c4c12d6d90db0fde3b6a474a05dfb6e53f4faef4c756eaa20bc2b3e8188da52"
+  },
+  "usage_reset_stop": false,
+  "notifier_used": false
+}

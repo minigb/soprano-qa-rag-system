@@ -1,0 +1,28 @@
+{
+  "rollout": "/home/minhee/.codex/sessions/2026/10/25/rollout-2026-10-25T11-54-50-01a17132-6472-7672-888d-3f2666e24d71.jsonl",
+  "initial": {
+    "observed_at": 1793376910.007,
+    "limit_id": "codex",
+    "buckets": {
+      "primary": {
+        "used_percent": 1.0,
+        "resets_at": 1793782101.0,
+        "window_minutes": 10080
+      }
+    }
+  },
+  "high_water": {
+    "primary": 3.0
+  },
+  "latest": {
+    "observed_at": 1793379568.321,
+    "limit_id": "codex",
+    "buckets": {
+      "primary": {
+        "used_percent": 3.0,
+        "resets_at": 1793782101.0,
+        "window_minutes": 10080
+      }
+    }
+  }
+}

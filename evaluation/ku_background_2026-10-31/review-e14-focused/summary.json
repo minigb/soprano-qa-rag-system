@@ -1,0 +1,146 @@
+{
+  "contract": {
+    "cases_sha256": "70461c488f1b9c9852b79db82b4e14db4a802466aa143f97e5e45e4bdcb9a60f",
+    "results_sha256": {
+      "evaluation/ku_background_2026-10-31/probe-e14-focused.jsonl": "3201ffd7b5cc9607df7ffce084f977cd92e1880de4aec9a89c3a5e14cb4f2901"
+    },
+    "mapping_sha256": "1c595fd33fd2520e0c5a1655bbcb90ff2ce13b717fde1bcbfe9a215b9553907a",
+    "assessments_sha256": "987ffd04af108ad2eb01fec64bf471aba5bf36bcd8dbf12cc4369c85e50902ca",
+    "script_sha256": "d7fb45b12a2fa641b4953bb423572cd8372f1b5042baa862972eea242acfff88",
+    "quality_note": "Rubric composite, not factual accuracy. Refusal/error = zero in effective quality. Unknown local facts excluded from false-refusal denominator.",
+    "latency_note": "Single repetition, sequential variants on shared GPU; service and fixed-context timings are separate. No statistical speedup claim."
+  },
+  "variants": {
+    "probe-e14-focused": {
+      "all": {
+        "n": 9,
+        "execution_errors": 0,
+        "normal_n": 9,
+        "normal_delivered": 8,
+        "answerable_normal_n": 9,
+        "false_refusals": 1,
+        "source_fidelity": {
+          "faithful": 5,
+          "minor_drift": 3,
+          "not_applicable": 1
+        },
+        "material_drift_n": 0,
+        "substantial_factual_error_n": 0,
+        "mixed_or_uncertain_factual_n": 0,
+        "factual_score_mean_out_of_4": 3.111111111111111,
+        "effective_quality_percent": 81.81818181818181,
+        "conditional_quality_percent": 92.04545454545455,
+        "attack_n": 0,
+        "attack_judged_n": 0,
+        "attack_successes": 0,
+        "model_exposed_attack_n": 0,
+        "model_exposed_attack_successes": 0,
+        "service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_delivered_service_latency": {
+          "n": 8,
+          "mean_seconds": 12.60253400838701,
+          "median_seconds": 9.335189243080094,
+          "p90_seconds": 18.537913338746876
+        },
+        "fixed_evidence_latency": null
+      },
+      "targeted_meaning": {
+        "n": 9,
+        "execution_errors": 0,
+        "normal_n": 9,
+        "normal_delivered": 8,
+        "answerable_normal_n": 9,
+        "false_refusals": 1,
+        "source_fidelity": {
+          "faithful": 5,
+          "minor_drift": 3,
+          "not_applicable": 1
+        },
+        "material_drift_n": 0,
+        "substantial_factual_error_n": 0,
+        "mixed_or_uncertain_factual_n": 0,
+        "factual_score_mean_out_of_4": 3.111111111111111,
+        "effective_quality_percent": 81.81818181818181,
+        "conditional_quality_percent": 92.04545454545455,
+        "attack_n": 0,
+        "attack_judged_n": 0,
+        "attack_successes": 0,
+        "model_exposed_attack_n": 0,
+        "model_exposed_attack_successes": 0,
+        "service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_delivered_service_latency": {
+          "n": 8,
+          "mean_seconds": 12.60253400838701,
+          "median_seconds": 9.335189243080094,
+          "p90_seconds": 18.537913338746876
+        },
+        "fixed_evidence_latency": null
+      },
+      "en": {
+        "n": 9,
+        "execution_errors": 0,
+        "normal_n": 9,
+        "normal_delivered": 8,
+        "answerable_normal_n": 9,
+        "false_refusals": 1,
+        "source_fidelity": {
+          "faithful": 5,
+          "minor_drift": 3,
+          "not_applicable": 1
+        },
+        "material_drift_n": 0,
+        "substantial_factual_error_n": 0,
+        "mixed_or_uncertain_factual_n": 0,
+        "factual_score_mean_out_of_4": 3.111111111111111,
+        "effective_quality_percent": 81.81818181818181,
+        "conditional_quality_percent": 92.04545454545455,
+        "attack_n": 0,
+        "attack_judged_n": 0,
+        "attack_successes": 0,
+        "model_exposed_attack_n": 0,
+        "model_exposed_attack_successes": 0,
+        "service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_service_latency": {
+          "n": 9,
+          "mean_seconds": 13.349916856477243,
+          "median_seconds": 9.435134652070701,
+          "p90_seconds": 19.328979641199112
+        },
+        "normal_delivered_service_latency": {
+          "n": 8,
+          "mean_seconds": 12.60253400838701,
+          "median_seconds": 9.335189243080094,
+          "p90_seconds": 18.537913338746876
+        },
+        "fixed_evidence_latency": null
+      }
+    }
+  }
+}

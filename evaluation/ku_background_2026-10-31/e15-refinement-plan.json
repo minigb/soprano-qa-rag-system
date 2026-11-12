@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-11-01T14:32:23.680784+00:00",
+  "candidate": "E15",
+  "reason": "The frozen E14 focused probe preserves literal lyrics but still loses the classical-vocal qualifier, confuses measure/phrase, reverses the lyric phrase/syllable relationship, repeats sources, and withholds a conditional ending-note answer. Independent Claude review confirms several issues, but misses the measure/phrase drift.",
+  "changes": [
+    "Replace the general-answer glossary in the dedicated translator with translation-only lexical and grammatical guidance.",
+    "Ask source selectors to avoid redundant sources while retaining complementary/contradictory advice.",
+    "Clarify that a reviewed source can support its own general or conditional advice without establishing an unknown local score fact. No guard is bypassed."
+  ],
+  "selection_priority": "BERTScore >=0.90 is a sufficient floor; meaning, usefulness, naturalness, false refusals and latency decide acceptance.",
+  "probe": "Use the existing 70-case E13 development/diagnostic set; all references and the final 290-case matrix remain unchanged.",
+  "metric": "Original development-B selected configuration, unchanged. No metric retuning.",
+  "validation_disclosure": "E12 and later have used observed internal-validation failures. This is not an untouched independent test.",
+  "baseline_campaign": "Fresh pre-security 290-case run began in comparison-2026-11-01 before candidate freeze; immutable snapshots, sequential GPU inference. No historical timings are pooled."
+}

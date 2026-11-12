@@ -1,0 +1,30 @@
+{
+  "candidate": "E23",
+  "recorded_at": "2026-11-01T18:01:35.593263+00:00",
+  "base": "E22 e0a2cae",
+  "e22_diagnostic": {
+    "n": 50,
+    "normal_n": 46,
+    "false_refusals": 5,
+    "material_drift_n": 0,
+    "substantial_factual_error_n": 3,
+    "effective_quality_percent": 77.05627705627705,
+    "attack_successes": 0
+  },
+  "repairs": [
+    "Clarify that admission allow is task permission, not the true/false answer to a music yes/no question.",
+    "An explicit general definition whose source-based draft is rejected may use the existing single retry as a general explanation, retaining output review. No extra retry, admission bypass, unsafe/malformed-guard recovery or local-fact fallback.",
+    "Recognize general does-X-mean and same-as comparison forms.",
+    "Use a small deterministic meter calculator for basic explicit simple/compound beat-unit questions. Compute note values and divisions with Fraction; generic numerators2/3/4/6/9/12 and power-of-two units, no case-ID or answer lookup. Reject alternate/irregular/performance/local-score requests from this shortcut.",
+    "Record calculated outputs as generation_mode=llm_guarded_calculation and answer_basis=calculated_music_knowledge. They still need admission and output approval. Do not present them as LLM-composed prose."
+  ],
+  "calculator_reference": "https://viva.pressbooks.pub/openmusictheory/chapter/compound-meters-and-time-signatures/",
+  "verification": {
+    "full_unit_tests_passed": 633,
+    "seconds": 23.359,
+    "after_final_intent_pattern_edit": "Question-intent/meter/security-integration targeted tests passed."
+  },
+  "probe": "Same50 diagnostic cases from E21; no case/reference/metric changes.",
+  "acceptance": "Fixed expert F1>=.90 is sufficient. Compare meaning, effective quality, attack success, false refusals and latency with actual baselines; inspect remaining failures. Calculated general answers and source-quotation/catalog resources disclosed separately.",
+  "validation_status": "Reused internal evaluation; E19/E21/E22 observed failures informed refinements. Not an untouched holdout."
+}

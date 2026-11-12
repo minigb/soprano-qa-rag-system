@@ -1,0 +1,56 @@
+{
+  "source_commit": "9d9ac235ea2374855ab1519ecc20097f41c5f8a2",
+  "source_sha256": {
+    "soprano_qa/answer.py": "a7cc158c7abba5b637351d3898dac8be58f0e0c4579241c316d7f14e64140300",
+    "soprano_qa/security.py": "44c2ba1db09612286a1ba4fc9eed59f8f229dcc3a0b577c0aefed637a64df80d",
+    "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d",
+    "soprano_qa/llm.py": "c83d05efb8c04f99a7e10e2b4b6191e384e92f102c2f9e448455a2af689784aa",
+    "soprano_qa/structured_answer.py": "5486a3d642acf5c7880ddcc28ed43e5d8bc0d109c85f1ddc7ddd15ca1334bbd5",
+    "soprano_qa/music_terms.py": "b9528a41c3adeccbb2df1e297456263c1cd2c277fbb69719340423f8aac7077a"
+  },
+  "note": "Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.",
+  "assembly": "soprano_qa.answer.build_messages -> soprano_qa.llm.generate",
+  "retry": "Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.",
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 11416,
+      "sha256": "fe0148f7eaf537bbf58057e46fafe0fb679fe16cdbe77b5e835350b9af4ca270"
+    },
+    "answer-en.txt": {
+      "characters": 11846,
+      "sha256": "665bf7617f3ff562a6f910b83f4b3094fece137b718f87f531ddc69b2939b0bb"
+    },
+    "answer-preserve-ko.txt": {
+      "characters": 13267,
+      "sha256": "6ebf79dbe5d85f4158c8046c8bb05f00300e8a7aa70f9216ba013b7e895488f5"
+    },
+    "answer-preserve-en.txt": {
+      "characters": 13697,
+      "sha256": "d278fb6690fcd359491d16f68a2dc4a27c5b5a45ea2acfa3faac34076df0e196"
+    },
+    "answer-general.txt": {
+      "characters": 6060,
+      "sha256": "449829dc838d7dddaa24f882b10a65985b3379209eb9eac384c96667fa965ab6"
+    },
+    "guard-admission.txt": {
+      "characters": 2655,
+      "sha256": "855733aa6dfd67a6711035e97525934f19f6830f8a9cde42adb7e940fe1ecf85"
+    },
+    "guard-output.txt": {
+      "characters": 5729,
+      "sha256": "7f1a23a1c567eb963b3b35572ded2246ea9ab5aeb5b41b138e89368f648b4df9"
+    },
+    "evidence-selection.txt": {
+      "characters": 1198,
+      "sha256": "178861dea0626de3637da8df2b1d656d4f12d6a836af3c7248dd9116fc382e8b"
+    },
+    "query-translation.txt": {
+      "characters": 1998,
+      "sha256": "4ed18dac9e862f26651bceb32414b8b1b404a7ab9011efe4723ef01eeb7b1a3b"
+    },
+    "retry-suffix.txt": {
+      "characters": 456,
+      "sha256": "1c2180fb0746de5b4513648bbca1bdea472c5c63d3b2e0bb5aa550acf768c672"
+    }
+  }
+}

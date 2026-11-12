@@ -1,0 +1,35 @@
+{
+  "evaluated_revision": "79cbd7b",
+  "note": "Exact system message contents. Per-request question/evidence JSON and the native chat template are assembled separately; these are not complete tokenized requests.",
+  "assembly": "soprano_qa.answer.build_messages, then soprano_qa.llm.generate prepends STRUCTURED_ANSWER_POLICY",
+  "schema": "soprano_qa.structured_answer.answer_schema, applied by soprano_qa.llm.generate",
+  "sources": {
+    "soprano_qa/answer.py": "ac1734129f655d2c17944f2b096817669eef50053102807fd2dbdfd4b1b0318f",
+    "soprano_qa/security.py": "117d431cb102baee3d0ed1ed17d9269e041084887e036abe34ce44d1107a2801",
+    "soprano_qa/translation.py": "6af1ef07a6bc83b4be6cb7f3956dc550134bddde7799a8dcfb227303f6470b9b",
+    "soprano_qa/llm.py": "68e4b182c6aed5bc74c669ae7c1585b4ad0b8e2425eabff7c63c65ab4f4e7c08",
+    "soprano_qa/structured_answer.py": "23a07168c5e3fe9f2b3011eeef4be195030509599973d945d5f60438f5d84923"
+  },
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 10000,
+      "sha256": "308f751dcafaf2833ed0b0fc73b68658dd4d6126e9d665503770c1d9fe76cf0b"
+    },
+    "answer-en.txt": {
+      "characters": 10430,
+      "sha256": "1752574fea026d63d43ff73a2f032ea323f9f39325c35b39e1c9b25928fe021b"
+    },
+    "guard-admission.txt": {
+      "characters": 2311,
+      "sha256": "be5fef6ed0d83d48ddfa20f12c1fd23254c5f7200afc1b589099505ff0ea72a8"
+    },
+    "guard-output.txt": {
+      "characters": 3354,
+      "sha256": "51ae6fcbdc1300846d75787b378e93b73f100850daf8326337e8a9035e01dabf"
+    },
+    "query-translation.txt": {
+      "characters": 1778,
+      "sha256": "c4663ef0a1684edb08935020dd61223a59a3118a65f76a216bbc97020def36df"
+    }
+  }
+}

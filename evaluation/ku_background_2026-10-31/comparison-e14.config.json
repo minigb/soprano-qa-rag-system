@@ -1,0 +1,60 @@
+{
+  "output": "evaluation/ku_background_2026-10-31/comparison-e14",
+  "generation_python": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "metric_python": "/home/minhee/.cache/soprano-rag-eval-venv/bin/python",
+  "cases": "evaluation/ku_background_2026-10-31/all_cases.json",
+  "expert_cases": "evaluation/ku_background_2026-10-31/expert_cases.json",
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "warmup_case": "expert-kim-die-forelle-03__no-range",
+  "systems": [
+    {
+      "name": "candidate",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e14/snapshots/hardened",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e14/snapshots/hardened/settings.json",
+      "variant": "hardened",
+      "source_commit": "759511cef5054c4b9c137c75f86e0327b043d1fd",
+      "settings_sha256": "f22ea8c0df04dc8ad744dd7d4830da4f225b68d4d2816985e555b9b1cb616bc7"
+    },
+    {
+      "name": "pre-security",
+      "root": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329"
+    },
+    {
+      "name": "main-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+      "settings_sha256": "fdbe2cdfef553abc2165fff89a8bd1633c7cb6028bb5f4a562e73a70f21a7945"
+    },
+    {
+      "name": "strict-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "302f8d1afe08e9965a9ba3009a5da2c0f03af49c",
+      "settings_sha256": "68ba9d53530848f1c36e30591cd39719e65ccdc122b1e9a45593de5a97fce98b"
+    }
+  ],
+  "protocol": {
+    "repetitions": 1,
+    "ordering": "serial systems; same seed-shuffled cases within each system",
+    "metric_selection": "development B only; unchanged for all subsequent candidates and validation",
+    "indirect_attacks": "forced model exposure after clean retrieval; not retrieval poisoning",
+    "case_count_per_system": 290,
+    "validation_expert_requests": 62,
+    "no_candidate_changes_during_comparison": true,
+    "candidate_algorithm_setting": {
+      "source_preservation": "verbatim_or_translation",
+      "evidence_translation": "segmented",
+      "evidence_translation_max_tokens": 1536
+    },
+    "validation_status": "Reused internal evaluation; observed E11 validation failures informed E12 and later. Not an untouched holdout.",
+    "selection_priority": "BERTScore >=0.90 is a sufficient floor, not a maximization target. Compare meaning, usefulness, normal false refusals and latency before accepting this candidate.",
+    "candidate_status": "Experimental E14; not yet selected or evaluated on the full matrix."
+  }
+}

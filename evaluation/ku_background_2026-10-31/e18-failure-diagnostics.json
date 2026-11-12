@@ -1,0 +1,90 @@
+[
+  {
+    "case_id": "practice-probe-03-en"
+  },
+  {
+    "stage": "query_translation",
+    "result": "새로운 음계를 연습할 때 주의해야 할 점은 무엇인가요?"
+  },
+  {
+    "response": {
+      "piece_id": "die-forelle",
+      "scope": "whole_piece",
+      "measure_range": null,
+      "language": "en",
+      "answer_language": "en",
+      "evidence_language": "ko",
+      "retrieval_query": null,
+      "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+      "generation_mode": "unavailable",
+      "answer_basis": "no_corpus_evidence",
+      "unavailable_reason": "security_admission_rejected",
+      "generation_validation_warning": null,
+      "score_context": null,
+      "has_primary_grounding": false,
+      "has_selected_range_grounding": null,
+      "has_confirmed_local_examples": false,
+      "pipeline": "soprano_qa",
+      "model": {
+        "path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "retrieval": {},
+      "evidence": [],
+      "evidence_notices": []
+    }
+  },
+  {
+    "case_id": "practice-probe-06-en"
+  },
+  {
+    "stage": "query_translation",
+    "result": "이 아리아를 연습할 때 무엇을 확인해야 하나요?"
+  },
+  {
+    "stage": "finalization",
+    "type": "GeneratedAnswerRejected",
+    "reason": "Generated answer contains unsupported tokens: YouTube",
+    "draft": "Translated reference text:\nAs seen in YouTube videos or the drama Penthouse, there is no single correct way to account for the different versions of this aria in scores and performances. [E1] Music of this period allowed variations according to a singer's abilities and manner of expression; Romantic-era arias in particular favoured displays of vocal skill and technique. [E1] It is advisable to choose variations and ornaments that show your strengths, such as high notes, low notes or scales, expressing yourself and adding musical beauty. [E1] Several passages in this piece may be sung differently by different singers. [E1] The different pitches heard in one such passage across YouTube videos result from these variations. [E1] Some commonly used variations can also be found in currently published books by Ricci. [E1]\nIn Rosina's aria, the technical strengths to bring out, such as low notes, high notes or scales, may vary according to the voice type performing it. [E2]\nThis aria contains particularly detailed uses of double and single consonants. [E3] These consonants also serve to portray the character, so study them carefully. [E3]",
+    "source_ids": [
+      "una-voce-poco-fa-ku-018",
+      "una-voce-poco-fa-ku-034",
+      "una-voce-poco-fa-ku-031"
+    ],
+    "source_texts": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+      "Rosina의 아리아는 부르는 성부에 따라 저음, 고음, 스케일 등 테크닉적으로 어떤 점을 살릴지가 달라질 수 있다.",
+      "이 아리아에는 특히 더블자음과 싱글자음 등이 세밀하게 나오며, 이런 자음은 캐릭터를 표현하는 장치이기도 하므로 주의해서 공부해야 한다."
+    ]
+  },
+  {
+    "response": {
+      "piece_id": "una-voce-poco-fa",
+      "scope": "whole_piece",
+      "measure_range": null,
+      "language": "en",
+      "answer_language": "en",
+      "evidence_language": "ko",
+      "retrieval_query": null,
+      "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+      "generation_mode": "unavailable",
+      "answer_basis": "no_corpus_evidence",
+      "unavailable_reason": "answer_validation_failed",
+      "generation_validation_warning": null,
+      "score_context": null,
+      "has_primary_grounding": false,
+      "has_selected_range_grounding": null,
+      "has_confirmed_local_examples": false,
+      "pipeline": "soprano_qa",
+      "model": {
+        "path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+        "checkpoint_exists": true,
+        "backend": "llama-cpp-python"
+      },
+      "retrieval": {},
+      "evidence": [],
+      "evidence_notices": []
+    }
+  }
+]

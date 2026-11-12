@@ -1,0 +1,9 @@
+{
+  "purpose": "Separate evaluator instrument check, not benchmark questions or score tuning. Synthetic definition and answer controls authored before assessment.",
+  "expected": {
+    "faithful_fluent": "faithful; high naturalness",
+    "false_fluent": "material drift but surface fluency may remain high",
+    "faithful_repetitive": "faithful but lower naturalness"
+  },
+  "acceptance": "First structurally valid assessment; retain unexpected findings."
+}

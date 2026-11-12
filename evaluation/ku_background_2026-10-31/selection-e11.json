@@ -1,0 +1,28 @@
+{
+  "selected_at": "2026-10-31T13:40:35.722772+00:00",
+  "source_commit": "4788793e065d77402adee675e23ce506006ae07a",
+  "source_sha256": "08ddf8fd5b3d60e291566d8d36d2e354da9fb59779b0d78141dcc09beeded548",
+  "config_sha256": "e3c6dd59822a2a5c15ed3c9e956a00678b60ef6236ea273a4edaa0281144a0c2",
+  "metric_selection_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "development": {
+    "expert_requests": 43,
+    "expert_delivered": 43,
+    "effective_bertscore_f1": 0.9720738294512726,
+    "expert_material_drift": 0,
+    "expert_substantial_factual_errors": 0,
+    "expert_effective_quality_percent": 99.15433403805493,
+    "general_delivered_of_10": 10,
+    "general_effective_quality_percent": 91.81818181818181,
+    "general_false_refusals": 0
+  },
+  "decision": "Choose E11 source-preservation mode with conservative explicit-general routing. Expert text is unchanged from E10; general refusals fall from 3/10 to 0/10. Independent development review finds no material drift or substantial factual errors. Partial unrelated practice advice and minor English translation drift remain limitations.",
+  "candidate_validation_started": false,
+  "validation_metric_values_used_for_selection": false,
+  "disclosure": "E9 validation metric files already exist from its completed run but were not inspected. Previously known targeted meaning cases informed E10/E11; neither expert split nor targeted cohort is newly collected or source-disjoint.",
+  "architecture_caveat": "Korean source claims are literal retrieved-KU quotations; references contain expert KUs. High overlap does not demonstrate unrestricted generation accuracy. General knowledge and English translations require separate checks.",
+  "no_changes_during_comparison": "candidate snapshot, cases, metric setting, corpus, judge rubric and bound runners",
+  "tests": {
+    "production_full_suite": 582,
+    "new_quotation_audit_tests": 2
+  }
+}

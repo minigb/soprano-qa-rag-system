@@ -1,0 +1,54 @@
+{
+  "candidate": "E16",
+  "status": "Source catalog reviewed; complete RAG evaluation pending.",
+  "catalog": {
+    "original_review": {
+      "sources": 129,
+      "faithful": 124,
+      "minor_drift": 5,
+      "material_drift": 0
+    },
+    "revisions": {
+      "sources": 5,
+      "faithful": 5,
+      "minor_drift": 0,
+      "material_drift": 0
+    },
+    "final_unique_sources": 129,
+    "final_faithful": 129
+  },
+  "selection": "Every original source of expert_annotation or sumijo_feedback type, independent of evaluation question. Exact original source SHA256 only.",
+  "reviewer": "claude-opus-5-5; first valid assessment for each translation version; only the five edited versions were reviewed again.",
+  "manual_checks": [
+    "Rest versus comma and half versus quarter note remain distinct.",
+    "Each measure remains measure, not phrase.",
+    "Pronunciation alternatives retain their direction and optional conditions.",
+    "Composer-intent interpretation remains tentative.",
+    "Quoted Korean lyrics stay in their original form; no invented romanization.",
+    "Classical vocal production remains qualified; the falsetto/head/chest list is complete."
+  ],
+  "source_level_findings": [
+    {
+      "source_id": "nella-fantasia-ku-013",
+      "issue": "Original Korean says 엔리코 모리꼬네; its translation Enrico repeats the source name error. Actual first name is Ennio.",
+      "action": "Preserve the frozen original and disclose the source error; expert dataset correction is separate from this system comparison."
+    },
+    {
+      "source_id": "die-forelle-ku-003",
+      "issue": "The original absolute historical first-composer claim is overstated.",
+      "action": "Faithfully preserved source claim; flagged for source curation."
+    },
+    {
+      "source_id": "la-capinera-ku-013",
+      "issue": "The original fermata 2–3× statement is a teaching convention, not a universal duration rule.",
+      "action": "Preserve source teaching; general-definition answers must not assert a universal multiplier."
+    }
+  ],
+  "limitations": [
+    "Independent LLM assessment is not a human expert validation or proof.",
+    "Source fidelity is different from source truth, relevance and overall answer quality.",
+    "All targeted validation failures have been observed; subsequent validation is reused internal evaluation.",
+    "Offline source preparation and review add work not included in request latency.",
+    "The English preparations do not replace Korean expert BERTScore references."
+  ]
+}

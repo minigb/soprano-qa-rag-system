@@ -1,0 +1,32 @@
+{
+  "recorded_at": "2026-11-02T08:04:29.471708+00:00",
+  "checks": {
+    "original105_fields_unchanged": true,
+    "all460_question_range_reference_authority_unchanged": true,
+    "all_reference_text_matches_current_expert_KUs": true,
+    "frozen_metric_settings_unchanged": true,
+    "all_case_ids_unique": true,
+    "factual_and_fluency_separation": true,
+    "repetitive_control_faithful_but_less_natural": true,
+    "summary_error_refusal_denominator_check": "passed independent3-row check:1 useful,1 exception,1 judge-only refusal; correct conditional/effective naturalness and BERTScore",
+    "identical_pair_bootstrap_zero_difference": "passed"
+  },
+  "calibration_first_valid_assessments": {
+    "faithful_fluent": {
+      "source_fidelity": "faithful",
+      "naturalness": 4
+    },
+    "false_fluent": {
+      "source_fidelity": "material_drift",
+      "naturalness": 4
+    },
+    "faithful_repetitive": {
+      "source_fidelity": "faithful",
+      "naturalness": 1
+    }
+  },
+  "source_groups": 115,
+  "original_and_extended_cohorts_reported_separately": true,
+  "production_changed": false,
+  "additional_gpu_workers": false
+}

@@ -1,0 +1,501 @@
+[
+  {
+    "id": "8482e676908cfdbe056b",
+    "question": "‘venticel’의 ‘cel’은 어떻게 발음해야 더 자연스러울까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      86,
+      88
+    ],
+    "language": "ko",
+    "answer": "‘venticel’의 ‘cel’은 이태리어 발음 규칙에 따라 e가 충분히 발음되도록 c를 앞쪽으로, l을 뒤쪽으로 위치시켜야 합니다. 모음의 길이를 늘려 공명과 좋은 소리를 전달할 수 있도록 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 86,
+          "voice": "sung",
+          "lyric_lines": [
+            "Del ven- -ti-"
+          ]
+        },
+        {
+          "measure": 87,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cel"
+          ]
+        },
+        {
+          "measure": 88,
+          "voice": "sung",
+          "lyric_lines": [
+            "il mor- -mo-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-016",
+        "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            86,
+            88
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              86,
+              88
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0c0c176e2423df161309",
+    "question": "발음을 io l’ingegno aguzzerò에서 어떻게 연결해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      32,
+      32
+    ],
+    "language": "ko",
+    "answer": "'io l’ingegno aguzzerò'에서 'l’ingegno'와 'aguzzerò' 사이의 'o'와 'a'는 연음으로 이어 발음하는 것이 좋습니다. 이는 이태리어 발음에서 앞 단어의 마지막 모음과 뒤 단어의 첫 모음이 자연스럽게 이어지는 방식입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, io l’in- -ge- -gno a- -guz- -ze-",
+            "-sign, Though my guard- -ian should say"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-011",
+        "text": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3f81f1167d238c86db77",
+    "question": "《La capinera》에서 특별히 주의해야 하는 리듬은 무엇일까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《La capinera》에서는 부점 리듬에 특별히 주의해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-024",
+        "text": "부점 리듬에 주의한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            36,
+            39
+          ],
+          [
+            44,
+            47
+          ],
+          [
+            102,
+            105
+          ],
+          [
+            110,
+            113
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점 리듬에 주의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점 리듬에 주의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              36,
+              39
+            ],
+            [
+              44,
+              47
+            ],
+            [
+              102,
+              105
+            ],
+            [
+              110,
+              113
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-024"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "106ca792e8fca8f72b7d",
+    "question": "성악과 반주에 같은 멜로디가 함께 나올 때 어떻게 맞춰 연주해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "성악과 반주에 같은 멜로디가 나올 때는 두 성부가 정확히 맞물리도록 연주해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-020",
+        "text": "성악 부분과 반주 부분에 동일한 멜로디가 등장하여 함께 진행할 때 두 성부가 정확히 맞물리도록 연주해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            54,
+            60
+          ],
+          [
+            67,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "성악 부분과 반주 부분에 동일한 멜로디가 등장하여 함께 진행할 때 두 성부가 정확히 맞물리도록 연주해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "성악 부분과 반주 부분에 동일한 멜로디가 등장하여 함께 진행할 때 두 성부가 정확히 맞물리도록 연주해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              54,
+              60
+            ],
+            [
+              67,
+              79
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ce327e81a9c7a96c5f58",
+    "question": "‘꽃바람’을 음원에서는 스타카토로 부르는 경우가 많지만 악보에 표시가 없다면 무엇을 따라야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      12
+    ],
+    "language": "ko",
+    "answer": "악보에 스타카토 표시가 없어도 ‘꽃바람’은 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부릅니다. ‘꽃’의 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 표현하는 것이 좋습니다.\n‘꽃바람’은 ‘꼬-빠-람’처럼 발음하는 것이 좋으며, ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려울 경우 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’처럼 발음하는 것도 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        },
+        {
+          "measure": 12,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-002",
+        "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.\n‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              12
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-002"
+        },
+        {
+          "reference_id": "R002",
+          "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              11
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6828fb9b81f4ea8c5533",
+    "question": "이 곡의 부점 리듬을 부를 때 무엇에 주의해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      33,
+      34
+    ],
+    "language": "ko",
+    "answer": "이 곡의 부점 리듬은 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "흩 뿌 리 어"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "마 을 마 다"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-018",
+        "text": "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            13,
+            13
+          ],
+          [
+            15,
+            15
+          ],
+          [
+            21,
+            21
+          ],
+          [
+            33,
+            34
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡에는 부점 리듬이 자주 등장하므로, 각 음의 길이와 리듬의 특징이 분명하게 드러나도록 주의하여 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              13,
+              13
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              21,
+              21
+            ],
+            [
+              33,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

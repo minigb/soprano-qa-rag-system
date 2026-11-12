@@ -1,0 +1,12 @@
+{
+  "candidate": "E24",
+  "base_source_commit": "f6e1869042f49209df715125ca47167624eda526",
+  "recorded_at": "2026-11-01T18:08:21.022299+00:00",
+  "change": "Extend the generic meter request recognizer to comparison inflections and terse two-signature comparisons in the selected music context. Exclude explicit fraction/date requests. The arithmetic, admission/output policies, source selection and all other production code remain E23.",
+  "reason": "The original short KO/EN meter questions did not reach the E23 calculator; only the longer transfer questions did. Preserve that failed diagnostic rather than treating the unit test as end-to-end success.",
+  "verification": "15 meter/question-intent tests pass; all supported beat/note lengths reconstruct their bar duration exactly. Prior E23 full suite633 passed; total now634.",
+  "targeted_probe": "Same6 meter diagnostics and8 practice diagnostics,14 total; expert refs and full290 unchanged.",
+  "full_comparison": "Run all290 from this frozen candidate. Reuse byte-identical baseline rows and exact-packet E19 independent assessments only; fresh assessment for changed packets. No pooling candidate results.",
+  "priority": "Expert F1>=.90 suffices. Judge whole-system quality/meaning/availability/security and disclose residual failures, source factuality, extractive/catalog/calculator methods and latency.",
+  "validation_status": "Reused internal evaluation with known failures; not an independent holdout."
+}
