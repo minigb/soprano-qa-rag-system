@@ -49,17 +49,11 @@ latest Gemini entry or use this URL. To share a particular case locally, use its
 “링크 복사” button. The hostname, port and browser must match to reuse local
 notes. Notes and bookmarks stay in browser localStorage and can be exported
 as JSON; they are not sent to the server. Keep the server running while using
-the demo. The user requested localhost-only serving; do not deploy this Site.
-
-The same static files are mirrored to the Lab worktree at
-`demo/static/answer-review/`, available through the Lab demo server at
-`/static/answer-review/index.html`.
+the demo. Serve it on localhost only; it is not meant to be deployed.
 
 ## Data and validation
 
-The implementation and demo are on branch `codex/helpful-rag-responses`
-at `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
-From that checkout:
+From the repository root:
 
 ```bash
 python sites/answer-review/export_gemini_priority.py

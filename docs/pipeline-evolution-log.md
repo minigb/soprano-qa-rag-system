@@ -10,7 +10,250 @@ The stable method description remains in
 [`rag-llm-pipeline-method.md`](rag-llm-pipeline-method.md). This file is the
 chronological engineering record, including unsuccessful approaches.
 
-## Current status (2026-08-04)
+## Single-pass service and stage timing (2026-11-04)
+
+The user requested existing hybrid retrieval, prompt-based task scope, a fixed
+14B generator, and no online output assessment. Work stays on
+`codex/helpful-rag-responses`; `f71d5fe` preserves the preceding implementation.
+The initial pre-injection worktree and both main repositories are unchanged.
+
+Before changing the service, 20 fixed questions were measured twice with actual
+completion timers. The initial observer attached to a differently keyed cached
+model instance; that capture is explicitly invalidated and retained. The valid
+`baseline-measured` capture uses identical cache arguments and asserts that
+inference is observed. Ordinary questions average 8.720 s: 6.322 s writing,
+0.422 s admission, 0.339 s extra KU selection, 1.556 s output assessment,
+0.033 s retrieval, and 0.049 s other work. All five prior refusals trigger the
+slow path (23.289 s average, usually seven completions). This enriched cohort
+is diagnostic, not a traffic-weighted latency estimate.
+
+`single_pass.py` removes model-based admission, second KU selection, output
+review and retries from the default service/CLI. Korean uses one writing call;
+English retains the existing query translation and one writing call. Retrieval
+and the 14B checkpoint are unchanged. Plain prose is not replaced by source
+quotes, scores or a canned musical answer. Legacy paths remain explicit.
+
+Candidates and all observed failures are retained under
+`evaluation/single_pass_2026-11-04`. A simplified writing prompt produced excess
+general commentary; shorter B improved latency but merged dynamics notation.
+C restored existing source-derived meaning hints. D (directory
+`single-pass-final`, a superseded name) fixed bar/verse wording but expanded p
+incorrectly and invented a preference between source accounts. Its profile
+and partial expert run are preserved; the name does not make it a final result.
+E also retains the previous comparison-writing instructions inside the sole
+generation call. It adds no source selector, output reviewer or retry.
+
+E's plain-prose version was also rejected: the profile included a cookie recipe
+under a direct injection, and expert review found source contradictions such as
+breathing inside a word where the source warns against doing so. Its full 109
+expert/regression outputs and first Claude judgments are retained. F therefore
+keeps the previous semantic composition/comparison instructions and structured
+draft format, with a prompt-based task boundary. The application only joins
+generated text fields; it does not validate citations or evaluate the answer,
+and it never substitutes a source text. There is still exactly one writing call.
+
+F's profile still produced long repetitive source-like paragraphs and substantial
+writing latency despite one call. It was not adopted. G restores the initial
+free-prose writing instructions from `f307470`, adapting their source-only and
+internal-citation restrictions to the user's general-knowledge/direct-delivery
+requirements. Its source-disagreement and meaning hints remain input preparation
+only. One G timing capture was invalidated because an orphaned F process briefly
+overlapped it; `single-pass-g-clean` starts after confirming the GPU is free.
+All invalid and unsuccessful captures remain separately labelled.
+
+G's offline checks cover the unchanged expert 105 plus four additional former
+refusal paraphrases, and the prior 74 bilingual challenge fixtures. BERTScore
+settings and references stay fixed. These are regression checks, not a fresh
+holdout or a new 460-case demo capture. The final report records measured
+latency, quality differences and limitations; no test result is used to alter
+an individual delivered answer.
+
+Final G results: expert-105 BERTScore 0.928871, but material meaning drift rises
+from 2 to 11/105 and naturalness falls from 3.543 to 3.448/4. Direct attack success
+rises from 0 to 8/30 and unrelated task completion from 0 to 3/12. Ordinary
+diagnostic latency falls from 8.720 to 3.968 s; previous-refusal latency from
+23.289 to 4.367 s. The candidate is not promoted. The validated default config
+is restored byte-for-byte, and `config/settings.single-pass.json` explicitly
+selects the experimental path. The old backend and all 460-case demo assets
+remain unchanged. 684 tests and source/model/corpus/preservation checks pass.
+See `evaluation/single_pass_2026-11-04/report.md` for the final comparison.
+
+## Active experiment: bounded general knowledge (2026-10-31)
+
+Development checkpoints on `codex/ku-background-knowledge`:
+
+- A (24-question pilot): typed source/background/lyric parts, but general
+  concept questions were often rejected and related KUs were used as if they
+  answered a different concept. Preserved under `ku_background_2026-10-31`.
+- B (`6420d2c`, 55 development requests): explicit general-music admission
+  wording. Expert answers: 38/43 delivered; Claude found 3 material and 14 minor
+  source drifts. General answerable questions: 4/10 delivered. The best of 18
+  BERTScore settings was XLM-R large layer 18 without IDF: 0.838086 effective
+  F1, 0.948361 conditional on delivered answers. No validation answers were
+  used to choose this setting. B is not a successful release.
+- C (`9c30037`, 55 development requests): admission sees the original
+  request rather than retrieval/score contents, and generation preserves
+  complete relevant explanations. Literal scoped source sentences can pass
+  the coarse frequency screen without authorizing new whole-piece claims.
+  Expert delivery 37/43 and effective F1 0.823354: it did not improve B.
+  Lyric diction needed explicit admission context.
+- D (`a9fee80`, 55 development requests): fix Unicode ellipsis citation boundaries
+  and colon-in-parentheses register checks; normalize only unambiguous
+  `있어요`/`없어요` endings. Clarify music diction admission and narrative
+  source scope. An output-review denial may trigger at most one fresh draft
+  with the same frozen evidence, schema and policies; the replacement needs a
+  new affirmative output verdict. Admission failures, malformed verdicts,
+  input/output text screening and backend failures never use this retry.
+  Expert delivery 41/43 and effective F1 0.909693 under B's frozen metric.
+  Claude v2 found 2 material expert drifts; general delivery was only 6/10.
+
+The 555 system tests pass for the prepared D source. The experiment's frozen
+protocol, rather than the old source-only release checklist below, governs
+general-knowledge evaluation and legitimate refusals of unknown local facts.
+No experiment here changes the live service or published demo answer files.
+
+Next development hypothesis E: D's early general-concept answers still attach
+related but non-answering passages (for example, legato advice to a fermata
+definition). A semantic selection step will be evaluated for bundles containing
+multiple primary sources. It can only retain existing primary citation labels
+or return an empty list; it cannot write new facts or promote context-only
+records. It runs after task admission and source screening, before composition.
+The generator may then use marked general knowledge when nothing directly
+answers the question. A malformed selection fails closed. This is prompted
+relevance filtering, not a trained Self-RAG implementation or a security proof.
+Whether its extra inference cost and possible selection omissions are worth it
+must be decided on the same frozen development questions before validation.
+E (`5f75039`) delivered 41/43 expert answers, F1 0.912229, with one material
+expert drift and one material general drift under Claude v2. E2 (`35d47af`)
+had the same delivery and metric, two material expert judgments and one
+material general judgment. Separate judge calls have variance, so the final
+comparison will deduplicate identical packets and judge them only once.
+
+E2 hypothesis, before running it: E's selector correctly returned no passages
+for note-value definitions, but the source-oriented composer then returned an
+empty answer. Use a dedicated general-music system prompt when the selected
+bundle has no primary source. It retains the task/injection boundary, explicit
+unknown-score limits, requested language and typed output; it does not ask a
+general explanation to satisfy irrelevant KU synthesis instructions. Limit the
+schema's kind choices to those actually possible for the supplied bundle.
+
+E3 hypothesis, before running it: E2 still returned empty arrays for elementary
+note-value/glossary questions. An isolated development diagnostic compared the
+current grammar, a required item, a background example and unconstrained JSON.
+Only the required item produced the correct substantive answer. In the general
+path require an explanation **or an explicit limitation**, using a matching
+format prompt; unknown local facts must still be withheld and output review
+remains mandatory. No minimum factual claim is required. Also make explicit
+that replacing a source's technique with another term is not a faithful
+definition, and that omitting a condition can widen a permission. These changes
+are hypotheses to evaluate, not grounds to dismiss earlier failed cases.
+
+E4 development hypothesis: E3 now answers both note-value questions, but its
+English answer added an unrequested, false 60-BPM example. Restrict general
+explanations to requested details and ask for units/proportions to be checked.
+Do not add assumed numerical demonstrations unless needed. This changes only
+the general prompt; it is not a special answer rule for a benchmark case.
+Record the E3 error and evaluate E4 rather than silently replacing its output.
+
+E3 completed 55 requests: 41/43 expert answers, effective F1 0.912330. Its
+general answers still confused Korean articulation terminology. E4 was tested
+in isolated empty-bundle development diagnostics, not a full service run.
+Greedy constrained generation, the Qwen-recommended sampled settings, and
+parsed thinking-mode JSON all retained serious Korean glossary errors. Adding
+original Italian term names helped portamento but did not reliably fix tenuto
+or notation. These diagnostics are not held-out measurements.
+
+E5 hypothesis before evaluation: keep the current structured generation and
+add a short bilingual terminology aid, checked against a published music
+theory lesson, to composition and output review. This is explicit general
+reference guidance, not new expert KUs or references for BERTScore. It cannot
+establish local score facts or overwrite source-specific performance advice.
+The frozen expert references and BERTScore setting are unchanged. This is
+development-informed domain guidance; no claim of unseen glossary performance
+is warranted from these development questions alone.
+
+E6 deterministic scope correction, identified from an E3 withheld draft before
+validation: a faithful "in phrases where ornaments often appear" clause was
+misread as a new whole-piece frequency assertion. Permit only a source-matching
+relative clause with the same subject, frequency and predicate; mask just its
+frequency word and continue screening the rest of the claim. Broader claims,
+changed subjects and unrequested measure numbers remain rejected. This does
+not change generation prompts or model settings, and does not weaken semantic
+review. The separate mixed-register Nella fantasia draft remains withheld;
+it also contains questionable generalization, so fixing its register alone
+would not establish a correct answer.
+
+E7 routing hypothesis: E5 fixed the basic definitions, but some mixed drafts
+cited piece-specific legato advice as if it defined portamento. Put the
+terminology aid only in the general composer (and output reviewer). Extend
+relevance selection to every nonempty primary bundle and require an explicit
+general-definition versus evidence mode. Abstract definitions use an empty
+bundle and the general prompt; performance/history/local-score questions retain
+relevant sources. This is semantic routing, not a list of benchmark questions.
+The generator cannot cite a discarded source. Full development evaluation
+must check that expert questions are not incorrectly routed away from their KUs.
+
+The E6 scope regression test also exposed missing formal verb forms in the
+old broadening pattern: it caught `자주 나타나는` but missed `자주 나타납니다`.
+Both forms are now covered; only a source-matching relative clause receives
+the narrow exception described above.
+
+E8 hypothesis: E7's combined intent/relevance call let triplet and legato
+passages redefine an abstract fermata-duration question. Separate question
+routing from passage selection. The router sees only the raw question and
+selected range, after task admission; it never sees a piece title, source or
+lyric that could supply an irrelevant interpretation. Only explicit abstract
+definitions/comparisons/general theory rules route to the general composer.
+Performance/history/interpretation questions and uncertainty default to
+evidence. Multi-passage relevance selection then retains its original label-only
+contract. This adds a bounded question-only call for nonempty bundles.
+Also request one coherent general paragraph (two items only when separate
+score lyrics are needed); longer multi-item defaults had encouraged unrequested
+and sometimes false notation examples. The source composer still allows six
+items. Both changes require fresh development measurement before validation.
+
+E7 also showed that the E6 source-matching exception had not fixed the original
+leggiero refusal: its source uses different but compatible relative clauses.
+E8 therefore separates the scope check from entailment: an explicit "in phrases
+where X often appears" construction is not itself a whole-piece assertion.
+Mask only its frequency token and still reject other broadening in the claim.
+The actual historical source and generated clause now form the regression
+test. Citation authority, selected-measure checks and semantic support review
+remain required; this syntax rule does not establish that X or the advice is true.
+
+The user authorized general musical knowledge as a supplement to curated KU
+answers, a separate Claude Opus 5.5 CLI judge, and a BERTScore F1 target of 0.90
+on expert-annotation questions. This explicitly supersedes the historical
+internal-knowledge prohibition below for this experiment. The baseline remains
+preserved at `302f8d1`; work is isolated on `codex/ku-background-knowledge`. The
+[protocol](../evaluation/ku_background_2026-10-31/protocol.md) fixes provenance,
+development/validation separation, metric settings and quality/security checks.
+Results are pending; no claim of improvement or promotion is made yet.
+
+## Latest meaning-fidelity diagnostic (2026-10-31)
+
+The security refinement branch `codex/refine-rag-quality` at `79cbd7b` was
+compared with the secured pre-refinement baseline `29fe3e2` on 41 targeted
+cases per system. The [report](../evaluation/meaning_fidelity_2026-10-31/report.md)
+and [side-by-side answers](../evaluation/meaning_fidelity_2026-10-31/review.html)
+record 75 delivered-answer reviews and seven abstentions. On the 39 service
+requests per variant, material meaning errors increased from 14 to 19; the two
+fixed-evidence conflict probes are reported separately. Ten new material
+regressions received the same evidence text, order and scope in both systems.
+
+Reproduced failures include consonant omission becoming emphasis, the
+one-consonant qualifier being negated, invented vowel connections, and a
+duration instruction becoming `2~3배로 끌어내리는`. The output guard passed all
+20 materially wrong current answers across the 41-case inventory. Some older
+problems improved, but the current candidate is not validated for meaning
+preservation. Earlier aggregate quality scores do not override this finding.
+
+This is a frozen diagnostic, not a new generation approach or a full rerun of
+the 460 historical cases. No generator, main branch, running service, or
+published static answer was changed by the audit. Prompt exports include the
+structured-format prefix that `llm.generate()` prepends to `system_prompt()`.
+
+## Historical status (2026-08-04)
 
 - Active `main` work remains the answer-required one-pass baseline, with
   pipeline, evaluation, viewer, corpus, documentation, and test changes in
@@ -694,6 +937,24 @@ Available behind `language="en"`; the Korean path is unchanged. Risks:
 - English requests make two model calls, and `generate=False` English
   requests still load the 14B model for translation.
 - `scripts/ask.py` and the `answer.py` CLI have no language option.
+
+## October 31: reject the destructive intent router (E9)
+
+E8 passed effective development BERTScore (0.905950, 42/43 delivered) but
+failed semantic review: Claude marked four expert answers with material drift
+and three with substantial factual errors. Manual review confirmed that
+question-only routing discarded useful KUs for short local questions, then
+invented explanations of grace notes and small notation. A high BERTScore did
+not justify retaining that design. E8 never entered validation or deployment.
+
+E9 removes that routing call. It retains passage-based relevance selection,
+explicitly marked general knowledge, the checked bilingual terminology aid,
+one concise general paragraph, and the conditional-scope correction. A
+regression test verifies that a short notation question keeps its reviewed
+source through composition and output review. No reference or question list
+is embedded in the production routing code. Frozen experiment artifacts and
+all earlier unsuccessful candidates remain in the background-evaluation
+folder; the current candidate still requires a fresh complete comparison.
 
 ## Evaluation and promotion checklist
 
