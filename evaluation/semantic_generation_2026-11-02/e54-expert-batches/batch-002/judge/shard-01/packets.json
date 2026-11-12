@@ -1,0 +1,536 @@
+[
+  {
+    "id": "799b3d41ed9f08efdb42",
+    "question": "leggiero는 어떻게 표현할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      28,
+      35
+    ],
+    "language": "ko",
+    "answer": "leggiero는 새가 노래하는 듯한 밝고 가벼운 움직임으로 표현하는 것이 좋습니다. 이 구간(28-35마디)의 프레이즈는 가볍고 정확하게 처리하면서, 새소리를 연상시키는 리듬과 꾸밈음에 주의해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tua"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo- -ce un"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "tal pia-"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cer mi"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "fa Che"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "di can-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tar de- -sio mi"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "dà"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-009",
+        "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            35
+          ],
+          [
+            94,
+            101
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "eb97f6149f991da1885a",
+    "question": "‘dir’ 위의 크레센도는 어떻게 노래해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      20,
+      24
+    ],
+    "language": "ko",
+    "answer": "‘dir’ 위의 크레센도는 ‘E vieni a dir’에서 ‘la tua canzon’으로의 문장 흐름을 자연스럽게 이어가도록 활용합니다. 전 구간을 하나의 큰 문장처럼 연결해 부드럽게 표현하는 것이 권장됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "dir"
+          ]
+        },
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "la tua can-"
+          ]
+        },
+        {
+          "measure": 23,
+          "voice": "sung",
+          "lyric_lines": [
+            "-zon"
+          ]
+        },
+        {
+          "measure": 24,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fra va- -ghi"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-008",
+        "text": "dir 위의 크레센도는 문장의 시작인 ‘E vieni a dir’에서 ‘la tua canzon’으로 말의 흐름이 자연스럽게 이어지게 한다. 이를 살려 전체를 하나의 큰 문장처럼 이어 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            24
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "dir 위의 크레센도는 문장의 시작인 ‘E vieni a dir’에서 ‘la tua canzon’으로 말의 흐름이 자연스럽게 이어지게 한다. 이를 살려 전체를 하나의 큰 문장처럼 이어 노래한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "52f3553147cdb7b16a0d",
+    "question": "‘La la’ 부분이 자연스럽게 들리지 않으면 어떻게 해결할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      51,
+      66
+    ],
+    "language": "ko",
+    "answer": "‘la la’가 이어지는 대목은 프레이징이 끊어져 들릴 수 있으니, 여러 음정을 하나의 큰 덩어리처럼 묶어 노래하는 방법을 추천합니다. 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 자연스러운 연결을 만들 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam La la"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 53,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 60,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 61,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 63,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 64,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 65,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 66,
+          "voice": "sung",
+          "lyric_lines": [
+            "La"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-012",
+        "text": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            51,
+            66
+          ],
+          [
+            117,
+            132
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "42cb9589d9c942073415",
+    "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "사선이 그어진 꾸밈음은 원음보다 앞서 미리 불러 원래 리듬과 박자를 방해하지 않도록 해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "16035eb2ccc370d91f37",
+    "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      22,
+      22
+    ],
+    "language": "ko",
+    "answer": "사선이 그어진 꾸밈음은 원음보다 앞서 미리 불러서 리듬을 방해하지 않도록 합니다. 이는 22번 마디의 꾸밈음 처리 방식으로 권고됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "la tua can-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e89e6e2a9a3e0836db5e",
+    "question": "페르마타는 어느 정도 끌어야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "페르마타는 일반적으로 해당 음의 길이의 2~3배로 끌어 부르는 것이 원칙입니다. 'l’amor'의 페르마타에서도 이 방식을 적용하면서 악센트가 놓인 'mor'을 강조하는 것이 권장됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-013",
+        "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "1e9436a794616891da21",
+    "question": "dim.은 왜 있을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      17,
+      19
+    ],
+    "language": "ko",
+    "answer": "‘o mia gentil’ 부분의 dim. 가사 표현을 강화하기 위한 지시로 해석됩니다. 디미뉴엔도를 통해 작곡가가 의도한 효과를 고려하고, 이어지는 단어들의 표현에 자연스럽게 연결되도록 부드럽게 음량을 줄이는 것이 중요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 17,
+          "voice": "sung",
+          "lyric_lines": [
+            "pur, o"
+          ]
+        },
+        {
+          "measure": 18,
+          "voice": "sung",
+          "lyric_lines": [
+            "mia gen-"
+          ]
+        },
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "-til"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-005",
+        "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            17,
+            19
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

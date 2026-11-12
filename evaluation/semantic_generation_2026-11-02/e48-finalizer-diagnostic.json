@@ -1,0 +1,27 @@
+[
+  {
+    "id": "expert-kim-nella-fantasia-10__no-range",
+    "diagnosis": "GeneratedAnswerRejected: Generated answer overgeneralizes local evidence",
+    "retrieval_source": "Frozen E37 public retrieval; retrieval code and corpus unchanged. Score lyric context not replayed.",
+    "evidence_ids": [
+      "sumijo-nella-fantasia-039-ku-01",
+      "nella-fantasia-ku-010"
+    ]
+  },
+  {
+    "id": "expert-kim-una-voce-poco-fa-05__m22-24",
+    "diagnosis": "SecurityViolation: security_policy_violation",
+    "retrieval_source": "Frozen E37 public retrieval; retrieval code and corpus unchanged. Score lyric context not replayed.",
+    "evidence_ids": [
+      "una-voce-poco-fa-ku-007"
+    ]
+  },
+  {
+    "id": "expert-kim-una-voce-poco-fa-09__no-range",
+    "diagnosis": "GeneratedAnswerRejected: Generated answer overgeneralizes local evidence",
+    "retrieval_source": "Frozen E37 public retrieval; retrieval code and corpus unchanged. Score lyric context not replayed.",
+    "evidence_ids": [
+      "una-voce-poco-fa-ku-012"
+    ]
+  }
+]

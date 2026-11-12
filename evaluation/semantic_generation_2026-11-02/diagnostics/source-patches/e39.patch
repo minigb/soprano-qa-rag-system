@@ -1,0 +1,175 @@
+--- a/soprano_qa/answer.py
++++ b/soprano_qa/answer.py
+@@ -150,11 +150,13 @@
+ Start with the direct answer. Select the source passages that answer the question,
+ then retain their relevant explanation, conditions and alternatives. Do not shorten
+ away why or how the recommendation works, or the situation to which it applies.
+-Keep the source's wording when it already answers the question; change only what
+-is needed for the answer language and polite grammar. Do not paraphrase just for
+-variety. A complete relevant paragraph is preferable to a compressed restatement
+-that loses qualifications. Do not summarize every retrieved record or add another
+-passage's advice merely because it appears in the evidence.
++Write a natural answer to this question using the source's meaning. Retain
++necessary explanations, conditions and alternatives, while removing repeated
++advice and connecting related points. Quote exact lyric words and musical
++symbols when needed; do not replace the answer with complete source paragraphs.
++Do not summarize every retrieved record or add another passage's advice merely
++because it appears in the evidence. Do not announce that you are showing source
++text or describe the retrieval process to the user.
+ For a general definition or comparison of musical concepts, explain those concepts
+ directly. The selected piece is context, not an obligation to discuss it. If no
+ reviewed answer directly explains the requested concept, use background items;
+--- a/soprano_qa/llm.py
++++ b/soprano_qa/llm.py
+@@ -22,6 +22,7 @@
+ from soprano_qa.structured_answer import (
+     NO_GROUNDED_ANSWER_SENTINEL,
+     STRUCTURED_ANSWER_POLICY,
++    SEMANTIC_ANSWER_POLICY,
+     SOURCE_PRESERVATION_POLICY,
+     SOURCE_SELECTION_POLICY,
+     GENERAL_MUSIC_SYSTEM_PROMPT,
+@@ -146,6 +147,7 @@
+         completion_options["response_format"] = {"type": "json_object", "schema": response_schema}
+     separate_translation = False
+     reason_general = False
++    reason_synthesis = False
+     if security_context is not None:
+         if not messages or messages[0].get("role") != "system":
+             raise SecurityViolation()
+@@ -158,8 +160,11 @@
+         # irrelevant: it misrouted score and performance questions as abstract
+         # theory. Judge relevance using the actual passages before discarding
+         # them, and permit background in either composition path.
+-        preserve_sources = llm_settings.get("source_preservation") == "verbatim_or_translation"
+-        calculated = basic_meter_explanation(security_context) if preserve_sources else None
++        source_mode = llm_settings.get("source_preservation")
++        preserve_sources = source_mode == "verbatim_or_translation"
++        synthesize_sources = source_mode == "semantic"
++        source_aware = preserve_sources or synthesize_sources
++        calculated = basic_meter_explanation(security_context) if source_aware else None
+         if calculated is not None:
+             # Numeric beat units are derived from ordinary meter rules, rather
+             # than guessed by the model. Both security boundaries still run.
+@@ -174,7 +179,7 @@
+             answer.answer_basis = "calculated_music_knowledge"
+             answer.generation_mode = "llm_guarded_calculation"
+             return answer
+-        general_intent = explicit_general_intent(security_context) if preserve_sources else None
++        general_intent = explicit_general_intent(security_context) if source_aware else None
+         if general_intent in {"practice", "universal"}:
+             # Explicit global practice/universal claims are not established by
+             # local performance advice. Named works and local referents have
+@@ -207,6 +212,8 @@
+                 security_context["separate_source_translation"] = True
+         messages = [messages[0], {"role": "user", "content": serialize_untrusted(security_context)}]
+         general_only = not any(r.get("citation_label") for r in security_context.get("Retrieved evidence", []))
++        reason_synthesis = (synthesize_sources and not general_only
++                            and int(llm_settings.get("synthesis_reasoning_tokens", 0)) > 0)
+         if general_only:
+             general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
+             if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
+@@ -228,14 +235,15 @@
+         messages = [
+             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
+                                        SOURCE_SELECTION_POLICY if separate_translation else
+-                                       SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
++                                       SOURCE_PRESERVATION_POLICY if preserve_sources else
++                                       SEMANTIC_ANSWER_POLICY if synthesize_sources else STRUCTURED_ANSWER_POLICY)
+              + "\n" + messages[0]["content"]},
+             *messages[1:],
+         ]
+-        if reason_general:
++        if reason_general or reason_synthesis:
+             # A JSON grammar forces the first token and suppresses Qwen's
+-            # reasoning. General pitch operations need that reasoning to keep
+-            # pitch, register, key and enharmonic spelling distinct. The final
++            # reasoning. Pitch operations and source synthesis need that
++            # reasoning to compare meanings before drafting prose. The final
+             # JSON still passes the same strict parser and all output checks.
+             messages[0]["content"] += "\n/think"
+         else:
+@@ -258,7 +266,9 @@
+                 messages=messages,
+                 temperature=float(llm_settings.get("temperature", 0.0)),
+                 top_p=float(llm_settings.get("top_p", 0.8)),
+-                max_tokens=1536 if reason_general else int(llm_settings.get("max_tokens", 768)),
++                max_tokens=(1536 if reason_general else
++                            int(llm_settings["synthesis_reasoning_tokens"]) if reason_synthesis else
++                            int(llm_settings.get("max_tokens", 768))),
+                 **completion_options,
+             )
+         answer = strip_thinking(response["choices"][0]["message"]["content"])
+@@ -291,6 +301,7 @@
+                 security_context.pop("separate_source_translation", None)
+                 separate_translation = False
+                 general_only = True
++                reason_synthesis = False
+                 reason_general = concise_pitch_question(security_context)
+                 general_policy = (concise_concept_system_prompt(security_context.get("answer_language", "ko"))
+                                   if reason_general else GENERAL_MUSIC_SYSTEM_PROMPT)
+--- a/soprano_qa/security.py
++++ b/soprano_qa/security.py
+@@ -475,6 +475,16 @@
+         {"role": "user", "content": serialize_untrusted(payload)},
+     ]
+     settings = {**llm_settings, "temperature": 0.0, "top_p": 1.0, "max_tokens": 64}
++    if (stage == "output" and llm_settings.get("source_preservation") == "semantic"
++            and payload.get("composition")
++            and any(p.get("kind") == "evidence" for p in payload["composition"])
++            and int(llm_settings.get("output_review_reasoning_tokens", 0)) > 0):
++        # A three-token immediate verdict missed condition and alternative
++        # reversals. Allow a bounded comparison before the same strict verdict.
++        # The raw generator strips private reasoning; truncated or malformed
++        # verdicts still fail closed and cannot fall back to source quotations.
++        messages[0]["content"] += "\nCompare each source-based claim against its cited source before deciding. /think"
++        settings["max_tokens"] = int(llm_settings["output_review_reasoning_tokens"])
+     try:
+         raw = generate_fn(model_path, messages, settings)
+     except Exception:
+--- a/soprano_qa/structured_answer.py
++++ b/soprano_qa/structured_answer.py
+@@ -38,6 +38,43 @@
+ is possible, return {"sentences":[]}.
+ /no_think
+ """
++
++
++SEMANTIC_ANSWER_POLICY = """Write the answer yourself using the retrieved passages as evidence.
++Your task is to answer the user's question, not display or translate complete
++source records. Start with the relevant answer or practical recommendation.
++Write a connected, concise explanation in the requested language and register.
++Combine repeated advice once, retaining the conditions of every claim you use.
++Include useful explanations and alternatives; omit passages that do not answer
++the question. Do not list sources one after another or announce that you are
++presenting reference text. For Korean, use natural, consistent 합니다체.
++
++Preserve the musical meaning, not the source's paragraph structure. Check who
++does what, negation, the condition under which advice applies, alternatives,
++certainty, and the specific musical location or situation. A possibility or
++interpretation must not become a definite fact or composer's intention. Clarify
++a source's 'this part' using the supplied musical situation; if the situation
++cannot be identified, state that limitation instead of generalizing its advice.
++Retain quoted lyric words, pronunciation spellings and musical symbols exactly.
++These short quotations do not require quoting the surrounding source paragraph.
++For conflicting accounts, distinguish their claims and preserve uncertainty
++about the cause; do not invent a reconciliation or call unique advice shared.
++
++Return one JSON object with the following structure and no extra keys:
++{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"Your direct, source-supported answer."}]}
++Write nonempty text in every item. Use evidence items for supported source
++claims, selecting the labels of the passages supporting those claims. Use
++background items with evidence=[] for useful general musical knowledge or
++optional practice advice that the sources do not supply. Keep that provenance
++separate; background must not invent a fact about a piece, edition or expert,
++contradict a source, or explain an unknown source disagreement. score_lyrics
++items may identify only sung words actually supplied in the score context.
++Use 1-4 items, up to 6 if the question needs it. Each item can contain connected
++sentences, at most 2000 characters. Do not print IDs, headings, citation labels,
++or internal field names in the text. The application handles citations.
++If no useful authorized answer can be given, return {"sentences":[]}.
++/no_think
++""" + MUSIC_TERMINOLOGY
+ 
+ 
+ SOURCE_PRESERVATION_POLICY = """Return one JSON object with the existing sentences/kind/evidence/text fields.

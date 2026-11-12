@@ -1,0 +1,26 @@
+{
+  "expert_count": 105,
+  "remaining_count": 355,
+  "total": 460,
+  "expert_cases_sha256": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
+  "expanded_cases_sha256": "0e3f1061d1465b50e0a1a7c2ccb5b6433d14baf7c5be46b0faf917ad2b9710b1",
+  "remaining_cases_sha256": "ee0389e5027d737d7b986d03b16721ebd56e1ae8ce25d01dac8a65620e357953",
+  "request_fields": [
+    "piece_id",
+    "question",
+    "measure_range",
+    "language",
+    "top_k",
+    "generate",
+    "injection",
+    "fixed_evidence",
+    "selected_pool",
+    "pool",
+    "condition",
+    "budget",
+    "measure_ranges",
+    "score_context"
+  ],
+  "same_requests": true,
+  "judging": "Use expanded reference_authority for all 460 packets; expert-only packets are not interchangeable."
+}

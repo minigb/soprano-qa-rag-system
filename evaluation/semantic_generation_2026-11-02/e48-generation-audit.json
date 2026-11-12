@@ -1,0 +1,645 @@
+{
+  "results_sha256": "c1efe44d090f1e651f90f3f9f9ba5782534a363cc33b486bfe6b86d35ce29ce3",
+  "private_trace_sha256": "7f3e6b94b357e4d6b861e421496407ec2a05fe87c522b1eb1867f59102ce132b",
+  "audit_script_sha256": "cd1297ca7117dc066431008248a68c0a9d98f20fda30417fff04ab38b6ae925d",
+  "requests": 105,
+  "generation_modes": {
+    "llm": 102,
+    "unavailable": 3
+  },
+  "llm_nonempty_compositions": 102,
+  "legacy_source_returns": 0,
+  "limitation": "Provenance audit, not a factuality or naturalness judgment. A generated phrase may legitimately match a short source phrase.",
+  "cases": [
+    {
+      "id": "expert-kim-die-forelle-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-02__m41-54",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-04__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-05__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-06__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-07__m28-40",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-die-forelle-08__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-die-forelle-04__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-die-forelle-04__m28-40",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-die-forelle-05__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__m1-2",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-02__m11-12",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-05__m19-21",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-06__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-07__m39-49",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-07__reported-no-range-01",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-08__m56-59",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-09__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-09__m67-69",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-10__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-11__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-11__m74-79",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-12__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-01__m11-14",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-02__m22-22",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-03__m16-16",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-04__m17-19",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-05__m20-20",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-06__m20-24",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-07__m28-35",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-08__m95-96",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-09__m41-43",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-10__m51-66",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-11__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-11__m67-69",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-12__m68-69",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-13__m80-80",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-14__m83-85",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-15__m86-88",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-16__m103-103",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-17__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-17__m117-124",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-18__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-la-capinera-18__m137-137",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-la-capinera-11__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-la-capinera-12__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-la-capinera-12__m135-137",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-03__m7-8",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-04__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-05__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-06__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-07__m11-17",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-08__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-09__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-09__m44-52",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__no-range",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__m34-35",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-11__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-12__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-03__m21-22",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-04__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-05__m22-24",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-07__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-07__m25-25",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-08__m32-32",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-09__no-range",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-09__m31-34",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-10__m37-37",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__m44-55",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__reported-no-range-01",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-12__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-13__m62-62",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-14__m67-67",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-15__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-15__m92-93",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-16__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-17__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-18__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-19__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-20__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-20__m42-42",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-16__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-17__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-20__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    }
+  ]
+}

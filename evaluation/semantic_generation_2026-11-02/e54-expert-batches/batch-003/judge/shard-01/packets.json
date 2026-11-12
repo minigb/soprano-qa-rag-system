@@ -1,0 +1,278 @@
+[
+  {
+    "id": "7a3a9cd4af88325e78f4",
+    "question": "테크닉이나 기교가 들어갈 때 가사는 어떻게 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기교적인 부분에서는 가사를 그대로 붙이기 어려울 수 있으므로 ‘아-’ 모음으로 선율을 이어가거나, 해당 단어의 모음으로 연결할 수 있습니다. 다만 모음으로 연결할 경우 반드시 해당 단어를 완전히 발음해 구절을 마무리해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-028",
+        "text": "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다.\n",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5f4973c3d1efc854f0e9",
+    "question": "트릴은 어떻게 노래해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보에 표기된 트릴은 충분히 트릴한 후 제시된 마무리 방식으로 끝맺는 것이 중요하며, 느린 템포로 연습하는 것이 도움이 됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-019",
+        "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            137,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2f8bead354cbf90bd372",
+    "question": "이 곡을 부르는 데 성별이나 성부의 제한이 있을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Nella fantasia》는 영화 원작 곡으로 남녀 구분 없이 누구나 부를 수 있습니다. 클래식 가곡 중 성별이나 성부가 지정된 경우도 있지만, 이 곡은 성별 제한이 없는 일반적인 곡입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-001",
+        "text": "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 가곡은 일반적으로 성별 구분 없이 부를 수 있으나, 성별과 성부를 지정한 가곡도 간혹 존재한다. 《Nella fantasia》는 영화 OST에 가사를 붙여 만든 곡이므로 남성이나 여성의 구분 없이 누구나 부를 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5bb2e9592db9aae282fa",
+    "question": "‘linguaggio’의 겹자음을 더 잘 발음하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      83,
+      85
+    ],
+    "language": "ko",
+    "answer": "‘linguaggio’의 ‘gg’처럼 같은 자음이 겹칠 때는 두 자음 사이에 짧은 휴지 시간을 두는 것이 좋습니다. 자음 하나처럼 통합하는 방법 외에도, 두 번 발음되는 느낌으로 노래하는 방식도 유용합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 83,
+          "voice": "sung",
+          "lyric_lines": [
+            "-can lin-"
+          ]
+        },
+        {
+          "measure": 84,
+          "voice": "sung",
+          "lyric_lines": [
+            "-guag- -gio"
+          ]
+        },
+        {
+          "measure": 85,
+          "voice": "sung",
+          "lyric_lines": [
+            "lor."
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-015",
+        "text": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            83,
+            85
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f373f6c51e3514ea65af",
+    "question": "‘venticel’의 ‘cel’은 어떻게 발음해야 더 자연스러울까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      86,
+      88
+    ],
+    "language": "ko",
+    "answer": "‘venticel’의 ‘cel’ 발음은 e가 충분히 발음되도록 c는 앞쪽, l은 뒤쪽에 위치시키며 e의 길이를 늘려 공명과 소리의 풍부함을 강조하는 것이 좋습니다. 이태리어 특성상 모음(e)이 가장 중요하며, 이 구간에서는 e의 연장이 자연스러운 표현을 돕습니다.\n\n악보의 가사 문맥상 ‘-cel’은 87번 조에 나뉘어 표기되어 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 86,
+          "voice": "sung",
+          "lyric_lines": [
+            "Del ven- -ti-"
+          ]
+        },
+        {
+          "measure": 87,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cel"
+          ]
+        },
+        {
+          "measure": 88,
+          "voice": "sung",
+          "lyric_lines": [
+            "il mor- -mo-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-016",
+        "text": "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            86,
+            88
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "venticel의 ‘cel’에서는 e가 충분히 발음되도록 c는 최대한 앞으로, l은 최대한 뒤로 위치시킨다. 이태리어에서는 모음이 가장 중요하며, e 발음의 길이가 길어지면 충분한 공명과 좋은 소리를 전달할 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e7cb1a22be2efb543af8",
+    "question": "첫 소리는 어떤 다이나믹으로 시작할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "두 자료는 첫 소리를 부드럽게 시작하는 방향을 공통으로 제시합니다. 한 자료는 반주가 PP로 시작하므로 부드러운 어택이 적절하다고 설명하며, 다른 자료는 반주가 piano(p) 표기이므로 크지 않게 시작하는 것이 좋다고 합니다. 이 두 표기의 차이에 대한 원인은 명확히 밝혀지지 않았으나, 공통적으로 과도한 음량보다는 호흡과 울림을 유지한 채 섬세하게 시작하는 것이 중요하다는 조언은 일치합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-036-ku-01",
+        "text": "이 곡은 첫소리부터 강하게 존재감을 드러내기보다는 반주가 제시하는 섬세한 분위기와 자연스럽게 호흡을 맞추는 것이 중요해요. 특히 반주부가 PP로 시작한다는 점을 고려한다면 노래 역시 지나치게 큰 소리로 시작하기보다는 부드러운 어택으로 시작하는 것이 적절해요.\n\n다만 단순히 작게 부르는 것이 목표가 되어서는 안 되고, 작은 음량 안에서도 충분히 호흡의 지지와 울림을 유지하여 소리가 약해지는 것이 아니라 집중력 있는 피아노, 피아니시모가 되도록 하는 것이 중요해요. 그 이후 프레이즈가 진행되면서 가사의 의미와 음악적 흐름에 따라 자연스럽게 다이나믹을 확장해 가는 것이 좋습니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-002",
+        "text": "일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. 이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. 이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c9a69ae12bae37fcd1a4",
+    "question": "ff와 pp의 대비는 어떤 음악적 효과를 표현할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "ff와 pp가 빠르게 번갈아 나오는 대비는 산새의 경쾌한 움직임과 메아리 같은 반향 효과를 표현하는 것으로 해석할 수 있습니다. 성악가는 멜로디뿐 아니라 반주 부분의 강약 기호도 함께 고려해 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-030",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            51,
+            58
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

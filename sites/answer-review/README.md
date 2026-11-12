@@ -1,13 +1,24 @@
 # Local answer comparison demo
 
-The default E37 screen is historical quotation-mode evidence, not proof of
-generative answer quality. `dist/evaluations.json` labels each version and keeps
-its notes in a separate storage key; the original E37 key is preserved.
+The default screen compares unchanged initial-system answers with outputs from
+Qwen3-14B on `codex/helpful-rag-responses`. The current policy provides usable
+music answers with a qualification when quality checks remain unresolved and
+uses general music knowledge when source-based generation cannot answer.
+The displayed text is the actual service response, including warnings or errors.
+No source text is substituted for a generated answer.
 
-All 460 frozen questions and 920 full answers from `expanded_460_2026-11-02`,
-with the original Claude judgments, BERTScore values, retrieved KUs and expert
-references. This is a static review tool; it does not generate new answers or
-call a model. No dependencies or external assets are required to serve it.
+All 460 frozen questions remain. The left column retains its original answers,
+Claude judgments and BERTScore values. The right column is captured with actual
+hybrid retrieval in `evaluation/helpful_responses_2026-11-04/full-final/`.
+Changed question/answer/evidence packets receive new Claude Opus 5.5 assessments;
+identical complete packets reuse the first prior judgment under the same rubric
+and model. BERTScore is recomputed on full displayed answers with the existing
+fixed setting. No score for a different answer is transferred.
+
+The “이전 거절 5건” filter selects the five requests withheld in the November 3
+capture. E37 and the November 3 outputs remain separate historical versions,
+with their original browser-notes keys. This static tool does not call a model
+when opened, and it does not switch the Lab application's RAG backend.
 
 From this directory:
 
@@ -32,6 +43,14 @@ python export_data.py
 python verify_data.py
 node --check dist/app.js
 ```
+
+Those first two commands reproduce/verify the preserved historical E37 data.
+The latest implementation and capture are on branch `codex/helpful-rag-responses`
+at `/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system`.
+From that checkout, run `python sites/answer-review/export_helpful.py` and
+`python sites/answer-review/verify_helpful.py` after generation and evaluation.
+The independent verifier checks all 920 full answers, the unchanged left
+column, source text, score mappings and frozen implementation hashes.
 
 The exporter reads the frozen evaluation. It projects only fields shown in
 the UI: full question/answer/source text, measurements and judgment summaries.

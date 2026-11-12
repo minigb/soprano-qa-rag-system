@@ -12,14 +12,28 @@ const FIDELITY = { faithful: "의미 보존", minor_drift: "경미한 의미 변
 let storageKey;
 const FEATURED = "expert-kim-in-flowery-clouds-02__m11-12";
 const state = { evaluation: null, data: null, selected: null, filtered: [], focus: "all", notes: {}, storageOK: true };
+const assessed = (v) => v.judge.available !== false && Number.isFinite(v.judge.naturalness);
+const pairedAssessment = (c) => assessed(c.versions.original) && assessed(c.versions.current);
+const unscorable = (v) => !v.bertscore.scored && v.bertscore.reason !== "not_evaluated";
+const numberText = (n, digits) => Number.isFinite(n) ? (digits == null ? String(n) : n.toFixed(digits)) : "미평가";
 const filters = [
   ["all", "전체 문항", () => true],
-  ["declined", "자연스러움 하락", (c) => c.versions.current.judge.naturalness < c.versions.original.judge.naturalness],
-  ["resolved", "중대한 의미 변경 해소", (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"],
-  ["remaining", "선택 버전 의미·사실 검토", (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2],
-  ["overlength", "BERTScore 계산 불가", (c) => !c.versions.current.bertscore.scored || !c.versions.original.bertscore.scored],
+  ["previous-refusals", "이전 거절 5건", (c) => c.versions.current.previous_refusal === true],
+  ["priority-updated", "이번 변경 문항", (c) => c.versions.current.writer_priority_updated === true],
+  ["recovered", "API 오류 후 재시도", (c) => c.versions.current.technical_retry === true],
+  ["declined", "자연스러움 하락", (c) => pairedAssessment(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness],
+  ["resolved", "중대한 의미 변경 해소", (c) => pairedAssessment(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift" && usefulVersion(c.versions.current)],
+  ["unavailable", "답변 미제공", (c) => !usefulVersion(c.versions.current)],
+  ["remaining", "선택 버전 의미·사실 검토", (c) => assessed(c.versions.current) && (c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2)],
+  ["unreviewed", "최신 답변 미평가", (c) => !assessed(c.versions.current)],
+  ["overlength", "BERTScore 계산 불가", (c) => unscorable(c.versions.current) || unscorable(c.versions.original)],
   ["marked", "내 검토 기록", (c) => hasNote(c.id)],
 ];
+
+function usefulVersion(v) {
+  return (!v.status || v.status === "response") && !["unavailable", "response_error", "domain_guidance"].includes(v.generation_mode)
+    && !v.judge.refusal && Boolean(v.answer.trim());
+}
 
 function hasNote(id) {
   const n = state.notes[id];
@@ -49,14 +63,14 @@ function saveNote(id, patch) {
 function renderOverview() {
   const old = state.data.summary.original, now = state.data.summary.current;
   const items = [
-    ["중대한 출처 의미 변경", old.all.material_drifts, now.all.material_drifts, "건", `전체 460문항 · 원본 → ${state.evaluation.shortLabel}`, false],
-    ["자연스러움 평균", old.all.naturalness_mean_useful_out_of_4.toFixed(2), now.all.naturalness_mean_useful_out_of_4.toFixed(2), "/ 4", `${state.data.naturalness_comparison.losses}문항에서 하락 · Claude 평가`, true],
-    ["전문가 원질문 BERTScore", old.original.bertscore_effective_f1.toFixed(4), now.original.bertscore_effective_f1.toFixed(4), "F1", state.evaluation.metricNote, false],
-    ["응답 지연 중앙값", old.all.latency_all.median_seconds.toFixed(2), now.all.latency_all.median_seconds.toFixed(2), "초", "버전별 1회 실행 · 생성 당시 기록", true],
+    ["중대한 출처 의미 변경", numberText(old.all.material_drifts), numberText(now.all.material_drifts), "건", `표시된 ${state.data.cases.length}문항 · 원본 → ${state.evaluation.shortLabel}`, false],
+    ["자연스러움 평균", numberText(old.all.naturalness_mean_effective_out_of_4, 2), numberText(now.all.naturalness_mean_effective_out_of_4, 2), "/ 4", state.data.naturalness_comparison ? `양쪽 답변 제공 문항 중 ${state.data.naturalness_comparison.losses}건 하락` : "최신 답변은 아직 Claude 미평가", true],
+    ["전문가 원질문 BERTScore", numberText(old.original.bertscore_effective_f1, 4), numberText(now.original.bertscore_effective_f1, 4), "F1", state.evaluation.metricNote, false],
+    [state.evaluation.latencyTitle || "응답 지연 중앙값", old.all.latency_all.median_seconds.toFixed(2), now.all.latency_all.median_seconds.toFixed(2), "초", state.evaluation.latencyNote || "버전별 1회 실행 · 생성 당시 기록", true, state.evaluation.latencyComparable === false ? "/" : "→"],
   ];
-  $("overview").replaceChildren(...items.map(([title, before, after, unit, note, warn]) => {
+  $("overview").replaceChildren(...items.map(([title, before, after, unit, note, warn, separator = "→"]) => {
     const box = el("article", `stat${warn ? " warn" : ""}`), values = el("div", "stat-values");
-    values.append(el("span", "stat-old", String(before)), el("span", "stat-arrow", "→"), el("strong", "stat-new", String(after)), el("span", "stat-unit", unit));
+    values.append(el("span", "stat-old", String(before)), el("span", "stat-arrow", separator), el("strong", "stat-new", String(after)), el("span", "stat-unit", unit));
     box.append(el("h2", "stat-title", title), values, el("p", "stat-note", note));
     return box;
   }));
@@ -79,14 +93,14 @@ function updateResults() {
     (!piece || c.piece_id === piece) && (!family || c.family === family) && predicate(c) &&
     (!query || c.searchText.includes(query)));
   const order = $("sort").value;
-  if (order === "naturalness") state.filtered.sort((a, b) => a.versions.current.judge.naturalness - b.versions.current.judge.naturalness || a.index - b.index);
-  if (order === "decline") state.filtered.sort((a, b) => (a.versions.current.judge.naturalness - a.versions.original.judge.naturalness) - (b.versions.current.judge.naturalness - b.versions.original.judge.naturalness) || a.index - b.index);
-  if (order === "bert") state.filtered.sort((a, b) => (a.versions.current.bertscore.f1 ?? -1) - (b.versions.current.bertscore.f1 ?? -1) || a.index - b.index);
+  if (order === "naturalness") state.filtered.sort((a, b) => (a.versions.current.judge.naturalness ?? Infinity) - (b.versions.current.judge.naturalness ?? Infinity) || a.index - b.index);
+  if (order === "decline") state.filtered.sort((a, b) => (pairedAssessment(a) ? a.versions.current.judge.naturalness - a.versions.original.judge.naturalness : Infinity) - (pairedAssessment(b) ? b.versions.current.judge.naturalness - b.versions.original.judge.naturalness : Infinity) || a.index - b.index);
+  if (order === "bert") state.filtered.sort((a, b) => (a.versions.current.bertscore.f1 ?? Infinity) - (b.versions.current.bertscore.f1 ?? Infinity) || a.index - b.index);
   if (!state.filtered.some((c) => c.id === state.selected)) state.selected = state.filtered[0]?.id || null;
   renderFilterButtons(); renderList(); renderComparison(); updateURL(false);
 }
 function renderList() {
-  $("result-count").textContent = `${state.filtered.length} / 460문항`;
+  $("result-count").textContent = `${state.filtered.length} / ${state.data.cases.length}문항`;
   $("case-list").replaceChildren(...state.filtered.map((c) => {
     const button = el("button", "case-item");
     button.dataset.caseId = c.id;
@@ -95,7 +109,8 @@ function renderList() {
     piece.append(el("span", "", pieceFor(c.piece_id).title), el("span", "", noteFor(c.id).bookmarked ? "★" : String(c.index).padStart(3, "0")));
     bottom.append(el("span", "", rangeText(c.measure_range)));
     const current = c.versions.current.judge, original = c.versions.original.judge;
-    if (current.source_fidelity !== "faithful" || current.factual_correctness <= 2) bottom.append(el("span", "mini-badge danger judgment-content", "선택 버전 검토"));
+    if (!assessed(c.versions.current)) bottom.append(el("span", "mini-badge judgment-content", "미평가"));
+    else if (current.source_fidelity !== "faithful" || current.factual_correctness <= 2) bottom.append(el("span", "mini-badge danger judgment-content", "선택 버전 검토"));
     else if (original.source_fidelity === "material_drift") bottom.append(el("span", "mini-badge judgment-content", "의미 변경 해소"));
     else if (current.naturalness < original.naturalness) bottom.append(el("span", "mini-badge warn judgment-content", "자연스러움 ↓"));
     button.append(piece, el("div", "case-question", c.question), bottom);
@@ -106,6 +121,7 @@ function renderList() {
 }
 function updateURL(push) {
   const url = new URL(location.href);
+  if (state.evaluation) url.searchParams.set("evaluation", state.evaluation.id);
   url.hash = state.selected ? `case=${encodeURIComponent(state.selected)}` : "";
   if (url.href !== location.href) history[push ? "pushState" : "replaceState"]({}, "", url);
 }
@@ -135,17 +151,23 @@ function makeAnswer(c, version) {
   head.append(title, el("small", "", current ? state.evaluation.answerSubtitle : "보안 적용 전"));
   const body = el("div", "answer-body"), answer = el("p", "answer-text", v.answer), meta = el("div", "answer-meta");
   answer.dataset.version = version;
-  meta.append(el("span", "", "저장된 답변 전문"), el("span", "", `${[...v.answer].length}자 · ${v.latency_seconds.toFixed(2)}초`));
+  const timeLabel = state.evaluation.latencyLabels?.[version];
+  meta.append(el("span", "", "저장된 답변 전문"), el("span", "", `${[...v.answer].length}자 · ${timeLabel ? timeLabel + " " : ""}${v.latency_seconds.toFixed(2)}초`));
   body.append(answer, meta);
+  if (v.writer_priority_updated) body.append(el("p", "secondary-note", "조수미 우선 참고 지침을 적용해 다시 생성한 답변입니다."));
+  if (v.technical_retry) body.append(el("p", "secondary-note retry-note", "최초 API 호출 오류 후 같은 입력으로 1회 재시도한 답변입니다. 표시 시간은 성공한 재시도 호출만 포함합니다."));
+  if (v.status && v.status !== "response") body.append(el("p", "secondary-note", "실행 오류로 생성된 답변이 없습니다."));
+  else if (!usefulVersion(v)) body.append(el("p", "secondary-note", "이 음악 질문에 답변을 제공하지 못했습니다."));
   const judge = el("div", "judge-box judgment-content"), jt = el("div", "judge-title");
-  jt.append(el("span", "", "CLAUDE 평가"), el("span", `fidelity ${v.judge.source_fidelity}`, FIDELITY[v.judge.source_fidelity] || v.judge.source_fidelity));
+  jt.append(el("span", "", "CLAUDE 평가"), el("span", `fidelity ${v.judge.source_fidelity || "pending"}`, assessed(v) ? FIDELITY[v.judge.source_fidelity] || v.judge.source_fidelity : "미평가"));
   const metrics = el("div", "metric-row");
-  metrics.append(makeMetric("자연스러움", String(v.judge.naturalness), "/ 4"), makeMetric("사실성", String(v.judge.factual_correctness), "/ 4"), makeMetric("BERTScore F1", v.bertscore.scored ? v.bertscore.f1.toFixed(4) : "계산 불가", "", !v.bertscore.scored));
+  metrics.append(makeMetric("자연스러움", numberText(v.judge.naturalness), assessed(v) ? "/ 4" : ""), makeMetric("사실성", numberText(v.judge.factual_correctness), assessed(v) ? "/ 4" : ""), makeMetric("BERTScore F1", v.bertscore.scored ? v.bertscore.f1.toFixed(4) : v.bertscore.reason === "not_evaluated" ? "미평가" : "계산 불가", "", unscorable(v)));
   judge.append(jt, metrics);
-  if (!v.bertscore.scored) judge.append(el("p", "judge-rationale", v.bertscore.reason === "encoder_length_limit"
+  if (v.bertscore.reason === "not_evaluated") judge.append(el("p", "judge-rationale", "이 답변의 Claude·BERTScore 평가는 아직 실시하지 않았습니다. 이전 버전의 점수를 적용하지 않았습니다."));
+  else if (!v.bertscore.scored) judge.append(el("p", "judge-rationale", v.bertscore.reason === "encoder_length_limit"
     ? `${v.bertscore.candidate_tokens}토큰으로 512토큰 제한을 넘었습니다. 답변은 자르지 않았고 전체 집계에서만 0점 기여로 포함했습니다.`
     : "답변 거절 또는 실행 실패로 BERTScore를 계산하지 못했습니다. 전체 평균에는 0점 기여로 포함했습니다."));
-  for (const [label, text] of [["자연스러움", v.judge.naturalness_rationale], ["의미·내용", v.judge.rationale]]) {
+  for (const [label, text] of assessed(v) ? [["자연스러움", v.judge.naturalness_rationale], ["의미·내용", v.judge.rationale]] : []) {
     const p = el("p", "judge-rationale"); p.append(el("strong", "", label + " · "), document.createTextNode(text || "판정 설명 없음")); judge.append(p);
   }
   if (v.secondary_note) judge.append(el("div", "secondary-note", "추가 대조 메모 · " + v.secondary_note));
@@ -180,8 +202,23 @@ function renderComparison() {
   question.append(metadata, heading, idRow);
   const pair = el("div", "pair"); pair.append(makeAnswer(c, "original"), makeAnswer(c, "current"));
   const references = el("details", "references"), refContent = el("div");
-  references.append(el("summary", "", `공통 전문가 참조 · ${c.references.length}개 KU`));
-  refContent.append(el("p", "reference-hint", "평가에 사용한 전문가 KU입니다. 시스템별로 실제 검색된 근거는 각 답변 아래에서 확인할 수 있습니다. 보조 맥락을 모두 포함해야 정답인 것은 아닙니다."), ...c.references.map((r) => makeSource(r, true)));
+  if (c.evaluation_references) {
+    references.append(el("summary", "", "버전별 평가 참조 · 원본 / " + state.evaluation.shortLabel));
+    refContent.append(el("p", "reference-hint", "평가 참조가 버전별로 달라질 수 있습니다. 아래는 각 평가에 쓰인 참조이며, 실제 검색 근거는 위의 각 답변 아래에 있습니다."));
+    const referencePair = el("div", "pair");
+    for (const version of ["original", "current"]) {
+      const ref = c.evaluation_references[version], section = el("section", "reference-version");
+      section.dataset.version = version;
+      section.append(el("h3", "", version === "original" ? "원본 평가 참조" : state.evaluation.shortLabel + " 평가 참조"), ...ref.sources.map((r) => makeSource(r, true)));
+      const bert = el("details", "bert-reference-details"), text = el("p", "source-text bert-reference", ref.bertscore_text);
+      text.dataset.version = version;
+      bert.append(el("summary", "", "실제 BERTScore 참조문 보기"), text); section.append(bert); referencePair.append(section);
+    }
+    refContent.append(referencePair);
+  } else {
+    references.append(el("summary", "", `공통 전문가 참조 · ${c.references.length}개 KU`));
+    refContent.append(el("p", "reference-hint", "평가에 사용한 전문가 KU입니다. 시스템별로 실제 검색된 근거는 각 답변 아래에서 확인할 수 있습니다. 보조 맥락을 모두 포함해야 정답인 것은 아닙니다."), ...c.references.map((r) => makeSource(r, true)));
+  }
   references.append(refContent);
   $("comparison").replaceChildren(question, pair, references, makeNotes(c));
 }
@@ -251,16 +288,22 @@ async function init() {
     $("method-intro").textContent = state.evaluation.methodIntro;
     $("method-bert").textContent = state.evaluation.methodBert;
     $("method-scope").textContent = state.evaluation.methodScope;
-    $("snapshot").textContent = state.evaluation.date + " 평가 기록";
+    if (state.evaluation.methodInventory) $("method-inventory").textContent = state.evaluation.methodInventory;
+    $("snapshot").textContent = state.evaluation.date + " 답변 기록";
     const response = await fetch(state.evaluation.data, { cache: "no-cache" });
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     state.data = await response.json();
-    if (state.data.cases.length !== 460) throw new Error("460개 문항을 확인할 수 없습니다.");
+    const expectedCount = state.evaluation.caseCount ?? 460;
+    if (state.data.cases.length !== expectedCount || new Set(state.data.cases.map((c) => c.id)).size !== expectedCount) throw new Error(`${expectedCount}개 문항을 확인할 수 없습니다.`);
+    $("total-count").textContent = String(state.data.cases.length);
+    $("coverage-footer").textContent = state.evaluation.footer || `전체 ${state.data.cases.length}문항 · 저장된 답변 ${state.data.cases.length * 2}개 · 모든 문항 한국어`;
     for (const c of state.data.cases) c.searchText = [c.id, c.question, pieceFor(c.piece_id).title, pieceFor(c.piece_id).subtitle, c.versions.original.answer, c.versions.current.answer].join(" ").toLocaleLowerCase();
     restoreNotes();
     for (const p of state.data.pieces) { const option = el("option", "", p.title); option.value = p.id; $("piece").append(option); }
-    state.selected = readHash() || FEATURED;
+    const requestedCase = readHash();
+    state.selected = requestedCase || state.evaluation.featuredCase || FEATURED;
     renderOverview(); updateResults();
+    if (requestedCase && !state.data.cases.some((c) => c.id === requestedCase)) toast("이 문항은 선택한 버전의 결과가 없어 첫 문항을 표시합니다.");
     $("export-notes").disabled = !Object.keys(state.notes).some(hasNote);
     $("export-notes").addEventListener("click", exportNotes);
     $("search").addEventListener("input", updateResults);
@@ -272,7 +315,7 @@ async function init() {
       if (!event.altKey || !["ArrowLeft", "ArrowRight"].includes(event.key) || event.target.matches("input, textarea, select") || $("method-dialog").open) return;
       event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1);
     });
-    window.addEventListener("popstate", () => { state.selected = readHash() || FEATURED; clearFilters(); });
+    window.addEventListener("popstate", () => { state.selected = readHash() || state.evaluation.featuredCase || FEATURED; clearFilters(); });
   } catch (error) {
     $("comparison").replaceChildren(el("p", "empty", `평가 데이터를 불러오지 못했습니다. localhost 서버에서 열고 새로고침해 주세요. (${error.message})`));
     $("result-count").textContent = "불러오기 실패";

@@ -1,0 +1,343 @@
+[
+  {
+    "id": "fc8a3bd51f92044bf27d",
+    "question": "반주부에 보이는 표시는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      56,
+      59
+    ],
+    "language": "ko",
+    "answer": "반주부에는 트레몰로 표시가 사용되어 있습니다. 이 표시는 연주자가 악보를 더 편하게 읽도록 돕고, 극적인 효과를 만들어 이어지는 분위기 전환을 강조하는 역할을 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "아-"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": [
+            "- 까 맣 게"
+          ]
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "잊"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-009",
+        "text": "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            56,
+            59
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8e429d65afd0609a1c31",
+    "question": "박자가 바뀌는 이유는 무엇이며, 곡의 분위기는 어떻게 달라질까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      39,
+      49
+    ],
+    "language": "ko",
+    "answer": "박자와 조성의 변화는 가사 '추위와 주림에 시달리어'의 겨울·고난 이미지를 반영하는 분위기 전환을 위해 이루어집니다. 이 구간에서 작곡가는 이전의 분위기를 중단하고, 새로운 음악적 요소를 통해 고통과 시련을 표현하고자 했습니다. 가창자는 음색과 연주 방식으로 이 전환을 강조해야 합니다.\n박자·조성·반주 리듬의 변화로 곡의 분위기는 평온한 상태에서 추위와 굶주림의 고난을 묘사하는 긴장감 있는 분위기로 바뀝니다. 특히 47마디부터 시작되는 가사는 이전의 무반주 구간과 대비되어 감정의 강도를 높입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 39,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 40,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 41,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 42,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 43,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 44,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "추 위"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "와 주 림 에 시 달 리"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "어 - 한 겨 우"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-008",
+        "text": "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            39,
+            49
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "앞선 간주에서 느껴지던 분위기는 이후 박자·조성·반주 리듬의 변화와 함께 전환되어, 가사 ‘추위와 주림에 시달리어’와 겨울·고난·시련 같은 이미지를 나타낸다. 가창자도 이 변화를 음색과 음악으로 표현하는 것이 중요하다. 이처럼 작곡가는 박자와 조성을 바꾸어 곡의 분위기를 전환한다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "02dda30cc6d42e59d50d",
+    "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 전환하며 극적 효과를 조절하다가 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다. 2/4박은 매 마디의 강-약 리듬이 두드러지게 작용해, 음형 간 대비를 명확히 하며 곡의 밝고 경쾌한 특성을 유지하도록 설계된 것으로 해석됩니다. 이는 4/4박보다 강약의 대비가 선명해지는 리듬적 특성 때문인 것으로 분석됩니다.\n\n일반적인 음악 설명입니다.\n2/4박은 일반적으로 두 박을 가진 단순박으로, 첫 박이 강세인 반면 두 번째 박은 약세입니다. 이와 달리 4/4박은 강-약-중강-약의 네 박 구조를 지닙니다. 따라서 2/4박은 반복적인 강세로 리듬의 흐름을 더 뚜렷하게 만들 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6aa953eca2597bc5429a",
+    "question": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《꽃구름 속에》 곡의 페르마타 표시가 악보와 음원에서 다를 경우, 이는 편곡 차이로 인해 발생할 수 있습니다. 페르마타가 있는 경우든 없는 경우든 모두 허용되므로, 연주자는 음악적 맥락과 해석에 따라 선택할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f85a884a0277a3090d1d",
+    "question": "‘꽃바람’을 음원에서는 스타카토로 부르는 경우가 많지만 악보에 표시가 없다면 무엇을 따라야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      12
+    ],
+    "language": "ko",
+    "answer": "한국 가곡은 편곡과 변주가 많아 악보 표시 없이도 성악가들이 표현적 해석을 적용하는 경우가 많습니다. '꽃바람' 부분은 곡의 경쾌한 분위기와 가사의 리듬을 살리기 위해 스타카토나 가벼운 아티큘레이션을 사용하는 것이 일반적입니다. '꽃'의 받침 'ㅊ'을 강조해 발성하면 자연스럽게 경쾌한 효과를 낼 수 있습니다.\n\n일반적인 음악 설명입니다.\n악보 표시가 없을 때는 곡의 정서와 가사의 리듬에 따라 표현 방식을 자유롭게 조절할 수 있습니다. 다만 기존 연주례에 어울리면서도 개인의 음악적 해석을 반영하는 것이 중요합니다.\n\n선택된 11-12번 마디의 가사는 '꽃 바 람'으로, 단어의 경쾌한 느낌을 살리는 발성이 권장됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        },
+        {
+          "measure": 12,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-002",
+        "text": "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            12
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "한국 가곡에는 편곡과 다양한 변주가 존재하는 경우가 많다. 성악 도입부의 ‘꽃바람 꽃바람’은 스타카토 표시가 없지만, 가사의 내용과 곡의 분위기를 표현하기 위해 대다수의 성악가가 스타카토와 비슷하게 가볍게 부른다. 더 정확하게 표현하려면 ‘꽃바람’의 ‘꽃’ 받침 ‘ㅊ’을 강조해 경쾌한 분위기를 노래한다.\n‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "75258cfca54300b60fce",
+    "question": "Larghetto는 어느 정도로 느리게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디씩 충분히 표현할 수 있도록 여유를 가진 템포로 처리하는 것이 일반적입니다. 연주자의 해석에 따라 달라질 수 있으나, 각 음을 강조하면서도 문장이 자연스럽게 이어지도록 하는 균형이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-012",
+        "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            74,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "181ea4a04fd664d5cdad",
+    "question": "이 노래가 너무 높으면 조정하거나 편곡해도 될까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《꽃구름 속에》는 가곡이기 때문에 조성을 자신의 음역대에 맞게 바꾸는 것이 일반적으로 허용됩니다. 곡의 조성이 너무 높거나 낮아 불편하다면, 자신의 목소리와 음색에 맞게 조정할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-007",
+        "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

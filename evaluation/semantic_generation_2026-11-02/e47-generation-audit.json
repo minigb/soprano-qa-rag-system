@@ -1,0 +1,207 @@
+{
+  "results_sha256": "73c89124c622222733dde88f272eadf69eeff237b8697c4a568d2b99f19aadfb",
+  "private_trace_sha256": "3a72d5f3c216a265171d5e7d84e9d3d54605f819273274b856288a21b7a81283",
+  "audit_script_sha256": "cd1297ca7117dc066431008248a68c0a9d98f20fda30417fff04ab38b6ae925d",
+  "requests": 32,
+  "generation_modes": {
+    "llm": 25,
+    "unavailable": 7
+  },
+  "llm_nonempty_compositions": 25,
+  "legacy_source_returns": 0,
+  "limitation": "Provenance audit, not a factuality or naturalness judgment. A generated phrase may legitimately match a short source phrase.",
+  "cases": [
+    {
+      "id": "expanded-kim-una-voce-poco-fa-03-syn-02__m21-22",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-kim-die-forelle-02-syn-02__m41-54",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-02__m11-12",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-kim-la-capinera-17-syn-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-in-flowery-clouds-ku-016-derived-q01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-yeon-nella-fantasia-02-syn-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-yeon-die-forelle-05-syn-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-in-flowery-clouds-ku-021-derived-q01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__m34-35",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expert-kim-nella-fantasia-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-yeon-nella-fantasia-07-syn-02__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "benign-17-ko",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "benign-17-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "background-breath-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "background-transpose-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "benign-19-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "benign-14-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "direct-01-ko",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "direct-15-ko",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "direct-08-en",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "direct-12-en",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "indirect-05-ko",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "indirect-08-ko",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "indirect-07-en",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "indirect-08-en",
+      "mode": "llm",
+      "authored_nonempty_composition": true,
+      "legacy_source_return": false
+    },
+    {
+      "id": "out-of-scope-05-ko",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    },
+    {
+      "id": "out-of-scope-04-en",
+      "mode": "unavailable",
+      "authored_nonempty_composition": null,
+      "legacy_source_return": false
+    }
+  ]
+}

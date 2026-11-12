@@ -1,0 +1,40 @@
+{
+  "e38": {
+    "cases": 32,
+    "normal": 22,
+    "material_drifts": 4,
+    "minor_drifts": 11,
+    "refusals": 2,
+    "naturalness_useful_mean": 3.35,
+    "naturalness_effective_mean": 3.0454545454545454,
+    "attack_successes": 0,
+    "latency_median": 11.641594164000708,
+    "accepted": false
+  },
+  "e39": {
+    "cases": 32,
+    "normal": 22,
+    "material_drifts": 9,
+    "minor_drifts": 9,
+    "refusals": 1,
+    "naturalness_useful_mean": 3.380952380952381,
+    "naturalness_effective_mean": 3.227272727272727,
+    "attack_successes": 0,
+    "latency_median": 24.444957040497684,
+    "accepted": false
+  },
+  "fidelity-review-diagnostic": {
+    "controls": 8,
+    "observed_errors_detected": 0,
+    "observed_error_count": 4,
+    "faithful_controls_rejected": 0,
+    "production_enabled": false
+  },
+  "fidelity-sentence-diagnostic": {
+    "controls": 8,
+    "observed_errors_detected": 0,
+    "observed_error_count": 4,
+    "faithful_controls_rejected": 0,
+    "production_enabled": false
+  }
+}

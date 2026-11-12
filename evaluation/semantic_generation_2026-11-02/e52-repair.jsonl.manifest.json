@@ -1,0 +1,91 @@
+{
+  "created_at": "2026-11-02T16:45:03.613850Z",
+  "contract_id": "ee8d7564bb5f3576927bec55fa55dfa4bbd41b86259829576ef60282108ab684",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "f340d3dc6147b18c67efb2fdf292e56d9136ce914a66fa1a819bde759eebedd8",
+    "helper_sha256": "271890735ea22725a888db58fbe4d28f5444eeac803733d51fcecd5b22c399eb",
+    "source_sha256": "6ebb366f72652e11a1804d93b7be219bd22406fc1997a409e24048f049d781ad",
+    "settings_sha256": "17c95ccf053161d2b1d772c55c66c62b5fc9badc6a0dab43954c83aa53aad759",
+    "cases_sha256": "fc162332fdc518e16e54ee12a9ca42a70e966aefccb2b2ac2a840e69a6df91fb",
+    "variant": "hardened",
+    "warmup_case": null,
+    "usage_rollout": null
+  },
+  "sessions": [
+    {
+      "started_at": "2026-11-02T16:45:03.613899Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/e52-repair.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/e52/data/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/e52/data/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/e52/data/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-32B-GGUF",
+          "model_filename": "Qwen3-32B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/models/Qwen3-32B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/e52/data/embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768,
+            "source_preservation": "semantic",
+            "synthesis_prompt": "concise",
+            "reasoning_temperature": 0.6,
+            "reasoning_top_p": 0.95,
+            "reasoning_top_k": 20,
+            "reasoning_min_p": 0.0,
+            "seed": 42,
+            "evidence_translation": "reviewed_catalog",
+            "evidence_translation_max_tokens": 1536
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 32B Instruct"
+      },
+      "status": "complete",
+      "finished_at": "2026-11-02T16:47:45.825639Z"
+    }
+  ]
+}

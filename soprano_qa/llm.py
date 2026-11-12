@@ -9,7 +9,7 @@ import json
 import os
 import re
 import threading
-from typing import Any, Dict, List
+from typing import Any, Callable, Dict, List
 
 from soprano_qa.question_intent import explicit_general_intent, concise_pitch_question
 from soprano_qa.meter import basic_meter_explanation
@@ -22,6 +22,8 @@ from soprano_qa.security import (
 from soprano_qa.structured_answer import (
     NO_GROUNDED_ANSWER_SENTINEL,
     STRUCTURED_ANSWER_POLICY,
+    SEMANTIC_ANSWER_POLICY,
+    concise_synthesis_policy, synthesis_evidence_view, source_comparison_policy,
     SOURCE_PRESERVATION_POLICY,
     SOURCE_SELECTION_POLICY,
     GENERAL_MUSIC_SYSTEM_PROMPT,
@@ -43,6 +45,10 @@ class GenerationBackendUnavailable(RuntimeError):
     """Raised before retrieval when the configured answer model cannot load."""
 
 
+class GenerationFinalizationRejected(RuntimeError):
+    """A reviewed composition failed the application's final content checks."""
+
+
 @lru_cache(maxsize=1)
 def load_llama(
     model_path: str,
@@ -58,13 +64,35 @@ def load_llama(
             "conda run -n soprano-qa python -m pip install -r requirements.txt"
         ) from exc
 
-    return Llama(
+    native_controlled = chat_format in {"native_non_thinking", "native_controlled"}
+    model = Llama(
         model_path=model_path,
         n_ctx=n_ctx,
         n_gpu_layers=n_gpu_layers,
-        chat_format=chat_format,
+        chat_format=None if native_controlled else chat_format,
         verbose=False,
     )
+    if native_controlled:
+        from llama_cpp.llama_chat_format import Jinja2ChatFormatter
+
+        template = model.metadata.get("tokenizer.chat_template", "")
+        if "enable_thinking" not in template:
+            model.close()
+            raise ValueError("The checkpoint template has no enable_thinking switch")
+        # The embedded template, tokenizer and stop tokens remain authoritative.
+        # This is a trusted template parameter, never inferred from user text.
+        eos, bos = model.token_eos(), model.token_bos()
+        modes = (False, True) if chat_format == "native_controlled" else (False,)
+        model._soprano_native_chat_handlers = {
+            enabled: Jinja2ChatFormatter(
+                template="{%- set enable_thinking = " + str(enabled).lower() + " -%}" + template,
+                eos_token=model._model.token_get_text(eos) if eos != -1 else "",
+                bos_token=model._model.token_get_text(bos) if bos != -1 else "",
+                stop_token_ids=[eos] if eos != -1 else [],
+            ).to_chat_handler() for enabled in modes
+        }
+        model.chat_handler = model._soprano_native_chat_handlers[False]
+    return model
 
 
 def _configured_chat_format(llm_settings: Dict[str, Any]) -> str | None:
@@ -135,17 +163,30 @@ def generate(
     *,
     security_context: Dict[str, Any] | None = None,
     response_schema: Dict[str, Any] | None = None,
+    finalizer: Callable[[str], str] | None = None,
 ) -> str:
     # Public answer paths supply the frozen question/evidence bundle. Guard
     # calls omit this argument, so they cannot recursively invoke themselves.
     # Run outside the inference lock: each completion acquires it separately.
     completion_options: Dict[str, Any] = {}
+    if finalizer is not None and security_context is None:
+        raise ValueError("Finalization requires the guarded answer path")
+    if "seed" in llm_settings:
+        completion_options["seed"] = int(llm_settings["seed"])
+    for name in ("top_k", "min_p"):
+        if name in llm_settings:
+            completion_options[name] = llm_settings[name]
     if response_schema is not None:
         if security_context is not None:
             raise ValueError("A guarded answer must use its own application schema")
         completion_options["response_format"] = {"type": "json_object", "schema": response_schema}
     separate_translation = False
     reason_general = False
+    reason_synthesis = False
+    native_controlled = _configured_chat_format(llm_settings) == "native_controlled"
+    supports_reasoning = _configured_chat_format(llm_settings) != "native_non_thinking"
+    if not supports_reasoning and llm_settings.get("synthesis_reasoning") is True:
+        raise ValueError("Synthesis reasoning conflicts with native_non_thinking")
     if security_context is not None:
         if not messages or messages[0].get("role") != "system":
             raise SecurityViolation()
@@ -158,8 +199,11 @@ def generate(
         # irrelevant: it misrouted score and performance questions as abstract
         # theory. Judge relevance using the actual passages before discarding
         # them, and permit background in either composition path.
-        preserve_sources = llm_settings.get("source_preservation") == "verbatim_or_translation"
-        calculated = basic_meter_explanation(security_context) if preserve_sources else None
+        source_mode = llm_settings.get("source_preservation")
+        preserve_sources = source_mode == "verbatim_or_translation"
+        synthesize_sources = source_mode == "semantic"
+        source_aware = preserve_sources or synthesize_sources
+        calculated = basic_meter_explanation(security_context) if source_aware else None
         if calculated is not None:
             # Numeric beat units are derived from ordinary meter rules, rather
             # than guessed by the model. Both security boundaries still run.
@@ -174,7 +218,7 @@ def generate(
             answer.answer_basis = "calculated_music_knowledge"
             answer.generation_mode = "llm_guarded_calculation"
             return answer
-        general_intent = explicit_general_intent(security_context) if preserve_sources else None
+        general_intent = explicit_general_intent(security_context) if source_aware else None
         if general_intent in {"practice", "universal"}:
             # Explicit global practice/universal claims are not established by
             # local performance advice. Named works and local referents have
@@ -211,8 +255,9 @@ def generate(
             general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT if general_intent == "practice" else GENERAL_MUSIC_SYSTEM_PROMPT
             if general_intent == "practice" and security_context.get("answer_language", "ko") == "ko":
                 general_policy = GENERAL_PRACTICE_SYSTEM_PROMPT_KO
-            reason_general = general_intent != "practice" and concise_pitch_question(security_context)
-            if reason_general:
+            concise_general = general_intent != "practice" and concise_pitch_question(security_context)
+            reason_general = concise_general and supports_reasoning
+            if concise_general:
                 general_policy = concise_concept_system_prompt(security_context.get("answer_language", "ko"))
                 view = {"question": security_context["question"],
                         "answer_language": security_context.get("answer_language", "ko")}
@@ -228,24 +273,45 @@ def generate(
         messages = [
             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
                                        SOURCE_SELECTION_POLICY if separate_translation else
-                                       SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
+                                       SOURCE_PRESERVATION_POLICY if preserve_sources else
+                                       SEMANTIC_ANSWER_POLICY if synthesize_sources else STRUCTURED_ANSWER_POLICY)
              + "\n" + messages[0]["content"]},
             *messages[1:],
         ]
-        if reason_general:
+        if synthesize_sources and not general_only and llm_settings.get("synthesis_prompt") == "concise":
+            view = synthesis_evidence_view(security_context)
+            comparison = bool(view.get("source_disagreements"))
+            if comparison:
+                security_context = {**security_context, "source_synthesis": True}
+            messages = [
+                {"role": "system", "content": (source_comparison_policy if comparison else concise_synthesis_policy)(security_context.get("answer_language", "ko"))
+                 + "\n" + SECURITY_SYSTEM_POLICY},
+                {"role": "user", "content": serialize_untrusted(view)},
+            ]
+        reason_synthesis = (synthesize_sources and not general_only
+                            and llm_settings.get("synthesis_reasoning") is True)
+        if reason_general or reason_synthesis:
             # A JSON grammar forces the first token and suppresses Qwen's
-            # reasoning. General pitch operations need that reasoning to keep
-            # pitch, register, key and enharmonic spelling distinct. The final
+            # reasoning. The existing pitch-operation path uses bounded
+            # reasoning before drafting its explanation. The final
             # JSON still passes the same strict parser and all output checks.
-            messages[0]["content"] += "\n/think"
+            if not native_controlled:
+                messages[0]["content"] += "\n/think"
+            completion_options["top_k"] = int(llm_settings.get("reasoning_top_k", 20))
+            completion_options["min_p"] = float(llm_settings.get("reasoning_min_p", 0.0))
         else:
             completion_options["response_format"] = {
                 "type": "json_object", "schema": answer_schema(security_context),
             }
-    # A denied output may receive one new composition under the same policy.
+    # A denied output or finalization failure shares ONE new composition.
     # Admission denials, malformed verdicts, unsafe text and backend failures
     # never enter this path. A replacement still needs every normal check.
     for attempt in range(2 if security_context is not None else 1):
+        if native_controlled:
+            # Qwen3.5 uses its template switch, not soft /think commands. Do
+            # not rewrite untrusted user/evidence content to control the mode.
+            messages = [{**m, "content": re.sub(r"(?m)^/(?:no_)?think\s*$", "", m["content"])}
+                        if m["role"] == "system" else m for m in messages]
         # llama.cpp completions are not reentrant.
         with _INFERENCE_LOCK:
             llm = load_llama(
@@ -254,16 +320,37 @@ def generate(
                 n_gpu_layers=int(llm_settings.get("n_gpu_layers", -1)),
                 chat_format=_configured_chat_format(llm_settings),
             )
+            if native_controlled:
+                # Set on every call while holding the inference lock: guard
+                # calls must not inherit a writer's reasoning prefill.
+                llm.chat_handler = llm._soprano_native_chat_handlers[bool(reason_general or reason_synthesis)]
             response = llm.create_chat_completion(
                 messages=messages,
-                temperature=float(llm_settings.get("temperature", 0.0)),
-                top_p=float(llm_settings.get("top_p", 0.8)),
-                max_tokens=1536 if reason_general else int(llm_settings.get("max_tokens", 768)),
+                temperature=float(llm_settings.get("reasoning_temperature", 0.6) if reason_general or reason_synthesis
+                                  else llm_settings.get("temperature", 0.0)),
+                top_p=float(llm_settings.get("reasoning_top_p", 0.95) if reason_general or reason_synthesis
+                            else llm_settings.get("top_p", 0.8)),
+                max_tokens=(int(llm_settings.get("synthesis_reasoning_max_tokens", 4096))
+                            if reason_synthesis else 1536 if reason_general
+                            else int(llm_settings.get("max_tokens", 768))),
                 **completion_options,
             )
-        answer = strip_thinking(response["choices"][0]["message"]["content"])
+        raw_answer = response["choices"][0]["message"]["content"]
+        if native_controlled and (reason_general or reason_synthesis):
+            # The native template already opens <think>, so the completion
+            # may contain only the closing tag. Never expose that private
+            # prefix, including when the generation budget ends mid-thought.
+            raw_answer = raw_answer.split("</think>", 1)[1] if "</think>" in raw_answer else ""
+        answer = strip_thinking(raw_answer)
         if security_context is None:
             return answer
+        if reason_synthesis:
+            # Reasoning completions may wrap their final JSON in one code fence.
+            # Accept only a whole-response wrapper; the exact JSON schema and
+            # all content checks still run on its unchanged inner text.
+            wrapped = re.fullmatch(r"```(?:json)?[ \t]*\r?\n(.*?)\r?\n```", answer, re.DOTALL)
+            if wrapped:
+                answer = wrapped.group(1)
         answer = render_structured_answer(answer, security_context)
         if answer == NO_GROUNDED_ANSWER_SENTINEL:
             # An explicit abstention has no prose to assess. The public answer
@@ -279,10 +366,13 @@ def generate(
                                           "composition": list(getattr(answer, "parts", ()))},
                 stage="output", generate_fn=generate,
             )
-        except SecurityViolation as exc:
-            if exc.reason != "security_output_rejected" or attempt:
+            if finalizer is not None:
+                answer.validated_text = finalizer(answer)
+        except (SecurityViolation, GenerationFinalizationRejected) as exc:
+            if attempt or (isinstance(exc, SecurityViolation)
+                           and exc.reason != "security_output_rejected"):
                 raise
-            if general_intent == "definition" and not general_only:
+            if isinstance(exc, SecurityViolation) and general_intent == "definition" and not general_only:
                 # A definition's selected passage can be merely related. A
                 # rejected source-based draft gets the SAME one retry as a
                 # general explanation, still under full output review. Local
@@ -291,16 +381,18 @@ def generate(
                 security_context.pop("separate_source_translation", None)
                 separate_translation = False
                 general_only = True
-                reason_general = concise_pitch_question(security_context)
+                reason_synthesis = False
+                concise_general = concise_pitch_question(security_context)
+                reason_general = concise_general and supports_reasoning
                 general_policy = (concise_concept_system_prompt(security_context.get("answer_language", "ko"))
-                                  if reason_general else GENERAL_MUSIC_SYSTEM_PROMPT)
+                                  if concise_general else GENERAL_MUSIC_SYSTEM_PROMPT)
                 view = ({"question": security_context["question"],
                          "answer_language": security_context.get("answer_language", "ko")}
-                        if reason_general else security_context)
+                        if concise_general else security_context)
                 messages = [
                     {"role": "system", "content": GENERAL_MUSIC_FORMAT_POLICY + "\n"
                      + general_policy + "\n" + SECURITY_SYSTEM_POLICY
-                     + ("\n/think" if reason_general else "")},
+                     + ("\n/think" if reason_general and not native_controlled else "")},
                     {"role": "user", "content": serialize_untrusted(view)},
                 ]
                 if reason_general:
@@ -317,9 +409,28 @@ def generate(
                  "summaries. For source-based advice retain the original actor, "
                  "location, conditions, alternatives and certainty. If a requested "
                  "piece fact is unknown, state that limit; do not invent it. All "
-                 "security, language and structured-output requirements still apply."},
+                 "security, language and structured-output requirements still apply. "
+                 "Distinguish a source's performance guideline from a universal music-theory law. "
+                 "When a general rule is debatable, explicitly attribute the source's guidance "
+                 "rather than assert it as a universal definition. Accurate general context may "
+                 "clarify that distinction without rewriting what the source actually says."},
                 *messages[1:],
             ]
+            if isinstance(exc, GenerationFinalizationRejected):
+                # Never interpolate the exception: it can contain untrusted
+                # generated tokens. Only trusted, fixed corrective guidance
+                # enters the system message. Evidence and guard policy stay.
+                detail = (
+                    "The draft's location or frequency claim exceeded its cited scope. "
+                    "Limit advice to the actual musical situation and retain its conditions; "
+                    "do not turn a local example into a claim about the whole piece."
+                    if "overgeneralizes local evidence" in str(exc) else
+                    "The draft failed citation or presentation checks. Keep source claims in "
+                    "evidence items with their actual supporting labels. Score_lyrics may only "
+                    "identify supplied sung words, never establish rhythm or performance advice. "
+                    "Do not print internal labels or metadata in prose. Use 마디 for score measures."
+                )
+                messages[0]["content"] += "\n" + detail
             continue
         return answer
     raise AssertionError("Composition loop ended without a verdict")

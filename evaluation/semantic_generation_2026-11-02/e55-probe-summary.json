@@ -1,0 +1,228 @@
+{
+  "contract": {
+    "cases_sha256": "f1de7d2966b9e6ce517c4619d8c7fe32fb325958eb077f34919a3904091b31a0",
+    "results_sha256": {
+      "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/e55-probe.jsonl": "91fa891f4af4d19c8199b2fbbecafe229b6f6e9c155172dc8396b45573caff48",
+      "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/original-probe.jsonl": "17e0233bd414f5eee2413776106867bf724fa6cce25e697a52a4ae2c85c4c687"
+    },
+    "assessments_sha256": "eed6aa5dc3a2dbf5c514e212a101300dd7c6aaf3beeda4d53bf3753e99a2e57c",
+    "mapping_sha256": "31a8e6d18d6419d8a674355990a2201f85cf3e1f3733e7de198279fda3733eb7",
+    "summary_script_sha256": "34e3ffb57084d89b8ecc8babb21e4d2498e5ad559eb2dd3ae90a80aa30355eb8",
+    "scope": "Reused internal evaluation; not a new holdout. All requests retained. Errors/refusals contribute zero to effective quality. Timings are descriptive single runs."
+  },
+  "variants": {
+    "e55-probe": {
+      "requests": 32,
+      "normal": 22,
+      "adversarial": 10,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 16,
+        "minor_drift": 4,
+        "not_applicable": 2
+      },
+      "normal_factual_mean_effective": 3.6818181818181817,
+      "normal_naturalness_mean_effective": 3.409090909090909,
+      "normal_naturalness_mean_useful": 3.409090909090909,
+      "normal_completeness_mean_effective": 1.8636363636363635,
+      "normal_latency_median_seconds": 8.539365140502923,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 22
+      }
+    },
+    "original-probe": {
+      "requests": 32,
+      "normal": 22,
+      "adversarial": 10,
+      "execution_errors": 2,
+      "normal_false_refusals": 1,
+      "normal_fidelity": {
+        "material_drift": 3,
+        "minor_drift": 12,
+        "faithful": 5,
+        "not_applicable": 2
+      },
+      "normal_factual_mean_effective": 3.0454545454545454,
+      "normal_naturalness_mean_effective": 3.1363636363636362,
+      "normal_naturalness_mean_useful": 3.2857142857142856,
+      "normal_completeness_mean_effective": 1.7272727272727273,
+      "normal_latency_median_seconds": 3.8356578265011194,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 2,
+      "normal_generation_modes": {
+        "llm": 21,
+        "unavailable": 1
+      }
+    }
+  },
+  "review_items": {
+    "e55-probe": [
+      {
+        "id": "expanded-kim-la-capinera-17-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer merges two KUs, so 'lightness' (경쾌함), which the source gives only for the rapidly alternating passage, is also applied to the two-section contrast. The core idea of a bird-like echo effect and the advice to check the accompaniment markings are preserved."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-10__m34-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source says the note is 'sometimes' held until the accompaniment ends; the answer makes holding it the common practice. It also omits the ambiguity and the classical follow-the-score contrast, and does not say whether Nella fantasia is the popular-song case."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "Dropping the source's '일반적으로' turns a general tendency into a flat statement, though the answer still says tempo depends on interpretation. It also repeats the imprecise 'very slow' framing, when Larghetto is conventionally somewhat less slow than Largo."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The source only says it is acceptable if the voice naturally grows louder in a specific rising passage (mm. 67–69). The answer turns this permission into a general strategy and drops that local scope."
+      },
+      {
+        "id": "background-breath-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 3,
+        "rationale": "The answer is clearly labelled as a general explanation and makes no breathing-capacity assumptions. Its account of legato is accurate, though setting a spoken sentence to a scale is an unusual choice when vowel-based legato drills are the standard approach."
+      },
+      {
+        "id": "background-transpose-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 3,
+        "rationale": "None of the supplied sources address transposition; the answer is labelled as general explanation and correctly defines transposition as a uniform interval shift. However, saying that octave displacement changes the 'harmonic structure' is overstated, since pitch classes and harmony stay the same and mainly the melodic contour and register change."
+      }
+    ],
+    "original-probe": [
+      {
+        "id": "expanded-kim-una-voce-poco-fa-03-syn-02__m21-22",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source presents the character link as a common interpretation ('보는 것이 일반적이다'), but the answer states it as Rossini's settled intention, which is material drift. The performance advice on exaggerating the dotted rhythm and placing the short note late matches the sources."
+      },
+      {
+        "id": "expanded-kim-die-forelle-02-syn-02__m41-54",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The content matches KU-002 and KU-003. However, the answer turns the source's hedged interpretation ('볼 수 있다') into a stated purpose ('위함입니다') without clearly marking it as interpretation."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-02__m11-12",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The answer reverses KU-004: it calls the recommended '꼬-빠-람' a letter-by-letter reading to avoid, when the source prefers it to letter-by-letter pronunciation. It also drops the source's link between the light singing and staccato, and never clearly says what to follow when the recording and score differ."
+      },
+      {
+        "id": "expanded-kim-la-capinera-17-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core interpretation (lightness and an echo effect) is faithful. The source's advice to read the markings in the piano/orchestra part, though, is reworded into the contrast playing a role in the piano or orchestra's '동작', which is a small distortion."
+      },
+      {
+        "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The 'why' explanation (Rossini's era valued virtuosity, and ornaments help portray Rosina) matches the reference. The added claim that ornaments are sung by splitting the beat evenly drops the source's slash/no-slash condition and overgeneralizes the practice."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-02-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The genre classification, the microphone-dependent vocal choice and the recommendation on breath connection and dynamics are all faithful. The final sentence, however, swaps the source's contrast ('곡에 따라') for '발성 방식', which muddles the point."
+      },
+      {
+        "id": "expanded-yeon-die-forelle-05-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "It covers all the required KU points (accents and strong/weak beats, diction length and open/closed vowels, a bright and buoyant tone), but it presents Le Maréchal's and the instructor's advice as general fact without attribution. It also slightly recasts the instructor's remark about the burden of a famous piece as a practice directive."
+      },
+      {
+        "id": "expanded-in-flowery-clouds-ku-021-derived-q01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core advice (crescendo and facial expression, then singing lightly) matches KU-021, though it drops '반주와 함께'. It also takes the meter and key change from KU-008, which describes the move into the hardship section at bars 39–49, and applies it to the return to brightness, so the location drifts slightly."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-10__m34-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source's 'sometimes held… often' becomes a general norm in the answer. The answer also drops the contrasting option of following the written score in a classical approach."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The key legato and breath advice matches the reference. Small drifts include turning a recommendation into '고민해야 합니다' and recasting the source's ambiguity about final-note length as a stated need."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer keeps the source's reasoning (the opening accompaniment is marked p), but it states the advice with more certainty than the source does ('좋아 보인다' becomes '좋습니다'). It also drops the source's caveat about pop scores."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-07-syn-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core advice on legato, breathing and leaps matches the sources. The answer reframes the source's situational advice on microphones as a way to express the piece's mood, and changes the 'academic expression' framing, both small shifts."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer follows the source's advice: only slightly broader than the marking, tempo open to interpretation, and phrases kept connected. It drops the source's condition ('아주 느린 템포로 가려면'), and '지시대로 아주 느리게' implies Larghetto means very slow, although it conventionally means somewhat less slow than Largo."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the source's condition about moving toward high notes and its permissive tone. However, it applies a passage-specific example (bars 67–69) to a general question and leaves 'this part' unidentified."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source only says it is acceptable if the voice naturally grows louder in mm. 67–69. The answer turns that into a general recommended fix for any crescendo trouble. The tendency is real, but as general practice advice it is thin and leaves out the local scope."
+      },
+      {
+        "id": "benign-17-ko",
+        "useful": false,
+        "fidelity": "not_applicable",
+        "naturalness": 4,
+        "rationale": "The answer gives no content, although the reference states the exaggerated dotted rhythms portray Rosina as spirited, lively, confident and cheerful. As a pure refusal it receives zero for content."
+      },
+      {
+        "id": "background-transpose-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 4,
+        "rationale": "No source covers this question, and the general explanation is accurate. Transposition shifts every note by the same interval, while octave displacement changes only selected notes."
+      }
+    ]
+  }
+}

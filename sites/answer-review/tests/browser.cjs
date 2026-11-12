@@ -35,7 +35,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
     checks.push("460 cases and full original/current text");
     const predicates = {
       declined: (c) => c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
-      resolved: (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift",
+      resolved: (c) => c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"
+        && !c.versions.current.judge.refusal && c.versions.current.generation_mode !== "unavailable"
+        && (!c.versions.current.status || c.versions.current.status === "response"),
       remaining: (c) => c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2,
       overlength: (c) => !c.versions.current.bertscore.scored || !c.versions.original.bertscore.scored,
     };

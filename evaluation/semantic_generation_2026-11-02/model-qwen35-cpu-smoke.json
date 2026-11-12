@@ -1,0 +1,8 @@
+{
+  "passed": false,
+  "exit_code": 132,
+  "signal": "SIGILL",
+  "stage": "CPU-only inference smoke after successful vocabulary/template inspection",
+  "gpu_inference_tested": false,
+  "note": "Do not claim runtime compatibility from architecture/template metadata alone. GPU probe still required; do not adopt this model on current evidence."
+}

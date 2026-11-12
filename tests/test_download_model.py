@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import sys
 import tempfile
@@ -14,6 +15,37 @@ from scripts import download_embedding_model, download_model
 
 
 class DownloadModelTests(unittest.TestCase):
+    def test_existing_checkpoint_must_match_its_pin_without_redownloading(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "model.gguf")
+            with open(path, "wb") as stream:
+                stream.write(b"different checkpoint")
+            settings = {"model_path": path, "model_sha256": hashlib.sha256(b"evaluated checkpoint").hexdigest()}
+            with mock.patch.object(download_model, "parse_args", return_value=argparse.Namespace(settings=None, force=False)), \
+                 mock.patch.object(download_model, "load_settings", return_value=settings), \
+                 self.assertRaisesRegex(SystemExit, "checksum differs"):
+                download_model.main()
+            with open(path, "rb") as stream:
+                self.assertEqual(stream.read(), b"different checkpoint")
+
+    def test_download_uses_revision_and_checks_the_received_bytes(self):
+        with tempfile.TemporaryDirectory() as directory:
+            path = os.path.join(directory, "model.gguf")
+            content = b"evaluated checkpoint"
+            settings = {"model_path": path, "model_repo_id": "example/repository", "model_filename": "model.gguf",
+                        "model_revision": "frozen-commit", "model_sha256": hashlib.sha256(content).hexdigest()}
+            def download(**kwargs):
+                self.assertEqual(kwargs["revision"], "frozen-commit")
+                with open(path, "wb") as stream:
+                    stream.write(content)
+                return path
+            hub = types.ModuleType("huggingface_hub")
+            hub.hf_hub_download = download
+            with mock.patch.object(download_model, "parse_args", return_value=argparse.Namespace(settings=None, force=False)), \
+                 mock.patch.object(download_model, "load_settings", return_value=settings), \
+                 mock.patch.dict(sys.modules, {"huggingface_hub": hub}):
+                download_model.main()
+
     def test_force_uses_current_hf_hub_download_signature(self) -> None:
         captured = {}
         with tempfile.TemporaryDirectory() as temp_dir:

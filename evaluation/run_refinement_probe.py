@@ -20,6 +20,7 @@ from contextlib import redirect_stdout
 from datetime import datetime, timezone
 import hashlib
 import importlib
+import inspect
 import json
 import math
 import os
@@ -235,7 +236,8 @@ def run_fixed_case(qa: Any, answer: Any, llm: Any, retrieval: Any, priority: dic
         qa.screen_text(case["piece_id"], source="piece")
         score = case.get("score_context", "")
         qa.screen_text(score, source="score_context")
-        if not results and not score:
+        supports_finalizer = "finalizer" in inspect.signature(llm.generate).parameters
+        if not results and not score and not supports_finalizer:
             return {"status": "response", "exception": None,
                     "response": {"answer": answer.no_corpus_evidence_message(case["language"]),
                                  "generation_mode": "unavailable", "unavailable_reason": "no_corpus_evidence", "evidence": []},
@@ -243,9 +245,17 @@ def run_fixed_case(qa: Any, answer: Any, llm: Any, retrieval: Any, priority: dic
                     "latency_scope": "fixed_evidence_generation", "llm_call_count": 0, "llm_calls": [], "fixed_selected_ids": []}
         messages = answer.build_messages(case["piece_id"], measures, case["question"], results,
                                          score_context=score, language=case["language"])
+        finalize = lambda draft: answer.finalize_grounded_generated_answer(
+            draft, results, messages, ranges, language=case["language"])
+        # Use the production shared retry boundary when the frozen pipeline
+        # supports it. Historical snapshots keep their original API. Empty
+        # bundles in the current pipeline can give general music explanations.
+        extra = {"finalizer": finalize} if supports_finalizer else {}
         raw = llm.generate(qa.SETTINGS["model_path"], messages, qa.SETTINGS["llm"],
-                           security_context=json.loads(messages[1]["content"]))
-        visible = answer.finalize_grounded_generated_answer(raw, results, messages, ranges, language=case["language"])
+                           security_context=json.loads(messages[1]["content"]), **extra)
+        visible = getattr(raw, "validated_text", None)
+        if visible is None:
+            visible = finalize(raw)
         visible = answer.finalize_user_visible_answer(visible, results, language=case["language"])
         refused = visible == answer.no_corpus_evidence_message(case["language"])
         response = {"answer": visible, "generation_mode": "unavailable" if refused else "llm",

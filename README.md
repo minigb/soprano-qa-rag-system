@@ -319,76 +319,47 @@ in `soprano_qa/music_terms.py`. It supplies general definitions, never expert
 attribution or facts about the selected score. It is documented development
 guidance, separate from the frozen expert evaluation references.
 
-The branch configuration sets `llm.source_preservation` to
-`verbatim_or_translation`. For Korean source claims, the model selects one
-source label per item and leaves its text empty. Application code quotes the
-complete actual retrieved answer, verifies its identity, and labels it
-`참고 자료의 원문입니다.`. It preserves the author's conditions, qualifications,
-lyric spellings and register. English uses an exact-source reviewed translation
-when available, or guarded model translation of the selected complete answer;
-translation remains fallible and receives output review. General explanations remain generated, separately labelled, and
-allowed when they help answer the question. This mode does not skip source,
-citation, scope or security checks. It may still choose an irrelevant or
-incomplete set of sources, and quoted source text itself may be inaccurate.
+The branch now sets `llm.source_preservation="semantic"`. Qwen writes a nonempty,
+question-focused answer from the selected KU passages. Application code validates
+and displays those generated sentences; it does not insert complete KU answers
+when the model leaves text empty. Background music knowledge remains allowed
+without attributing it to a source. Scope, injection screening, admission, citation
+validation and output review still apply. These checks are fallible, including
+when the same 14B model drafts and reviews an answer.
 
-The experimental `llm.evidence_translation="segmented"` option selects English
-source labels first, then translates original source sentences in a separate
-call without the user question. `soprano_qa/source_translation.py` protects
-quoted Korean strings, requires every sentence slot and literal token, and
-restores the original quoted spelling. The translation must still pass output
-review against the original sources. Slot coverage and literal identity do not
-prove that every relationship or musical term was translated correctly. The
-translation budget is separately configurable (default 1536 tokens), and its
-extra inference time belongs in end-to-end latency. It is also the fallback
-for new or changed sources under the branch's default reviewed-catalog mode.
+The source-based writing prompt is `concise_synthesis_policy()` in
+`soprano_qa/structured_answer.py`, assembled in `soprano_qa/llm.py`. The writer
+receives the actual source answers and scope, without teaching-question premises.
+Literal source operators (possible interpretation, preferred alternatives and
+conditional alternatives) are highlighted without adding musical facts. Generic
+logic examples illustrate faithful paraphrasing; evaluation answers and case IDs
+are never supplied to the generator. The prompt asks for connected, useful prose
+and preserves negation, uncertainty, actors, conditions and musical context.
 
-The branch default uses `llm.evidence_translation="reviewed_catalog"`.
-All 129 curated expert/performer source answers have versioned English
-translations authored by Codex and assessed separately by Claude Opus 5.5.
-These are not human-expert English annotations. The application matches the
-exact SHA256 of the selected Korean source text, not a question, case ID or
-source ID. Changed or new sources use the segmented translation path; a matching
-translation still undergoes the normal security, citation, scope and output
-checks. General explanations remain generated. Source preparation and review
-are extra offline work and are excluded from request latency. The original
-Korean expert evaluation references remain unchanged. See
-`evaluation/ku_background_2026-10-31/translation-catalog-review.json` for the
-full fidelity review and the separately flagged original-source factual errors.
-English source translations are visibly labelled as translated reference text,
-including first-person statements inherited from the source. The service retains a
-narrow route for explicit general practice scenarios without a local referent;
-selected ranges, directly matching source questions and selected-work names
-retain evidence. Explicit definition/comparison questions assess actual source
-relevance even when only one KU is retrieved, so a directly answering definition
-is retained. It also calculates basic explicit beat-unit questions using conventional
-simple/compound meter arithmetic. These answers retain both model security
-checks and are reported as `llm_guarded_calculation`, not model-composed prose.
-Score facts, alternate groupings and performance interpretations do not use this
-shortcut. The service also screens source/output instructions that promote a decoded
-request into the final answer, while permitting ordinary musical notation
-decoding. A bounded source comparison identifies differing explicit opening
-accompaniment markings and shared quiet vocal-entrance advice in two selected
-Korean sources, without inventing a cause. All guards remain mandatory;
-`llm_guarded_source_comparison` identifies the application-rendered answer.
-For source-empty pitch concepts without local score context, a concise question
-view and bounded private reasoning reduce irrelevant examples; strict final
-JSON and full-context output review still apply.
-Its [completed comparison](evaluation/ku_background_2026-10-31/followup-report.md)
-passes the fixed metric target and checks meaning, security, usefulness and latency.
+**E37's quoted-source mode was rejected as the wrong solution for this task.**
+That mode selected sources and displayed their complete original text, including
+`참고 자료의 원문입니다.`; it was actual service output, not a demo decoration.
+Its BERTScore is historical evidence about reference overlap, not achievement of
+the generative RAG quality goal. The old mode and reviewed English translation
+catalog remain available only for explicit legacy reproduction. The default
+semantic path does not use them or the application-authored p/PP comparison.
+Historical E37 policies are exported under
+`evaluation/ku_background_2026-10-31/prompts-e37/`, not the current prompts.
 
-Current policy code is in `soprano_qa/structured_answer.py`, assembled by
-`soprano_qa/llm.py` with `soprano_qa.answer.system_prompt`. The current
-Korean, English, translation and general policies are exported under
-`evaluation/ku_background_2026-10-31/prompts-e37/`; the conservative general
-intent rule is in `soprano_qa/question_intent.py`. The frozen BERTScore setting
-is `config/bertscore.json`, with the development choices and limitations in
-`evaluation/ku_background_2026-10-31/development.md`. High reference similarity
-from literal source quotations is not proof of unrestricted generation quality.
-BERTScore 0.90 is a sufficient acceptance floor, not a score-maximization
-objective. Meaning, useful coverage, naturalness, refusals and latency determine
-whether a candidate is acceptable. E37 is selected on this branch; the report
-records resolution of the three false refusals, remaining small theory/practice
-and source-presentation issues, and latency relative to the original system.
+The conservative general-intent rule remains in `soprano_qa/question_intent.py`.
+Explicit simple/compound beat-unit calculations retain both security checks and
+are identified as `llm_guarded_calculation`, not LLM-authored prose. Source-empty
+pitch questions use a bounded reasoning path with strict final JSON and output
+review. Other musical interpretations and score facts require generated prose.
+
+The fixed BERTScore encoder/settings are in `config/bertscore.json`; the earlier
+development choices and limitations are documented in
+`evaluation/ku_background_2026-10-31/development.md`. BERTScore 0.90 is a floor for
+useful generated answers, not a score-maximization objective. Meaning, coverage,
+naturalness, refusals and latency take priority. Restoration diagnostics and
+rejected candidates are preserved under
+`evaluation/semantic_generation_2026-11-02/`. Broader acceptance is still pending;
+E37's earlier high overlap scores must not be reported as the new system's scores.
 
 English questions (`language="en"`) add one call before retrieval: Qwen3-14B
 translates the question into Korean, and that translation drives the

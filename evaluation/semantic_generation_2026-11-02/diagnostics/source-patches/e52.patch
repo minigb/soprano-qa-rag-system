@@ -1,0 +1,522 @@
+--- a/soprano_qa/answer.py
++++ b/soprano_qa/answer.py
+@@ -39,6 +39,7 @@
+     validate_retrieval_requirements,
+ )
+ from soprano_qa.llm import (
++    GenerationFinalizationRejected,
+     GenerationBackendUnavailable,
+     generate,
+     validate_generation_requirements,
+@@ -150,11 +151,13 @@
+ Start with the direct answer. Select the source passages that answer the question,
+ then retain their relevant explanation, conditions and alternatives. Do not shorten
+ away why or how the recommendation works, or the situation to which it applies.
+-Keep the source's wording when it already answers the question; change only what
+-is needed for the answer language and polite grammar. Do not paraphrase just for
+-variety. A complete relevant paragraph is preferable to a compressed restatement
+-that loses qualifications. Do not summarize every retrieved record or add another
+-passage's advice merely because it appears in the evidence.
++Write a natural answer to this question using the source's meaning. Retain
++necessary explanations, conditions and alternatives, while removing repeated
++advice and connecting related points. Quote exact lyric words and musical
++symbols when needed; do not replace the answer with complete source paragraphs.
++Do not summarize every retrieved record or add another passage's advice merely
++because it appears in the evidence. Do not announce that you are showing source
++text or describe the retrieval process to the user.
+ For a general definition or comparison of musical concepts, explain those concepts
+ directly. The selected piece is context, not an obligation to discuss it. If no
+ reviewed answer directly explains the requested concept, use background items;
+@@ -253,7 +256,7 @@
+ )
+ 
+ 
+-class GeneratedAnswerRejected(RuntimeError):
++class GeneratedAnswerRejected(GenerationFinalizationRejected):
+     """Raised when a generated draft fails grounding or presentation checks."""
+ 
+ 
+@@ -1320,6 +1323,12 @@
+     claim = _SCOPED_FREQUENCY_CLAUSE.sub(
+         lambda match: match.group().replace(match.group('frequency'), '', 1), claim,
+     )
++    # "음표가 많은 부분은" identifies a passage by its note density;
++    # "많은 부분에서" asserts occurrence in many passages. Remove only the
++    # former relative-clause marker, keeping any separate global assertion.
++    claim = _SCOPED_DENSITY_CLAUSE.sub(
++        lambda match: match.group().replace(match.group('density'), '', 1), claim,
++    )
+     for match in LOCAL_SCOPE_GENERALIZATION_RE.finditer(claim):
+         before = claim[max(0, match.start() - 12) : match.start()]
+         after = claim[match.end() : match.end() + 56]
+@@ -1428,6 +1437,11 @@
+     r"(?P<scope>[가-힣A-Za-z·]+[이가]\s+(?P<frequency>자주|흔히|빈번하게)\s+"
+     r"(?:나타나|등장하|반복되|사용되)는\s+(?:프레이즈|구간|부분|대목))"
+     r"(?:에서는|에서)(?=\s|[,.;!?])"
++)
++
++_SCOPED_DENSITY_CLAUSE = re.compile(
++    r"[가-힣A-Za-z·]+[이가]\s+(?P<density>많은)\s*(?:프레이즈|구간|부분|대목)"
++    r"(?:에서는|에서|은|을)(?=\s|[,.;!?])"
+ )
+ 
+ 
+@@ -4026,6 +4040,25 @@
+             RenderedAnswer(plain_parts, language), results, messages, measure_ranges, language=language,
+         )
+         return "Translated reference text:\n" + checked
++    if isinstance(answer, RenderedAnswer) and any(p["kind"] == "score_lyrics" for p in answer.parts):
++        # A lyric transcription has its own provenance. Requiring a KU label
++        # for these words falsely rejects a valid mixed answer, or encourages
++        # the writer to misattribute score text to an expert. The output guard
++        # has reviewed each typed part under the existing lyrics-only policy.
++        payload = json.loads(messages[1]["content"])
++        if not payload.get("Score context"):
++            raise GeneratedAnswerRejected("Score lyric text has no supplied score context")
++        lyrics = "\n".join(p["text"] for p in answer.parts if p["kind"] == "score_lyrics")
++        if _claim_has_unauthorized_measure_locator(lyrics, results, set(), measure_ranges):
++            raise GeneratedAnswerRejected("Score lyric text includes an unselected measure")
++        visible_lyrics = finalize_user_visible_answer(lyrics, results, language=language)
++        if visible_lyrics == no_corpus_evidence_message(language):
++            raise GeneratedAnswerRejected("Invalid score lyric presentation")
++        remaining = [p for p in answer.parts if p["kind"] != "score_lyrics"]
++        source = finalize_grounded_generated_answer(
++            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
++        ) if remaining else ""
++        return "\n\n".join(part for part in (source, visible_lyrics) if part)
+     if isinstance(answer, RenderedAnswer) and answer.background_text:
+         # Provenance comes from validated structured output, not a guessed
+         # heading in model prose. Source claims retain all existing checks.
+@@ -4220,10 +4253,14 @@
+         raw_answer = generate(
+             settings["model_path"], messages, settings["llm"],
+             security_context=json.loads(messages[1]["content"]),
+-        )
+-        answer = finalize_grounded_generated_answer(
+-            raw_answer, generation_results, messages, args.measure_ranges,
+-        )
++            finalizer=lambda draft: finalize_grounded_generated_answer(
++                draft, generation_results, messages, args.measure_ranges),
++        )
++        answer = getattr(raw_answer, "validated_text", None)
++        if answer is None:
++            answer = finalize_grounded_generated_answer(
++                raw_answer, generation_results, messages, args.measure_ranges,
++            )
+         generation_mode = getattr(raw_answer, "generation_mode", "llm")
+         answer_basis = getattr(raw_answer, "answer_basis",
+                                "retrieved_evidence" if grounded else "general_music_knowledge")
+--- a/soprano_qa/llm.py
++++ b/soprano_qa/llm.py
+@@ -9,7 +9,7 @@
+ import os
+ import re
+ import threading
+-from typing import Any, Dict, List
++from typing import Any, Callable, Dict, List
+ 
+ from soprano_qa.question_intent import explicit_general_intent, concise_pitch_question
+ from soprano_qa.meter import basic_meter_explanation
+@@ -22,6 +22,8 @@
+ from soprano_qa.structured_answer import (
+     NO_GROUNDED_ANSWER_SENTINEL,
+     STRUCTURED_ANSWER_POLICY,
++    SEMANTIC_ANSWER_POLICY,
++    concise_synthesis_policy, synthesis_evidence_view, source_comparison_policy,
+     SOURCE_PRESERVATION_POLICY,
+     SOURCE_SELECTION_POLICY,
+     GENERAL_MUSIC_SYSTEM_PROMPT,
+@@ -41,6 +43,10 @@
+ 
+ class GenerationBackendUnavailable(RuntimeError):
+     """Raised before retrieval when the configured answer model cannot load."""
++
++
++class GenerationFinalizationRejected(RuntimeError):
++    """A reviewed composition failed the application's final content checks."""
+ 
+ 
+ @lru_cache(maxsize=1)
+@@ -135,11 +141,19 @@
+     *,
+     security_context: Dict[str, Any] | None = None,
+     response_schema: Dict[str, Any] | None = None,
++    finalizer: Callable[[str], str] | None = None,
+ ) -> str:
+     # Public answer paths supply the frozen question/evidence bundle. Guard
+     # calls omit this argument, so they cannot recursively invoke themselves.
+     # Run outside the inference lock: each completion acquires it separately.
+     completion_options: Dict[str, Any] = {}
++    if finalizer is not None and security_context is None:
++        raise ValueError("Finalization requires the guarded answer path")
++    if "seed" in llm_settings:
++        completion_options["seed"] = int(llm_settings["seed"])
++    for name in ("top_k", "min_p"):
++        if name in llm_settings:
++            completion_options[name] = llm_settings[name]
+     if response_schema is not None:
+         if security_context is not None:
+             raise ValueError("A guarded answer must use its own application schema")
+@@ -158,8 +172,11 @@
+         # irrelevant: it misrouted score and performance questions as abstract
+         # theory. Judge relevance using the actual passages before discarding
+         # them, and permit background in either composition path.
+-        preserve_sources = llm_settings.get("source_preservation") == "verbatim_or_translation"
+-        calculated = basic_meter_explanation(security_context) if preserve_sources else None
++        source_mode = llm_settings.get("source_preservation")
++        preserve_sources = source_mode == "verbatim_or_translation"
++        synthesize_sources = source_mode == "semantic"
++        source_aware = preserve_sources or synthesize_sources
++        calculated = basic_meter_explanation(security_context) if source_aware else None
+         if calculated is not None:
+             # Numeric beat units are derived from ordinary meter rules, rather
+             # than guessed by the model. Both security boundaries still run.
+@@ -174,7 +191,7 @@
+             answer.answer_basis = "calculated_music_knowledge"
+             answer.generation_mode = "llm_guarded_calculation"
+             return answer
+-        general_intent = explicit_general_intent(security_context) if preserve_sources else None
++        general_intent = explicit_general_intent(security_context) if source_aware else None
+         if general_intent in {"practice", "universal"}:
+             # Explicit global practice/universal claims are not established by
+             # local performance advice. Named works and local referents have
+@@ -228,21 +245,34 @@
+         messages = [
+             {**messages[0], "content": (GENERAL_MUSIC_FORMAT_POLICY if general_only else
+                                        SOURCE_SELECTION_POLICY if separate_translation else
+-                                       SOURCE_PRESERVATION_POLICY if preserve_sources else STRUCTURED_ANSWER_POLICY)
++                                       SOURCE_PRESERVATION_POLICY if preserve_sources else
++                                       SEMANTIC_ANSWER_POLICY if synthesize_sources else STRUCTURED_ANSWER_POLICY)
+              + "\n" + messages[0]["content"]},
+             *messages[1:],
+         ]
++        if synthesize_sources and not general_only and llm_settings.get("synthesis_prompt") == "concise":
++            view = synthesis_evidence_view(security_context)
++            comparison = bool(view.get("source_disagreements"))
++            if comparison:
++                security_context = {**security_context, "source_synthesis": True}
++            messages = [
++                {"role": "system", "content": (source_comparison_policy if comparison else concise_synthesis_policy)(security_context.get("answer_language", "ko"))
++                 + "\n" + SECURITY_SYSTEM_POLICY},
++                {"role": "user", "content": serialize_untrusted(view)},
++            ]
+         if reason_general:
+             # A JSON grammar forces the first token and suppresses Qwen's
+-            # reasoning. General pitch operations need that reasoning to keep
+-            # pitch, register, key and enharmonic spelling distinct. The final
++            # reasoning. The existing pitch-operation path uses bounded
++            # reasoning before drafting its explanation. The final
+             # JSON still passes the same strict parser and all output checks.
+             messages[0]["content"] += "\n/think"
++            completion_options["top_k"] = int(llm_settings.get("reasoning_top_k", 20))
++            completion_options["min_p"] = float(llm_settings.get("reasoning_min_p", 0.0))
+         else:
+             completion_options["response_format"] = {
+                 "type": "json_object", "schema": answer_schema(security_context),
+             }
+-    # A denied output may receive one new composition under the same policy.
++    # A denied output or finalization failure shares ONE new composition.
+     # Admission denials, malformed verdicts, unsafe text and backend failures
+     # never enter this path. A replacement still needs every normal check.
+     for attempt in range(2 if security_context is not None else 1):
+@@ -256,8 +286,10 @@
+             )
+             response = llm.create_chat_completion(
+                 messages=messages,
+-                temperature=float(llm_settings.get("temperature", 0.0)),
+-                top_p=float(llm_settings.get("top_p", 0.8)),
++                temperature=float(llm_settings.get("reasoning_temperature", 0.6) if reason_general
++                                  else llm_settings.get("temperature", 0.0)),
++                top_p=float(llm_settings.get("reasoning_top_p", 0.95) if reason_general
++                            else llm_settings.get("top_p", 0.8)),
+                 max_tokens=1536 if reason_general else int(llm_settings.get("max_tokens", 768)),
+                 **completion_options,
+             )
+@@ -279,10 +311,13 @@
+                                           "composition": list(getattr(answer, "parts", ()))},
+                 stage="output", generate_fn=generate,
+             )
+-        except SecurityViolation as exc:
+-            if exc.reason != "security_output_rejected" or attempt:
++            if finalizer is not None:
++                answer.validated_text = finalizer(answer)
++        except (SecurityViolation, GenerationFinalizationRejected) as exc:
++            if attempt or (isinstance(exc, SecurityViolation)
++                           and exc.reason != "security_output_rejected"):
+                 raise
+-            if general_intent == "definition" and not general_only:
++            if isinstance(exc, SecurityViolation) and general_intent == "definition" and not general_only:
+                 # A definition's selected passage can be merely related. A
+                 # rejected source-based draft gets the SAME one retry as a
+                 # general explanation, still under full output review. Local
+@@ -317,9 +352,28 @@
+                  "summaries. For source-based advice retain the original actor, "
+                  "location, conditions, alternatives and certainty. If a requested "
+                  "piece fact is unknown, state that limit; do not invent it. All "
+-                 "security, language and structured-output requirements still apply."},
++                 "security, language and structured-output requirements still apply. "
++                 "Distinguish a source's performance guideline from a universal music-theory law. "
++                 "When a general rule is debatable, explicitly attribute the source's guidance "
++                 "rather than assert it as a universal definition. Accurate general context may "
++                 "clarify that distinction without rewriting what the source actually says."},
+                 *messages[1:],
+             ]
++            if isinstance(exc, GenerationFinalizationRejected):
++                # Never interpolate the exception: it can contain untrusted
++                # generated tokens. Only trusted, fixed corrective guidance
++                # enters the system message. Evidence and guard policy stay.
++                detail = (
++                    "The draft's location or frequency claim exceeded its cited scope. "
++                    "Limit advice to the actual musical situation and retain its conditions; "
++                    "do not turn a local example into a claim about the whole piece."
++                    if "overgeneralizes local evidence" in str(exc) else
++                    "The draft failed citation or presentation checks. Keep source claims in "
++                    "evidence items with their actual supporting labels. Score_lyrics may only "
++                    "identify supplied sung words, never establish rhythm or performance advice. "
++                    "Do not print internal labels or metadata in prose. Use 마디 for score measures."
++                )
++                messages[0]["content"] += "\n" + detail
+             continue
+         return answer
+     raise AssertionError("Composition loop ended without a verdict")
+--- a/soprano_qa/security.py
++++ b/soprano_qa/security.py
+@@ -438,6 +438,14 @@
+             raise ValueError("Invalid selection")
+     except (TypeError, ValueError, KeyError, RecursionError):
+         raise SecurityViolation("security_guard_invalid_response") from None
++    if llm_settings.get("source_preservation") == "semantic" and not assess_single:
++        # Contradicting accounts are not redundant copies of quiet-entry
++        # advice. If one is relevant, retain the other explicit account so
++        # the writer can describe the disagreement instead of hiding it.
++        from soprano_qa.source_comparison import opening_dynamics_accounts
++        accounts = opening_dynamics_accounts(payload)
++        if accounts and any(a["evidence"] in labels for a in accounts):
++            labels = list(dict.fromkeys([*labels, *(a["evidence"] for a in accounts)]))
+     # Preserve original labels and record order. A filtered E3 never becomes E1.
+     return {**payload, "Retrieved evidence": [r for r in primary if r["citation_label"] in labels]}
+ 
+--- a/soprano_qa/service.py
++++ b/soprano_qa/service.py
+@@ -354,10 +354,14 @@
+         raw_answer = generate_llm(
+             SETTINGS["model_path"], messages, SETTINGS["llm"],
+             security_context=json.loads(messages[1]["content"]),
+-        )
+-        answer = finalize_grounded_generated_answer(
+-            raw_answer, generation_results, messages, measure_ranges, language=language,
+-        )
++            finalizer=lambda draft: finalize_grounded_generated_answer(
++                draft, generation_results, messages, measure_ranges, language=language),
++        )
++        answer = getattr(raw_answer, "validated_text", None)
++        if answer is None:
++            answer = finalize_grounded_generated_answer(
++                raw_answer, generation_results, messages, measure_ranges, language=language,
++            )
+         generation_mode = getattr(raw_answer, "generation_mode", "llm")
+         answer_basis = getattr(raw_answer, "answer_basis",
+                                "retrieved_evidence" if grounded else "score_context")
+--- a/soprano_qa/source_comparison.py
++++ b/soprano_qa/source_comparison.py
+@@ -46,8 +46,8 @@
+     return markings[0] if shared_advice else None
+ 
+ 
+-def opening_dynamics_comparison(payload: dict):
+-    """Return a cited comparison only for two unambiguous supported accounts.
++def opening_dynamics_accounts(payload: dict):
++    """Extract two differing accounts as data, never as a generated answer.
+ 
+     Values and citation labels come from actual selected text; no work IDs,
+     evaluation questions, reference answers or model verdicts are cached here.
+@@ -66,6 +66,16 @@
+     values = [_opening_mark_and_advice(r.get("answer", "")) for r in sources]
+     if not all(values) or values[0].casefold() == values[1].casefold():
+         return None
++    return [{"evidence": label, "mark": value} for label, value in zip(labels, values)]
++
++
++def opening_dynamics_comparison(payload: dict):
++    """Legacy quotation-mode renderer; the semantic writer uses only accounts."""
++    accounts = opening_dynamics_accounts(payload)
++    if accounts is None:
++        return None
++    labels = [a["evidence"] for a in accounts]
++    values = [a["mark"] for a in accounts]
+     if payload.get("answer_language", "ko") == "ko":
+         prose = [
+             f"첫 번째 자료는 시작 반주의 셈여림을 {values[0]}로, 두 번째 자료는 {values[1]}로 설명합니다.",
+--- a/soprano_qa/structured_answer.py
++++ b/soprano_qa/structured_answer.py
+@@ -38,6 +38,170 @@
+ is possible, return {"sentences":[]}.
+ /no_think
+ """
++
++
++SEMANTIC_ANSWER_POLICY = """Write the answer yourself using the retrieved passages as evidence.
++Your task is to answer the user's question, not display or translate complete
++source records. Start with the relevant answer or practical recommendation.
++Write a connected, concise explanation in the requested language and register.
++Combine repeated advice once, retaining the conditions of every claim you use.
++Include useful explanations and alternatives; omit passages that do not answer
++the question. Do not list sources one after another or announce that you are
++presenting reference text. For Korean, use natural, consistent 합니다체.
++
++Preserve the musical meaning, not the source's paragraph structure. Check who
++does what, negation, the condition under which advice applies, alternatives,
++certainty, and the specific musical location or situation. A possibility or
++interpretation must not become a definite fact or composer's intention. Clarify
++a source's 'this part' using the supplied musical situation; if the situation
++cannot be identified, state that limitation instead of generalizing its advice.
++Retain quoted lyric words, pronunciation spellings and musical symbols exactly.
++These short quotations do not require quoting the surrounding source paragraph.
++For conflicting accounts, distinguish their claims and preserve uncertainty
++about the cause; do not invent a reconciliation or call unique advice shared.
++
++Return one JSON object with the following structure and no extra keys:
++{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"Your direct, source-supported answer."}]}
++Write nonempty text in every item. Use evidence items for supported source
++claims, selecting the labels of the passages supporting those claims. Use
++background items with evidence=[] for useful general musical knowledge or
++optional practice advice that the sources do not supply. Keep that provenance
++separate; background must not invent a fact about a piece, edition or expert,
++contradict a source, or explain an unknown source disagreement. score_lyrics
++items may identify only sung words actually supplied in the score context.
++Use 1-4 items, up to 6 if the question needs it. Each item can contain connected
++sentences, at most 2000 characters. Do not print IDs, headings, citation labels,
++or internal field names in the text. The application handles citations.
++If no useful authorized answer can be given, return {"sentences":[]}.
++/no_think
++""" + MUSIC_TERMINOLOGY
++
++
++def concise_synthesis_policy(language: str) -> str:
++    language_rule = ("한국어 합니다체로 자연스럽게 답합니다." if language == "ko" else
++                     "Answer in natural English; retain exact lyric words and pronunciation spellings in their original script.")
++    return """당신은 성악과 음악에 관한 질문에 답하는 도우미입니다.
++질문에 바로 답하고, 제공된 자료에서 필요한 내용만 연결하여 짧고 명확하게 설명합니다.
++자료 목록이나 원문 모음을 반환하지 않습니다. 반복되는 내용은 한 번만 설명합니다.
++관련 자료가 부족하면 정확한 일반 음악 지식과 선택적인 연습 제안도 사용할 수 있습니다.
++자료만으로 충분히 답했다면 일반론을 덧붙이지 않습니다. 출처별 항목이 아니라
++질문의 요점별로 문장을 연결합니다. 한 항목에 여러 출처를 함께 사용할 수 있습니다.
++서로 연결되는 자료 내용은 evidence 라벨을 함께 넣은 한 항목으로 통합합니다.
++같은 주장의 동의어 문장을 반복하지 말고 질문에 필요한 설명만 남깁니다.
++
++자료의 문장 표현은 바꿀 수 있지만 다음 의미는 바꾸지 않습니다.
++각 자료의 meaning_constraints는 원문에서 주의할 표현을 발췌한 것입니다.
++해당 내용을 답변에 사용할 때 원문의 논리 관계를 반드시 유지합니다.
++source_disagreements가 있으면 같은 대상에 대한 설명이 자료마다 다른 것입니다.
++각각 누구의 설명인지 구분하고, 두 표기가 모두 확정된 사실인 것처럼 쓰지 않습니다.
++- ‘볼 수 있다’, ‘해석하는 것이 일반적이다’는 가능한 해석입니다.
++  이를 확정된 원인이나 ‘작곡가가 그렇게 의도했다’는 사실로 바꾸지 않습니다.
++  질문이 작곡가의 의도를 단정하더라도 자료가 뒷받침하지 않으면 그대로 단정하지 않습니다.
++- ‘A보다 B가 좋다’는 B를 권장한다는 뜻입니다. 뒤에 C라는 보조 방법이 있어도
++  B를 피해야 한다거나 C만 써야 한다는 뜻이 아닙니다.
++- 부정, 조건, 선택지, 권고의 강도, 적용되는 상황과 주체를 유지합니다.
++  ‘또는’을 ‘그리고’로 바꾸거나, 가끔 나타나는 현상을 의무로 바꾸지 않습니다.
++- 가사·발음 예시·음악 기호는 정확히 유지합니다. 내용을 모르는 구간·판본·작곡 의도를
++  추측하지 않습니다. 서로 다른 자료의 설명은 구분하고 차이의 원인을 꾸며내지 않습니다.
++- 일반 설명과 자료의 주장을 구분합니다. 일반 지식을 특정 전문가의 말처럼 인용하지 않습니다.
++
++마디가 선택되어 있으면 selected_range_support만 그 마디의 사실을 뒷받침합니다.
++일반 조언은 원래의 조건을 유지합니다. 마디 선택이 없으면 국소적 예시는 그 상황에
++한해서 설명하며, 곡 전체의 법칙으로 확장하지 않습니다. 내부 마디 메타데이터를
++출력하지 않고 원문에 있는 ‘첫머리’, ‘무반주 구간’ 같은 상황을 유지합니다.
++악보 가사 문맥은 제공된 가사를 확인하는 용도이며 음정·리듬·표현법의 증거는 아닙니다.
++
++출력은 다음 형식의 JSON 한 개입니다. 설명문이나 Markdown으로 감싸지 않습니다.
++{"sentences":[{"kind":"evidence","evidence":["E1"],"text":"질문에 직접 답하는 문장입니다."}]}
++자료가 뒷받침하는 문장은 kind=evidence, evidence에는 해당 자료의 라벨을 넣습니다.
++일반 음악 설명이나 선택적인 연습 제안은 kind=background, evidence=[]입니다.
++제공된 가사만 확인하는 문장은 kind=score_lyrics, evidence=[]입니다.
++1–4개 항목으로 간결하게 쓰고 필요한 경우에만 최대 6개를 씁니다. text는 비우지 않습니다.
++본문에 라벨·내부 용어·자료 반환 안내·제목을 쓰지 않습니다. 출처별로 문단을 나열하지 않습니다.
++유용한 답변이 전혀 불가능할 때만 {"sentences":[]}를 반환합니다.
++
++다음은 문장 관계를 지키는 예시입니다. 예시의 내용은 실제 답변의 근거가 아닙니다.
++예시 1: 질문은 ‘작곡가는 왜 중간에 쉼을 넣었나요?’이고 자료 E1은
++‘그 쉼은 인물의 망설임을 표현한 것으로 볼 수 있다. 쉼 뒤의 시작을 부드럽게 준비한다.’입니다.
++올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"그 쉼은 인물의 망설임을 표현하는 것으로 해석할 수 있습니다. 쉼 뒤에는 부드럽게 시작할 수 있도록 준비합니다."}]}
++‘작곡가는 망설임을 표현하려고 쉼을 넣었습니다’는 원문보다 강한 단정이므로 쓰지 않습니다.
++예시 2: 자료 E1은 ‘빠르게 반복하기보다 천천히 연습하는 것이 좋다.
++박자가 흔들릴 때는 손뼉을 치는 것도 도움이 될 수 있다.’입니다.
++올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"천천히 연습하는 것이 좋습니다. 박자가 흔들린다면 손뼉을 치며 연습하는 방법도 도움이 될 수 있습니다."}]}
++‘천천히 연습하지 말고 반드시 손뼉을 쳐야 합니다’는 권고와 보조 방법을 뒤집으므로 쓰지 않습니다.
++예시 3: 자료 E1은 ‘혼자 연습하거나 반주가 없는 경우 녹음으로 확인할 수 있다.’입니다.
++올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1"],"text":"혼자 연습할 때나 반주가 없을 때는 녹음해서 확인하는 방법도 있습니다."}]}
++‘혼자 무반주로 연습할 때’는 두 조건을 모두 요구하므로 원문과 다릅니다.
++예시 4: 자료 E1은 ‘첫 부분은 빠른 템포다. 호흡을 미리 준비한다.’이고
++자료 E2는 ‘첫 부분은 보통 템포다. 호흡을 미리 준비하고 입모양도 준비한다.’입니다.
++올바른 답변: {"sentences":[{"kind":"evidence","evidence":["E1","E2"],"text":"첫 부분의 템포에 대해서는 빠르다는 설명과 보통이라는 설명이 있습니다. 두 자료 모두 호흡을 미리 준비하도록 권합니다. 두 번째 자료는 입모양도 준비하도록 덧붙입니다."}]}
++자료만으로 차이의 원인을 알 수 없다면 판본이나 연주자의 선택 때문이라고 추측하지 않습니다.
++""" + language_rule + "\n/no_think\n"
++
++
++def source_meaning_constraints(text: str) -> list[dict[str, str]]:
++    """Surface literal source operators without adding musical facts."""
++    hints = []
++    for sentence in re.split(r"(?<=[.!?。！？])\s+|\n+", text):
++        if not sentence.strip():
++            continue
++        if re.search(r"것(?:으)?로\s*볼\s*수|보는\s*것이\s*일반적|(?:could|may)\s+be\s+(?:interpreted|seen)", sentence, re.I):
++            hints.append({"relation": "interpretation_not_established_intention", "source_excerpt": sentence})
++        contrast = re.search(r"보다(?:는)?\s+(?P<preferred>.+?(?:좋|적절|낫|권장)[^.!?。！？]*)", sentence)
++        if contrast:
++            hints.append({"relation": "preferred_alternative", "source_excerpt": sentence,
++                          "preferred_clause": contrast.group("preferred")})
++        if re.search(r"거나|또는|\bor\b", sentence, re.I):
++            hint = {"relation": "alternatives_not_joint_requirements", "source_excerpt": sentence}
++            condition = re.search(r"(?P<a>.+?)거나\s*(?P<b>.+?(?:경우|때))(?:에는|는|에)", sentence)
++            if condition:
++                hint.update(logic="OR", condition_fragment_1=condition["a"],
++                            condition_fragment_2=condition["b"])
++            hints.append(hint)
++    return hints
++
++
++def source_comparison_policy(language: str) -> str:
++    """Generate a question-focused comparison from conflicting source facts."""
++    return """서로 다른 연주 자료를 비교해 성악 질문에 간결하고 자연스럽게 답합니다.
++공통으로 뒷받침되는 가창 방향을 먼저 설명하고, 표기에 대한 서로 다른 설명을 구분합니다.
++source_disagreements의 accounts는 실제 자료에서 추출한 시작 반주의 표기입니다.
++반주의 표기를 성악부에 적힌 기호로 바꾸지 않습니다. 어느 설명이 실제 악보와 일치하는지는
++이 자료만으로 결정하지 않습니다. 차이의 원인을 묻는 경우, 원인을 확정할 근거가 없으면
++그 한계를 짧게 말합니다. 판본, 작곡가 의도, 연주자 선택을 원인으로 추측하지 않습니다.
++작곡가 의도에 관한 일반적인 주의 문구는 이 특정 차이의 원인을 설명하지 않습니다.
++두 자료가 공통으로 말하는 내용과 한 자료만 덧붙이는 조언을 구분합니다.
++공통 조언이 있다고 해서 두 표기가 같다는 뜻은 아닙니다. 고유한 호흡·울림 조언을
++모두의 공통 권고로 바꾸지 않습니다. 기호 뜻은 질문에 필요한 경우에만 설명합니다.
++원문 전체를 나열하지 말고 질문의 요점에 맞춰 직접 문장을 작성합니다.
++본문에서는 '한 자료', '다른 자료' 같은 자연스러운 표현을 쓰며 E1·E2 같은 내부 라벨을
++쓰지 않습니다. 서로 다른 설명을 함께 비교하는 문장에는 두 자료를 함께 인용할 수 있습니다.
++JSON 한 개를 반환합니다:
++{"sentences":[{"kind":"evidence","evidence":["E1","E2"],"text":"질문에 맞춰 작성한 비교 설명입니다."}]}
++1–3개 항목으로 쓰며 text는 비우지 않습니다. 출처의 주장은 evidence 항목에만 쓰고
++출처 라벨은 evidence 배열에만 넣습니다. 근거 없는 원인을 background 항목으로 만들지 않습니다.
++""" + ("한국어 합니다체로 답합니다." if language == "ko" else "Answer in natural English.") + "\n/no_think\n"
++
++
++def synthesis_evidence_view(payload: dict[str, Any]) -> dict[str, Any]:
++    """Keep claims/scope, omitting teaching-question premises after selection."""
++    records = []
++    for record in payload.get("Retrieved evidence", []):
++        item = {key: value for key, value in record.items() if key != "question"}
++        hints = source_meaning_constraints(record.get("answer", ""))
++        if hints:
++            item["meaning_constraints"] = hints
++        records.append(item)
++    view = {**payload, "Retrieved evidence": records}
++    # Delay this import because the legacy comparison renderer imports this
++    # module. Only source-derived labels/symbols enter the writing input; no
++    # canned answer or evaluation-specific question is supplied.
++    from soprano_qa.source_comparison import opening_dynamics_accounts
++    accounts = opening_dynamics_accounts(payload)
++    if accounts:
++        view["source_disagreements"] = [{"topic": "opening accompaniment dynamic",
++                                        "accounts": accounts, "cause_established": False}]
++    return view
+ 
+ 
+ SOURCE_PRESERVATION_POLICY = """Return one JSON object with the existing sentences/kind/evidence/text fields.

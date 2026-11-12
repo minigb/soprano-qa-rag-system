@@ -46,8 +46,8 @@ def _opening_mark_and_advice(answer: str) -> str | None:
     return markings[0] if shared_advice else None
 
 
-def opening_dynamics_comparison(payload: dict):
-    """Return a cited comparison only for two unambiguous supported accounts.
+def opening_dynamics_accounts(payload: dict):
+    """Extract two differing accounts as data, never as a generated answer.
 
     Values and citation labels come from actual selected text; no work IDs,
     evaluation questions, reference answers or model verdicts are cached here.
@@ -66,6 +66,16 @@ def opening_dynamics_comparison(payload: dict):
     values = [_opening_mark_and_advice(r.get("answer", "")) for r in sources]
     if not all(values) or values[0].casefold() == values[1].casefold():
         return None
+    return [{"evidence": label, "mark": value} for label, value in zip(labels, values)]
+
+
+def opening_dynamics_comparison(payload: dict):
+    """Legacy quotation-mode renderer; the semantic writer uses only accounts."""
+    accounts = opening_dynamics_accounts(payload)
+    if accounts is None:
+        return None
+    labels = [a["evidence"] for a in accounts]
+    values = [a["mark"] for a in accounts]
     if payload.get("answer_language", "ko") == "ko":
         prose = [
             f"첫 번째 자료는 시작 반주의 셈여림을 {values[0]}로, 두 번째 자료는 {values[1]}로 설명합니다.",

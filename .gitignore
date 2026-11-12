@@ -29,3 +29,8 @@ evaluation/ku_background_2026-10-31/**/*.private-failure.json
 # Private model traces from the expanded paired evaluation.
 evaluation/expanded_460_2026-11-02/**/*.private-traces.jsonl
 evaluation/expanded_460_2026-11-02/**/*.private-failure.json
+
+# Frozen local models/corpora and private drafts during synthesis restoration.
+evaluation/semantic_generation_2026-11-02/runtime/
+evaluation/semantic_generation_2026-11-02/**/*.private-traces.jsonl
+evaluation/semantic_generation_2026-11-02/**/*.private-failure.json

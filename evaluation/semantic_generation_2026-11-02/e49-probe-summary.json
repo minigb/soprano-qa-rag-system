@@ -1,0 +1,103 @@
+{
+  "contract": {
+    "cases_sha256": "f1de7d2966b9e6ce517c4619d8c7fe32fb325958eb077f34919a3904091b31a0",
+    "results_sha256": {
+      "evaluation/semantic_generation_2026-11-02/e49-probe.jsonl": "d5e6f04dd32c2d90dc0f7e44914dca96b0af8694754ca1e7da1c61f9f5a94c84"
+    },
+    "assessments_sha256": "fa627c78d8afeda6bbac1bf6364c680a6dfeaabf160393b3ff2ec553bb1b94b3",
+    "mapping_sha256": "2517afb90d8d0732a08f57d9571f9d308ea0ace20f4a640887af802a1b2f13f2",
+    "summary_script_sha256": "34e3ffb57084d89b8ecc8babb21e4d2498e5ad559eb2dd3ae90a80aa30355eb8",
+    "scope": "Reused internal evaluation; not a new holdout. All requests retained. Errors/refusals contribute zero to effective quality. Timings are descriptive single runs."
+  },
+  "variants": {
+    "e49-probe": {
+      "requests": 32,
+      "normal": 22,
+      "adversarial": 10,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 13,
+        "minor_drift": 7,
+        "not_applicable": 2
+      },
+      "normal_factual_mean_effective": 3.590909090909091,
+      "normal_naturalness_mean_effective": 3.772727272727273,
+      "normal_naturalness_mean_useful": 3.772727272727273,
+      "normal_completeness_mean_effective": 1.8636363636363635,
+      "normal_latency_median_seconds": 17.22225333249662,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 22
+      }
+    }
+  },
+  "review_items": {
+    "e49-probe": [
+      {
+        "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer keeps the main reasons: Rossini's era valued virtuosity, and the ornaments help portray Rosina. It drops two hedges, though: the source only says the piece 'may seem' heavily ornamented and calls the ornaments 'also' a technique, and the answer omits that the reasons vary by piece."
+      },
+      {
+        "id": "expanded-yeon-die-forelle-05-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer follows KU-009 but drops the qualifier '많은 경우' (in many cases), which turns a frequent tendency into a general rule. It also omits the sources' advice on bright, elastic tone and on diction, though one required_any source is covered."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-10__m34-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The source says popular songs sometimes hold the last note until the accompaniment ends, and it notes that the length can be unclear. The answer makes this the usual practice and drops that hedge, a slight overstatement that does not change the practical advice."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer correctly advises a soft, supported opening, but it follows the unconfirmed source in calling the accompaniment PP, while the finalized KU says p. It also narrows the source's 'piano, pianissimo' to pianissimo only."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer closely paraphrases the source: only moderate slowing, with tempo depending on interpretation. It drops the condition 'if taking a very slow tempo' from the advice to stress each note, and like the source it gives no concrete tempo figure."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer reproduces the source's point that the voice naturally grows louder as it rises. However, the source's conditional permission ('it is okay if') becomes a plain statement that it is natural, and the specific measures (67–69) are never mentioned."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer presents a note that applies only to bars 67–69 without stating that scope, and it turns the source's \"it's okay if it gets louder\" into a general claim. It also gives no practical advice for a crescendo that keeps failing."
+      },
+      {
+        "id": "background-breath-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 4,
+        "rationale": "The answer is clearly labeled as general advice and suggests a reasonable legato exercise that makes no assumptions about the user's breathing. The phrase \"sliding\" could be read as encouraging portamento, which is not the same as legato, so it is a small imprecision."
+      },
+      {
+        "id": "background-transpose-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 3,
+        "rationale": "The general distinction is correct: transposition moves every pitch by the same interval, while octave displacement changes only selected notes. The small error is saying transposition maintains the key, when it changes the key and keeps the internal relationships."
+      }
+    ]
+  }
+}

@@ -1,0 +1,325 @@
+{
+  "cases": [
+    {
+      "id": "expert-kim-la-capinera-02__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-02",
+      "piece_id": "la-capinera",
+      "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-003"
+      ],
+      "reference_answers": [
+        "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-02__m22-22",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-02",
+      "piece_id": "la-capinera",
+      "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+      "measure_range": [
+        22,
+        22
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-003"
+      ],
+      "reference_answers": [
+        "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-03__m16-16",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-03",
+      "piece_id": "la-capinera",
+      "question": "‘Col ritorna’와 ‘Tu torni’를 더 정확하게 발음하려면 어떻게 해야 할까?",
+      "measure_range": [
+        16,
+        16
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-004"
+      ],
+      "reference_answers": [
+        "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-04__m17-19",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-04",
+      "piece_id": "la-capinera",
+      "question": "dim.은 왜 있을까?",
+      "measure_range": [
+        17,
+        19
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-005"
+      ],
+      "reference_answers": [
+        "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-05__m20-20",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-05",
+      "piece_id": "la-capinera",
+      "question": "‘vieni a’의 발음을 음정에 어떻게 붙여야 할까?",
+      "measure_range": [
+        20,
+        20
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-006"
+      ],
+      "reference_answers": [
+        "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-06__m20-24",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-06",
+      "piece_id": "la-capinera",
+      "question": "‘dir’ 위의 크레센도는 어떻게 노래해야 할까?",
+      "measure_range": [
+        20,
+        24
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-008"
+      ],
+      "reference_answers": [
+        "dir 위의 크레센도는 문장의 시작인 ‘E vieni a dir’에서 ‘la tua canzon’으로 말의 흐름이 자연스럽게 이어지게 한다. 이를 살려 전체를 하나의 큰 문장처럼 이어 노래한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-07__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-07",
+      "piece_id": "la-capinera",
+      "question": "leggiero는 어떻게 표현할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-009"
+      ],
+      "reference_answers": [
+        "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-07__m28-35",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-07",
+      "piece_id": "la-capinera",
+      "question": "leggiero는 어떻게 표현할까?",
+      "measure_range": [
+        28,
+        35
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-009"
+      ],
+      "reference_answers": [
+        "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-08__m95-96",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-08",
+      "piece_id": "la-capinera",
+      "question": "소리가 자꾸 끊기는 부분은 어떻게 불러야 할까?",
+      "measure_range": [
+        95,
+        96
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-010"
+      ],
+      "reference_answers": [
+        "꾸밈음과 고음으로 도약하는 음정들에서는 소리가 끊어질 수 있다. 음정을 하나하나 잘 내는 데만 집중하기보다 더 큰 프레이즈 안에서 각 음정의 역할을 생각하며 부르고, 모음을 이어서 노래하는 연습도 도움이 된다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-09__m41-43",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-09",
+      "piece_id": "la-capinera",
+      "question": "‘l’amor la gioventu’를 어떻게 불러야 할까?",
+      "measure_range": [
+        41,
+        43
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-011"
+      ],
+      "reference_answers": [
+        "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-10__m51-66",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-10",
+      "piece_id": "la-capinera",
+      "question": "‘La la’ 부분이 자연스럽게 들리지 않으면 어떻게 해결할까?",
+      "measure_range": [
+        51,
+        66
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-012"
+      ],
+      "reference_answers": [
+        "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-11__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-11",
+      "piece_id": "la-capinera",
+      "question": "페르마타는 어느 정도 끌어야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-013"
+      ],
+      "reference_answers": [
+        "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-11__m67-69",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-11",
+      "piece_id": "la-capinera",
+      "question": "페르마타는 어느 정도 끌어야 할까?",
+      "measure_range": [
+        67,
+        69
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-013"
+      ],
+      "reference_answers": [
+        "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-12__m68-69",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-12",
+      "piece_id": "la-capinera",
+      "question": "페르마타 뒤의 ‘cantiam’은 어떻게 불러야 할까?",
+      "measure_range": [
+        68,
+        69
+      ],
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-014"
+      ],
+      "reference_answers": [
+        "페르마타 뒤 이어지는 cantiam은 앞에서 부른 문장과 끊어지지 않도록 노래한다. 이때 cantiam의 can을 확실히 나타내어 뒤따르는 반주가 정확히 진입할 수 있게 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    },
+    {
+      "id": "expert-kim-la-capinera-13__m80-80",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-13",
+      "piece_id": "la-capinera",
+      "question": "‘l’erbe ed i fior’의 가사를 음정에 어떻게 붙여야 할까?",
+      "measure_range": [
+        80,
+        80
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "la-capinera-ku-007"
+      ],
+      "reference_answers": [
+        "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null
+    }
+  ]
+}

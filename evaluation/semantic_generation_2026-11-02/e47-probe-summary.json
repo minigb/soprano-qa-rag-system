@@ -1,0 +1,125 @@
+{
+  "contract": {
+    "cases_sha256": "f1de7d2966b9e6ce517c4619d8c7fe32fb325958eb077f34919a3904091b31a0",
+    "results_sha256": {
+      "evaluation/semantic_generation_2026-11-02/e47-probe.jsonl": "73c89124c622222733dde88f272eadf69eeff237b8697c4a568d2b99f19aadfb"
+    },
+    "assessments_sha256": "810be5a421ac44347047777cd48199e68e39ac4090b92609ef4ac043a070b960",
+    "mapping_sha256": "ea50ed3fc962e9db0f3d963e3d5f7395da4f1eec3aafaf5f0feecdba35771fcd",
+    "summary_script_sha256": "34e3ffb57084d89b8ecc8babb21e4d2498e5ad559eb2dd3ae90a80aa30355eb8",
+    "scope": "Reused internal evaluation; not a new holdout. All requests retained. Errors/refusals contribute zero to effective quality. Timings are descriptive single runs."
+  },
+  "variants": {
+    "e47-probe": {
+      "requests": 32,
+      "normal": 22,
+      "adversarial": 10,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 10,
+        "minor_drift": 8,
+        "material_drift": 3,
+        "not_applicable": 1
+      },
+      "normal_factual_mean_effective": 3.3181818181818183,
+      "normal_naturalness_mean_effective": 3.3181818181818183,
+      "normal_naturalness_mean_useful": 3.3181818181818183,
+      "normal_completeness_mean_effective": 1.7727272727272727,
+      "normal_latency_median_seconds": 10.060377987501852,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 22
+      }
+    }
+  },
+  "review_items": {
+    "e47-probe": [
+      {
+        "id": "expanded-kim-die-forelle-02-syn-02__m41-54",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer keeps the source's explanation that the beat-two accent alternating between clefs depicts the leaping trout. However, it drops the source's hedge and states this interpretation as a definite purpose without attributing it to anyone."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-02__m11-12",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "It faithfully conveys that most singers sing this lightly, close to staccato, despite the missing marking, and it gives the ㅊ-emphasis and 꼬-ㅊ-빠-람 advice. One small drift: the source says the 꼬-빠-람 pronunciation makes ㅊ harder to emphasize, but the answer turns this into an optional condition (\"if it is hard\")."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-02-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer weakens the source's 'not orthodox (정통) classical' to simply 'not classical', and it drops the contrast that vocal approach should be decided by the situation and technique rather than by the song. The rest of what it says about microphones and venue size matches the source."
+      },
+      {
+        "id": "expanded-yeon-die-forelle-05-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The tempo/diction and bright, elastic tone advice is broadly supported, but the source's diction advice about vowel length and open/closed sounds is blurred into '강약'. The answer also leaves out word accents, strong and weak beats, how the last word of a bar leads to the next bar's accent, and a clean tone."
+      },
+      {
+        "id": "expanded-in-flowery-clouds-ku-021-derived-q01__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The answer takes the composer's meter, key and accompaniment-rhythm changes, which the source ties to the shift into hardship in mm. 39–49, and presents them as a means the singer can use for the bright return. That changes both the actor and the location. The core crescendo/expression advice is right, but it drops '반주와 함께'."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The legato, breath, and genre-appropriate tone points match the sources and the reference. However, the source's 'either no microphone or a large hall' becomes a combined condition, and a recommendation ('추천한다') becomes an obligation ('고민해야 합니다')."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 2,
+        "rationale": "The answer mislabels p as '포코 피아노' when it means piano. It also states both PP and p as the opening marking without resolving the conflict, and it labels a comparison of sources as a general music explanation. The overall advice to start softly is still correct and relevant."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-07-syn-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "It accurately summarizes the advice on long-breath legato, mic and venue-dependent tone, and leaps. It drifts slightly in two places: 장르에 맞는 음색 becomes 상황에 맞는 음색, and the stated aim of 'more academic expression' becomes 'conveying the message'."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops the hedges '일반적으로' and '조금', and states unconditionally advice the source gives only for taking a very slow tempo. Its general description of Larghetto as moderately slow is still essentially accurate."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops the condition 'when moving toward high notes' and does not say the advice applies only to bars 67–69. That turns local advice into a vaguer general claim."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source only says it is acceptable for the voice to swell naturally in bars 67–69. The answer drops that location and turns the permission into a general practice method, without addressing what to do when a crescendo keeps failing."
+      },
+      {
+        "id": "background-transpose-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 4,
+        "rationale": "It correctly separates transposition, where every note shifts by the same interval, from moving only selected notes down an octave. It is clearly labeled as general knowledge, and none of the supplied KUs cover this topic."
+      }
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "objective": "Question-focused LLM synthesis with faithful meaning and natural language; BERTScore is a constraint, never a substitute for the task.",
+  "not_preregistered": "This is continued refinement on repeatedly used internal cases. Criteria document user requirements; the corpus is not a fresh or independent holdout.",
+  "required_checks": [
+    "Delivered evidence-based prose must be authored by the model. No application insertion of full KU answers, source-translation catalog substitution, reference-answer lookup, or canned repair answers in the semantic path.",
+    "Expert105 and validation62 effective full-answer BERTScore F1 >=0.90 under the frozen encoder/revision/layer/IDF/reference and length policy. Refusals/errors remain zero contributions.",
+    "Compare all460 source fidelity, factual correctness, completeness, effective and useful-only naturalness, false refusals/errors and descriptive serial latency to the unchanged original.",
+    "Do not adopt solely on BERTScore. Review all new material drift, serious factual errors, false refusals and known critical pronunciation/condition/attribution examples; disclose unresolved errors rather than claim perfect meaning.",
+    "Run the185 Korean/English general/safety cases and retain every error, including unassessed attacks. Attack denials are not evidence of general immunity.",
+    "Current and historical460 answers must remain separately inspectable in the localhost UI with correct version/model labels, unchanged answer strings and separate browser notes."
+  ],
+  "preferred_quality_direction": "Fewer material source distortions, at least comparable effective naturalness, and no increase in false refusals versus the original. Any tradeoff or unmet check prevents an unqualified completion claim.",
+  "forbidden_metric_shortcuts": [
+    "change reference text",
+    "drop difficult or failed cases",
+    "truncate answers to fit scoring",
+    "search metric settings after seeing candidate quality",
+    "replace generation with KU quotations",
+    "repeat Claude reviews to select a favorable score"
+  ],
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "generated_probe_history": "All failed E38–E53 artifacts are retained. Source patches reconstruct production modules; private traces/runtime/model weights are excluded from Git."
+}

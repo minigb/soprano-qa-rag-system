@@ -1,0 +1,14 @@
+{
+  "repo_id": "ggml-org/Qwen3.5-35B-A3B-GGUF",
+  "revision": "3127ef0b7fd4f12626506419ceefde54fa8db53c",
+  "filename": "Qwen3.5-35B-A3B-Q8_0.gguf",
+  "size": 36903139584,
+  "sha256": "8a83fbfde74b0366feb76b075c10df46bbece6aa21ed14a6f291a7904f2b7d67",
+  "base_model": "Qwen/Qwen3.5-35B-A3B",
+  "source_model_card": "https://huggingface.co/Qwen/Qwen3.5-35B-A3B",
+  "quantizer_model_card": "https://huggingface.co/ggml-org/Qwen3.5-35B-A3B-GGUF",
+  "reason": "Separate local comparison after source synthesis errors persisted in Qwen3-14B and Qwen3-32B; not adopted without evaluation.",
+  "path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/runtime/models/Qwen3.5-35B-A3B-Q8_0.gguf",
+  "verified": true,
+  "seconds": 986.6393177509308
+}

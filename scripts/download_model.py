@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import os
 import shutil
 import sys
@@ -27,6 +28,7 @@ def main() -> None:
     settings = load_settings(args.settings) if args.settings else load_settings()
     model_path = settings["model_path"]
     if os.path.exists(model_path) and not args.force:
+        verify_checkpoint(model_path, settings)
         print("Model already exists: %s" % model_path)
         return
 
@@ -45,10 +47,25 @@ def main() -> None:
         filename=settings["model_filename"],
         local_dir=os.path.dirname(model_path),
         force_download=args.force,
+        **({"revision": settings["model_revision"]} if settings.get("model_revision") else {}),
     )
+    verify_checkpoint(downloaded, settings)
     if os.path.abspath(downloaded) != os.path.abspath(model_path):
         shutil.copy2(downloaded, model_path)
     print("Model ready: %s" % model_path)
+
+
+def verify_checkpoint(path: str, settings: dict) -> None:
+    """Honor an evaluated checkpoint pin without changing unpinned setups."""
+    expected = settings.get("model_sha256")
+    if not expected:
+        return
+    digest = hashlib.sha256()
+    with open(path, "rb") as stream:
+        for block in iter(lambda: stream.read(16 * 1024 * 1024), b""):
+            digest.update(block)
+    if digest.hexdigest() != expected:
+        raise SystemExit("Model checksum differs from the evaluated checkpoint: %s" % path)
 
 
 if __name__ == "__main__":

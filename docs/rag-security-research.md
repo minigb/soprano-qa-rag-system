@@ -7,6 +7,16 @@ design and its limits for the local soprano-performance QA pipeline. The cited
 papers motivate the design; their reported attack-success rates are **not**
 measurements of this implementation.
 
+**November 3 correction:** the E10–E37 quotation/translation approach described
+below is historical and has been rejected for this task. In E37, the model
+usually selected passages and application code inserted complete KU answers.
+Its high reference similarity did not establish good generative RAG answers.
+The active refinement restores question-focused model-authored prose and keeps
+meaning, factuality, naturalness, refusals and attacks separate from BERTScore.
+See the [quality protocol](../evaluation/semantic_generation_2026-11-02/quality-protocol.json)
+and [resume state](../RESUME.md). Failed candidates and historical results remain
+available; no new candidate is declared successful merely for exceeding 0.90.
+
 ## Threat model
 
 The application should answer questions about soprano performance and the

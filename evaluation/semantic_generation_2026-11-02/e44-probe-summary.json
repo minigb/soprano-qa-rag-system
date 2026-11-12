@@ -1,0 +1,111 @@
+{
+  "contract": {
+    "cases_sha256": "f1de7d2966b9e6ce517c4619d8c7fe32fb325958eb077f34919a3904091b31a0",
+    "results_sha256": {
+      "evaluation/semantic_generation_2026-11-02/e44-probe.jsonl": "853600f6219fa04003941010d5548476d4469f2a13f53f4f09e787f6e7af4b86"
+    },
+    "assessments_sha256": "2ffad3a25b71936d69a8b3599eac1270aabce5393f651c8f065ff74c76b6d35f",
+    "mapping_sha256": "68d6e9f0a508942f02af0a4346ad6b51efba110aafbcf369f1f3d1a42be77721",
+    "summary_script_sha256": "34e3ffb57084d89b8ecc8babb21e4d2498e5ad559eb2dd3ae90a80aa30355eb8",
+    "scope": "Reused internal evaluation; not a new holdout. All requests retained. Errors/refusals contribute zero to effective quality. Timings are descriptive single runs."
+  },
+  "variants": {
+    "e44-probe": {
+      "requests": 32,
+      "normal": 22,
+      "adversarial": 10,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 12,
+        "minor_drift": 8,
+        "material_drift": 1,
+        "not_applicable": 1
+      },
+      "normal_factual_mean_effective": 3.409090909090909,
+      "normal_naturalness_mean_effective": 3.3636363636363638,
+      "normal_naturalness_mean_useful": 3.3636363636363638,
+      "normal_completeness_mean_effective": 1.7272727272727273,
+      "normal_latency_median_seconds": 8.868238399998518,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 22
+      }
+    }
+  },
+  "review_items": {
+    "e44-probe": [
+      {
+        "id": "expanded-in-flowery-clouds-ku-016-derived-q01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer combines the three units accurately, but it applies the meter, key and accompaniment-rhythm change, which the source ties to the turn toward hardship, to the mood shift in general. It also drops the measure scope and the source's 'together with the accompaniment' detail."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-02-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops '정통', which turns 'not orthodox classical' into 'not classical at all'. It also leaves out the source's contrast that vocal technique should be chosen by singing situation rather than by song. The microphone-based guidance on vocal technique is reproduced faithfully."
+      },
+      {
+        "id": "expanded-yeon-die-forelle-05-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "Fast tempo, precise diction and a springy, bright tone are all supported, but the source's specific points on diction (vowel length and open/closed sounds) are reduced to a vague 'strength and weakness of pronunciation'. The answer also leaves out the useful guidance on word accents and beats leading into the next downbeat."
+      },
+      {
+        "id": "expanded-in-flowery-clouds-ku-021-derived-q01__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The answer takes the meter, key and accompaniment-rhythm changes, which the source ties to the composer's shift into the hardship section (mm. 39–49), and presents them as a way the singer can create the return to brightness. It also drops the point that the singer should make the change together with the accompaniment ('반주와 함께')."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The advice to begin softly matches the sources. However, the answer states as fact both that the accompaniment starts at PP and that it starts at p, mixing an unconfirmed source with the score-specific one, and it drops the source's hedge ('좋아 보인다')."
+      },
+      {
+        "id": "expanded-yeon-nella-fantasia-07-syn-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer covers the required legato and long-breath point along with the source's advice on vocal color, leaps and breathing. Small drifts remain: the source's 'or' becomes 'and' (no mic in a large hall), 'genre' becomes 'situation', and the source's goal of a more academic performance becomes conveying the message."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops the source's softeners '일반적으로' and '조금', and states the very-slow-tempo condition unconditionally, which slightly strengthens the claims. Implying that Larghetto means 'very slow' is a little imprecise, since Larghetto is usually less slow than Largo."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops the source's condition that the voice grows louder when moving toward high notes, so a local tendency becomes a general one. It also doesn't say that the advice applies to bars 67–69."
+      },
+      {
+        "id": "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source only says it is acceptable for the voice to grow louder naturally in mm. 67–69. The answer turns that into a general practice strategy and drops the measure scope. It gives little practical help for a crescendo that keeps going wrong."
+      },
+      {
+        "id": "background-transpose-en",
+        "useful": true,
+        "fidelity": "not_applicable",
+        "naturalness": 4,
+        "rationale": "The answer is labeled as general knowledge and correctly says that transposition moves all notes by the same interval, which octave displacement of a few notes is not. One small imprecision: octave displacement changes the register but keeps the pitch class, so 'drastically' overstates it."
+      }
+    ]
+  }
+}

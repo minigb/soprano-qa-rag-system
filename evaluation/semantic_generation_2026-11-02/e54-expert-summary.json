@@ -1,0 +1,681 @@
+{
+  "contract": {
+    "cases_sha256": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
+    "results_sha256": {
+      "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/e54-expert.jsonl": "9a73e1c436f95d998d3d8b8405416951a760dc5af8ea39427c9b35546ec5c806",
+      "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/semantic_generation_2026-11-02/original-expert.jsonl": "fb7a670a73cbbba9c7e885a80a13b6f82a5e2c27cfbc6aee0d2a72e85fbb00fc"
+    },
+    "assessments_sha256": "04f724214c5f912cbc9f0a1201197966d46cdf05f6c0ba3fa5da3f3b537efcca",
+    "mapping_sha256": "88e24ed8fd0fe594c9941d39a973265c8ca173089b1ae7c86e350cf9eb79fa7c",
+    "summary_script_sha256": "34e3ffb57084d89b8ecc8babb21e4d2498e5ad559eb2dd3ae90a80aa30355eb8",
+    "scope": "Reused internal evaluation; not a new holdout. All requests retained. Errors/refusals contribute zero to effective quality. Timings are descriptive single runs."
+  },
+  "variants": {
+    "e54-expert": {
+      "requests": 105,
+      "normal": 105,
+      "adversarial": 0,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 56,
+        "minor_drift": 41,
+        "material_drift": 8
+      },
+      "normal_factual_mean_effective": 3.4,
+      "normal_naturalness_mean_effective": 3.4095238095238094,
+      "normal_naturalness_mean_useful": 3.4095238095238094,
+      "normal_completeness_mean_effective": 1.819047619047619,
+      "normal_latency_median_seconds": 26.076210885003093,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 105
+      }
+    },
+    "original-expert": {
+      "requests": 105,
+      "normal": 105,
+      "adversarial": 0,
+      "execution_errors": 0,
+      "normal_false_refusals": 0,
+      "normal_fidelity": {
+        "faithful": 67,
+        "minor_drift": 28,
+        "material_drift": 10
+      },
+      "normal_factual_mean_effective": 3.4952380952380953,
+      "normal_naturalness_mean_effective": 3.447619047619048,
+      "normal_naturalness_mean_useful": 3.447619047619048,
+      "normal_completeness_mean_effective": 1.8666666666666667,
+      "normal_latency_median_seconds": 2.7144461209973088,
+      "attack_successes": 0,
+      "unassessed_adversarial_errors": 0,
+      "normal_generation_modes": {
+        "llm": 105
+      }
+    }
+  },
+  "review_items": {
+    "e54-expert": [
+      {
+        "id": "expert-kim-die-forelle-02__m41-54",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the interpretive hedge (\"해석됩니다\") and the trout-leaping meaning. However, it loosely restates alternation between treble and bass clefs as \"고음과 저음을 반복\"."
+      },
+      {
+        "id": "expert-kim-die-forelle-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source gives two separate ideas: practise slowly and then faster, and, as an extra option, practise the words without pitch. The answer merges them into one routine and turns the source's \"may help\" (도움이 될 수 있다) into \"is effective\" (효과적입니다), and it leaves out the source's points about smoothly connected vowels and keeping good vocal production."
+      },
+      {
+        "id": "expert-kim-die-forelle-06__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The reasons for the difficulty (fast tempo, many words to pronounce quickly, strong and weak beats) are kept. However, the source's \"많은 경우\" hedge and its first-beat referent are dropped."
+      },
+      {
+        "id": "expert-kim-die-forelle-07__m28-40",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The piano depiction and the advice to the singer are kept. However, the answer adds \"역동성\" and \"자연스럽게\", which slightly shifts the source's goal of making the transition noticeable."
+      },
+      {
+        "id": "expert-yeon-die-forelle-05__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps KU-009's core advice but drops the 'in many cases' qualifier, and its claim that clarity and rhythmic accuracy are 'the key' is its own addition. It also leaves out the curated points on a bright, elastic tone and on vowel length and open/closed vowels in the diction."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer drops the source's location (the opening of the piece) and so widens a local example into a general claim. It also gives little concrete guidance on what the singer should actually do."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-01__m1-2",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer turns the source's hedged \"일 수 있다\" into a definite arrangement difference. It also adds an unattributed instruction (\"해야 합니다\") that the source does not give, though the advice does not contradict the source's point that both versions are allowed."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 4,
+        "rationale": "The source allows the fermata either way only at the opening of the piece, but the answer extends that permission to any fermata in the song. It also does not address the question's actual issue, which is a mismatch in note length rather than whether a fermata is present."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-02__m11-12",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 2,
+        "rationale": "The source says most singers sing it lightly, close to staccato, without a staccato marking; the answer partly turns this into actual staccato and presents the ㅊ emphasis as producing a natural effect. It never clearly says what the singer should follow and leaves out the source's pronunciation guidance (꼬-ㅊ-빠-람)."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer correctly says the composer changes meter and key to shift the mood toward images of winter, hardship and trials. However, it adds the word 'dark' (어두운), which the source doesn't use, and it omits the change in accompaniment rhythm, the lyric '추위와 주림에 시달리어', the passage's location (mm. 39–49) and the point that the singer should express the change through tone color."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__m39-49",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source calls mm. 39–46 an interlude (간주), meaning the piano plays while the singer rests, but the answer calls it an unaccompanied section, which reverses the roles. The answer also adds an unsupported 'calm' earlier mood and states the composer's intention as fact."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__reported-no-range-01",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The general reason (the composer changes meter to shift the mood) is supported by the source. However, the winter/hardship imagery comes from one local passage (mm. 39–49), and the answer applies it to all of the meter changes without naming that passage."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-09__m67-69",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 4,
+        "rationale": "The source only reassures the singer that it is fine if the voice naturally grows louder toward the high notes. The answer turns this into an instruction to push gradually ('힘을 주면'), which changes the practice action and can encourage forcing the voice; it also drops the reassurance itself."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-10__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the main point that returning to 2/4 revives the opening's lively mood and gives clearer strong–weak contrast. However, it softens 'heighten' (고조) to 'adjust' (조절), and its explanation of contrasting figures in consecutive bars is thinner than the source's."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-11__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer follows the source's main advice: take a slightly relaxed tempo rather than a very slow one, adjusted to the performer's interpretation. However, it drops the condition that the advice on note emphasis applies when taking a very slow tempo, and it repeats the source's description of Larghetto as very slow, even though the term normally means somewhat less slow than Largo."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-11__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer closely follows the source: Larghetto here means slowing just enough to give each bar room, and the tempo depends on the performer. However, it drops the source's condition that stressing each note applies only when taking a very slow tempo, and presents that advice as general."
+      },
+      {
+        "id": "expert-kim-la-capinera-01__m11-14",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The pp start matches the source. However, the answer leaves out that the repeated f/p changes are in the piano/orchestra part, which could suggest the singer should perform them, and it omits the l/r pronunciation point in 'Col ritornar'."
+      },
+      {
+        "id": "expert-kim-la-capinera-04__m17-19",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the source's hedged view that the dim. is there to express the lyric more strongly, and it repeats the advice to consider the composer's intended effect. It slightly reframes the final advice as reducing volume smoothly so the phrase connects naturally, while the source asks the singer to attend to how the following words are expressed; the added general point about diminuendo is accurate."
+      },
+      {
+        "id": "expert-kim-la-capinera-05__m20-20",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The first sentence faithfully matches the source: keep both vowels distinct while linking them on one pitch. The added gloss about needing to 'separate' the pronunciation (발음의 분리) shifts the emphasis toward a break that the source does not call for, which is a slight drift."
+      },
+      {
+        "id": "expert-kim-la-capinera-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "In the source, the birdsong image comes from the ornaments in the leggiero phrases; the answer attaches it to leggiero in general and adds unsupported ideas such as 'physical weight' and accompaniment–voice harmony. It also leaves out the ornament context and the gloss leggiero = 가볍게."
+      },
+      {
+        "id": "expert-kim-la-capinera-07__m28-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer keeps the source's light, bright, precise approach. It slightly widens the birdsong association from the grace notes to the rhythm as well, and it drops the source's point that the grace notes appear in both the accompaniment and the vocal part."
+      },
+      {
+        "id": "expert-kim-la-capinera-08__m95-96",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer hedges the cause appropriately and keeps the practice of connecting vowels within the phrase. It slightly changes 'each note's role' into 'connectivity' and drops the 'leap to a high note' detail."
+      },
+      {
+        "id": "expert-kim-la-capinera-14__m83-85",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source recommends the double-consonant feeling as the helpful approach; the answer turns this into one of two equal alternatives. It also changes '멈추는 듯한' (as if pausing) into a literal '휴지' (pause), which slightly overstates the source."
+      },
+      {
+        "id": "expert-kim-la-capinera-17__m117-124",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the interpretive framing of the bird's liveliness and the echo effect, but it adds the detail '울음'. Its advice also shifts from the source's 'check the markings in the accompaniment' to 'emphasize the mood through dynamic contrast with the accompaniment', which is a minor change in the practice action."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer reports the PP-versus-p discrepancy openly and correctly concludes that the singer should start softly. However, it says both sources agree on keeping breath support and resonance, which only the first source says, and it drops the second source's hedge '좋아 보인다' (seems good)."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-04__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer reflects the source: sing from the score, but singing slightly ahead of or behind the beat is common. It slightly upgrades the source's statement that this is common into a recommendation."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-05__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The sources make lack of a microphone the condition for using classical vocal technique, but the first paragraph swaps this for '무반주' (no accompaniment), which is a different condition. The later microphone-based sentences are correct but do not erase the earlier error, and the answer also leaves out the source's preferred setting (a small space, or a microphone in a large hall)."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "Most of the source's advice is kept: take enough time, keep the vowels and resonance natural, stay relaxed, and practise the lower notes just before the leap for legato. However, the source says to prepare breath and high-note space at the start of the phrase, and the answer moves this to 'before the high note'."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-07__m11-17",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "Most of the advice matches the source: take time, keep vowels and resonance natural, stay relaxed, and prepare the high-note space and breath. The source's optional tip to practise the preceding mid-low notes more becomes a general instruction to keep legato centred on those notes."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-09__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The cause and the rest-based breath preparation are faithful, but the answer moves the release point from the end of the first half note to the end of the phrase, then describes the whole first note as softened. It also leaves out the reference's advice against breathing in the middle of a word in classical singing."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-10__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "It follows the source: respect the written note value, connect the last note with the accompaniment's final sound in popular repertoire, and aim for a natural fade. The source only permits ending with the accompaniment ('가능합니다'), but the answer recommends it ('좋습니다')."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-10__m34-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer covers the source's main point: in popular songs, the last note is often held until the accompaniment ends. However, it turns the source's hedged '하기도 하며/경우가 많다' into '일반적' and '권장', which overstates the source slightly."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-12__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The overall meaning (go back to the segno, then jump to the coda) is correct. However, the answer calls the whole term 'D.S. al Coda' the abbreviation of Dal Segno, and its gloss of al Coda is vaguer than the source's description."
+      },
+      {
+        "id": "expert-yeon-nella-fantasia-01__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer gives the source's reasons correctly: the film connection, the peaceful message, and its use on Korean variety and choir programs. However, it calls Nella fantasia itself the soundtrack. In fact it is a later vocal adaptation of a piece from the film (Gabriel's Oboe), which the source describes as its origin."
+      },
+      {
+        "id": "expert-yeon-nella-fantasia-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer is right that the song is not strictly classical but is often sung with classical technique. However, it reduces the source's condition that a classical voice is required without a microphone to an optional choice. Its general remark about adjusting the voice to the song also sits awkwardly with the source's view that technique should be chosen by microphone use and vocal register rather than by song."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer gives the core guidance (start piano, following the accompaniment's p). However, it turns the source's recommendation ('좋다') into a statement of common practice ('일반적') and makes the start conditional on the vocal line having no marking."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-04__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer conveys the stage direction and why it matters. However, its quoted text changes the source's 'the window fitted with Venetian blinds is closed' to 'the blinds are closed', a small change inside quotation marks."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-05__m22-24",
+        "useful": true,
+        "fidelity": "faithful",
+        "naturalness": 2,
+        "rationale": "The answer correctly restates the source: pronunciation starts on the grace note on each beat, and the short dotted rhythm must be kept exactly; the syllable split also matches the lyric transcription. However, it mislabels the aria as \"협곡\" (canyon) and leaves malformed bracket text in the answer, which is a meaningful terminology and wording error."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-06__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 2,
+        "rationale": "The slash explanation follows KU-009, but the answer leaves out KU-008: in the full score the grace notes are the same length, and the differences likely come from the piano arrangement. Instead it credits the differences to compositional intent. It also wrongly calls the grace-note slash a legato sign; the slash marks an acciaccatura."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer conveys the source's advice: place the syllable at the start of the triplet and sustain the vowel instead of re-articulating it. However, it turns the source's conditional ('when the same vowel continues') into a general rule for every triplet."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-07__m25-25",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 2,
+        "rationale": "The source says to put the syllable at the start of the triplet and sustain its vowel, but the example starts a new vowel on the next note of the triplet. The claim that each vowel in m.25 corresponds to its own note also cannot be supported, because the unverified lyric transcription does not establish rhythm or note alignment."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-08__m32-32",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core o-a linking advice matches the source, but the answer adds a 'glide' framing and turns '좋다' into '강조해야'. It also leaves out the source's distinction that combinable cases like l'ingegno use the apostrophe for elision."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-11__m44-55",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core advice matches KU-016 (a dramatic transition, reacting with facial expression, gaze and movement), but the example '흥분에서 진지함으로' is an unsupported claim about this particular passage. Calling the instrumental interlude a '무반주 구간' is a terminology error, because the accompaniment keeps playing while the singer rests."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-13__m62-62",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 2,
+        "rationale": "The source names triplets as the difficult context, and the answer changes this to 32nd notes. It also adds an unsupported 'o'/'a' focus for this bar and claims the unverified lyric transcription implies rhythmic guidance, while ignoring the e-a elision that is shown."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-14__m67-67",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer correctly calls the portamento a traditional way of heightening the 'ma' contrast and notes that singers vary. However, the source's advice to the singer becomes a statement that the method itself achieves clear expression, and the specific dar, ma / dar / ma alternatives are left out."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-15__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source offers a suggested way to think about the passage while singing, but the answer's first sentence states it as the definite purpose of the markings, and the later hedge does not undo that. The answer also drops the detail that the melody's first beat is a slurred, trill-like figure, which is what explains why the accent falls elsewhere."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-15__m92-93",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the source's reasons (staccato accompaniment, a slurred trill-like first beat, Rosina's lively character), but it adds ideas the source does not contain: accenting particular syllables to highlight the acting, and the accent reflecting the libretto's drama. It presents these alongside the source content without separating them. The labeled general point about Italian stressed syllables is plausible and is kept apart from the source claims."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-19__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer follows the source on slashed and unslashed grace notes and the four-16th-note figure, but it drops '대부분', so a typical practice becomes a rule. It also leaves out the source's 'two' other passages. The general appoggiatura/acciaccatura distinction is accurate."
+      },
+      {
+        "id": "expert-yeon-una-voce-poco-fa-16__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer keeps the options of 'a' or the word's own vowel. It moves word closure from 'before the phrase ends' to 'at the phrase end' and drops the hedge '가급적', but the practical instruction stays close to the source."
+      },
+      {
+        "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core reasons match the source: the era's emphasis on virtuosity and the use of ornaments to portray Rosina. However, the answer narrows the source's general point that reasons vary by piece to the Rossini era alone, and it leaves out scales. This is a small shift in scope."
+      }
+    ],
+    "original-expert": [
+      {
+        "id": "expert-kim-die-forelle-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "Practising slowly and speaking the text without pitch matches the source. The source presents clear consonants and connected vowels as a requirement that is hard to combine with good vocal production; the answer reframes them as a benefit of the practice and states 'helps' more firmly than the source's 'can help'."
+      },
+      {
+        "id": "expert-kim-die-forelle-06__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer changes 'words that must be pronounced quickly' into 'words that must be pronounced accurately'. It also drops the qualifier '많은 경우' and states the bar-line accent direction as always true. Otherwise it keeps the source's points about tempo, accent and strong/weak beats."
+      },
+      {
+        "id": "expert-yeon-die-forelle-04__m28-40",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer accurately reports the source's explanation that the changed piano figure depicts the fisherman muddying the water, along with its advice to the singer. However, it adds a firmer claim that the change was 'intended' (의도된 것), which the source does not state."
+      },
+      {
+        "id": "expert-yeon-die-forelle-05__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer turns the source's \"in many cases\" (많은 경우) into a general rule. It also presents Le Massena's advice and the instructor's views as unattributed facts. The other points (diction, tone, the passaggio options) are conveyed accurately."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-01__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 4,
+        "rationale": "The source is a local example about whether a fermata appears at the opening. The answer stretches it to any difference in fermata length and gives arrangement differences as the cause, which leaves out the basic point that a fermata's length is left to the performer."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source says a fermata being present or absent 'may be' due to arrangement differences; the answer states this as a definite cause and drops the limit that it concerns the opening of the piece. The added advice to respect one's own interpretation is reasonable general advice, but it is not clearly separated from the source claim."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-02__m11-12",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source recommends '꼬-빠-람' over letter-by-letter pronunciation, but the answer wrongly presents '꼬-빠-람' as the letter-by-letter way to avoid. It also never says plainly whether to follow the score or the recordings, and it drops 'similar to staccato'."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-06__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "It correctly says transposing this song is generally allowed. However, it turns the source's permission into a recommendation, swaps the condition (range) with the criterion (voice and timbre), and drops the exceptions for arias and composer-prohibited works, making the 가곡 claim slightly too general."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core claim is faithful: meter, key and accompaniment-rhythm changes shift the mood to depict hardship. However, describing the earlier mood as 'warm and soft' is not in the source and is presented without being marked as the answerer's own interpretation, and the local passage (mm. 39–49) is never mentioned."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__m39-49",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The reason given (shifting the mood) and the hardship/winter imagery match the source. However, the wording blurs the idea that the earlier mood is transformed, and the answer leaves out the advice that the singer should express this change through tone colour."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-07__reported-no-range-01",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core reason (meter and key changes shift the mood to depict the lyric's hardship imagery) matches the source. However, the answer adds an unsupported 'natural emotional flow' effect and leaves out the change in accompaniment rhythm."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-09__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source only says it is acceptable for the voice to grow louder naturally in one local ascending passage (mm. 67-69). The answer turns that permission into general advice, so it only partly addresses how to fix a crescendo that isn't working."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-09__m67-69",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source only says it is acceptable if the sound grows naturally. The answer first turns that into a recommendation, then correctly restates it as permission."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-10__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "It keeps the main content, but it hedges the return to 2/4 and states the reason for choosing 2/4 as a definite cause, which reverses the source's hedging. It also omits the 4/4 strong-weak-medium-weak structure that the comparison depends on."
+      },
+      {
+        "id": "expert-kim-in-flowery-clouds-11__m74-79",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source describes what is generally done, and the answer turns that into a recommendation, which is a slight shift. The answer also suggests the marking itself means 'very slow', when Larghetto normally indicates a tempo less slow than Largo, but overall it conveys the source's moderate-slowing advice."
+      },
+      {
+        "id": "expert-kim-la-capinera-06__m20-24",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer keeps the purpose of the crescendo, but it turns the source's instruction to the singer into a description of what the crescendo does. That leaves the 'how to sing' advice only implied."
+      },
+      {
+        "id": "expert-kim-la-capinera-07__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The performance advice matches the source. However, the source says the grace notes evoke birdsong, while the answer gives that role to the leggiero expression itself, which is a small drift."
+      },
+      {
+        "id": "expert-kim-la-capinera-07__m28-35",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The advice on performing leggiero matches the source. However, the answer attributes the birdsong association to the leggiero expression itself and frames it as a purpose, while the source says the grace notes evoke birdsong."
+      },
+      {
+        "id": "expert-kim-la-capinera-10__m51-66",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "It accurately describes the source's method of grouping notes into gradually larger units. However, the source's hedged 'may help' becomes a near-guaranteed result."
+      },
+      {
+        "id": "expert-kim-la-capinera-13__m80-80",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The core advice matches the source: elide the e–e vowels and attach the d to the following i. However, the answer drops the qualifier '가능하면' and adds a generic opening recommendation."
+      },
+      {
+        "id": "expert-kim-la-capinera-14__m83-85",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source admits the double consonant is often pronounced as a single consonant and recommends only the feeling of two. The answer turns this into an instruction not to pronounce it as one and adds 'separated consonants', which misrepresents Italian gemination as a lengthened single consonant."
+      },
+      {
+        "id": "expert-kim-la-capinera-15__m86-88",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The technique (c forward, l back, lengthen the e) matches the source. However, the answer calls a coaching suggestion an Italian pronunciation rule and states it as an obligation ('위치시켜야')."
+      },
+      {
+        "id": "expert-kim-la-capinera-17__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source offers the composer's intention as an interpretation ('볼 수 있다', 'can be seen as'), but the answer states it as established fact. That turns an interpretation into proven intention."
+      },
+      {
+        "id": "expert-kim-la-capinera-17__m117-124",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source offers the composer's intention only as an interpretation ('볼 수 있다'). The answer states that intention as fact and adds an unsupported broader aim, 'recreating nature's liveliness'."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer turns the source's hedged, score-specific suggestion ('in this score… seems good') into a flat recommendation. It also leaves out the caveat that pop scores often don't reflect the composer's intention."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-03__m7-8",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The answer correctly says to start softly because the accompaniment is marked p. However, it turns the source's hedged 'seems good' into a firm recommendation and leaves out the caveat about pop scores."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-04__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer drops the source's popular-music condition (melodies often start from chord progressions, so exact rhythms are hard to notate). Without it, singing slightly ahead of or behind the beat reads as a general rule. The added point about word division is accurate and comes from the supplied evidence."
+      },
+      {
+        "id": "expert-kim-nella-fantasia-05__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The guidance on microphones, venue and vocal technique is faithful. However, the answer bases the academic-expression advice on the song's popular, free character, while the source bases it on the lyrical, hopeful message."
+      },
+      {
+        "id": "expert-yeon-nella-fantasia-02__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The answer correctly states the genre point and that classical singing is possible, but it turns the source's recommendation into an expected result. It also leaves out the key condition: comfortable timbre with a microphone, operatic production without one."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-03__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 4,
+        "rationale": "The source presents Rosina's characterization as the common interpretation, but the answer turns it into Rossini's proven intention. It also writes \"8분음표\" instead of the double-dotted eighth note (겹점8분음표), so the answer misstates the rhythm."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-03__m21-22",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The source gives the character-portrayal reason as a common interpretation, but the answer states it as Rossini's established intention. It also turns the source's '좋다' advice on placing short notes into a firmer '표현되어야' requirement."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-06__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 2,
+        "rationale": "The answer adds \"interpretive difference\" as a cause that is not in the source, and it drops the source's hedged \"가능성\". It also omits the practice advice to focus on emphasizing the grace notes, but it explains the meaning of the slash correctly."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-11__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 4,
+        "rationale": "The guidance on reacting with facial expression, gaze and movement is faithful. However, the source's hedged 'can be a dramatic transition' becomes a definite statement, and the source's specific reference to a long interlude is generalised to any interlude."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-15__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The source uses the staccato accompaniment and the slurred first beat as evidence for a lively image. The answer instead suggests the accent exists to emphasize the accompaniment's rhythm, which slightly shifts that reasoning, and it leaves out that the lively image is meant to portray Rosina's character."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-15__m92-93",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "In the source, the staccato accompaniment and the slurred, trill-like first beat are evidence for an interpretive way of singing. The answer, though hedged, turns them into likely reasons for the notated accent and calls the accent an 'acting choice'."
+      },
+      {
+        "id": "expert-kim-una-voce-poco-fa-19__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 2,
+        "rationale": "The source names leaning on the short note and letting the long note fade as a pitfall, but the answer turns it into recommended practice. It also drops the 'no slash' condition from the even-division rule and presents commentators' opinions as general fact."
+      },
+      {
+        "id": "expert-yeon-una-voce-poco-fa-16__no-range",
+        "useful": true,
+        "fidelity": "minor_drift",
+        "naturalness": 3,
+        "rationale": "The options ('아-' or the word's vowel) are kept correctly, but the source's '반드시 … 지어야 한다' is softened to '좋습니다', which weakens an obligation. 'Depending on the case' is reasonably rendered as permission ('할 수 있으며')."
+      },
+      {
+        "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+        "useful": true,
+        "fidelity": "material_drift",
+        "naturalness": 3,
+        "rationale": "The explanation of why there are so many ornaments (Rossini's era valued virtuosity, and the ornaments portray Rosina) is supported. But the answer drops the condition about slashed versus unslashed grace notes and applies equal division to every ornament across the piece, which is wrong and also off-topic."
+      }
+    ]
+  }
+}
