@@ -1,0 +1,83 @@
+[
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-08__m32-32",
+    "case_id": "expert-kim-una-voce-poco-fa-08__m32-32",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a97e8f2fe8173123563d"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-13__m62-62",
+    "case_id": "expert-kim-una-voce-poco-fa-13__m62-62",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e77802f4574426b632ac"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-15__m92-93",
+    "case_id": "expert-kim-una-voce-poco-fa-15__m92-93",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "c6d6a4d75d0e8f6b653d"
+  },
+  {
+    "key": "current:expert-yeon-nella-fantasia-02__no-range",
+    "case_id": "expert-yeon-nella-fantasia-02__no-range",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "ec3e2bf6691037a603bd"
+  },
+  {
+    "key": "current:expert-yeon-la-capinera-12__no-range",
+    "case_id": "expert-yeon-la-capinera-12__no-range",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "16646f82f78a1ed62245"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-03__m16-16",
+    "case_id": "expert-kim-la-capinera-03__m16-16",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e2db240ccdad57ea5065"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-03__no-range",
+    "case_id": "expert-kim-una-voce-poco-fa-03__no-range",
+    "variant": "gemini-4-argon-low-frozen-j",
+    "source_file": "evaluation/gemini_writer_2026-11-07/expert/judge-batches/004-partial/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "exception",
+    "generation_mode": null,
+    "review_id": null,
+    "exception": {
+      "type": "ClientError",
+      "message": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.', 'status': 'RESOURCE_EXHAUSTED'}}"
+    }
+  }
+]

@@ -1,0 +1,6 @@
+{
+  "reason": "Official model guide clarification after capture started; no requests, outputs, settings or judge criteria changed.",
+  "sampling": "Argon ignores temperature/top_p/top_k. Frozen contract retained values describes request fields only, not effective matching. Provider defaults and reasoning differ from Qwen; no claim of same decoding or exact determinism.",
+  "source": "https://docs.cloud.google.com/gemini-enterprise-agent-platform/models/guides/gemini-4-argon",
+  "first_valid_results_policy": "All initial errors and completed outputs are retained. Technical/API failures contribute zero in effective BERTScore."
+}

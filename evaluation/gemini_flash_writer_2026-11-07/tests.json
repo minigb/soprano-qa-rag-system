@@ -1,0 +1,16 @@
+{
+  "command": "/home/minhee/miniconda3/envs/soprano-qa/bin/python -m unittest discover -s tests -q",
+  "tests": 693,
+  "seconds": 23.553,
+  "result": "passed",
+  "log_sha256": "7e4eb17a8d6bc26c1ee6341f933cb7a6346f7acde43c5b169015742428fa46f2",
+  "implementation_commit": "5989b70",
+  "suites": "existing regression tests + provider and service integration tests",
+  "selected_model_update": "Configuration and test fixture strings changed to Gemini3.8Flash; runtime source is unchanged from the full693-test run.",
+  "focused_rerun": {
+    "tests": 19,
+    "result": "passed",
+    "scope": "Vertex provider and single-pass integration tests after selected-model update"
+  },
+  "dependency_check": "pip check: No broken requirements found"
+}

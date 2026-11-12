@@ -1,0 +1,170 @@
+{
+  "case_id": "expert-kim-nella-fantasia-05__no-range",
+  "variant": "sumijo-priority-v1",
+  "messages_sha256": "0a74469aecc2f5bd5a68302271c4b55c5dbc50958d09df163c2dc62d7ac8e940",
+  "started_at": "2026-11-07T13:51:04.257763+00:00",
+  "api_project": "project-44e5d3cc-7919-41c0-bb5",
+  "contract_sha256": "82d0273e40f708705cc6c578632c7296208698cd54e729d40ac7d005eb6aa720",
+  "latency_scope": "generation_api_only",
+  "status": "response",
+  "response": {
+    "piece_id": "nella-fantasia",
+    "scope": "whole_piece",
+    "measure_range": null,
+    "language": "ko",
+    "answer_language": "ko",
+    "evidence_language": "ko",
+    "retrieval_query": "이 곡은 어떤 발성으로 불러야 할까?",
+    "answer": "《Nella fantasia》는 정통 예술가곡이나 오페라 아리아와 달리 대중적이고 자유로운 음악적 언어를 지닌 곡이므로, 모든 부분을 오페라적인 성량과 발성으로 부르기보다는 연주 환경과 장르에 맞는 음색을 선택하는 것이 중요합니다.\n\n마이크를 사용하는 공연이나 비교적 작은 공간에서는 지나치게 무겁고 성악적인 발성보다는 자연스럽고 친밀하며 편안한 음색을 사용할 수 있습니다. 반면 마이크 없이 노래하거나 홀이 큰 경우에는 충분한 공명과 호흡 지지를 바탕으로 한 성악적 발성이 필요할 수 있습니다. \n\n따라서 발성을 단순히 곡 자체로 고정하기보다는 마이크 유무나 공간의 크기 등 연주 상황과 환경을 고려하여 조절하는 것이 적절합니다.",
+    "generation_mode": "llm_single_pass",
+    "answer_basis": "retrieved_evidence",
+    "unavailable_reason": null,
+    "generation_validation_warning": null,
+    "score_context": null,
+    "has_primary_grounding": true,
+    "has_selected_range_grounding": null,
+    "has_confirmed_local_examples": false,
+    "pipeline": "soprano_qa",
+    "model": {
+      "backend": "vertex_gemini",
+      "model": "gemini-3.8-flash"
+    },
+    "retrieval": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "hybrid",
+      "query_route": "hybrid",
+      "route_reason": "dense_result_returned",
+      "ambiguous_candidates": [],
+      "dense_attempted": true,
+      "dense_contributed": true
+    },
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-037-ku-01",
+        "piece_id": "nella-fantasia",
+        "kind": "sumijo",
+        "evidence_type": "sumijo_feedback",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "이 곡은 정통 예술가곡이나 오페라 아리아와는 달리 보다 대중적이고 자유로운 음악적 언어를 갖고 있죠. 그래서 모든 부분을 오페라적인 성량과 발성으로 표현하기보다는 이 장르에 맞는 그런 음색을 선택하는 것이 중요해요.\n\n마이크를 사용하는 공연이나 또 비교적 작은 공간에서는 지나치게 무겁고 성악적인 발성보다는 보다 자연스럽고 친밀한 음색을 사용할 수 있습니다. 반면 마이크 없이 노래하거나 또 홀이 큰 경우에는 충분한 공명과 호흡 지지를 바탕으로 한 성악적 발성이 필요할 수 있어요.\n\n웬만하면 이 노래는 작은 공간에서, 아니면 큰 공간에서 마이크를 써서 노래하는 것이 적당하다고 봅니다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "unspecified",
+        "measure_status": "unspecified",
+        "scope_match": "unspecified_scope",
+        "generation_role": "unconfirmed_scope_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 22.313373,
+        "text_score": 8.98004,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0.0,
+        "alias_score": 0.666667,
+        "concept_coverage": 1.0,
+        "content_concept_coverage": 0.5,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": {
+          "source_id": "sumijo-nella-fantasia-037",
+          "speaker": "Sumi Jo",
+          "files": {
+            "audio": "audio/nella-fantasia/Memo 037.m4a",
+            "raw": "text/nella-fantasia/Memo 037.raw.txt",
+            "reviewed": "text/nella-fantasia/Memo 037.reviewed.txt"
+          },
+          "sha256": {
+            "audio": "84d6856f2d0da8a4c75ccae146a65da7e2a77cd70e7502c5bbb14a054055b280",
+            "raw": "6368ca2a5b95e5020d19981547b700b67cb31b8cc3fc7621188e8a38476e0373",
+            "reviewed": "1c26ef77e3644965b67d33945258ea922b2f76ec5544f4296dc810d13c842db3"
+          },
+          "attribution_basis": "User identifies these recordings as feedback received directly from Sumi Jo."
+        },
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      },
+      {
+        "id": "nella-fantasia-ku-004",
+        "piece_id": "nella-fantasia",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": "whole_piece",
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 34.786927,
+        "text_score": 13.786927,
+        "dense_score": 0.625202,
+        "dense_content_score": 0.56364,
+        "fusion_score": 1.0,
+        "retrieval_mode": "hybrid",
+        "measure_score": 1.0,
+        "alias_score": 1.0,
+        "concept_coverage": 1.0,
+        "content_concept_coverage": 1.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [
+          "kim-nella-fantasia-05",
+          "yeon-nella-fantasia-02",
+          "yeon-nella-fantasia-08"
+        ],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "evidence_notices": [],
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-3.8-flash",
+      "model_version": "gemini-3.8-flash",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 3.0502425990998745,
+      "usage": {
+        "candidates_token_count": 180,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 180
+          }
+        ],
+        "prompt_token_count": 2829,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2829
+          }
+        ],
+        "total_token_count": 3009,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  },
+  "exception": null,
+  "elapsed_seconds": 3.050568890059367
+}

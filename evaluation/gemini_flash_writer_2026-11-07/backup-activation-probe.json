@@ -1,0 +1,9 @@
+{
+  "status": "exception",
+  "exception": {
+    "type": "ClientError",
+    "message": "403 PERMISSION_DENIED. {'error': {'code': 403, 'message': \"Permission 'aiplatform.endpoints.predict' denied on resource '//aiplatform.googleapis.com/projects/project-44e5d3cc-7919-41c0-bb5/locations/global/publishers/google/models/gemini-3.8-flash' (or it may not exist). Remediate access with this Troubleshooter URL or share it with your administrator - https://console.cloud.google.com/iam-admin/troubleshooter/summary;errorId=CiQwMWExYjFlZi00YmE4LTc2YWQtOTUyOC1iZTI3M2E2NTEwN2ESYnByb2plY3RzL3Byb2plY3QtNDRlNWQzY2MtNzkxOS00MWMwLWJiNS9sb2NhdGlvbnMvZ2xvYmFsL3B1Ymxpc2hlcnMvZ29vZ2xlL21vZGVscy9nZW1pbmktMy44LWZsYXNo .\", 'status': 'PERMISSION_DENIED', 'details': [{'@type': 'type.googleapis.com/google."
+  },
+  "at": "2026-11-06T17:36:52.175395+00:00",
+  "seconds": 1.3937621779623441
+}

@@ -1,0 +1,13 @@
+{
+  "observed_at": "2026-11-06T17:24:07.229167+00:00",
+  "same_vertex_project_other_workload": true,
+  "module": "dataset.linking.youtube_model_full",
+  "pids": [
+    1704435,
+    1704436
+  ],
+  "configured_concurrency": 32,
+  "action": "Leave other workload untouched. Continue own evaluation at concurrency2, minimum5s request-start interval.",
+  "interpretation": "Uncontrolled co-tenant workload is a potential cause of capacity errors and latency. Does not prove a specific causal contribution; no intrinsic model-speed claim.",
+  "user_decision": "Keep YouTube workload running; continue RAG evaluation with low request rate."
+}

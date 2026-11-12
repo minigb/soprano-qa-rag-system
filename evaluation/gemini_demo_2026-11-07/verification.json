@@ -1,0 +1,19 @@
+{
+  "verified": true,
+  "cases": 109,
+  "full_answers_verified": 218,
+  "original": "unchanged pre-security outputs, not candidate J",
+  "current": "exact saved Gemini outputs, evidence, judgments and scores",
+  "retry_cases": [
+    "expert-kim-una-voce-poco-fa-06__no-range",
+    "expert-kim-la-capinera-07__no-range",
+    "expert-kim-una-voce-poco-fa-20__m42-42",
+    "expert-kim-die-forelle-07__m28-40",
+    "expert-kim-in-flowery-clouds-09__no-range",
+    "expert-kim-una-voce-poco-fa-08__m32-32"
+  ],
+  "historical_datasets": "unchanged, 460 cases each",
+  "evaluation_references": "original and current verified separately",
+  "latency": "separate scopes labeled, no direct speed claim",
+  "api_calls": 0
+}

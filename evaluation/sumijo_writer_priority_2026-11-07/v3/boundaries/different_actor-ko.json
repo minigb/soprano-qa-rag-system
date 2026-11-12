@@ -1,0 +1,114 @@
+{
+  "case_id": "different_actor-ko",
+  "variant": "synthetic-boundary",
+  "status": "response",
+  "elapsed_seconds": 1.7385634820675477,
+  "response": {
+    "answer": "가상 연습곡에서 성악부의 첫 소리는 f로 부르도록 권합니다. 반주부의 첫 소리에 대해서는 피아니스트가 pp로 연주하도록 권하고 있습니다.",
+    "evidence": [
+      {
+        "id": "fictional-different_actor-ko-expert_annotation",
+        "piece_id": "nella-fantasia",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "이 가상 연습곡에서 성악가는 성악부의 첫 소리를 f로 부르도록 권합니다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      },
+      {
+        "id": "fictional-different_actor-ko-sumijo_feedback",
+        "piece_id": "nella-fantasia",
+        "kind": "sumijo",
+        "evidence_type": "sumijo_feedback",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "이 가상 연습곡에서 피아니스트는 반주부의 첫 소리를 pp로 연주하도록 권합니다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": {
+          "speaker": "Sumi Jo"
+        },
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "generation_mode": "llm_single_pass",
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-3.8-flash",
+      "model_version": "gemini-3.8-flash",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 1.7384142000228167,
+      "usage": {
+        "candidates_token_count": 43,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 43
+          }
+        ],
+        "prompt_token_count": 2256,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2256
+          }
+        ],
+        "total_token_count": 2299,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  }
+}

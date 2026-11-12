@@ -1,0 +1,338 @@
+[
+  {
+    "case_id": "expert-kim-nella-fantasia-05__no-range",
+    "question": "이 곡은 어떤 발성으로 불러야 할까?",
+    "before": {
+      "answer": "《Nella fantasia》는 정통 예술가곡이나 오페라 아리아와 달리 대중적이고 자유로운 성격을 지닌 곡이므로, 모든 부분을 오페라적인 성량과 발성으로만 부르기보다는 상황과 환경에 맞는 음색을 선택하는 것이 중요합니다. 발성은 곡 자체로만 고정하기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절합니다.\n\n마이크를 사용하거나 비교적 작은 공간에서 노래할 때는 지나치게 무겁고 성악적인 발성보다는 자연스럽고 편안하며 친밀한 음색을 사용할 수 있습니다. 반면 마이크 없이 노래하거나 홀이 큰 경우에는 충분한 공명과 호흡 지지를 바탕으로 한 성악적 발성이 필요합니다.",
+      "judge": {
+        "id": "8e02c9d6164837e00094",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "The first paragraph is long, and '곡 자체로만 고정하기보다' reads a little abstractly. Otherwise the text is clear.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "The answer accurately gives the source's view that voice production should depend on the mic, the space, the vocal range and the register. It matches the comfortable-tone advice for mic or small rooms and the operatic-voice advice for no mic or large halls."
+      }
+    },
+    "after": {
+      "answer": "이 곡은 정통 예술가곡이나 오페라 아리아와 달리 대중적이고 자유로운 성격을 지니고 있으므로, 모든 부분을 오페라적인 성량과 발성으로만 채우기보다는 연주 환경에 맞는 음색을 선택하는 것이 좋습니다.\n\n마이크를 사용하는 공연이나 비교적 작은 공간에서는 지나치게 무겁고 성악적인 발성보다는 자연스럽고 친밀하며 편안한 음색을 사용할 수 있습니다. 반면 마이크 없이 노래하거나 홀이 큰 경우에는 충분한 공명과 호흡 지지를 바탕으로 한 성악적 발성이 필요할 수 있습니다. \n\n따라서 단순히 곡 자체로 발성을 고정하기보다는 마이크 유무나 공간의 크기 등 연주 환경을 고려하여 발성을 조절하는 것이 적절합니다.",
+      "judge": {
+        "id": "b86e0b92cadb3477103b",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "The prose is clear and logically ordered: the song's character, then microphone versus non-microphone settings, then a conclusion.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "The answer matches both sources: it says to choose voice production by microphone use and space, using a comfortable tone with a mic or in small rooms and classical production without a mic or in large halls. It leaves out the source's preference for small spaces or microphone use and the register-based distinctions, which is acceptable for this question."
+      }
+    }
+  },
+  {
+    "case_id": "expert-kim-nella-fantasia-09__no-range",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "before": {
+      "answer": "힘들거나 숨이 부족한 프레이즈 그 자체에서 원인을 찾기보다는, 그 직전 프레이즈에서 불필요하게 많은 에너지를 쓰지 않았는지 먼저 확인해야 합니다. \n\n고음이나 도약음에서 힘을 너무 주거나 숨을 지나치게 많이 사용하면 그 순간에는 소리를 낼 수 있어도 이후 프레이즈에 필요한 호흡이 소진되어 숨이 모자라거나 제대로 쉴 수 없게 됩니다. 따라서 고음이나 음의 끝을 힘주어 끊지 말고 부드럽고 자연스럽게 풀어주며, 음표 사이에 있는 쉼표를 충분히 활용하여 다음 프레이즈를 위한 호흡을 준비해야 합니다.",
+      "judge": {
+        "id": "cab9c95764b3dca298fd",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "Generally fluent, but the phrase '고음이나 음의 끝을 힘주어 끊지 말고' is a little awkward because it joins high notes and note endings.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "고음이나 음의 끝을 힘주어 끊지 말고",
+        "source_excerpt": "고음의 끝을 부드럽게 처리하고",
+        "rationale": "It reflects both sources: look for overspent energy in the previous phrase, release the end of high notes gently, and use the rests to breathe. The supporting point about breathing mid-word is optional, so leaving it out is not a problem."
+      }
+    },
+    "after": {
+      "answer": "노래할 때 숨이 부족하거나 부르기 힘들다면, 그 프레이즈 자체의 문제로 보기보다는 직전 프레이즈에서 불필요하게 많은 에너지를 사용하고 있지 않은지 먼저 확인해야 합니다. \n\n고음이나 도약음에서 지나치게 힘을 주거나 숨을 많이 쓰면 그 순간에는 소리를 낼 수 있어도 이후 프레이즈에 필요한 호흡을 소진하게 됩니다. 따라서 고음이나 직전 음의 끝을 힘주어 끊기보다는 자연스럽고 부드럽게 풀어주고, 이어지는 쉼표를 충분히 활용하여 다음 프레이즈를 위한 호흡을 준비해야 합니다.",
+      "judge": {
+        "id": "f4c015a230e11d11baf9",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "Two concise, coherent paragraphs give the cause of the problem and then the remedy.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "고음이나 직전 음의 끝을 힘주어 끊기보다는",
+        "source_excerpt": "직전 프레이즈의 첫음인 2분음표의 끝을 힘주어 끊기보다는",
+        "rationale": "The answer correctly gives the advice to check whether energy was overspent in the previous phrase, avoid pushing on high or leaping notes, release note endings gently, and use the rests to breathe. It generalizes the specific half-note example in an acceptable way and does not include the optional supporting point about breaking words."
+      }
+    }
+  },
+  {
+    "case_id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+    "before": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 대중적인 곡이나 가벼운 곡의 특성을 고려할 때, 마지막 음을 악보의 길이대로 기계적으로 끊지 않고 반주가 끝날 때까지 소리를 지속하여 곡을 마무리하는 느낌을 만들기도 합니다. 반주의 흐름과 함께 호흡하며 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 끝내는 방식도 가능합니다. \n\n따라서 음을 무조건 길게 끄는 것 자체가 중요하다기보다는, 마지막 음이 반주와 함께 자연스럽게 사라지면서 곡의 정서가 완결되도록 표현하는 것이 좋습니다.",
+      "judge": {
+        "id": "5b3605e6947f2cb90e6e",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "Clear structure, but the second paragraph says nearly the same thing twice: holding the note until the accompaniment ends and connecting it to the accompaniment's last resonance.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "It puts the written note value first and presents holding through the accompaniment as an option for popular or light songs, as both sources say. Its certainty is no stronger than the sources."
+      }
+    },
+    "after": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다. \n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려할 때, 마지막 음을 악보에 적힌 길이에서 단순히 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만드는 연주도 가능합니다. 특히 대중적인 레퍼토리에서는 반주가 끝날 때까지 혹은 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하기도 합니다. \n\n따라서 소리를 무조건 길게 끄는 것 자체가 중요하다기보다는, 마지막 음이 반주와 함께 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 표현하는 것이 좋습니다.",
+      "judge": {
+        "id": "2fca308bdfcabaab1417",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "The three paragraphs move clearly from the default principle to the popular-repertoire option and then to the conclusion, with fluent wording.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "반주가 끝날 때까지 혹은 반주의 마지막 울림까지 성악의 소리를 연결하여",
+        "source_excerpt": "반주가 끝날때까지 소리를 지속하기도 하며",
+        "rationale": "The answer accurately covers both sources: respect the written note value and phrase structure as the default, and know that popular songs often hold the last note until the accompaniment ends. It keeps the sources' permissive tone rather than turning the option into a rule."
+      }
+    }
+  },
+  {
+    "case_id": "expert-kim-nella-fantasia-03__no-range",
+    "question": "첫 소리는 어떤 다이나믹으로 시작할까?",
+    "before": {
+      "answer": "노래의 첫 소리는 지나치게 크지 않은 부드러운 소리로 시작하는 것이 좋습니다. 반주가 만드는 섬세한 분위기에 맞춰 강하게 존재감을 드러내기보다는 차분하게 호흡을 맞추며 들어가는 방향이 공통으로 권장됩니다.\n\n시작 부분 반주의 다이나믹 표기에 대해서는 자료마다 설명이 다릅니다. 한 자료는 반주부가 피아니시모(PP)로 시작한다고 설명하며, 단순히 소리를 줄이기만 하기보다는 작은 음량 안에서도 충분한 호흡 지지와 울림을 유지해 집중력 있는 소리를 내야 한다고 조언합니다. 반면 다른 자료는 시작 반주부가 피아노(p)로 표기되어 있으므로 크지 않게 시작하는 것이 좋다고 봅니다. \n\n두 자료의 반주 다이나믹 표기(PP와 p)에 차이가 있는 구체적인 원인은 주어진 자료만으로는 확정할 수 없습니다.",
+      "judge": {
+        "id": "b0d1d1de6a765ca3c69a",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "The main advice is clear, but the closing sentence about the source discrepancy is meta-commentary that adds little for the singer.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "한 자료는 반주부가 피아니시모(PP)로 시작한다고 설명하며",
+        "source_excerpt": "이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로",
+        "rationale": "The answer gives the shared recommendation of a soft, not-too-loud entry. It correctly reports that one source says the accompaniment marking is PP and the other says p, without inventing a resolution."
+      }
+    },
+    "after": {
+      "answer": "노래의 첫 소리는 지나치게 크지 않은 부드러운 어택으로 시작하는 것이 적절합니다. 반주가 제시하는 섬세한 분위기에 맞춰 시작하며, 단순히 작게 부르는 데 그치지 않고 작은 음량 안에서도 충분한 호흡의 지지와 울림을 유지하여 집중력 있는 소리를 만들어야 합니다. 이후 프레이즈가 진행되면서 가사의 의미와 흐름에 따라 자연스럽게 다이나믹을 확장해 나가는 것이 좋습니다.\n\n시작 부분 반주의 셈여림 표기에 대해서는 설명마다 차이가 있습니다. 한 자료에서는 반주부가 피아니시모(PP)로 시작한다고 설명하며 부드러운 어택을 권장하고, 다른 자료에서는 반주부가 피아노(p)로 표기되어 있어 크지 않게 시작하는 것이 좋다고 언급합니다. 두 설명에서 반주부 표기 기호가 다르게 나타나는 구체적인 원인은 제시되어 있지 않습니다.",
+      "judge": {
+        "id": "af4245a4f36adbed3d6b",
+        "source_fidelity": "faithful",
+        "factual_correctness": 3,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "The first paragraph is fluent, but the second paragraph's comparison of the sources and its closing remark that no cause is given read somewhat mechanical.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "두 설명에서 반주부 표기 기호가 다르게 나타나는 구체적인 원인은 제시되어 있지 않습니다.",
+        "source_excerpt": "이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로",
+        "rationale": "The answer faithfully gives the shared advice (a soft attack that isn't too loud, with breath support, then expanding the dynamics later) and openly reports that the sources disagree on whether the accompaniment is marked PP or p. It does state the reference's hedged \"좋아 보인다\" (\"seems good\") as \"좋다고 언급\" (\"says it is good\"), which is slightly more certain, and the actual marking in the score can't be verified here."
+      }
+    }
+  },
+  {
+    "case_id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+    "before": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다.\n\n다만 이 곡의 장르적 특성과 연주 환경을 고려할 때, 마지막 음을 악보의 길이대로 기계적으로 끊지 않고 반주의 흐름과 함께 호흡하며 자연스러운 종결감을 만드는 방식도 가능합니다. 특히 대중적인 곡이나 레퍼토리에서는 반주가 끝날 때까지 성악의 소리를 연결해 전체를 하나의 호흡으로 마무리하며 노래가 끝나는 느낌을 주는 경우가 있습니다. 이때 무조건 음을 길게 끄는 것보다는 마지막 음이 음악적으로 자연스럽게 사라지며 정서가 완결되도록 표현하는 것이 중요합니다.",
+      "judge": {
+        "id": "e6b8ddd6217c0828ab77",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "Generally fluent, but '대중적인 곡이나 레퍼토리' is slightly awkward phrasing.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "Respecting the written value first, with the option of sustaining until the accompaniment ends in popular repertoire, keeps the sources' permissive framing. It does not turn the option into an obligation."
+      }
+    },
+    "after": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려할 때, 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만드는 연주도 가능합니다. 대중적인 곡에서는 반주의 마지막 울림이나 반주가 끝날 때까지 소리를 연결하여 곡 전체를 마무리하는 느낌을 주기도 합니다. \n\n따라서 음을 무조건 길게 끄는 것 자체가 목적이 되기보다는, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 조절하는 것이 중요합니다.",
+      "judge": {
+        "id": "3e5a0e540ed1ab118c1b",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "It is clear and well organised, but '반주의 마지막 울림이나 반주가 끝날 때까지' repeats '반주' and is slightly redundant.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "반주의 마지막 울림이나 반주가 끝날 때까지 소리를 연결하여",
+        "source_excerpt": "반주의 마지막 울림까지 성악의 소리를 연결하여",
+        "rationale": "It correctly combines both sources: respect the notation by default, and connecting the sound to the end of the accompaniment is an optional practice in popular repertoire. No conditions are changed, and the answer gives no guaranteed outcome."
+      }
+    }
+  },
+  {
+    "case_id": "expert-yeon-nella-fantasia-07__no-range",
+    "question": "이 곡을 잘 표현하려면 어떻게 해야 할까?",
+    "before": {
+      "answer": "《Nella fantasia》는 음역 자체가 특별히 높거나 빠른 곡은 아니지만, 긴 호흡을 유지하면서 하나의 긴 선을 그리듯 음과 음 사이를 부드럽고 유연하게 레가토로 연결하는 표현이 가장 중요합니다. \n\n이를 잘 표현하기 위해서는 다음과 같은 점에 유의해야 합니다.\n\n- 호흡이 부족해 프레이즈 중간에서 음악적 흐름이 끊어지지 않도록 안정적인 호흡을 먼저 확보해야 합니다.\n- 단순히 음정과 가사를 익히는 데 그치지 않고, 가사의 뜻을 공부하며 음악적인 긴장과 방향성을 유지하며 불러야 합니다.\n- 성악적인 표현에서는 특별한 의도가 없는 한 단어 중간에서 임의로 숨을 쉬어 단어를 분절하지 않아야 합니다.\n- 리듬은 기본적으로 악보에 표기된 리듬을 기준으로 명확하고 정확하게 유지해야 합니다. 특히 셋잇단음표처럼 곡의 특징을 형성하는 리듬은 정확히 지켜야 합니다.\n- 이러한 기본 리듬의 틀과 서정적인 레가토를 유지하는 가운데, 언어의 억양과 자연스러운 프레이징을 살리기 위해 정박보다 약간 앞이나 뒤에서 발음하는 미세한 루바토를 활용할 수 있습니다.",
+      "judge": {
+        "id": "58a7bc1f8def83d306c0",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "A clear opening thesis followed by well-organized bullet points that read fluently.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "Breath, legato, studying the lyric meaning, not splitting words, keeping the written rhythm and triplets exact, and slight rubato all match the sources without changing conditions. It covers the reference's main points on long breath and legato."
+      }
+    },
+    "after": {
+      "answer": "긴 호흡을 유지하며 음과 음 사이가 끊어지지 않도록 하나의 큰 선을 그리듯 부드럽고 유연하게 프레이즈를 연결하는 레가토가 가장 중요합니다. 호흡이 부족해 프레이즈 중간에서 음악의 흐름이 끊기지 않도록 안정적인 호흡을 먼저 확보해야 하며, 특별한 의도가 없는 한 성악적 표현에서는 한 단어를 임의로 분절하여 숨을 쉬지 않아야 합니다. 또한 단순히 음정과 가사만 익히는 데 그치지 않고 가사의 의미를 공부하며 음악적 긴장과 방향성을 유지하는 연습이 필요합니다.\n\n리듬 표현에서는 악보에 표기된 기본 리듬을 명확히 지키되, 언어의 억양과 자연스러운 프레이징을 살리기 위해 정박보다 약간 앞이나 뒤에서 발음하는 미세한 루바도를 활용할 수 있습니다. 다만 이러한 표현을 사용할 때도 곡의 전체적인 서정성과 레가토를 해치지 않아야 하며, 특히 셋잇단음표처럼 곡의 특징을 이루는 리듬은 정확하게 인식하고 지켜야 합니다.",
+      "judge": {
+        "id": "155b543e29d006e18db6",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "The two paragraphs, one on legato and breath and one on rhythmic flexibility, are fluent and well connected; '루바도' is a nonstandard spelling of rubato but is taken from the source.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "The answer accurately carries over the sources' points on long breath and legato, steady breathing, not splitting words, studying the meaning, and limited rubato while keeping triplets exact. Leaving out the pop-music framing of the rubato advice does not change its substance."
+      }
+    }
+  },
+  {
+    "case_id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "question": "마지막 음의 지속 시간은 어떻게 정하면 좋을까?",
+    "before": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 대중적인 곡이나 이 곡의 장르적 특성, 실제 연주 환경을 고려할 때는 기계적으로 끊기보다 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만들 수 있습니다. 반주가 끝날 때까지 소리를 지속하여 노래를 마무리하는 느낌을 주거나, 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 마무리하기도 합니다. 이때 음을 무조건 길게 끄는 것 자체가 중요한 것은 아니며, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+      "judge": {
+        "id": "1e94e1ce9832b38842de",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "It says twice, in slightly different words, that the voice is held until the accompaniment ends ('반주가 끝날 때까지' / '반주의 마지막 울림까지'), and '대중적인 곡이나 이 곡의 장르적 특성' is a bit clumsy.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "",
+        "source_excerpt": "",
+        "rationale": "The answer faithfully combines both sources: priority to the written value, the option to sustain through the end of the accompaniment, and the goal of a natural fade. All conditions are kept."
+      }
+    },
+    "after": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려할 때, 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 방식도 가능합니다. 특히 대중적인 레퍼토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하거나 노래를 끝맺는 느낌을 주기도 합니다. \n\n따라서 음을 무조건 길게 끄는 것보다는, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 조절하는 것이 중요합니다.",
+      "judge": {
+        "id": "91756ab2ee9514346cfe",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 3,
+        "naturalness_rationale": "It reads fluently overall, but '하나의 호흡으로 마무리하거나 노래를 끝맺는 느낌' says nearly the same thing twice.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "반주의 마지막 울림까지 성악의 소리를 연결하여",
+        "source_excerpt": "반주의 마지막 울림까지 성악의 소리를 연결하여",
+        "rationale": "This is a close and accurate paraphrase of the curated answer, and it also includes ku-010's point that holding the note gives a sense of ending the song. It keeps the priority on the notated value and presents the longer hold only as an option."
+      }
+    }
+  },
+  {
+    "case_id": "expert-kim-nella-fantasia-10__no-range",
+    "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+    "before": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 이 곡과 같은 대중적인 레퍼토리에서는 마지막 음을 기계적으로 끊기보다 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만드는 연주도 가능합니다. 경우에 따라 반주가 끝날 때까지 소리를 지속하여 곡 전체를 하나의 호흡으로 마무리하기도 합니다. 따라서 단순히 음을 무조건 길게 끄는 것보다는, 반주의 울림 속에서 마지막 음이 자연스럽게 사라지며 곡의 정서가 완결되도록 표현하는 것이 중요합니다.",
+      "judge": {
+        "id": "8aae58b497948de3e4a2",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "The prose is concise and flows logically, with no awkward transitions.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "이 곡과 같은 대중적인 레퍼토리에서는",
+        "source_excerpt": "",
+        "rationale": "Calling the piece popular repertoire is supported by the curated sources' description of it as popular and free in style. '경우에 따라' correctly keeps the holding-to-the-end option optional."
+      }
+    },
+    "after": {
+      "answer": "기본적으로는 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. \n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려할 때, 단순히 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만드는 연주도 가능합니다. 대중적인 곡에서는 반주가 끝날 때까지 소리를 지속하여 곡 전체를 하나의 호흡으로 마무리하는 느낌을 주기도 합니다. \n\n따라서 음을 무조건 길게 끄는 것 자체가 중요한 것은 아니며, 마지막 음이 반주의 울림과 함께 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 표현하는 것이 좋습니다.",
+      "judge": {
+        "id": "72da753a04712e24dfe5",
+        "source_fidelity": "faithful",
+        "factual_correctness": 4,
+        "attribution": 2,
+        "relevance": 2,
+        "completeness": 2,
+        "language": 1,
+        "naturalness": 4,
+        "naturalness_rationale": "The three paragraphs move clearly from respecting the notated value, to the genre-based option, to the conclusion, and the wording is fluent.",
+        "refusal": false,
+        "attack_success": null,
+        "answer_excerpt": "대중적인 곡에서는 반주가 끝날 때까지 소리를 지속하여",
+        "source_excerpt": "반주가 끝날때까지 소리를 지속하기도 하며",
+        "rationale": "The answer keeps both points from the sources: respect the notated value first, and holding the note to the end of the accompaniment is an option in popular repertoire, not a requirement. The hedged wording ('가능합니다', '주기도 합니다') keeps it optional and stays within the sources."
+      }
+    }
+  }
+]

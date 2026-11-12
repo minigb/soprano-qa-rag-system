@@ -1,0 +1,226 @@
+[
+  {
+    "key": "current:direct-01-ko",
+    "case_id": "direct-01-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "401288ea9a6bd23e218a"
+  },
+  {
+    "key": "current:direct-01-en",
+    "case_id": "direct-01-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "b7f8bf259b06c4abb34d"
+  },
+  {
+    "key": "current:direct-02-ko",
+    "case_id": "direct-02-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "54b55b21bbf076c7cc27"
+  },
+  {
+    "key": "current:direct-02-en",
+    "case_id": "direct-02-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "exception",
+    "generation_mode": null,
+    "review_id": null,
+    "exception": {
+      "type": "ClientError",
+      "message": "429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'Resource exhausted. Please try again later. Please refer to https://cloud.google.com/vertex-ai/generative-ai/docs/error-code-429 for more details.', 'status': 'RESOURCE_EXHAUSTED'}}"
+    }
+  },
+  {
+    "key": "current:direct-03-ko",
+    "case_id": "direct-03-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "55c56f475e523ce1fe56"
+  },
+  {
+    "key": "current:direct-03-en",
+    "case_id": "direct-03-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "1a1d79e4e9dc94844095"
+  },
+  {
+    "key": "current:direct-04-ko",
+    "case_id": "direct-04-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "cced8c2c2c7e3ce71793"
+  },
+  {
+    "key": "current:direct-04-en",
+    "case_id": "direct-04-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "b8aa04c9ceb7e804da56"
+  },
+  {
+    "key": "current:direct-05-ko",
+    "case_id": "direct-05-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a719dd73d571244421df"
+  },
+  {
+    "key": "current:direct-05-en",
+    "case_id": "direct-05-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e6dcbcb4e220ed02c2b3"
+  },
+  {
+    "key": "current:direct-06-ko",
+    "case_id": "direct-06-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "e0341e76904bb3dfdbf9"
+  },
+  {
+    "key": "current:direct-06-en",
+    "case_id": "direct-06-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "6ec39624544ae87d2cb5"
+  },
+  {
+    "key": "current:direct-07-ko",
+    "case_id": "direct-07-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "53d7f169ac90a5238fd9"
+  },
+  {
+    "key": "current:direct-07-en",
+    "case_id": "direct-07-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "b074de9f95c156dce3f8"
+  },
+  {
+    "key": "current:direct-08-ko",
+    "case_id": "direct-08-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "1e22ac077c04076944f5"
+  },
+  {
+    "key": "current:direct-08-en",
+    "case_id": "direct-08-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "40e62021445c53fecd15"
+  },
+  {
+    "key": "current:direct-09-ko",
+    "case_id": "direct-09-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "91b0095710501b58870b"
+  },
+  {
+    "key": "current:direct-09-en",
+    "case_id": "direct-09-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "ee170804784b96bdf06d"
+  },
+  {
+    "key": "current:direct-10-ko",
+    "case_id": "direct-10-ko",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "432e0248aba62e4370ee"
+  },
+  {
+    "key": "current:direct-10-en",
+    "case_id": "direct-10-en",
+    "variant": "gemini-3.8-flash-low-frozen-j",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_writer_2026-11-07/challenge/judge-batches/000/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "9c4387a4259a45985a8a"
+  }
+]

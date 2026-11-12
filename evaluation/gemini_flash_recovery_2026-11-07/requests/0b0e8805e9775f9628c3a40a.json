@@ -1,0 +1,232 @@
+{
+  "case_id": "expert-kim-die-forelle-07__m28-40",
+  "cohort": "expert",
+  "variant": "gemini-3.8-flash-technical-retry1",
+  "attempt_number": 2,
+  "started_at": "2026-11-07T04:16:39.021723+00:00",
+  "api_project": "project-44e5d3cc-7919-41c0-bb5",
+  "contract_sha256": "9a4d318e273b1737b84dc25f8d3e420902816c5a2cdee3f72b041418c5369e66",
+  "messages_sha256": "2876cca7772660dc58073a560a69d88b669ef240b10b586c6e49125e667f68c5",
+  "original_exception": {
+    "type": "ServerError",
+    "message": "504 DEADLINE_EXCEEDED. {'error': {'code': 504, 'message': 'Deadline expired before operation could complete.', 'status': 'DEADLINE_EXCEEDED'}}"
+  },
+  "status": "response",
+  "response": {
+    "piece_id": "die-forelle",
+    "scope": "range",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer_language": "ko",
+    "evidence_language": "ko",
+    "retrieval_query": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+    "answer": "28마디부터 40마디 구간에서 피아노 파트의 바뀐 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 묘사해 긴장감과 분위기 전환을 만들어 냅니다. 성악가는 이러한 피아노의 변화를 이해하고, 반주가 형성하는 긴장감을 활용해 가사를 표현하면서 분위기의 전환이 분명히 느껴지도록 주의를 기울여 부르는 것이 좋습니다.",
+    "generation_mode": "llm_single_pass",
+    "answer_basis": "retrieved_evidence",
+    "unavailable_reason": null,
+    "generation_validation_warning": null,
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "lang,"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "er macht das"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "Bäch- -lein tü- -ckisch"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "trü- -be, und"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "eh' ich es ge-"
+          ]
+        },
+        {
+          "measure": 36,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dacht, so"
+          ]
+        },
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "zuck- -te sei- -ne"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "Ru- -the, das"
+          ]
+        },
+        {
+          "measure": 39,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein, das"
+          ]
+        },
+        {
+          "measure": 40,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein zap- -pelt"
+          ]
+        }
+      ]
+    },
+    "has_primary_grounding": true,
+    "has_selected_range_grounding": true,
+    "has_confirmed_local_examples": false,
+    "pipeline": "soprano_qa",
+    "model": {
+      "backend": "vertex_gemini",
+      "model": "gemini-3.8-flash"
+    },
+    "retrieval": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "hybrid",
+      "query_route": "hybrid",
+      "route_reason": "dense_result_returned",
+      "ambiguous_candidates": [],
+      "dense_attempted": true,
+      "dense_contributed": true
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "piece_id": "die-forelle",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ],
+        "is_local": true,
+        "measure_scope": "local",
+        "measure_status": "specific",
+        "scope_match": "overlaps_query_range",
+        "generation_role": "selected_range_support",
+        "selected_range_claim_authority": true,
+        "in_requested_scope": true,
+        "score": 48.558842,
+        "text_score": 23.558842,
+        "dense_score": 0.679624,
+        "dense_content_score": 0.630842,
+        "fusion_score": 1.0,
+        "retrieval_mode": "hybrid",
+        "measure_score": 5.0,
+        "alias_score": 1.0,
+        "concept_coverage": 1.0,
+        "content_concept_coverage": 1.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "dense_source_question_led",
+        "source_ids": [
+          "kim-die-forelle-07",
+          "yeon-die-forelle-04"
+        ],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "evidence_notices": [],
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-3.8-flash",
+      "model_version": "gemini-3.8-flash",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 2.701952136005275,
+      "usage": {
+        "candidates_token_count": 104,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 104
+          }
+        ],
+        "prompt_token_count": 2257,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2257
+          }
+        ],
+        "total_token_count": 2361,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  },
+  "exception": null,
+  "elapsed_seconds": 2.702444147958886
+}
