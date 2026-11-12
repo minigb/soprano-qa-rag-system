@@ -1,0 +1,7 @@
+{
+  "results_sha256": "5dda59f4495bde7703de3918a139c29f475618421fe6f3592b61c0ef219de368",
+  "metric_input_sha256": "46291f399ceaa82d3b469c53c7354ccb6721aa54ce7b8c41b058a6c9355b3b43",
+  "cases": 460,
+  "judge": "claude-opus-5-5",
+  "policy": "First valid Claude judgment; same rubric as historical demo. Fixed BERTScore setting, full displayed text; semantic refusals, unavailable outputs and unscorable lengths contribute zero."
+}

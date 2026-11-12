@@ -1,0 +1,24 @@
+{
+  "authored_changes": "passed git diff --cached --check outside frozen source snapshots",
+  "frozen_snapshot_notices": [
+    "evaluation/helpful_responses_2026-11-04/full-final/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/full/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-a/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-b/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-c/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-d/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-e/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-f/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/pilot-g/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/security-final/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/security-hardened/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/security/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/source-recovery-probe-i/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/source-recovery-probe-j/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/source-recovery-probe-k/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/source-recovery-probe-l/snapshot/soprano_qa/__init__.py:2: new blank line at EOF.",
+    "evaluation/helpful_responses_2026-11-04/source-recovery-probe/snapshot/soprano_qa/__init__.py:2: new blank line at EOF."
+  ],
+  "reason": "Preserve the exact evaluated source bytes. Every notice is the pre-existing blank final line of __init__.py, identical to the live module and frozen source hashes.",
+  "original_init_sha256": "09861dc8855d3ccff8f9e63922f676591b3e67eb1e3941f29b6ab47ae0cfdd1f"
+}

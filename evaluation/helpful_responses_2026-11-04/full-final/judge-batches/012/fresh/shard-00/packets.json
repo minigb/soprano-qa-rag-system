@@ -1,0 +1,106 @@
+[
+  {
+    "id": "6d07c08d9e50710e84b7",
+    "question": "이 작품을 제대로 소화하려면 어떤 점에 신경 써야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 템포가 빠르고 발음이 빠르게 요구되며, 단어의 악센트와 마디의 강박·약박을 정확히 파악해야 합니다. 마디의 마지막 박자에 있는 단어는 다음 마디의 첫 박자 단어의 악센트로 이어지는 점에 유의해야 합니다.\n탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 중요합니다.\n피아노 파트의 음형 변화는 곡의 내용과 긴장감을 표현하는 데 중요한데, 이를 이해하고 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.\n딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 중요합니다.\n르 마세나는 송어의 민첩하고 우아한 움직임을 전달해야 하며, 피아노의 작은 동기는 가볍고 날렵하게 연주해야 하지만 다급하거나 신경질적인 느낌은 피해야 한다고 조언합니다.\n이 곡은 너무 유명해서 실기 시험에서 더 잘 부르는 부담이 따르며, 다른 사람과 차별화된 표현이 필요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-016",
+        "text": "《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      },
+      {
+        "id": "die-forelle-ku-017",
+        "text": "《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-0078",
+        "text": "르 마세나는 이 곡이 쏜살같은 송어의 민첩하고 우아한 움직임을 전해야 하고 피아노의 거품 이는 작은 동기는 가볍고 날렵하게 연주해야 하지만, 결코 다급하거나 신경질적인 서두름의 인상을 주어서는 안 된다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5029",
+        "text": "강사는 입시나 실기 시험에서 누구나 아는 이 곡처럼 너무 유명한 곡을 가져가는 것도 다르게, 더 잘 불러야 한다는 점에서 큰 부담이 된다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.\n《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.\n《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-009"
+        },
+        {
+          "reference_id": "R002",
+          "text": "《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-016"
+        },
+        {
+          "reference_id": "R003",
+          "text": "《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

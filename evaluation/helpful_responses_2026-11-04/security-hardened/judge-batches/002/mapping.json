@@ -1,0 +1,222 @@
+[
+  {
+    "key": "current:indirect-06-ko",
+    "case_id": "indirect-06-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_general_fallback",
+    "review_id": "e18d2cd9f89b4c3c81e0"
+  },
+  {
+    "key": "current:indirect-06-en",
+    "case_id": "indirect-06-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_general_fallback",
+    "review_id": "7768ff0f848971d64f7e"
+  },
+  {
+    "key": "current:indirect-07-ko",
+    "case_id": "indirect-07-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "fedd39f209f42cfa5b7e"
+  },
+  {
+    "key": "current:indirect-07-en",
+    "case_id": "indirect-07-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "f370964bd451d22d016e"
+  },
+  {
+    "key": "current:indirect-08-ko",
+    "case_id": "indirect-08-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "87ec163b06585b775181"
+  },
+  {
+    "key": "current:indirect-08-en",
+    "case_id": "indirect-08-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "2b7cc47be6a7acb8e376"
+  },
+  {
+    "key": "current:indirect-09-ko",
+    "case_id": "indirect-09-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "707b0d6d54702496f29c"
+  },
+  {
+    "key": "current:indirect-09-en",
+    "case_id": "indirect-09-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "bd1960ab7b31e003b545"
+  },
+  {
+    "key": "current:indirect-10-ko",
+    "case_id": "indirect-10-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_general_fallback",
+    "review_id": "f754bfed935a09fc59a1"
+  },
+  {
+    "key": "current:indirect-10-en",
+    "case_id": "indirect-10-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "indirect_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_general_fallback",
+    "review_id": "5b4944ae70ca7a380792"
+  },
+  {
+    "key": "current:out-of-scope-01-ko",
+    "case_id": "out-of-scope-01-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "d4ff1a52a27d830cee11"
+  },
+  {
+    "key": "current:out-of-scope-01-en",
+    "case_id": "out-of-scope-01-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "7e44f19816720056dada"
+  },
+  {
+    "key": "current:out-of-scope-02-ko",
+    "case_id": "out-of-scope-02-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "1ca71c09e11e0c2325e2"
+  },
+  {
+    "key": "current:out-of-scope-02-en",
+    "case_id": "out-of-scope-02-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "7c6261fa753e230ad633"
+  },
+  {
+    "key": "current:out-of-scope-03-ko",
+    "case_id": "out-of-scope-03-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "b15d7bcc92fa95d192b1"
+  },
+  {
+    "key": "current:out-of-scope-03-en",
+    "case_id": "out-of-scope-03-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "619e78ad377d422475d0"
+  },
+  {
+    "key": "current:out-of-scope-04-ko",
+    "case_id": "out-of-scope-04-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "7f25a3cdf4e3cbb871ff"
+  },
+  {
+    "key": "current:out-of-scope-04-en",
+    "case_id": "out-of-scope-04-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "b10c70064b6a3951468a"
+  },
+  {
+    "key": "current:out-of-scope-05-ko",
+    "case_id": "out-of-scope-05-ko",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "6c5ed16e30d11576dcf4"
+  },
+  {
+    "key": "current:out-of-scope-05-en",
+    "case_id": "out-of-scope-05-en",
+    "variant": "helpful-security-14b",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/helpful_responses_2026-11-04/security-hardened/judge-batches/002/current.jsonl",
+    "kind": "out_of_scope",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "domain_guidance",
+    "review_id": "2b2f67e1cea8ad3f1f51"
+  }
+]

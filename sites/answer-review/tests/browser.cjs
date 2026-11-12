@@ -37,12 +37,13 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
     const assessed = (v) => v.judge.available !== false && Number.isFinite(v.judge.naturalness);
     const paired = (c) => assessed(c.versions.original) && assessed(c.versions.current);
     const predicates = {
+      "previous-refusals": (c) => c.versions.current.previous_refusal === true,
       declined: (c) => paired(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness,
       resolved: (c) => paired(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift"
-        && !c.versions.current.judge.refusal && c.versions.current.generation_mode !== "unavailable"
+        && !c.versions.current.judge.refusal && !["unavailable", "response_error", "domain_guidance"].includes(c.versions.current.generation_mode)
         && (!c.versions.current.status || c.versions.current.status === "response"),
       remaining: (c) => assessed(c.versions.current) && (c.versions.current.judge.source_fidelity !== "faithful" || c.versions.current.judge.factual_correctness <= 2),
-      unavailable: (c) => c.versions.current.status && c.versions.current.status !== 'response' || c.versions.current.generation_mode === 'unavailable' || Boolean(c.versions.current.judge.refusal) || !c.versions.current.answer.trim(),
+      unavailable: (c) => c.versions.current.status && c.versions.current.status !== 'response' || ['unavailable', 'response_error', 'domain_guidance'].includes(c.versions.current.generation_mode) || Boolean(c.versions.current.judge.refusal) || !c.versions.current.answer.trim(),
       unreviewed: (c) => !assessed(c.versions.current),
       overlength: (c) => Object.values(c.versions).some((v) => !v.bertscore.scored && v.bertscore.reason !== "not_evaluated"),
     };

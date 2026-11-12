@@ -18,6 +18,7 @@ const unscorable = (v) => !v.bertscore.scored && v.bertscore.reason !== "not_eva
 const numberText = (n, digits) => Number.isFinite(n) ? (digits == null ? String(n) : n.toFixed(digits)) : "미평가";
 const filters = [
   ["all", "전체 문항", () => true],
+  ["previous-refusals", "이전 거절 5건", (c) => c.versions.current.previous_refusal === true],
   ["declined", "자연스러움 하락", (c) => pairedAssessment(c) && c.versions.current.judge.naturalness < c.versions.original.judge.naturalness],
   ["resolved", "중대한 의미 변경 해소", (c) => pairedAssessment(c) && c.versions.original.judge.source_fidelity === "material_drift" && c.versions.current.judge.source_fidelity !== "material_drift" && usefulVersion(c.versions.current)],
   ["unavailable", "답변 미제공", (c) => !usefulVersion(c.versions.current)],
@@ -28,7 +29,7 @@ const filters = [
 ];
 
 function usefulVersion(v) {
-  return (!v.status || v.status === "response") && v.generation_mode !== "unavailable"
+  return (!v.status || v.status === "response") && !["unavailable", "response_error", "domain_guidance"].includes(v.generation_mode)
     && !v.judge.refusal && Boolean(v.answer.trim());
 }
 
@@ -151,7 +152,7 @@ function makeAnswer(c, version) {
   meta.append(el("span", "", "저장된 답변 전문"), el("span", "", `${[...v.answer].length}자 · ${v.latency_seconds.toFixed(2)}초`));
   body.append(answer, meta);
   if (v.status && v.status !== "response") body.append(el("p", "secondary-note", "실행 오류로 생성된 답변이 없습니다."));
-  else if (v.generation_mode === "unavailable" || v.judge.refusal) body.append(el("p", "secondary-note", "이 음악 질문에 답변을 제공하지 못했습니다."));
+  else if (!usefulVersion(v)) body.append(el("p", "secondary-note", "이 음악 질문에 답변을 제공하지 못했습니다."));
   const judge = el("div", "judge-box judgment-content"), jt = el("div", "judge-title");
   jt.append(el("span", "", "CLAUDE 평가"), el("span", `fidelity ${v.judge.source_fidelity || "pending"}`, assessed(v) ? FIDELITY[v.judge.source_fidelity] || v.judge.source_fidelity : "미평가"));
   const metrics = el("div", "metric-row");
@@ -275,7 +276,7 @@ async function init() {
     for (const c of state.data.cases) c.searchText = [c.id, c.question, pieceFor(c.piece_id).title, pieceFor(c.piece_id).subtitle, c.versions.original.answer, c.versions.current.answer].join(" ").toLocaleLowerCase();
     restoreNotes();
     for (const p of state.data.pieces) { const option = el("option", "", p.title); option.value = p.id; $("piece").append(option); }
-    state.selected = readHash() || FEATURED;
+    state.selected = readHash() || state.evaluation.featuredCase || FEATURED;
     renderOverview(); updateResults();
     $("export-notes").disabled = !Object.keys(state.notes).some(hasNote);
     $("export-notes").addEventListener("click", exportNotes);
@@ -288,7 +289,7 @@ async function init() {
       if (!event.altKey || !["ArrowLeft", "ArrowRight"].includes(event.key) || event.target.matches("input, textarea, select") || $("method-dialog").open) return;
       event.preventDefault(); move(event.key === "ArrowLeft" ? -1 : 1);
     });
-    window.addEventListener("popstate", () => { state.selected = readHash() || FEATURED; clearFilters(); });
+    window.addEventListener("popstate", () => { state.selected = readHash() || state.evaluation.featuredCase || FEATURED; clearFilters(); });
   } catch (error) {
     $("comparison").replaceChildren(el("p", "empty", `평가 데이터를 불러오지 못했습니다. localhost 서버에서 열고 새로고침해 주세요. (${error.message})`));
     $("result-count").textContent = "불러오기 실패";

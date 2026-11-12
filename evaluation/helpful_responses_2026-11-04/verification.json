@@ -1,0 +1,63 @@
+{
+  "verified_at": "2026-11-04T12:03:37.678651+00:00",
+  "branch": "codex/helpful-rag-responses",
+  "implementation_commit": "e9d523ccc7b9b5549544dadbc71d969c730f4955",
+  "protected_checkouts": [
+    "/home/minhee/.codex/worktrees/rag-pre-injection/soprano-qa-rag-system",
+    "/home/minhee/soprano-qa-rag-system",
+    "/home/minhee/soprano-lab"
+  ],
+  "previous_backend_preserved_files": [
+    "config/feature_overrides.json",
+    "config/settings.json",
+    "soprano_qa/__init__.py",
+    "soprano_qa/answer.py",
+    "soprano_qa/coaching_index.py",
+    "soprano_qa/corpus.py",
+    "soprano_qa/dense.py",
+    "soprano_qa/llm.py",
+    "soprano_qa/meter.py",
+    "soprano_qa/music_terms.py",
+    "soprano_qa/question_intent.py",
+    "soprano_qa/retrieval.py",
+    "soprano_qa/score_context.py",
+    "soprano_qa/security.py",
+    "soprano_qa/service.py",
+    "soprano_qa/settings.py",
+    "soprano_qa/source_comparison.py",
+    "soprano_qa/source_priority.py",
+    "soprano_qa/source_translation.py",
+    "soprano_qa/source_translation_catalog.py",
+    "soprano_qa/structured_answer.py",
+    "soprano_qa/sumijo.py",
+    "soprano_qa/translation.py"
+  ],
+  "implementation_matches_unit_tests_and_evaluation": true,
+  "unit_tests_passed": 674,
+  "model": "Qwen3-14B-Q6_K",
+  "model_sha256": "ec1f1d1421d7636a23e17645cac6fda39ee4b5f1f11e42eb09238089705ef699",
+  "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+  "corpus_matches_november_3": true,
+  "metric_settings_unchanged": true,
+  "semantic_generation_enabled": true,
+  "source_substitution_headers": 0,
+  "expert_105_bertscore": 0.945026133173988,
+  "useful_responses": 460,
+  "previous_five_refusals_answered": 5,
+  "static_mirrors_match": [
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/sites/answer-review/dist",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/demo/static/answer-review",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/rag/sites/answer-review/dist"
+  ],
+  "initial_and_november_3_demo_data_unchanged": true,
+  "artifact_hashes": {
+    "full-final/current.jsonl": "5dda59f4495bde7703de3918a139c29f475618421fe6f3592b61c0ef219de368",
+    "full-final/assessment-complete.json": "4488f30bae7a5c5246b8bb4fa85f8132d5d9dbb62073591bb9d160662948e997",
+    "security-hardened/current.jsonl": "b1caf9358678a330b08b9ff208ef39a450456b54ce9f2dcb2fa4877bacc302e5",
+    "comparison.json": "1c622184d3690521bef590b8491ad9e3eba20f6be418846c1330c7754eb1a02d",
+    "manual-review.json": "658a74ac33284eb911b39d774555c3a4c903bd8e38cd031d4879557672e519a5",
+    "report.md": "a34ebfab4be0abbc9a1a9a674bbda700ca294f94f93e54feb1b5cd500f216ae5",
+    "demo-mirror-complete.json": "dd9822ebd964aa3bf9a3d9c1de24d17849358ca59f0bb59bf8e9ffe8b286900b",
+    "browser-validation.json": "9d0e8a938ce6b25a9223a2d5188cec2488f02a9919ff848db4279f5b96bfb4b2"
+  }
+}

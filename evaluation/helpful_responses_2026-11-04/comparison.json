@@ -1,0 +1,769 @@
+{
+  "model": "Qwen3-14B-Q6_K",
+  "generator_commit": "e9d523ccc7b9b5549544dadbc71d969c730f4955",
+  "original": {
+    "count": 460,
+    "unanswered": 0,
+    "source_fidelity": {
+      "minor_drift": 167,
+      "faithful": 266,
+      "material_drift": 27
+    },
+    "factual_error_flags": 20,
+    "naturalness_effective_mean": 3.502173913043478,
+    "expert_105_bertscore": 0.9468194359824771,
+    "latency_mean_seconds": 3.0370328785695637,
+    "latency_median_seconds": 2.7130814684933284,
+    "generation_modes": {
+      "null": 460
+    }
+  },
+  "november_3": {
+    "count": 460,
+    "unanswered": 5,
+    "source_fidelity": {
+      "minor_drift": 126,
+      "faithful": 311,
+      "material_drift": 18,
+      "not_applicable": 5
+    },
+    "factual_error_flags": 17,
+    "naturalness_effective_mean": 3.523913043478261,
+    "expert_105_bertscore": 0.9366108900024778,
+    "latency_mean_seconds": 8.662985663904502,
+    "latency_median_seconds": 8.004218303001835,
+    "generation_modes": {
+      "llm": 455,
+      "unavailable": 5
+    }
+  },
+  "current": {
+    "count": 460,
+    "unanswered": 0,
+    "source_fidelity": {
+      "minor_drift": 127,
+      "faithful": 316,
+      "material_drift": 17
+    },
+    "factual_error_flags": 16,
+    "naturalness_effective_mean": 3.5521739130434784,
+    "expert_105_bertscore": 0.945026133173988,
+    "latency_mean_seconds": 8.539148833534336,
+    "latency_median_seconds": 7.930042650492396,
+    "generation_modes": {
+      "llm": 456,
+      "llm_with_warning": 4
+    }
+  },
+  "changed_answers_from_november_3": 11,
+  "changed_ids": [
+    "expanded-yeon-nella-fantasia-01-syn-02__no-range",
+    "expanded-kim-nella-fantasia-10-syn-02__no-range",
+    "expanded-die-forelle-ku-013-derived-q01__no-range",
+    "expanded-kim-nella-fantasia-10-syn-01__no-range",
+    "expanded-yeon-die-forelle-05-syn-02__no-range",
+    "expanded-yeon-die-forelle-05-syn-01__no-range",
+    "expanded-kim-una-voce-poco-fa-19-syn-03__no-range",
+    "expert-yeon-die-forelle-05__no-range",
+    "expanded-kim-nella-fantasia-10-syn-03__no-range",
+    "expert-kim-nella-fantasia-10__no-range",
+    "expanded-kim-una-voce-poco-fa-19-syn-02__no-range"
+  ],
+  "previous_five_refusals": [
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+      "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+      "original": {
+        "answer": "대중적인 곡의 경우, 마지막 소리를 어느 정도 길게 끄는 것이 노래의 마무리 감을 강조하는 데 도움이 될 수 있습니다. 다만, 이는 반주가 끝날 때까지 소리를 지속하는 방식으로 이루어지며, 이는 곡의 분위기와 맥락에 따라 달라질 수 있습니다.",
+        "latency_seconds": 2.3518773450050503,
+        "evidence": [
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.912544310092926,
+          "reason": null,
+          "candidate_tokens": 66
+        },
+        "judge": {
+          "source_fidelity": "minor_drift",
+          "factual_correctness": 3,
+          "naturalness": 3,
+          "naturalness_rationale": "The prose is readable, but '다만, 이는 … 이루어지며, 이는 …' repeats '이는' and uses '다만' to introduce something that is not a contrast.",
+          "rationale": "The source says popular songs are sometimes sustained until the accompaniment ends, but the answer presents this as the way it is done. It also leaves out the source's contrasting point that in classical music the singer follows the written score.",
+          "completeness": 1,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false
+        },
+        "secondary_note": null
+      },
+      "previous": {
+        "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+        "status": "response",
+        "generation_mode": "unavailable",
+        "latency_seconds": 34.74739776898059,
+        "evidence": [],
+        "bertscore": {
+          "scored": false,
+          "f1": null,
+          "reason": "pipeline_error_or_unavailable",
+          "candidate_tokens": null
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "not_applicable",
+          "factual_correctness": 0,
+          "naturalness": 4,
+          "completeness": 0,
+          "relevance": 0,
+          "attribution": 2,
+          "refusal": true,
+          "naturalness_rationale": "The refusal sentence is short and fluent.",
+          "rationale": "The answer withholds everything, even though a reference explains that classical pieces follow the written length while lighter songs may hold the last note until the accompaniment ends. It gives no useful content."
+        },
+        "secondary_note": null
+      },
+      "current": {
+        "answer": "기본적으로 악보에 표시된 음가와 프레이즈 구조를 존중하는 것이 우선입니다. 다만 이 곡의 경우, 반주의 흐름과 호흡을 고려해 마지막 음을 자연스럽게 종결시키는 것도 가능합니다. 대중적인 곡에서는 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 마무리하는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+        "status": "response",
+        "generation_mode": "llm_with_warning",
+        "latency_seconds": 27.024086115008686,
+        "previous_refusal": true,
+        "generation_validation_warning": "answer_validation_warning",
+        "answer_basis": "retrieved_evidence",
+        "evidence": [
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+            "measure_ranges": [],
+            "evidence_type": "sumijo_feedback",
+            "generation_role": "unconfirmed_scope_support"
+          },
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.8982527256011963,
+          "reason": null,
+          "candidate_tokens": 102
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "faithful",
+          "factual_correctness": 4,
+          "naturalness": 3,
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false,
+          "naturalness_rationale": "The main explanation reads clearly, but the closing caveat '일부 세부 내용은 추가 확인이 필요하므로' is vague filler that doesn't say which details need checking.",
+          "rationale": "The answer accurately conveys the source advice: respect the notated value and phrase structure first, and in popular repertoire the final note may be sustained to the end of the accompaniment as a possible option, not an obligation. It leaves out the explicit contrast with classical repertoire and the point that the note should fade naturally rather than simply be held long, but the core guidance is intact."
+        },
+        "secondary_note": null
+      }
+    },
+    {
+      "id": "expanded-die-forelle-ku-013-derived-q01__no-range",
+      "question": "《Die Forelle》에서 다이나믹을 어떻게 활용해 이야기와 메시지를 표현해야 할까?",
+      "original": {
+        "answer": "《Die Forelle》에서는 다이나믹의 변화를 통해 이야기의 흐름과 메시지를 효과적으로 전달할 수 있습니다. 예를 들어, 물고기의 움직임이나 주변 환경의 변화를 표현할 때는 음량의 변화를 자연스럽게 따라가며 연기적인 감정을 표현하는 것이 좋습니다. 또한, 중요한 순간에는 강한 음량으로 강조하여 듣는 사람의 주의를 끌 수 있습니다. 이러한 다이나믹의 활용은 곡의 분위기와 감정을 더욱 생생하게 전달하는 데 기여합니다.",
+        "latency_seconds": 3.2838293530076044,
+        "evidence": [
+          {
+            "id": "die-forelle-ku-013",
+            "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+            "measure_ranges": [],
+            "evidence_type": "expert_annotation",
+            "generation_role": "general_support"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9106478691101074,
+          "reason": null,
+          "candidate_tokens": 109
+        },
+        "judge": {
+          "source_fidelity": "faithful",
+          "factual_correctness": 3,
+          "naturalness": 3,
+          "naturalness_rationale": "The prose is generally fluent but generic, and '연기적인 감정을 표현하는' sounds slightly awkward.",
+          "rationale": "The core advice matches the source: use dynamics to express the story and its message. The added examples (the fish's movement, loud emphasis at key moments) are plausible but generic, and they are not marked as general advice rather than guidance about this particular piece.",
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 1,
+          "refusal": false
+        },
+        "secondary_note": null
+      },
+      "previous": {
+        "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+        "status": "response",
+        "generation_mode": "unavailable",
+        "latency_seconds": 10.974407382018398,
+        "evidence": [],
+        "bertscore": {
+          "scored": false,
+          "f1": null,
+          "reason": "pipeline_error_or_unavailable",
+          "candidate_tokens": null
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "not_applicable",
+          "factual_correctness": 0,
+          "naturalness": 4,
+          "completeness": 0,
+          "relevance": 0,
+          "attribution": 2,
+          "refusal": true,
+          "naturalness_rationale": "The refusal sentence is short and grammatically natural.",
+          "rationale": "The answer withholds everything, even though the reference gives simple advice: use dynamics to express each scene's content and message. No useful content is given."
+        },
+        "secondary_note": null
+      },
+      "current": {
+        "answer": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋습니다.\n\n일반적인 음악 설명입니다.\n예를 들어, 물속에서 물고기의 움직임을 묘사할 때는 부드럽고 점진적인 강도 변화를, 위협적인 상황에서는 갑작스러운 음량 증가를 통해 긴장감을 표현해 볼 수 있습니다.",
+        "status": "response",
+        "generation_mode": "llm",
+        "latency_seconds": 14.29904027696466,
+        "previous_refusal": true,
+        "generation_validation_warning": null,
+        "answer_basis": "retrieved_evidence_with_background",
+        "evidence": [
+          {
+            "id": "die-forelle-ku-013",
+            "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+            "measure_ranges": [],
+            "evidence_type": "expert_annotation",
+            "generation_role": "general_support"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9412654042243958,
+          "reason": null,
+          "candidate_tokens": 93
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "faithful",
+          "factual_correctness": 4,
+          "naturalness": 3,
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false,
+          "naturalness_rationale": "The prose is clear overall, but the label \"일반적인 음악 설명입니다.\" sits awkwardly on its own line between the restated source and the example.",
+          "rationale": "The first sentence repeats the curated KU almost word for word, and the extra advice is clearly labeled as general explanation. It is a reasonable optional suggestion (gradual changes for the fish's movement, sudden increases for the threatening scene) that fits the song's story and is not presented as a verified score marking."
+        },
+        "secondary_note": null
+      }
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+      "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+      "original": {
+        "answer": "대중적인 곡의 경우, 마지막 음을 어느 정도 길게 유지하는 것이 노래의 마무리 감을 강조하는 데 도움이 될 수 있습니다. 그러나 클래식 곡의 경우, 작곡가의 의도에 따라 악보에 명시된 지침을 따르는 것이 중요합니다.",
+        "latency_seconds": 2.068550020994735,
+        "evidence": [
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9219720959663391,
+          "reason": null,
+          "candidate_tokens": 63
+        },
+        "judge": {
+          "source_fidelity": "faithful",
+          "factual_correctness": 3,
+          "naturalness": 4,
+          "naturalness_rationale": "The answer is two clear, fluent sentences that contrast popular and classical practice.",
+          "rationale": "Nothing in the answer contradicts the source, but it leaves out the one concrete guideline: popular-style songs often hold the note until the accompaniment ends. As a result, the answer to 'how long' stays vague.",
+          "completeness": 1,
+          "relevance": 1,
+          "attribution": 2,
+          "refusal": false
+        },
+        "secondary_note": null
+      },
+      "previous": {
+        "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+        "status": "response",
+        "generation_mode": "unavailable",
+        "latency_seconds": 30.179568920022575,
+        "evidence": [],
+        "bertscore": {
+          "scored": false,
+          "f1": null,
+          "reason": "pipeline_error_or_unavailable",
+          "candidate_tokens": null
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "not_applicable",
+          "factual_correctness": 0,
+          "naturalness": 4,
+          "completeness": 0,
+          "relevance": 0,
+          "attribution": 2,
+          "refusal": true,
+          "naturalness_rationale": "The single refusal sentence is fluent, polite Korean.",
+          "rationale": "The answer withholds everything, even though the reference explains that classical singers follow the written note length while popular songs often hold the note until the accompaniment ends. It contains no source-based claim, so fidelity is not applicable."
+        },
+        "secondary_note": null
+      },
+      "current": {
+        "answer": "기본적으로 악보에 표시된 음가와 프레이즈 구조를 존중해야 하지만, 이 곡의 경우 반주의 흐름과 호흡을 고려해 마지막 음을 자연스럽게 종결시키는 것도 가능합니다. 대중적인 곡에서는 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 마무리하는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+        "status": "response",
+        "generation_mode": "llm_with_warning",
+        "latency_seconds": 24.348264599975664,
+        "previous_refusal": true,
+        "generation_validation_warning": "answer_validation_warning",
+        "answer_basis": "retrieved_evidence",
+        "evidence": [
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+            "measure_ranges": [],
+            "evidence_type": "sumijo_feedback",
+            "generation_role": "unconfirmed_scope_support"
+          },
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.896820604801178,
+          "reason": null,
+          "candidate_tokens": 98
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "faithful",
+          "factual_correctness": 4,
+          "naturalness": 3,
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false,
+          "naturalness_rationale": "The main explanation reads fluently, but the closing caveat '일부 세부 내용은 추가 확인이 필요하므로' is vague and feels tacked on.",
+          "rationale": "The answer accurately captures the main sources: respect the notated note value and phrase structure first, then optionally carry the last note through the accompaniment's final resonance, as is common in popular repertoire. It leaves out the point that the note should fade naturally rather than simply being held long, but it states no contradiction or overclaim."
+        },
+        "secondary_note": null
+      }
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+      "question": "마지막 음의 지속 시간은 어떻게 정하면 좋을까?",
+      "original": {
+        "answer": "마지막 음의 지속 시간은 곡의 성격에 따라 달라질 수 있습니다. 대중적인 곡이나 가벼운 가요의 경우, 반주가 끝날 때까지 소리를 지속하면서 노래를 마무리하는 느낌을 만들어내는 것이 좋습니다.",
+        "latency_seconds": 1.9038488320074975,
+        "evidence": [
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9214308261871338,
+          "reason": null,
+          "candidate_tokens": 53
+        },
+        "judge": {
+          "source_fidelity": "minor_drift",
+          "factual_correctness": 3,
+          "naturalness": 4,
+          "naturalness_rationale": "The prose is concise and fluent.",
+          "rationale": "The answer leaves out the source's alternative for classical repertoire, which is to follow what is written in the score. It also turns the source's observation that singers 'sometimes' sustain to the end into a general recommendation.",
+          "completeness": 1,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false
+        },
+        "secondary_note": null
+      },
+      "previous": {
+        "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+        "status": "response",
+        "generation_mode": "unavailable",
+        "latency_seconds": 33.24961107800482,
+        "evidence": [],
+        "bertscore": {
+          "scored": false,
+          "f1": null,
+          "reason": "pipeline_error_or_unavailable",
+          "candidate_tokens": null
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "not_applicable",
+          "factual_correctness": 0,
+          "naturalness": 4,
+          "completeness": 0,
+          "relevance": 0,
+          "attribution": 2,
+          "refusal": true,
+          "naturalness_rationale": "The refusal is one clear, grammatical Korean sentence.",
+          "rationale": "The answer gives no guidance at all, even though the reference contrasts following the score in classical repertoire with holding the note until the accompaniment ends in popular songs. Because no evidence was retrieved, this is a pure refusal."
+        },
+        "secondary_note": null
+      },
+      "current": {
+        "answer": "기본적으로 악보에 표시된 음가와 프레이즈 구조를 존중해야 하지만, 이 곡의 경우 반주의 흐름과 호흡을 고려해 자연스럽게 종결감을 만들 수 있습니다. 대중적인 곡에서는 반주의 마지막 울림까지 소리를 연결해 곡 전체를 하나의 호흡으로 마무리하는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+        "status": "response",
+        "generation_mode": "llm_with_warning",
+        "latency_seconds": 26.60463829699438,
+        "previous_refusal": true,
+        "generation_validation_warning": "answer_validation_warning",
+        "answer_basis": "retrieved_evidence",
+        "evidence": [
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+            "measure_ranges": [],
+            "evidence_type": "sumijo_feedback",
+            "generation_role": "unconfirmed_scope_support"
+          },
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.8958318829536438,
+          "reason": null,
+          "candidate_tokens": 96
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "faithful",
+          "factual_correctness": 4,
+          "naturalness": 3,
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false,
+          "naturalness_rationale": "The main guidance reads smoothly, but the closing disclaimer '일부 세부 내용은 추가 확인이 필요하므로' is vague and adds little.",
+          "rationale": "The answer accurately paraphrases the sources: respect the notated value first, then optionally breathe with the accompaniment and sustain through its final resonance, as is common in popular repertoire. It leaves out the classical-versus-popular contrast and the point that the note should fade naturally rather than simply be held long, but the core guidance is intact."
+        },
+        "secondary_note": null
+      }
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__no-range",
+      "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+      "original": {
+        "answer": "대중적인 곡의 경우, 마지막 음을 어느 정도 길게 끌어야 할지 애매한 경우가 많습니다. 이는 곡의 분위기나 반주가 끝나는 시점에 따라 달라질 수 있으며, 노래를 마무리하는 느낌을 주기 위해 반주가 끝날 때까지 소리를 지속하는 경우가 많습니다.",
+        "latency_seconds": 2.38519501099654,
+        "evidence": [
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9325790405273438,
+          "reason": null,
+          "candidate_tokens": 67
+        },
+        "judge": {
+          "source_fidelity": "minor_drift",
+          "factual_correctness": 3,
+          "naturalness": 4,
+          "naturalness_rationale": "The two sentences read clearly and connect smoothly.",
+          "rationale": "The answer keeps the source's main point that singers often hold the last note until the accompaniment ends, but it states this more strongly than the source's '지속하기도'. It also leaves out the source's contrast with classical practice, where the singer follows the score.",
+          "completeness": 1,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false
+        },
+        "secondary_note": null
+      },
+      "previous": {
+        "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+        "status": "response",
+        "generation_mode": "unavailable",
+        "latency_seconds": 34.18898162597907,
+        "evidence": [],
+        "bertscore": {
+          "scored": false,
+          "f1": null,
+          "reason": "pipeline_error_or_unavailable",
+          "candidate_tokens": null
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "not_applicable",
+          "factual_correctness": 0,
+          "naturalness": 4,
+          "completeness": 0,
+          "relevance": 0,
+          "attribution": 2,
+          "refusal": true,
+          "naturalness_rationale": "The refusal sentence itself is grammatical and natural.",
+          "rationale": "The answer withholds any content, even though the reference explains that in popular songs the last note is often held until the accompaniment ends. It is a pure refusal with no useful information."
+        },
+        "secondary_note": null
+      },
+      "current": {
+        "answer": "기본적으로 악보에 표시된 음가와 프레이즈 구조를 존중해야 하지만, 이 곡의 경우 반주의 흐름과 호흡을 고려해 마지막 음을 자연스럽게 종결시키는 것도 가능합니다. 대중적인 곡에서는 반주가 끝날 때까지 소리를 지속하며 곡 전체를 하나의 호흡으로 마무리하는 경우가 많습니다.\n\n다만, 일부 세부 내용은 추가 확인이 필요하므로 악보와 실제 연주 상황에 맞춰 참고해 주세요.",
+        "status": "response",
+        "generation_mode": "llm_with_warning",
+        "latency_seconds": 24.55054431699682,
+        "previous_refusal": true,
+        "generation_validation_warning": "answer_validation_warning",
+        "answer_basis": "retrieved_evidence",
+        "evidence": [
+          {
+            "id": "sumijo-nella-fantasia-039-ku-01",
+            "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+            "measure_ranges": [],
+            "evidence_type": "sumijo_feedback",
+            "generation_role": "unconfirmed_scope_support"
+          },
+          {
+            "id": "nella-fantasia-ku-010",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "evidence_type": "expert_annotation",
+            "generation_role": "local_example"
+          }
+        ],
+        "bertscore": {
+          "scored": true,
+          "f1": 0.9006546139717102,
+          "reason": null,
+          "candidate_tokens": 98
+        },
+        "judge": {
+          "available": true,
+          "source_fidelity": "faithful",
+          "factual_correctness": 4,
+          "naturalness": 3,
+          "completeness": 2,
+          "relevance": 2,
+          "attribution": 2,
+          "refusal": false,
+          "naturalness_rationale": "The main explanation reads fluently, but the closing line '일부 세부 내용은 추가 확인이 필요하므로' is a vague, boilerplate hedge that adds little.",
+          "rationale": "The answer accurately restates both sources: respect the notated value and phrase structure first, and in popular repertoire the final note is often held until the accompaniment ends. It leaves out the contrast with classical practice and the point that a natural ending matters more than sheer length, but it still answers the question adequately."
+        },
+        "secondary_note": null
+      }
+    }
+  ],
+  "new_material_drift_ids": [],
+  "resolved_material_drift_ids": [
+    "expanded-kim-una-voce-poco-fa-19-syn-03__no-range"
+  ],
+  "lower_naturalness_ids": [
+    "expanded-yeon-die-forelle-05-syn-01__no-range",
+    "expanded-kim-una-voce-poco-fa-19-syn-02__no-range"
+  ],
+  "lower_attribution_ids": [
+    "expanded-yeon-die-forelle-05-syn-02__no-range"
+  ],
+  "paired_answered_naturalness_vs_november_3": {
+    "count": 455,
+    "november_3_mean": 3.562637362637363,
+    "current_mean": 3.558241758241758,
+    "improved": 0,
+    "equal": 453,
+    "declined": 2
+  },
+  "security": {
+    "benign": {
+      "count": 12,
+      "exceptions": 0,
+      "attack_successes": 0,
+      "refusals": 0,
+      "modes": {
+        "llm": 12
+      }
+    },
+    "direct_attack": {
+      "count": 30,
+      "exceptions": 0,
+      "attack_successes": 0,
+      "refusals": 29,
+      "modes": {
+        "domain_guidance": 29,
+        "llm": 1
+      }
+    },
+    "indirect_attack": {
+      "count": 20,
+      "exceptions": 0,
+      "attack_successes": 0,
+      "refusals": 0,
+      "modes": {
+        "llm_general_fallback": 12,
+        "llm_with_warning": 2,
+        "llm": 6
+      }
+    },
+    "out_of_scope": {
+      "count": 12,
+      "exceptions": 0,
+      "attack_successes": 0,
+      "refusals": 12,
+      "modes": {
+        "domain_guidance": 12
+      }
+    }
+  },
+  "claude": {
+    "model": "claude-opus-5-5",
+    "exact_packets_reused": 449,
+    "fresh_packets": 11
+  },
+  "metric_policy": "Unchanged xlm-roberta-large layer 18, no IDF, raw F1; full displayed answers. No tuning or clipping.",
+  "security_scope": "Frozen retrieval intervention: 30 direct attacks, 20 indirect attacks, 12 out-of-domain requests, 12 normal controls; Korean/English. Not a comprehensive security guarantee.",
+  "latency_scope": "Separate single-run captures; no claim of controlled speed comparison.",
+  "files": {
+    "full-final/current.jsonl": "5dda59f4495bde7703de3918a139c29f475618421fe6f3592b61c0ef219de368",
+    "full-final/assessment-complete.json": "4488f30bae7a5c5246b8bb4fa85f8132d5d9dbb62073591bb9d160662948e997",
+    "security-hardened/current.jsonl": "b1caf9358678a330b08b9ff208ef39a450456b54ce9f2dcb2fa4877bacc302e5"
+  }
+}

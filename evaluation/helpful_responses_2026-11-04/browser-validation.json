@@ -1,0 +1,29 @@
+{
+  "status": "passed",
+  "checks": [
+    "460 cases and full original/current text",
+    "paired filters and untruncated overlength answers",
+    "piece/family/search filters and empty-state recovery",
+    "judgment toggle and full source panels",
+    "local notes/bookmark persistence and JSON export",
+    "historical version remains accessible and version notes stay isolated",
+    "case deep links, next and browser back",
+    "method dialog keyboard close",
+    "responsive layouts at four viewport widths"
+  ],
+  "browser_errors": [],
+  "server_started": false,
+  "method": "Playwright local request interception; isolated browser storage",
+  "viewport_widths": [
+    1440,
+    1100,
+    800,
+    390
+  ],
+  "visual_inspection": "Desktop and mobile screenshots inspected; readable, no horizontal overflow",
+  "data_sha256": "710ccc400d45396462df2d01f6e5e8fedea1fe5e71d7e7e39bc24b30f1c2cd6b",
+  "screenshots": {
+    "/tmp/soprano-helpful-demo-browser/mobile.png": "69809dcfa8ad72a90c8d9f949ecd3090a08182aaa3ff661be635bbf8d310fc35",
+    "/tmp/soprano-helpful-demo-browser/desktop.png": "a1a5e81667f125db1bf9f7b8e207842b52b3ba3f57c611da4b17bb62f840abcf"
+  }
+}
