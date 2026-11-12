@@ -510,7 +510,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
         )
         self.assertEqual(response["evidence"][0]["measure_ranges"], [[1, 2]])
 
-    def test_overgeneralized_llm_draft_is_withheld(
+    def test_scope_warning_preserves_draft_for_user_review(
         self,
     ) -> None:
         results = self._case_results(
@@ -545,7 +545,8 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
                 return_value=overgeneralized,
             ) as generate,
         ):
-            response = qa.ask(
+            with mock.patch("soprano_qa.response_policy.instruction_guard"):
+                response = qa.ask(
                 piece_id="una-voce-poco-fa",
                 question="이 곡에 간주가 너무 길어서 그동안 뭘 해야할지 모르겠다",
                 measure_range=None,
@@ -554,13 +555,12 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             )
 
         generate.assert_called_once()
-        self.assertEqual(response["generation_mode"], "unavailable")
-        self.assertEqual(response["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(response["unavailable_reason"], "answer_validation_failed")
-        self.assertIsNone(response["generation_validation_warning"])
-        self.assertEqual(response["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
-        self.assertNotIn("항상 같은 연기를", response["answer"])
-        self.assertEqual(response["evidence"], [])
+        self.assertEqual(response["generation_mode"], "llm_with_warning")
+        self.assertEqual(response["answer_basis"], "retrieved_evidence")
+        self.assertIsNone(response["unavailable_reason"])
+        self.assertTrue(response["generation_validation_warning"])
+        self.assertIn("추가 확인", response["answer"])
+        self.assertTrue(response["evidence"])
 
 
 

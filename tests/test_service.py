@@ -919,7 +919,7 @@ class ServicePipelineTests(unittest.TestCase):
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
 
-    def test_rejected_generated_draft_is_withheld_after_one_call(self) -> None:
+    def test_abstention_recovers_with_general_explanation(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -935,7 +935,7 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value="<NO_GROUNDED_ANSWER>",
+                side_effect=["<NO_GROUNDED_ANSWER>", "판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다."],
             ) as generate,
         ):
             result = qa.ask(
@@ -945,15 +945,15 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
-        self.assertEqual(result["evidence"], [])
-
-        generate.assert_called_once()
+        self.assertEqual(result["generation_mode"], "llm_general_fallback")
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertIn("판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다.", result["answer"])
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertEqual(result["generation_validation_warning"], "general_knowledge_fallback")
+        self.assertEqual(generate.call_count, 2)
         self.generation_preflight.assert_called_once()
 
-    def test_natural_insufficiency_draft_is_withheld_after_one_call(self) -> None:
+    def test_insufficiency_recovers_with_general_explanation(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -972,7 +972,7 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=refusal,
+                side_effect=[refusal, "판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다."],
             ) as generate,
         ):
             result = qa.ask(
@@ -982,15 +982,15 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
-        self.assertEqual(result["evidence"], [])
-
-        generate.assert_called_once()
+        self.assertEqual(result["generation_mode"], "llm_general_fallback")
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertIn("판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다.", result["answer"])
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertEqual(result["generation_validation_warning"], "general_knowledge_fallback")
+        self.assertEqual(generate.call_count, 2)
         self.generation_preflight.assert_called_once()
 
-    def test_empty_generated_draft_is_withheld_after_one_call(self) -> None:
+    def test_empty_draft_recovers_with_general_explanation(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -1006,7 +1006,7 @@ class ServicePipelineTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value=" \n\t",
+                side_effect=[" \n\t", "판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다."],
             ) as generate,
         ):
             result = qa.ask(
@@ -1016,15 +1016,15 @@ class ServicePipelineTests(unittest.TestCase):
                 generate=True,
             )
 
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
-        self.assertEqual(result["evidence"], [])
-
-        generate.assert_called_once()
+        self.assertEqual(result["generation_mode"], "llm_general_fallback")
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertIn("판본의 차이는 악보의 표기와 출판 정보를 비교하여 확인할 수 있습니다.", result["answer"])
+        self.assertEqual(result["answer_basis"], "general_music_knowledge")
+        self.assertEqual(result["generation_validation_warning"], "general_knowledge_fallback")
+        self.assertEqual(generate.call_count, 2)
         self.generation_preflight.assert_called_once()
 
-    def test_other_rejected_draft_is_withheld_instead_of_warned(self) -> None:
+    def test_quality_failure_keeps_answer_and_records_warning(self) -> None:
         class WebIndex:
             configured_retrieval_mode = "hybrid"
             retrieval_mode = "hybrid"
@@ -1049,6 +1049,7 @@ class ServicePipelineTests(unittest.TestCase):
                 "finalize_grounded_generated_answer",
                 side_effect=GeneratedAnswerRejected(warning),
             ),
+            mock.patch("soprano_qa.response_policy.instruction_guard"),
         ):
             result = qa.ask(
                 piece_id="die-forelle",
@@ -1059,12 +1060,13 @@ class ServicePipelineTests(unittest.TestCase):
 
         generate.assert_called_once()
         self.generation_preflight.assert_called_once()
-        self.assertEqual(result["generation_mode"], "unavailable")
-        self.assertEqual(result["answer_basis"], "no_corpus_evidence")
-        self.assertEqual(result["unavailable_reason"], "answer_validation_failed")
-        self.assertIsNone(result["generation_validation_warning"])
-        self.assertEqual(result["answer"], NO_CORPUS_EVIDENCE_MESSAGE)
-        self.assertEqual(result["evidence"], [])
+        self.assertEqual(result["generation_mode"], "llm_with_warning")
+        self.assertEqual(result["answer_basis"], "retrieved_evidence")
+        self.assertIsNone(result["unavailable_reason"])
+        self.assertTrue(result["generation_validation_warning"])
+        self.assertIn("판본에 따라 연주 방식이 달라집니다.", result["answer"])
+        self.assertIn("추가 확인", result["answer"])
+        self.assertTrue(result["evidence"])
 
     def test_web_results_keep_deterministic_rights_notices(self) -> None:
         result = qa.ask(
