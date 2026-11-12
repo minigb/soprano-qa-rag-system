@@ -1,0 +1,32 @@
+{
+  "branch": "codex/helpful-rag-responses",
+  "candidate_source_matches_all_final_captures": true,
+  "validated_default_preserved": true,
+  "model_sha256": "ec1f1d1421d7636a23e17645cac6fda39ee4b5f1f11e42eb09238089705ef699",
+  "retrieval_settings_and_corpus_unchanged": true,
+  "protected": {
+    "/home/minhee/.codex/worktrees/rag-pre-injection/soprano-qa-rag-system": {
+      "head": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "files_checked": 12,
+      "unchanged": true
+    },
+    "/home/minhee/soprano-qa-rag-system": {
+      "head": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+      "files_checked": 16,
+      "unchanged": true
+    },
+    "/home/minhee/soprano-lab": {
+      "head": "f3fed8558488eca23c5e213f8ad20d20e82c0e33",
+      "files_checked": 16,
+      "unchanged": true
+    }
+  },
+  "one_writer_no_online_model_assessment": true,
+  "previous_backend_files_unchanged": 23,
+  "previous_demo_and_all_mirrors_unchanged": true,
+  "unit_tests_passed": 684,
+  "metric_settings_unchanged": true,
+  "demo": "Preserved previous complete 460-case dataset. This task did not overwrite it with a partial or unjudged new dataset.",
+  "quality_summary_sha256": "3f6a66fa4b6427266654edeba9cd4ad3187f8e645387c3c35c0a5a55ea7d5d7f",
+  "profile_summary_sha256": "317ca88158db6d604d9b87b1fee0d116993f160c656dcb6768c03bb5b9f6e98a"
+}

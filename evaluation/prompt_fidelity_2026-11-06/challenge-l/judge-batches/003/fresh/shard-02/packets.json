@@ -1,0 +1,245 @@
+[
+  {
+    "id": "4d01595013aeaae02c8d",
+    "question": "선택한 마디에서 반주의 두 번째 박 악센트를 어떤 이미지로 이해할 수 있나요?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      2,
+      5
+    ],
+    "language": "ko",
+    "answer": "선택한 마디에서 반주의 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 해석할 수 있습니다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되면서, 흐르는 물에서 뛰어오르는 송어의 생동감 있는 움직임을 잘 나타냅니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 2,
+          "voice": "sung",
+          "lyric_lines": [
+            "ei- -nem Bächlein",
+            "Fi- -scher mit der"
+          ]
+        },
+        {
+          "measure": 3,
+          "voice": "sung",
+          "lyric_lines": [
+            "hel- -le, da",
+            "Ru- -the wohl"
+          ]
+        },
+        {
+          "measure": 4,
+          "voice": "sung",
+          "lyric_lines": [
+            "schoss in fro- -her",
+            "an dem U- -fer"
+          ]
+        },
+        {
+          "measure": 5,
+          "voice": "sung",
+          "lyric_lines": [
+            "Eil' die",
+            "stand und"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "181a05e5556b1c8c8f53",
+    "question": "11마디의 꽃바람에서 받침을 살리면서 자연스럽게 발음하는 연습 방법을 알려 주세요.",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      11
+    ],
+    "language": "ko",
+    "answer": "‘꽃바람’은 ‘꼬-빠-람’처럼 발음하는 것이 좋습니다. 특히 ‘꽃’의 받침 ‘ㅊ’을 자연스럽게 살리기 위해 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’처럼 발음해 보세요. 이 방법은 받침을 강조하면서도 발음이 부자연스럽지 않도록 도와줍니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b6fbfc8fd27d66c55838",
+    "question": "선택한 구간의 피아노 음형이 바뀔 때 가창자는 분위기 전환을 어떻게 표현하면 좋을까요?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      30
+    ],
+    "language": "ko",
+    "answer": "피아노 음형이 바뀌는 구간은 곡의 내용에 따라 긴장감과 분위기 전환이 일어나는 중요한 순간입니다. 가창자는 이 변화를 자연스럽게 표현하기 위해 목소리의 강도와 감정을 조절하는 것이 좋습니다. 특히, 피아노의 음형 변화가 낚시꾼의 행동을 묘사하는 장면이라면, 가창자는 그 상황에 맞는 긴장감과 흐름을 유지하며, 전환점을 명확하게 느낄 수 있도록 부드럽게 또는 갑작스럽게 목소리를 조절하는 연기가 필요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e81d3cb5eda780262895",
+    "question": "How can I practise pronouncing 꽃바람 naturally in bar 11 while making the final consonant audible?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      11,
+      11
+    ],
+    "language": "en",
+    "answer": "To practise pronouncing \"꽃바람\" naturally in bar 11 while making the final consonant audible, you can break it down into \"꼬-빠-람\" rather than pronouncing it as separate syllables. To emphasize the final consonant, you may pause briefly between the consonants, similar to how double consonants are pronounced in Italian, such as \"꼬-ㅊ-빠-람.\" This technique can help make the final consonant more audible. Additionally, consider elongating the vowels as in European languages to better express and convey the sound in song, while keeping the consonants clear and distinct.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 11,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 바 람"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-004",
+        "text": "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            11
+          ]
+        ]
+      },
+      {
+        "id": "in-flowery-clouds-ku-003",
+        "text": "‘꽃바람’이 나오는 대목의 발음은 국립국어원의 발음법을 기초로 한다. 한국어의 모음은 유럽 언어의 모음만큼 길게 발음하지 않는 경우가 많지만, 노래에서는 유럽 언어의 모음처럼 길게 발음하는 것이 소리를 표현하고 전달하는 데 유리하다. 가창자는 이 점을 고려해 어떻게 발음하고 노래할지 미리 생각하는 것이 좋다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "‘꽃바람’은 한 글자씩 그대로 발음하기보다 ‘꼬-빠-람’으로 발음하는 것이 좋다. 이때 ‘꽃’의 받침 ‘ㅊ’을 강조하기 어려워지므로, 이태리어의 복자음처럼 자음과 자음 사이에 잠깐 멈추는 방식으로 ‘꼬-ㅊ-빠-람’과 같이 발음하는 것이 도움이 될 수 있다."
+    ],
+    "reference_authority": null,
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

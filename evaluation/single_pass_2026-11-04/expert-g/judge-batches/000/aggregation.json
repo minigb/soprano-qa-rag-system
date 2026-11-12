@@ -1,0 +1,26 @@
+{
+  "contract": {
+    "packets_sha256": "41c0e37775c19593bc87572f87b1bb1e070716a97defd1cb03f8a364da3d8705",
+    "workers": 3,
+    "model": "claude-opus-5-5",
+    "runner_sha256": "d3456e522cac1e2476a985aa750049ee7739d245194c22d6db8bf32ee1db2020",
+    "judge_runner_sha256": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+    "allocation": "frozen packet order, round-robin; exactly one judgment per packet"
+  },
+  "assessment_sha256": "66aa9ca246e465a40f34ea56c4391b1e97dadc022190d3255296e176858516de",
+  "packets": 20,
+  "shards": {
+    "shard-00": {
+      "assessment_sha256": "0c97850e895a9d222c9f84cd7d5727330e06bf9024d87ad5c25c7826f8a979d0",
+      "manifest_sha256": "a80406f5f61f595465cb423f326c6580460b5c7bbf2155367717c71fae7b8f38"
+    },
+    "shard-01": {
+      "assessment_sha256": "d7ad3bfca4820bcc59efabdad248c9f33c74329524587bddcea3a43ac4889cdf",
+      "manifest_sha256": "e8c4575b2d30e6ee7ba889ea849e8a36e9bc5603d592d6cd9e6c5db43820a158"
+    },
+    "shard-02": {
+      "assessment_sha256": "7735e22df5dcf4e529893ee9481623a196fe53d65e2f9ad56d851058ed67b4a0",
+      "manifest_sha256": "e8bd8e27274483643bc35c187b83f58707eb148ff7d62cc454f4ea68e9e359d9"
+    }
+  }
+}

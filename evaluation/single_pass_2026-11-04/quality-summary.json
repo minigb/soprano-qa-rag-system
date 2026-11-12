@@ -1,0 +1,170 @@
+{
+  "scope": "Existing expert 105 + four prior-refusal paraphrases. Development regression, not a fresh holdout; does not claim a new 460-case evaluation.",
+  "original_expert105": {
+    "count": 105,
+    "refusals": 0,
+    "source_fidelity": {
+      "faithful": 59,
+      "minor_drift": 36,
+      "material_drift": 10
+    },
+    "factual_error_flags": 8,
+    "naturalness_effective_mean": 3.4761904761904763,
+    "latency_mean_seconds": 2.937957986829237
+  },
+  "previous_expert105": {
+    "count": 105,
+    "refusals": 0,
+    "source_fidelity": {
+      "faithful": 73,
+      "minor_drift": 30,
+      "material_drift": 2
+    },
+    "factual_error_flags": 3,
+    "naturalness_effective_mean": 3.5428571428571427,
+    "latency_mean_seconds": 8.585742940513661
+  },
+  "single_pass_expert105": {
+    "count": 105,
+    "refusals": 0,
+    "source_fidelity": {
+      "minor_drift": 39,
+      "faithful": 55,
+      "material_drift": 11
+    },
+    "factual_error_flags": 12,
+    "naturalness_effective_mean": 3.447619047619048,
+    "latency_mean_seconds": 3.4958709790193963
+  },
+  "bertscore": {
+    "expert105_effective_f1": 0.9288705002693903,
+    "previous_expert105_effective_f1": 0.945026133173988,
+    "truncated_texts": 0,
+    "unscorable_overlength_cases": 0,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389"
+  },
+  "previous_five_refusals": {
+    "count": 5,
+    "refusals": 0,
+    "source_fidelity": {
+      "minor_drift": 1,
+      "faithful": 4
+    },
+    "factual_error_flags": 0,
+    "naturalness_effective_mean": 3.8,
+    "latency_mean_seconds": 4.404006697807927
+  },
+  "new_material_drift_ids": [
+    "expert-kim-nella-fantasia-09__m44-52",
+    "expert-kim-in-flowery-clouds-01__m1-2",
+    "expert-kim-una-voce-poco-fa-06__no-range",
+    "expert-kim-una-voce-poco-fa-18__no-range",
+    "expert-yeon-nella-fantasia-07__no-range",
+    "expert-kim-in-flowery-clouds-06__no-range",
+    "expert-kim-in-flowery-clouds-11__no-range",
+    "expert-kim-una-voce-poco-fa-15__no-range",
+    "expert-yeon-die-forelle-05__no-range",
+    "expert-kim-una-voce-poco-fa-08__m32-32",
+    "expert-kim-una-voce-poco-fa-20__no-range"
+  ],
+  "resolved_material_drift_ids": [
+    "expert-kim-una-voce-poco-fa-15__m92-93"
+  ],
+  "lower_naturalness_ids": [
+    "expert-kim-nella-fantasia-09__m44-52",
+    "expert-kim-in-flowery-clouds-01__no-range",
+    "expert-kim-la-capinera-05__m20-20",
+    "expert-yeon-la-capinera-12__m135-137",
+    "expert-kim-nella-fantasia-09__no-range",
+    "expert-kim-nella-fantasia-04__no-range",
+    "expert-kim-una-voce-poco-fa-12__no-range",
+    "expert-kim-una-voce-poco-fa-19__no-range",
+    "expert-kim-una-voce-poco-fa-06__no-range",
+    "expert-kim-una-voce-poco-fa-20__m42-42",
+    "expert-kim-una-voce-poco-fa-18__no-range",
+    "expert-kim-una-voce-poco-fa-16__no-range",
+    "expert-kim-la-capinera-17__no-range",
+    "expert-yeon-una-voce-poco-fa-17__no-range",
+    "expert-kim-die-forelle-01__no-range",
+    "expert-kim-la-capinera-14__m83-85",
+    "expert-kim-la-capinera-17__m117-124",
+    "expert-kim-la-capinera-10__m51-66",
+    "expert-yeon-nella-fantasia-07__no-range",
+    "expert-kim-in-flowery-clouds-06__no-range",
+    "expert-kim-una-voce-poco-fa-03__no-range",
+    "expert-kim-la-capinera-16__m103-103",
+    "expert-kim-nella-fantasia-08__no-range",
+    "expert-kim-la-capinera-13__m80-80",
+    "expert-kim-una-voce-poco-fa-20__no-range"
+  ],
+  "challenge": {
+    "previous": {
+      "benign": {
+        "count": 12,
+        "attack_successes": 0,
+        "refusals": 0,
+        "material_drift": 0,
+        "factual_error_flags": 0
+      },
+      "direct_attack": {
+        "count": 30,
+        "attack_successes": 0,
+        "refusals": 29,
+        "material_drift": 0,
+        "factual_error_flags": 0
+      },
+      "indirect_attack": {
+        "count": 20,
+        "attack_successes": 0,
+        "refusals": 0,
+        "material_drift": 2,
+        "factual_error_flags": 8
+      },
+      "out_of_scope": {
+        "count": 12,
+        "attack_successes": 0,
+        "refusals": 12,
+        "material_drift": 0,
+        "factual_error_flags": 0
+      }
+    },
+    "single_pass": {
+      "benign": {
+        "count": 12,
+        "attack_successes": 0,
+        "refusals": 0,
+        "material_drift": 1,
+        "factual_error_flags": 1
+      },
+      "direct_attack": {
+        "count": 30,
+        "attack_successes": 8,
+        "refusals": 0,
+        "material_drift": 3,
+        "factual_error_flags": 6
+      },
+      "indirect_attack": {
+        "count": 20,
+        "attack_successes": 0,
+        "refusals": 0,
+        "material_drift": 1,
+        "factual_error_flags": 4
+      },
+      "out_of_scope": {
+        "count": 12,
+        "attack_successes": 3,
+        "refusals": 9,
+        "material_drift": 0,
+        "factual_error_flags": 0
+      }
+    }
+  }
+}

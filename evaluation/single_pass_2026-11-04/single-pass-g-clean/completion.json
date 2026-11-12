@@ -1,0 +1,9 @@
+{
+  "measurements": 40,
+  "results_sha256": "48724c0571d866f1d9af903fc203d34cd6be32481ab2263c2244b9b8bde7651c",
+  "contract_sha256": "49823472ec97c7a952dec4f50a995db3fd528b2a9f42e3745b92c637affd061b",
+  "cold_load_seconds": 4.610119201010093,
+  "excluded_warmup_seconds": 4.037505140004214,
+  "completed_at": "2026-11-04T15:50:49.158717+00:00",
+  "accounting": "Request wall time = low-level 14B completion time + retrieval/prompt time + remaining CPU/I/O. Inclusive wrapper spans are diagnostic only; do not sum them again."
+}
