@@ -1,0 +1,16 @@
+{
+  "config_sha256": "c9c9974a9698c2f13db2432dc40c6826cf8d5b1caf1b683b09eaa632e1db2235",
+  "cases_sha256": "0e3f1061d1465b50e0a1a7c2ccb5b6433d14baf7c5be46b0faf917ad2b9710b1",
+  "metric_settings_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+  "scripts": {
+    "score_expanded_bertscore_bounded.py": "c75250b92cf01cd0537217a4c7f8353bab0a2735a69ee0f93273981aa4dca1e1",
+    "prepare_expanded_judge_packets.py": "9fecefabd615f63a74707be5b775e3e2e6da5370a8ca13be50970676ad83922f",
+    "run_expanded_judge.py": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+    "run_joint_expanded_judge.py": "d3456e522cac1e2476a985aa750049ee7739d245194c22d6db8bf32ee1db2020",
+    "summarize_expanded_comparison_bounded.py": "aac603fb65e6172d6fae8b81864c301d248f2b6e7f8fe145edf38aeaeb1772d0",
+    "run_expanded_analysis_bounded.py": "efd5e87abcee1da91dd6e0fcfc5a42a3f4f6f5d8f867a992395086e50650e191"
+  },
+  "length_policy_sha256": "43dd14d003f53ba73daca7142baea5eed0d86499ae038dcb9f339368697de9a0",
+  "judge_rubric_sha256": "d78cce50b047ccf313bc085141ca8d30dceb5ffe96dd3b648f9dddb5307b3495",
+  "judge_schema_sha256": "a2dcb4549b00942f24b7dc0c6539ded6f7c07a8e0041459ad7ba7fa3266f38fa"
+}

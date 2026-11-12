@@ -1,0 +1,15 @@
+{
+  "recorded_at": "2026-10-31T14:11:52.158551+00:00",
+  "reason": "Manual inspection of all E11 outputs confirms two remaining English meaning errors: invented gu-ryeong-churum romanization for 구름처럼, and replacement of 가성 with mixed voice. These were in the previously known targeted cohort, not newly authored answers.",
+  "changes": [
+    "Forbid adding romanization/transliteration not supplied by a source. Keep original-script lyrics.",
+    "Preserve listed technical terms; clarify the verified lexical mapping 가성=falsetto rather than mixed voice. Do not assert universal vocal-register physiology."
+  ],
+  "sources": [
+    "https://ksha1990.or.kr/dict/6409?etype=F&keyword=&ktype=&page=5",
+    "https://www.nats.org/Music_Theater_-_Resources.html"
+  ],
+  "metric": "Unchanged original B-selected setting; no metric or reference retuning.",
+  "probe": "55 development requests plus15 explicitly reused diagnostic requests; final290 remains unchanged.",
+  "validation_disclosure": "E12/E13 use internal validation after inspecting E11 failures. Do not claim an untouched test set. E11 validation mean F1 was0.8926430286899689,57/62 delivered, no truncation."
+}

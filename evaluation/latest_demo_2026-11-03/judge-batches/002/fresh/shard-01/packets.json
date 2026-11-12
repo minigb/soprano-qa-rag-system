@@ -1,0 +1,336 @@
+[
+  {
+    "id": "0b7b4e7a1819db2b7f65",
+    "question": "이 작품이 널리 불리게 된 까닭은 무엇일까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 작품은 영화 《The Mission》에 수록된 곡에서 시작되어, 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지로 인해 세계적으로 사랑받게 되었으며, 한국에서는 예능 프로그램과 합창 프로그램에서 자주 불리면서 더욱 유명해졌습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-013",
+        "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9cafb3747e98efaf1106",
+    "question": "동일한 곡의 악보들이 서로 다르게 나타나는 것은 왜일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "동일한 곡의 악보가 서로 다르게 나타나는 이유는, 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 보기 편하도록 마디와 페이지 간격 등을 조정해 편집하기 때문입니다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있습니다. 이 중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-001",
+        "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.\n성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-001"
+        },
+        {
+          "reference_id": "R002",
+          "text": "성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-002"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3b0fdddb90049f082fa5",
+    "question": "악보의 페르마타 표기와 음원에서 들리는 음의 길이가 다르면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보의 페르마타 표기와 음원에서 들리는 음의 길이가 다르다면, 이는 악보에 따른 편곡의 차이일 수 있습니다. 페르마타가 있는 경우와 없는 경우 모두 허용되며, 두 가지 버전 모두 정확한 해석으로 간주할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f275e7ed7c165d49fba7",
+    "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닙니다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러납니다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5527c32e67a801e3f9fa",
+    "question": "음이 높지 않은데도 이 곡을 부르기 어려운 이유는 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 음이 높지 않지만 템포가 빠르고 발음이 빠르게 요구되며, 단어의 악센트와 마디의 강박·약박을 정확히 파악해야 합니다. 또한 마디의 마지막 박자에 있는 단어가 다음 마디의 첫 박자에 있는 단어의 악센트로 이어지는 점을 유의해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c00f844a618699a65e07",
+    "question": "곡의 분위기 변화는 어떤 방식으로 표현하는 것이 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "222235236fc976a034ae",
+    "question": "전주가 포함된 판본과 생략된 판본이 함께 있다면 연주 방식을 어떻게 정해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 슈베르트가 여러 번 개정하고 즉흥적으로 기보한 바 있어 전주가 포함된 판본과 생략된 판본이 존재합니다. 두 경우 모두 가능하지만 일반적으로 전주가 있는 악보를 많이 사용합니다. 전주 유무가 다른 판본은 원본과 비교해 보는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-001",
+        "text": "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

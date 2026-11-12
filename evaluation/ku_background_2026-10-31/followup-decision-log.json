@@ -1,0 +1,170 @@
+{
+  "phase": "complete",
+  "accepted_candidate": "E37",
+  "metric_settings": "config/bertscore.json (unchanged)",
+  "E26": {
+    "commit": "59a7f7f",
+    "decision": "rejected",
+    "original_false_refusals_fixed": 3,
+    "issues": [
+      "Unrestricted multi-source prose invents causes for p/PP and changes actors; independent Claude identified material drift.",
+      "New general practice paraphrase confused portamento with a single pitch.",
+      "Korean general practice paraphrase gave irrelevant instrumental drills."
+    ],
+    "judge_limitation": "One Claude rationale itself speculates different scores/arrangements are more likely; this unsupported explanation is NOT used as a target answer."
+  },
+  "E27": {
+    "commit": "9b29407",
+    "decision": "rejected",
+    "original_false_refusals_fixed": 3,
+    "issues": [
+      "Same p/PP sources classified differently depending on question; two requests retain inadequate quoted output.",
+      "Comparison leaks E1/E2 names; English shared advice attributes a detail not explicitly present in both sources and fails output review."
+    ],
+    "improvements": [
+      "Conditional microphone guidance preserved by complementary-source routing.",
+      "Unsupported comparison causes can be explicitly marked unknown."
+    ]
+  },
+  "next": "No required work remains for this follow-up. Limitations are retained in followup-report.md; future experiments need new contracts and outputs.",
+  "E28": {
+    "commit": "b017c15",
+    "decision": "rejected",
+    "issues": [
+      "Fast relationship classification treats p/PP as complementary despite different markings.",
+      "Forced routing diagnostic still produced incomplete/shared-advice errors and output refusals."
+    ],
+    "artifacts": [
+      "probe-e28.jsonl",
+      "e28-routing-diagnostic.json",
+      "e28-forced-comparison-diagnostic.json"
+    ]
+  },
+  "E29": {
+    "commit": "a9f65f7",
+    "decision": "rejected",
+    "issues": [
+      "English faithful p/PP comparison rejected by output guard; joint attribution was conflated with shared advice.",
+      "Korean added practice paraphrase contains detached-note/scale errors, independently judged substantial.",
+      "Korean comparisons slightly strengthened recommendation wording."
+    ],
+    "output_guard_diagnostic": "Focused joint-citation clarification accepted faithful output and rejected all3 deliberately wrong controls; a reasoned guard incorrectly accepted unshared technique, so it was not adopted."
+  },
+  "E30": {
+    "commit": "a6ea84d",
+    "decision": "rejected",
+    "improvements": [
+      "Original three refusals fixed; English comparison accepted.",
+      "Validated fact-value rendering and source-only routing cache."
+    ],
+    "issues": [
+      "Two KO requests fail an exact shared-support quote check even though the shared recommendation is semantically supported.",
+      "Question bias shifts the disputed feature from accompaniment to singer in one unpublished draft.",
+      "KO general practice still invents an imprecise note-name scale example."
+    ]
+  },
+  "E31": {
+    "commit": "4dc5096",
+    "decision": "rejected",
+    "issues": [
+      "Korean comparison used awkward translated terminology; English shared advice remained Korean."
+    ]
+  },
+  "E32": {
+    "commit": "f6c4cd8",
+    "decision": "rejected",
+    "issues": [
+      "Locale prompt caused comparison to switch from accompaniment markings to vocal advice; some support/cause fields failed validation.",
+      "One new unit test failed because the generic parser masked a language violation reason. Generic comparison path is removed in E33."
+    ]
+  },
+  "E33": {
+    "decision": "rejected",
+    "method": "Bounded deterministic extraction of explicit opening-accompaniment dynamics and jointly stated quiet vocal-entry advice; normal guards stay mandatory. Ambiguous/unrecognized input uses original source-preserving path.",
+    "tests": {
+      "passed": 646,
+      "seconds": 23.508
+    },
+    "probe": "probe-e33.jsonl",
+    "commit": "fd8d0cc",
+    "issues": [
+      "New English comparison falsely rejected at output; diagnostic confirms separate citations fix it.",
+      "New English transposition paraphrase overstated harmonic/key consequences."
+    ]
+  },
+  "E34": {
+    "commit": "6cfbe9e",
+    "decision": "rejected",
+    "improvements": [
+      "Separate English comparison citations accepted; original three false refusals fixed."
+    ],
+    "issues": [
+      "General prompt addition induced enharmonic/transposition example error in Korean paraphrase; English paraphrase still conflates key and interval relationships."
+    ],
+    "tests": {
+      "passed": 646,
+      "seconds": 24.3
+    }
+  },
+  "E35": {
+    "commit": "52a047e",
+    "decision": "rejected",
+    "issues": [
+      "Textbook aid without reasoning does not prevent English key/transposition inversion; Korean answer copies unnecessary definitions."
+    ]
+  },
+  "E36": {
+    "decision": "diagnostic_only_not_accepted",
+    "issues": [
+      "Bounded general pitch reasoning still claims transposition preserves original key."
+    ],
+    "next": "Isolate short general theory prompt from long application policies and rendering schema; inspect all final answers.",
+    "commit": "fbae849"
+  },
+  "E37": {
+    "commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+    "decision": "accepted",
+    "tests": {
+      "passed": 648,
+      "seconds": 24.608
+    },
+    "probe": {
+      "requests": 23,
+      "benign_requests": 15,
+      "original_refusals_fixed": 3,
+      "p_pp_comparisons": "KO and EN faithful, factual4/4",
+      "material_drift": 0,
+      "substantial_factual_error": 0,
+      "limitations": [
+        "Minor transposition/octave wording and artistic-intent overstatement, factual3/4; keep this independent criticism.",
+        "Practice answer specificity/completeness remains limited.",
+        "Judge suggests possible different editions for p/PP; not adopted as a proven cause."
+      ]
+    },
+    "comparison": "comparison-2026-11-02-e37",
+    "full_result": {
+      "requests": 290,
+      "false_refusals": 0,
+      "answerable_normal_requests": 216,
+      "injection_successes": 0,
+      "injection_attempts": 58,
+      "validation_f1": 0.9729869404146748,
+      "material_source_drifts": 0,
+      "substantial_factual_errors": 0,
+      "mixed_or_uncertain_factual_cases": 1,
+      "quality_percent": 96.5488215488215
+    }
+  },
+  "preserved_diagnostic_scripts": [
+    {
+      "path": "evaluation/diagnose_comparison_reasoning_legacy.py",
+      "original_script_sha256": "6c34ddaf1cc66f2b803a8c3d9b2b2fddb23af7c5de2807ebbfbc942068bab348",
+      "source_revision": "b017c15 / E28"
+    },
+    {
+      "path": "evaluation/diagnose_comparison_review_legacy.py",
+      "original_script_sha256": "29e5fb675dc40dd6052ccbbc09601c12d060c9697d0a5c3238a7153fdd245176",
+      "source_revision": "a9f65f7 / E29"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "candidate": "E17",
+  "base": "E16 2ec416d",
+  "status": "Prepared before any E16 runtime probe; E16 catalog review retained.",
+  "reason": "Manual review of E15 general-practice outputs shows long redundant source collections that fail to explain the requested practice method. This behavior is unchanged in E16 Korean generation, so include the relevance repair before the next probe.",
+  "changes": [
+    "Pass original curated source question alongside answer into relevance selection, within the same untrusted JSON boundary.",
+    "Ask relevance selector to match requested task and original teaching context, not just shared musical subject.",
+    "Apply existing omission of purely redundant source selections to Korean composition too; retain useful distinct qualifications and conflicts.",
+    "General quantitative examples must specify BPM beat note value rather than silently assuming a quarter note."
+  ],
+  "scope": "No case IDs, query-specific output mapping, source rewrites, reference changes, metric changes or new general-intent routing.",
+  "evaluation": "Same frozen 70 diagnostic cases e15_probe_cases.json; independent Claude and unchanged 43-request development metric before full290.",
+  "source_catalog": "E16 reviewed 129-source catalog unchanged."
+}

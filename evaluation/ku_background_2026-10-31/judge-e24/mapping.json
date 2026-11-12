@@ -1,0 +1,156 @@
+[
+  {
+    "key": "probe-e24:background-meter-en",
+    "case_id": "background-meter-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "98440f01dab56baf4460"
+  },
+  {
+    "key": "probe-e24:background-meter-ko",
+    "case_id": "background-meter-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "13892d2dd1fe44c63f4b"
+  },
+  {
+    "key": "probe-e24:practice-probe-01-ko",
+    "case_id": "practice-probe-01-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "5e2abe71827512c3beb0"
+  },
+  {
+    "key": "probe-e24:practice-probe-02-en",
+    "case_id": "practice-probe-02-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "4396606faa5fbf1b28b9"
+  },
+  {
+    "key": "probe-e24:practice-probe-03-en",
+    "case_id": "practice-probe-03-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "93f8fd55ae5583eb67eb"
+  },
+  {
+    "key": "probe-e24:practice-probe-04-ko",
+    "case_id": "practice-probe-04-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "4a56e8cb883a9b587246"
+  },
+  {
+    "key": "probe-e24:practice-probe-05-ko",
+    "case_id": "practice-probe-05-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "7589dc1d46e5a12713a3"
+  },
+  {
+    "key": "probe-e24:practice-probe-06-en",
+    "case_id": "practice-probe-06-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "6346d28daab51459ec7e"
+  },
+  {
+    "key": "probe-e24:practice-probe-07-en",
+    "case_id": "practice-probe-07-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "c045be766abac3892b88"
+  },
+  {
+    "key": "probe-e24:practice-probe-08-ko",
+    "case_id": "practice-probe-08-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm",
+    "review_id": "75629b2ceecc7e6d03da"
+  },
+  {
+    "key": "probe-e24:meter-transfer-01-ko",
+    "case_id": "meter-transfer-01-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "e2be6e3d8dd083783214"
+  },
+  {
+    "key": "probe-e24:meter-transfer-02-en",
+    "case_id": "meter-transfer-02-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "3b9ab7bbb80b92fa5d2e"
+  },
+  {
+    "key": "probe-e24:meter-transfer-03-ko",
+    "case_id": "meter-transfer-03-ko",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "6973ed6e5a00b13abe53"
+  },
+  {
+    "key": "probe-e24:meter-transfer-04-en",
+    "case_id": "meter-transfer-04-en",
+    "variant": "hardened",
+    "source_file": "evaluation/ku_background_2026-10-31/probe-e24.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_guarded_calculation",
+    "review_id": "fa3e76601e4a14bd7d06"
+  }
+]

@@ -1,0 +1,187 @@
+{
+  "status": "complete",
+  "updated_at": "2026-11-02T09:27:23.125349+00:00",
+  "entries": [
+    {
+      "key": "pre-security:expanded-kim-una-voce-poco-fa-03-syn-02__m21-22",
+      "review_id": "af24200da5e3c803ce58",
+      "packet_sha256": "5bdd12dd2b575b2312fe231b9925fa195f2f656e6837780ddf85278eabffba81",
+      "review": "출처는 로지나 성격 해석이 일반적이라고 유보하지만 답변은 로시니가 강조하려 했다고 작곡가 의도를 확정한다. 판정의 유보→확정 변경을 직접 확인했다.",
+      "scope": "Direct inspection of answer and the cited source/reference passages; unblinded secondary review.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "pre-security:expanded-kim-die-forelle-02-syn-02__m41-54",
+      "review_id": "64496fd43131ae163c66",
+      "packet_sha256": "d66138e858ce98661bf7f8fc54eb6102915eda0e20a66040c8043b58be2e8b85",
+      "review": "송어의 움직임으로 볼 수 있다는 해석을 악센트를 둔 확정적 이유로 서술한다. 나머지 묘사와 별개로 확실성의 강도가 달라진다.",
+      "scope": "Direct inspection of answer and the cited source/reference passages; unblinded secondary review.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "pre-security:expert-kim-in-flowery-clouds-02__m11-12",
+      "review_id": "7831ccdc6831be8f69c2",
+      "packet_sha256": "57704ce2847fcd0799441cf090e1f203e9952948be6a1788cb7458016db48030",
+      "review": "출처가 권장하는 꼬-빠-람을 피해야 할 한 글자씩 발음하는 방식처럼 설명한다. 발음 권고의 방향이 뒤집혔다.",
+      "scope": "Direct inspection of answer and the cited source/reference passages; unblinded secondary review.",
+      "primary_judgment_changed": false,
+      "bertscore_observation": "Full-answer F1 is0.9383746386 despite the reversed pronunciation advice; lexical similarity is not proof of meaning preservation."
+    },
+    {
+      "key": "candidate-e37:expanded-kim-la-capinera-17-syn-03__no-range",
+      "review_id": "1d932e12d7d845e7b98d",
+      "packet_sha256": "a354142b988af8f5d003adfc694ba666c913d4dc71da442f94dc6851b72fa089",
+      "review": "두 KU를 정확히 인용하지만 성악가는 멜로디뿐 아니라… 문장이 두 번 반복된다. 의미 보존과 낮은 자연스러움 판정을 함께 인정한다.",
+      "scope": "Direct inspection of answer and the cited source/reference passages; unblinded secondary review.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "pre-security:expert-yeon-una-voce-poco-fa-18__no-range",
+      "review_id": "e56253308185ab7e6fd0",
+      "packet_sha256": "17681b919361f47e1668bccb50c455ea40db7655c5aeb64344436a63d3edaa77",
+      "review": "사선 없는 꾸밈음의 조건부·일반적 박자 분배를 모든 꾸밈음의 규칙으로 확대한다. 사선 여부와 원음 앞에서 미리 부르는 대안을 잃는다.",
+      "scope": "Direct inspection of answer and the cited source/reference passages; unblinded secondary review.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-in-flowery-clouds-ku-016-derived-q01__no-range",
+      "review_id": "ee3b5357f091cb9fdd5e",
+      "packet_sha256": "ebee50989085ece736a80b5d5cd37500430972b7160dba41fe8a2714e20ccad0",
+      "review": "희망적 회복·음색·크레센도·표정·가벼운 노래 권고는 보존된다. 그러나 전체 곡 설명, 앞선 간주, 이어지는 대목을 연결 없이 붙여 위치 지시가 모호하고 읽는 흐름이 약하다.",
+      "scope": "Unblinded secondary review of full displayed answer and source-grounded primary rationale. Naturalness severity is a subjective rubric boundary.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-yeon-nella-fantasia-02-syn-03__no-range",
+      "review_id": "ccdfa6d0cc8a62804475",
+      "packet_sha256": "9f60d90bd5150f02e4f51ab1c2d924f6c45e1984e3f76507f3207215d87bf626",
+      "review": "원자료의 마이크 문장이 반복되고 불려지곤·연주되어지는 같은 어색한 표현도 그대로 남는다. 의미 보존 판정과 자연스러움 결함이 양립한다.",
+      "scope": "Unblinded secondary review of full displayed answer and source-grounded primary rationale. Naturalness severity is a subjective rubric boundary.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-yeon-die-forelle-05-syn-03__no-range",
+      "review_id": "2fb861bb4e94d4e90ffe",
+      "packet_sha256": "e26d9f00ae23433883ff16f635888d0f7d1030b60aab25ba87be35491ecd344a",
+      "review": "악센트·강약박·딕션·음색이라는 필요한 내용은 있으나 세 문단에서 곡명과 중요하다가 반복된다. 내용 오류보다 문장 연결/중복 문제다.",
+      "scope": "Unblinded secondary review of full displayed answer and source-grounded primary rationale. Naturalness severity is a subjective rubric boundary.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-in-flowery-clouds-ku-021-derived-q01__no-range",
+      "review_id": "55dff96a1e47dbcf0ab6",
+      "packet_sha256": "7bce379f47742305e2139889e02e078ed4c7962702fa37442e379c14178f3ab3",
+      "review": "두 짧은 문단은 이해 가능하고 내용도 맞는다. Claude의2점은 원문 인용 형식·연결 부족에 엄격한 판정이며2/3점 경계에는 주관성이 있다. 일차 판정은 변경하지 않았다.",
+      "scope": "Unblinded secondary review of full displayed answer and source-grounded primary rationale. Naturalness severity is a subjective rubric boundary.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expert-kim-nella-fantasia-10__m34-35",
+      "review_id": "f573a5399f3deee866b1",
+      "packet_sha256": "47699f8905da94461ac0dff5bac1aba3e3689f03f7963249eadc3b1df351917c",
+      "review": "원문 인용 자체는 정확하지만 일반적인 대중곡·클래식 차이를 선택된 마지막 음에 직접 적용하지 않고, 띄어쓰기와 반복 표현도 그대로 보인다. source_fidelity와 직접적 유용성/자연스러움을 분리해야 한다.",
+      "scope": "Unblinded secondary review of full displayed answer and source-grounded primary rationale. Naturalness severity is a subjective rubric boundary.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-yeon-nella-fantasia-07-syn-01__no-range",
+      "review_id": "5df780597cbe56f556d1",
+      "packet_sha256": "8f077c6948c5e1fbfd0728f90d3a433c9dca21bc3452e01c16eb15d7a3bb3cf1",
+      "review": "레가토·긴 호흡 조언은 보존하지만 마이크/장르/가사 내용이 반복되고 해요체와 다체가 섞인다. 600토큰 전체 답변을 길이 초과로 별도 표시했으며, 자연스러움1점의 근거를 확인했다.",
+      "scope": "Targeted unblinded secondary review; no primary score replacement.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expert-kim-nella-fantasia-03__no-range",
+      "review_id": "8a44235431bd37d4b6fa",
+      "packet_sha256": "d62ee8c6779224186b6cb04cb2acf89eb513f782db63307c595101d4439cb922",
+      "review": "p/PP와 공통 첫소리 조언, 원인 불확실성은 정확하다. 일반적인 첫소리 질문에서는 부드러운 어택·낮은 음량의 호흡 지지 등 추가 설명이 생략된다. 다만 호흡 지지는 한 출처의 조언으로 귀속해야 하며 공통 주장으로 바꾸면 안 된다. Claude가 사용자가 출처를 볼 수 없다고 단정한 부분은 실제 UI를 확인한 판정이 아니므로 제한적으로 해석한다. 점수는 변경하지 않았다.",
+      "scope": "Targeted unblinded secondary review; no primary score replacement.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "pre-security:expert-kim-nella-fantasia-03__no-range",
+      "review_id": "50f18ea5772071a6eeb4",
+      "packet_sha256": "19fbf1db99f9439ff5201e3d4b90dc6061ac6f9b2fdbef9a7cc33fbc3ab423a9",
+      "review": "짧고 직접적인 문장이지만 좋아 보인다는 해석상 유보가 더 확정적인 권고로 바뀌고, 대중곡 악보 표기의 유보도 생략된다. 주된 변경은 확실성과 완전성이다.",
+      "scope": "Targeted unblinded secondary review; no primary score replacement.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "pre-security:expanded-yeon-nella-fantasia-07-syn-02__no-range",
+      "review_id": "376fb72cc2dd65580c35",
+      "packet_sha256": "8a0cce92c5a6c0c572dbe20fdf8bde016b07114fca4ae188bb887a301257f0aa",
+      "review": "긴 호흡·레가토·유연한 연결이라는 핵심을 요약하고, 마이크/다이나믹을 덧붙인다. 따라의 반복은 있지만 현재 원문 여러 개를 쌓는 방식보다 간결하게 읽힌다.",
+      "scope": "Targeted unblinded secondary review; no primary score replacement.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expert-kim-in-flowery-clouds-02__m11-12",
+      "review_id": "fcdf593583cbfb85afbb",
+      "packet_sha256": "cef75c1092ab947ed4ff6df79dedf867dc4339cdb321d76789127f50e935f574",
+      "review": "두 실제 KU를 인용해 꼬-빠-람 권고와 꼬-ㅊ-빠-람 보완 예를 올바르게 유지한다. 원본의 발음 권고 반전은 없다. 다만 무엇을 따라야 하나라는 질문에 대한 직접적인 첫 문장보다 인용 두 문단으로 제시한다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-yeon-nella-fantasia-07-syn-02__no-range",
+      "review_id": "1817df8648ec3f251960",
+      "packet_sha256": "44486aea0f81080bad7c36cfa06da19b08db694c951022897acc94932934cfc2",
+      "review": "730토큰/1411자 전체 답변에5개 출처가 이어진다. 긴 호흡·레가토는 포함되지만 마이크 조언과 가사 메시지가 반복되고 말투가 섞인다. 내용 보존과 자연스러움1점이 양립하는 실제 사례다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+      "review_id": "d396c62cae5694f9ceac",
+      "packet_sha256": "5504a31e74a76604e932dd772ce21103a249f1b868aa11004cf045a3f040ab95",
+      "review": "답변은 원문을 그대로 옮겼다. 앞에서는 아주 느리게보다 여유를 갖는 정도라고 하고 뒤에서는 Larghetto처럼 아주 느린 템포라고 하므로 원문 자체의 모호성이 남는다. 생성 단계의 새 의미 왜곡으로 세지 않는다. Trinity College London의 용어집은 Larghetto를 Rather broad로 제시한다. 특정BPM이나 모든 연주 상황을 단정하지 않고 원자료 검토 항목으로 기록한다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false,
+      "external_crosscheck": {
+        "title": "Trinity College London — Musical terms and directions for performance",
+        "url": "https://www.trinitycollege.com/resource?id=785",
+        "page": 1,
+        "limited_observation": "Larghetto: Rather broad. Does not establish a fixedBPM or resolve every contextual performance interpretation."
+      }
+    },
+    {
+      "key": "pre-security:expanded-kim-in-flowery-clouds-11-syn-03__m74-79",
+      "review_id": "ece1be5cce20044c6676",
+      "packet_sha256": "88d04b0231e4a51d65abccf6e4c8846aed9035ef8432481ef45b3295eb98c7e1",
+      "review": "첫 문장의 의미를 요약하지만 아주 느린 템포로 가려면이라는 조건을 생략해 각 음 강조/문장 연결을 무조건적인 조언처럼 제시한다. Claude의 경미한 의미 변경 판단은 이 조건 누락을 가리킨다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false,
+      "external_crosscheck": {
+        "title": "Trinity College London — Musical terms and directions for performance",
+        "url": "https://www.trinitycollege.com/resource?id=785",
+        "page": 1,
+        "limited_observation": "Larghetto: Rather broad. Does not establish a fixedBPM or resolve every contextual performance interpretation."
+      }
+    },
+    {
+      "key": "candidate-e37:expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+      "review_id": "a5de0d686e67b4a6e9d8",
+      "packet_sha256": "9be7d158f7a7861d236eea5526ba9ddc132dcbbb20e8a511c511b77dfe0f86b1",
+      "review": "67–69마디에 관한 지역적 허용을 원문 그대로 인용하지만 선택 마디 없는 일반적인 크레센도 어려움 질문에 이 부분이라는 지시어가 남는다. 단어 보존만으로 적용 범위가 명확해지지 않는다는 경미한 의미/관련성 문제를 확인했다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false
+    },
+    {
+      "key": "candidate-e37:expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+      "review_id": "f57db01f6c30d27a6c32",
+      "packet_sha256": "f94b81afb9e28aa134c89c7c8a96e701b996a64443b8ecab4b86e870b2f4122b",
+      "review": "같은 KU의 이 부분을 어느 마디인지 밝히지 않아 일반 연습 조언처럼 읽힌다. 권고 자체를 뒤집지는 않았지만 구체적인 연습 방법과 적용 범위 설명이 부족하다.",
+      "scope": "Targeted unblinded secondary review; full visible answer and actual source/reference checked.",
+      "primary_judgment_changed": false
+    }
+  ],
+  "primary_judgments_unchanged": true,
+  "reviewed_examples": 20,
+  "coverage": "Selected20 example packets, including every current material/low-factual critical case and both current minor-drift cases. Not an exhaustive human review of920 answers.",
+  "limitations": [
+    "Reviewer knows system identity; secondary audit does not replace blind Claude scores.",
+    "Naturalness severity is subjective; a2/3 boundary and source-quotation preference can vary across evaluators.",
+    "Judge claim that a user cannot see sources in the p/PP answer does not establish actual UI visibility."
+  ]
+}

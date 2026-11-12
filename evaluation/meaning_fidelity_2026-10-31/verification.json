@@ -1,0 +1,23 @@
+{
+  "evaluated_production_revision": "79cbd7b",
+  "source_files_match_candidate_f": 15,
+  "corpus_matches_frozen_protocol": true,
+  "complete_requests": 82,
+  "explicit_answer_assessments": 75,
+  "withheld_responses": 7,
+  "same_evidence_material_regressions": 10,
+  "review_html_sections": 41,
+  "review_html_javascript_syntax": "passed",
+  "five_complete_system_prompt_snapshots": "match current code",
+  "production_tests": "Not repeated: production code unchanged by this audit; preceding refinement records 542 pipeline and 44 demo tests.",
+  "artifacts_sha256": {
+    "cases.json": "23440d6ff3ce6a1e31b5f4e2734352551da64c4b12b03e202ad8f50f5490af6b",
+    "baseline.jsonl": "edc17e1d6961d3af1cfdf04cfc96502a2e67f8986ac2b0d2711494a14a9b461c",
+    "refined.jsonl": "64d58529fa1869fb2269c5dba1632197912f8a0a43cece29db5cc5442a7e5fc2",
+    "assessments.json": "9edbfff266eb9feffb6ac838c297948b3a7b6f8a5a691d1d6d4e3a0ebc62eefa",
+    "reviewed_answers.json": "10083a1ba9587d59831f1a13e54d02874fb86091db628d3af858ee9ac246562a",
+    "summary.json": "1f936b938dab1e21a56d2c165589f2bd9323c5ab13f83248719c96dbc8df802c",
+    "review.html": "cabf1dd0561430acbf567e121e1a61699314fc8fbf51fb75f10f2f9dcc54c29c",
+    "prompts/manifest.json": "fa1798ef1b2af1984dafc884025cc8434b21cc85d436b7e6b214564a22329139"
+  }
+}

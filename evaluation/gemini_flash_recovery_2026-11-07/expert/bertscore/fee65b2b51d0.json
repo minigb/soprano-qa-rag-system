@@ -1,0 +1,105 @@
+{
+  "summary": {
+    "config_id": "fee65b2b51d0",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 6,
+    "delivered": 6,
+    "scored": 6,
+    "unscorable_overlength_cases": 0,
+    "overlength_texts": 0,
+    "truncated_texts": 0,
+    "length_policy": "No truncation/chunking/encoder change. Explicitly unscorable overlength cases retained as zero contributions, not claimed computed scores.",
+    "max_input_tokens": 227,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.9432233969370524,
+      "recall": 0.933866043885549,
+      "f1": 0.938234806060791
+    },
+    "conditional_scorable": {
+      "precision": 0.9432233969370524,
+      "recall": 0.933866043885549,
+      "f1": 0.938234806060791
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 3.2486956090433523
+  },
+  "cases": [
+    {
+      "id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 227,
+      "reference_tokens": 207,
+      "precision": 0.9466935396194458,
+      "recall": 0.9494578242301941,
+      "f1": 0.9480737447738647
+    },
+    {
+      "id": "expert-kim-la-capinera-07__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 35,
+      "reference_tokens": 86,
+      "precision": 0.9534735083580017,
+      "recall": 0.876386284828186,
+      "f1": 0.9133061766624451
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-20__m42-42",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 152,
+      "reference_tokens": 162,
+      "precision": 0.9533799886703491,
+      "recall": 0.946020245552063,
+      "f1": 0.94968581199646
+    },
+    {
+      "id": "expert-kim-die-forelle-07__m28-40",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 103,
+      "reference_tokens": 88,
+      "precision": 0.9440140128135681,
+      "recall": 0.9554682970046997,
+      "f1": 0.9497066140174866
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-09__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 61,
+      "reference_tokens": 45,
+      "precision": 0.9316174983978271,
+      "recall": 0.9559392333030701,
+      "f1": 0.9436216950416565
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-08__m32-32",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 74,
+      "reference_tokens": 85,
+      "precision": 0.9301618337631226,
+      "recall": 0.9199243783950806,
+      "f1": 0.9250147938728333
+    }
+  ]
+}

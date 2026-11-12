@@ -1,0 +1,38 @@
+Sample-question answers (language: en):
+  asking die-forelle #1: What should I practise?
+  asking die-forelle #2: What changes?
+  answers/die-forelle/1.json (209 bytes)
+  answers/die-forelle/2.json (209 bytes)
+  answers/index.json (440 bytes)
+  answers/manifest.json (2,098 bytes)
+Sample-question answers (language: en):
+  asking die-forelle #1: What should I practise?
+  asking die-forelle #2: What changes?
+======================================================================
+FAIL: test_adapter_loads_media_from_sibling_dataset_repository (tests.test_demo_pipeline.DemoPipelineTests.test_adapter_loads_media_from_sibling_dataset_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-lab/demo/tests/test_demo_pipeline.py", line 47, in test_adapter_loads_media_from_sibling_dataset_repository
+    self.assertEqual(dataset.DATASET_ROOT, expected_dataset)
+AssertionError: Posix[14 chars]nhee/soprano-qa-dataset') != Posix[14 chars]nhee/.codex/worktrees/rag-quality-refinement/s[14 chars]set')
+
+======================================================================
+FAIL: test_adapter_loads_pipeline_from_sibling_repository (tests.test_demo_pipeline.DemoPipelineTests.test_adapter_loads_pipeline_from_sibling_repository)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-lab/demo/tests/test_demo_pipeline.py", line 39, in test_adapter_loads_pipeline_from_sibling_repository
+    self.assertEqual(
+AssertionError: Posix[19 chars].codex/worktrees/rag-quality-refinement/soprano-qa-rag-system') != Posix[19 chars].codex/worktrees/rag-quality-refinement/soprano-lab/rag')
+
+======================================================================
+FAIL: test_pipeline_loads_active_review_and_web_data_from_dataset_main_checkout (tests.test_demo_pipeline.DemoPipelineTests.test_pipeline_loads_active_review_and_web_data_from_dataset_main_checkout)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-lab/demo/tests/test_demo_pipeline.py", line 62, in test_pipeline_loads_active_review_and_web_data_from_dataset_main_checkout
+    self.assertEqual(Path(settings["dataset_root"]), expected_dataset)
+AssertionError: Posix[14 chars]nhee/.codex/worktrees/rag-quality-refinement/s[14 chars]set') != Posix[14 chars]nhee/soprano-qa-dataset')
+
+----------------------------------------------------------------------
+Ran 44 tests in 4.687s
+
+FAILED (failures=3, expected failures=1)

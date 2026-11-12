@@ -1,0 +1,12 @@
+{
+  "maximum_requests": 6,
+  "model": {
+    "model": "gemini-3.8-flash",
+    "thinking_level": "LOW",
+    "max_output_tokens": 2048,
+    "timeout_ms": 180000
+  },
+  "purpose": "Synthetic, held separate from the existing expert benchmark and BERTScore",
+  "inputs_sha256": "f5632df962f61e27d3ac960c6c6b6ac7a2bda0a608e8dc055b5ee1ebca4c44fb",
+  "runner_sha256": "a009d0b6aab2da9e0c7f5fbf811733a7a526050e7643056cd782b115c94e4b7d"
+}

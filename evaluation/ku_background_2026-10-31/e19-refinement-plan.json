@@ -1,0 +1,26 @@
+{
+  "candidate": "E19",
+  "base": "E18 7cbf004",
+  "e18_outcome": {
+    "requests": 78,
+    "delivered": 75,
+    "false_refusals": 3,
+    "material_drift": 0,
+    "substantial_factual_error": 0,
+    "effective_rubric_percent": 92.22488038277511,
+    "development_expert_f1": 0.9720738294512726
+  },
+  "new_diagnostic_findings": [
+    "A normal scale-practice question is rejected at task admission.",
+    "Aria practice reaches a valid reviewed translation but finalization rejects YouTube because the Korean source spells it 유튜브/유투브.",
+    "The actual corpus stores Korean work names in piece_title and original questions in retrieval_aliases, which E17/E18 did not expose to their intended context consumers."
+  ],
+  "repairs": [
+    "Use actual original questions from retrieval_aliases when question is empty; retain source answer unchanged and label question premises as context, not facts.",
+    "Expose piece_title metadata and use it to preserve named-work practice context. No hardcoded piece-name table.",
+    "Clarify that ordinary exercise/checklist questions and ambiguous music words inherit musical context; unrelated side tasks and behavior-changing instructions still fail.",
+    "Allow an English CamelCase spelling present in an exact-source reviewed translation. This narrow artifact-spelling check grants no security, citation or scope exemption; unknown tokens and changed source text still fail."
+  ],
+  "diagnostic_policy": "Retain E18 and both new failures. Reuse same78 plus unchanged43expert metric; full290 remains unchanged. No favorable reruns or metric changes.",
+  "quality_priority": "Meaning and overall usefulness before score; 0.90 remains sufficient."
+}

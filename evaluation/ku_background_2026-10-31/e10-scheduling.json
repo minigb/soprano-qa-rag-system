@@ -1,0 +1,8 @@
+{
+  "time": "2026-10-31T13:05:56.466562+00:00",
+  "paused_driver_pid": 1627707,
+  "running_candidate_pid": 1627710,
+  "reason": "Keep the frozen E9 inference running to completion, then insert an E10 development-only source-preservation probe before baseline runs. No E9 validation BERTScore has been computed or read. Existing E9 sources, cases, settings and runner contract remain unchanged.",
+  "scope_of_new_evidence": "E10 motivated by the already known targeted meaning cohort and source identity regressions, not by validation metric tuning.",
+  "resume": "E10 controller resumes this parent in finally; SIGSTOP targets only the parent, never the inference child."
+}

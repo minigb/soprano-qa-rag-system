@@ -1,0 +1,609 @@
+[
+  {
+    "id": "fabc45fee945e950afb9",
+    "question": "로시니가 일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      21,
+      22
+    ],
+    "language": "ko",
+    "answer": "<<Una voce poco fa>>에서 로시니가 일반적인 부점 대신 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적입니다. 성악가는 이 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 권장됩니다. 다만 이는 확정된 작곡 의도라기보다는 일반적인 해석으로 설명됩니다.\n\n해당 마디를 노래할 때는 뒤따르는 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 불러야 다른 리듬으로 들리지 않습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "-do- -ro fu che il pie-",
+            "thee my heart doth"
+          ]
+        },
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "-gò. Sì, Lin-",
+            "glow, Yes, Lin-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            17,
+            19
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ],
+          [
+            63,
+            63
+          ],
+          [
+            111,
+            111
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b1b2f47099d96ddae490",
+    "question": "노래를 시작하는 부분의 다이나믹은 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "노래를 시작하는 부분에서는 반주 파트에 표시된 piano (p)를 참고해 성악가도 piano (p)로 시작하는 것이 좋습니다. \n\n일부 악보의 멜로디 파트에 적힌 piano (p)는 오케스트라 총보의 지시를 옮겨 적은 것으로 볼 수 있으며, 성악 파트에 다이나믹이 따로 적혀 있지 않은 판본이라면 피아노나 오케스트라 파트의 다이나믹을 참고하여 해석합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-003",
+        "text": "일부 악보에서 멜로디 파트에 표시된 piano (p)는 오케스트라 총보의 지시를 옮겨 적은 것으로 볼 수 있다. 다른 판본처럼 성악 파트에 다이나믹이 따로 표시되지 않은 경우에는 피아노 또는 오케스트라 파트의 다이나믹을 참고해 해석한다. 노래를 시작하는 부분에서는 반주 파트에 표시된 piano (p)를 참고해 성악가도 piano (p)로 시작하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "일부 악보에서 멜로디 파트에 표시된 piano (p)는 오케스트라 총보의 지시를 옮겨 적은 것으로 볼 수 있다. 다른 판본처럼 성악 파트에 다이나믹이 따로 표시되지 않은 경우에는 피아노 또는 오케스트라 파트의 다이나믹을 참고해 해석한다. 노래를 시작하는 부분에서는 반주 파트에 표시된 piano (p)를 참고해 성악가도 piano (p)로 시작하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일부 악보에서 멜로디 파트에 표시된 piano (p)는 오케스트라 총보의 지시를 옮겨 적은 것으로 볼 수 있다. 다른 판본처럼 성악 파트에 다이나믹이 따로 표시되지 않은 경우에는 피아노 또는 오케스트라 파트의 다이나믹을 참고해 해석한다. 노래를 시작하는 부분에서는 반주 파트에 표시된 piano (p)를 참고해 성악가도 piano (p)로 시작하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "72d27a098eb620627233",
+    "question": "음이 높지 않은데도 이 곡을 부르기 어려운 이유는 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 전체적으로 높은 음이나 화려한 기교가 요구되지는 않지만, 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많기 때문에 부르기 어렵습니다. \n\n이 곡을 노래할 때는 단어의 악센트와 마디의 강박·약박을 잘 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "92229bb7778949aa6b55",
+    "question": "간주에서는 무엇을 하며 어떻게 표현할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      44,
+      55
+    ],
+    "language": "ko",
+    "answer": "44–55마디의 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있습니다.\n\n따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살피고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응하여 표현합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 48,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 49,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 50,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e0dde2e08ffebab5361b",
+    "question": "박자가 다시 이전 박자로 돌아오는 이유는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하며 극적 효과를 고조시킨 후, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살립니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-011",
+        "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡은 2/4박으로 시작한 뒤 12/8박과 3/4박으로 변화하면서 극적 효과를 고조시키고, 다시 2/4박으로 돌아와 처음의 경쾌한 분위기를 되살린다. 4/4박이 아닌 2/4박을 사용한 것은 강약의 대비를 더욱 선명하게 드러내기 위한 것으로 볼 수 있다. 2/4박은 매 마디가 ‘강-약’으로 이루어지는 반면, 4/4박은 일반적으로 ‘강-약-중강-약’의 구조를 지닌다. 따라서 연속된 두 마디에 서로 대조되는 음형이 등장할 경우, 2/4박에서는 각 마디의 첫 박에 강세가 주어져 두 음형의 성격이 모두 분명하게 드러난다. 이는 두 음형을 4/4박의 한 마디 안에서 표현하는 것보다 음형 간의 대비를 부각하고 곡의 경쾌한 분위기를 살리는 데 더욱 효과적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "fe3d792e9b99779627f4",
+    "question": "이 노래가 너무 높으면 조정하거나 편곡해도 될까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《꽃구름 속에》와 같은 가곡은 조성을 바꾸는 것이 일반적으로 허용됩니다. 곡의 조성이 자신의 음역대에 맞지 않고 너무 높다면, 자신의 목소리와 음색에 맞게 조성을 낮추어 부를 수 있습니다. 오페라 아리아나 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악은 원래 조성을 유지해야 하지만, 이 곡은 조성을 바꾸어 연주할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-007",
+        "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식과 성악에서는 오페라의 아리아, 작곡가가 조성 변환을 금지한 음악, 대부분의 현대음악을 작곡가가 처음 작곡한 조성으로 유지한 채 노래한다. 그러나 《꽃구름 속에》와 같은 그 밖의 가곡과 가요·대중음악은 조성을 바꾸는 것이 일반적으로 허용된다. 만약 곡의 조성이 자신의 음역대에 맞지 않고 너무 높거나 낮다면, 자신의 목소리와 음색에 맞게 조성을 바꿀 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ee55dbda132855dd6407",
+    "question": "첫 소리가 잘 나지 않으면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "ko",
+    "answer": "19–21마디에서 프레이즈 시작의 높은 음인 ‘환한속에 구름처럼’의 ‘구’ 소리를 유연하고 명확하게 내기 위해서는, 앞 프레이즈의 2분음표 중간에서 숨을 쉬지 않고 다음 프레이즈까지 연결하여 노래하는 방법이 일반적입니다.\n\n부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 하는 경우라면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지하여 다음 프레이즈로 이어가는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              19,
+              21
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

@@ -1,0 +1,66 @@
+[
+  {
+    "id": "ca5617131f91bbc1752b",
+    "question": "What vocal approach should I use for this fictional piece in a large hall without a microphone?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "In a large hall without a microphone, you may need to use classical vocal production with sufficient resonance and breath support.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "fictional-different_condition-en-expert_annotation",
+        "text": "In a large hall without a microphone, classical vocal production with sufficient resonance and breath support may be needed.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "fictional-different_condition-en-sumijo_feedback",
+        "text": "In a small space with a microphone, you may use a natural, intimate vocal tone.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "Use the large-hall, no-microphone guidance, retaining may be needed. Do not override it with the Sumi Jo-type advice about a different performance condition."
+    ],
+    "reference_authority": {
+      "status": "synthetic_policy_fixture_not_expert_annotation"
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7619e395418ebdfd55aa",
+    "question": "How should I begin the first sung note in this fictional practice piece?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "en",
+    "answer": "You should begin the first sung note softly and gently.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "fictional-same_scope-en-expert_annotation",
+        "text": "Begin the first sung note of this fictional practice piece strongly.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "fictional-same_scope-en-sumijo_feedback",
+        "text": "Begin the first sung note of this fictional practice piece softly and gently.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "Prefer the Sumi Jo-type passage for this same-scope conflict: start softly and gently. Do not claim to have verified the score or proven the other source wrong."
+    ],
+    "reference_authority": {
+      "status": "synthetic_policy_fixture_not_expert_annotation"
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

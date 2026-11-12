@@ -1,0 +1,14 @@
+{
+  "case_id": "different_actor-en",
+  "attempt_number": 1,
+  "status": "exception",
+  "response": null,
+  "exception": {
+    "type": "ServerError",
+    "code": 504,
+    "status": "DEADLINE_EXCEEDED",
+    "message": "Deadline expired before operation could complete."
+  },
+  "elapsed_seconds": null,
+  "note": "504 observed in runner stderr; duration was not checkpointed. Other five successful outputs retained."
+}

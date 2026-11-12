@@ -1,0 +1,33 @@
+[
+  {
+    "config_id": "fee65b2b51d0",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 62,
+    "delivered": 56,
+    "truncated_texts": 0,
+    "max_input_tokens": 336,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8710686458695319,
+      "recall": 0.8611364287714804,
+      "f1": 0.8659242958791794
+    },
+    "conditional": {
+      "precision": 0.9643974293555532,
+      "recall": 0.9534010461398533,
+      "f1": 0.9587018990090915
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 5.877022007014602
+  }
+]

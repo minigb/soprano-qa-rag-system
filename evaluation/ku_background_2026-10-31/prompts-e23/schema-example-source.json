@@ -1,0 +1,48 @@
+{
+  "type": "object",
+  "properties": {
+    "sentences": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 6,
+      "items": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "type": "string",
+            "enum": [
+              "evidence",
+              "background"
+            ]
+          },
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "E1"
+              ]
+            },
+            "minItems": 0,
+            "maxItems": 1,
+            "uniqueItems": true
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "kind",
+          "evidence",
+          "text"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "sentences"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,679 @@
+[
+  {
+    "id": "784c94b706e6efea06ef",
+    "question": "장식음을 어떤 방식으로 처리하면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "꾸밈음에 사선이 없으면 꾸밈음과 원음이 균등하게 박자를 나누어 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많습니다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 16분음표 네 개의 음형으로 균일하게 나누어 노래합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-009",
+        "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0090",
+        "text": "글은 벨칸토에서 장식은 표현이며 같은 방식으로 장식하는 가수는 없고, 모든 런과 장식이 하나의 결정이며 그 결정들이 로지나가 누구인지 말해 준다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0015",
+        "text": "필자는 반복 부분에서 장식을 넣을 때 희망사항이 아니라 실제로 자신이 잘하는 것을 보여 주는 장식을 고르고, 선택을 지나치게 고민하지 말라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0055",
+        "text": "글은 이 악보에서 장식이 기대되며 가수들이 반복 소재에 턴과 변형을 더하지만, 그 선택은 그 자체가 목적이 되지 말고 인물에 봉사해야 한다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0059",
+        "text": "글은 최근 수십 년의 연구에 따르면 로시니가 무의미하거나 요란한 장식은 인정하지 않았지만, 장식의 올바른 실행에는 호의적이었을 뿐 아니라 많은 경우 이를 요구했다고 서술한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "70be740fd5337702c6f0",
+    "question": "이 곡을 유절가곡으로 볼 수 있을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 변형된 유절가곡 형식으로 볼 수 있습니다. 원본 시는 4연이지만 슈베르트는 1-3연만 사용했고, 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡과는 다릅니다. 이는 슈베르트가 의도한 극적인 흐름이므로, 노래에서 이를 잘 표현하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-007",
+        "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "359d33540164ca4fcdcf",
+    "question": "첫 소리가 잘 나지 않으면 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      19,
+      21
+    ],
+    "language": "ko",
+    "answer": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않습니다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 합니다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "환 - 한 속"
+          ]
+        },
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        },
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-006",
+        "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            19,
+            21
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "프레이즈의 시작에 높은 음이 나오면 노래하기 쉽지 않다. ‘환한속에 구름처럼’의 ‘구’를 유연하고 명확하게 내기 위해 앞 프레이즈의 2분음표를 중간에 숨 쉬지 않고 다음 프레이즈까지 연결하는 것이 일반적이며, 많은 성악가가 택하는 선택지이기도 하다. 부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤 다음 프레이즈의 높은 음을 노래해야 한다면, 앞 프레이즈에서 노래했던 느낌과 발성을 가능한 한 유지해 다음 프레이즈로 이어가는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              19,
+              21
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "81bf1fdee58127e34c6b",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      44,
+      52
+    ],
+    "language": "ko",
+    "answer": "고음이나 도약음은 힘을 너무 주지 않고 부드럽게 처리하는 것이 좋습니다. 음표 사이의 쉼표를 충분히 활용해 숨을 쉬는 것도 중요합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "sung",
+          "lyric_lines": [
+            "nu -vo -le che"
+          ]
+        },
+        {
+          "measure": 45,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo -la"
+          ]
+        },
+        {
+          "measure": 46,
+          "voice": "sung",
+          "lyric_lines": [
+            "-no pien' d'u"
+          ]
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma ni"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ta"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "in fon do,al"
+          ]
+        },
+        {
+          "measure": 50,
+          "voice": "sung",
+          "lyric_lines": [
+            "l'a -ni"
+          ]
+        },
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ma"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "4474b048a4f85cbe22c4",
+    "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 분위기가 바뀔 때는 피아노 파트의 음형 변화를 따라가며, 낚시꾼의 행동을 연상시키는 긴장감을 표현하는 것이 좋습니다. 가사는 피아노의 긴장감을 활용해 전환이 자연스럽게 느껴지도록 주의해서 부르는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9fc4f89922e890c0be76",
+    "question": "‘La la’가 어색하게 들리는 부분을 자연스럽게 만들 방법은 무엇일까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      51,
+      66
+    ],
+    "language": "ko",
+    "answer": "‘la la’가 이어지는 부분은 프레이징이 끊어지지 않도록 주의해야 합니다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 51,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam La la"
+          ]
+        },
+        {
+          "measure": 52,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 53,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 60,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 61,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 63,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 64,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 65,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 66,
+          "voice": "sung",
+          "lyric_lines": [
+            "La"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-012",
+        "text": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            51,
+            66
+          ],
+          [
+            117,
+            132
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘la la’가 이어지는 대목은 주의하지 않으면 프레이징이 끊어져 들릴 수 있다. 여러 음정을 하나의 큰 음 덩어리처럼 묶어 노래하되, 처음에는 몇 개의 음정만 묶고 점차 더 큰 덩어리로 확장해 연습하면 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              51,
+              66
+            ],
+            [
+              117,
+              132
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "dd1fa5c924810f77864e",
+    "question": "Lindoro mio sara에는 가사를 어떤 방식으로 붙여야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      22,
+      24
+    ],
+    "language": "ko",
+    "answer": "Lindoro mio sara는 각 박자에 놓인 꾸밈음에서 발음을 시작합니다. 꾸밈음은 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "-gò. Sì, Lin-",
+            "glow, Yes, Lin-"
+          ]
+        },
+        {
+          "measure": 23,
+          "voice": "sung",
+          "lyric_lines": [
+            "-do- -ro mi- -o sa-",
+            "-do- -ro shall be"
+          ]
+        },
+        {
+          "measure": 24,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, lo giu-",
+            "mine, I have"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-007",
+        "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            24
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              24
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

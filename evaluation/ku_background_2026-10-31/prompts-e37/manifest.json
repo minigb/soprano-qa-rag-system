@@ -1,0 +1,92 @@
+{
+  "source_commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+  "source_sha256": {
+    "soprano_qa/answer.py": "f693cd5a9b159694a1988f208ba99ddec928fbe16545113561cdbb199f938d68",
+    "soprano_qa/security.py": "0080b7767fc3f8f40f4d9ca7f79034f32f544158fb6134da3e0aaf47d0b21e77",
+    "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d",
+    "soprano_qa/llm.py": "e447c70175e10a5b3701a8133b9f4990b6b4cac100c219cbf3f4de7bdac0042f",
+    "soprano_qa/structured_answer.py": "a68bdc4f76f257134526d0293724fe2d3bff59d61f27487b89a4dd8051ccfce0",
+    "soprano_qa/music_terms.py": "ee02893398056b393b91e86f21f3ed63e10cdad8bfaabda4944ec30fa4f70384",
+    "soprano_qa/source_translation.py": "d528aa63ed972257151f61dbfc3c1fa7518d6c593c66053b67c8857b5be60bcd",
+    "soprano_qa/source_translation_catalog.py": "9a0b16e1a44e6f4c93c749c453dbe0ff4d7a1c06499ca8aabea9be7cabd40ab5",
+    "soprano_qa/question_intent.py": "f1c1a01cd960d9c6ada8dca67d9776f52c2e459259f2abb3977a9f86eb95749f",
+    "soprano_qa/meter.py": "96a596852b3d1ce51d6d18a3538c7b93065a128fc9ee04c2ea0998db8d9afc90",
+    "soprano_qa/source_comparison.py": "4ce7f7a19e2cf5dae5a982dc702b32f18f2c2c2072c4a6ed4e3edaefbf2a40f7"
+  },
+  "note": "Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.",
+  "assembly": "soprano_qa.answer.build_messages -> soprano_qa.llm.generate",
+  "concise_concept": "After selection finds no answering source, a non-practice pitch-concept question without selected range or score context uses answer-concept-ko/en.txt and question/answer_language JSON. Max1536 tokens, no first-token grammar; remove private thinking, parse strict final JSON. Admission/output checks still see the full original bundle. No stored answer or new textbook prompt is used.",
+  "calculated_music_rule": "soprano_qa.meter.basic_meter_explanation; basic conventional meter arithmetic only, with admission/output review and llm_guarded_calculation metadata. It is not model-composed prose.",
+  "comparison": "soprano_qa.source_comparison.opening_dynamics_comparison deterministically extracts two explicit opening-accompaniment markings and quiet vocal-entrance suggestions from selected Korean source text. It attributes differing values, states that the cause is not established, and expresses only the shared suggestion. Unrecognized/ambiguous/local cases retain ordinary source preservation. Admission, evidence selection and output/citation/scope checks remain mandatory; generation_mode=llm_guarded_source_comparison. No comparison LLM, question/answer cache or cached guard verdict.",
+  "retry": "Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.",
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 11835,
+      "sha256": "ca9e0826af109fa8188a70e99852d2dce4f87c1a5d659df5d69b9ea4ad98f7a8"
+    },
+    "answer-en.txt": {
+      "characters": 12265,
+      "sha256": "deba4d96ce1a3e5fc6ced16fbb19d08e75c134bfae6ecbada7bfc0f4ff2f2e9f"
+    },
+    "answer-preserve-ko.txt": {
+      "characters": 15903,
+      "sha256": "92b1c6048766f703dd2e188cb3d0ca6e359f0a1b394587c68ddb68f47d3bcffe"
+    },
+    "answer-preserve-en.txt": {
+      "characters": 16333,
+      "sha256": "f9c539ab71b467ad2c93929e8d2fb6cf056e418f46833f74efe4b31ee6f6456b"
+    },
+    "answer-select-for-translation-en.txt": {
+      "characters": 15065,
+      "sha256": "46e35dacf3efd1ef41b34d763803ea5439ddfa01d7890a3b47684ec5e79c313c"
+    },
+    "source-translation-en.txt": {
+      "characters": 2165,
+      "sha256": "9c8306256463d79d32733ed1ada0baf323469973f3e3159090b1c937e4202d16"
+    },
+    "answer-general.txt": {
+      "characters": 7919,
+      "sha256": "a86753c73ec0a6298d59ce211584ce7f2d868d9cdd11edac936a5aa4fd7daecf"
+    },
+    "answer-concept-ko.txt": {
+      "characters": 5747,
+      "sha256": "046faaf23ad264f7d2736db459018a05340b3f45ed09e72831d86dd6cd654330"
+    },
+    "answer-concept-en.txt": {
+      "characters": 5747,
+      "sha256": "e4d605d06137de225a3bc27753b45bf49e49335e9d02700186e6e9b122960bc1"
+    },
+    "answer-practice.txt": {
+      "characters": 6849,
+      "sha256": "9876efd68ed0f931cf8e461dcd5ebde1fd05212261997176e2168b1055a83ec9"
+    },
+    "guard-admission.txt": {
+      "characters": 2284,
+      "sha256": "d4aed14a21802b4fefe19a8600941b1e368587737d26222cf8c47985b85f1a10"
+    },
+    "guard-output.txt": {
+      "characters": 8450,
+      "sha256": "5923f95f4bdae6de8e7dec5dfa68b4e5adccfedab72195aa681269d19f9bdc28"
+    },
+    "guard-comparison.txt": {
+      "characters": 9053,
+      "sha256": "b0a1009ae0724ddf1854eba2f35884d920cce20ee7cda5b6f7feae0a27fc0749"
+    },
+    "answer-practice-ko.txt": {
+      "characters": 6110,
+      "sha256": "adf029a1afea8dfb3331d44dcbbd5fbb4441186d0e9c0e0344052ee1625b7386"
+    },
+    "evidence-selection.txt": {
+      "characters": 2048,
+      "sha256": "0d0da9c116e124d47dbcd6372803df9f1ff28962ff423e4503392907d0ad4aad"
+    },
+    "query-translation.txt": {
+      "characters": 1998,
+      "sha256": "4ed18dac9e862f26651bceb32414b8b1b404a7ab9011efe4723ef01eeb7b1a3b"
+    },
+    "retry-suffix.txt": {
+      "characters": 456,
+      "sha256": "1c2180fb0746de5b4513648bbca1bdea472c5c63d3b2e0bb5aa550acf768c672"
+    }
+  }
+}

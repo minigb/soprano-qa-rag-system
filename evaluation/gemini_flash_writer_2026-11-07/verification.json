@@ -1,0 +1,41 @@
+{
+  "verified": true,
+  "captures": {
+    "expert": {
+      "count": 109,
+      "successful": 103,
+      "technical_errors": 6,
+      "excluded": 0,
+      "result_sha256": "5b6f08123026cedf3d8b66923381426bc966525e9f6a004b3f4d78c7c7e455b6"
+    },
+    "challenge": {
+      "count": 74,
+      "successful": 72,
+      "technical_errors": 1,
+      "excluded": 1,
+      "result_sha256": "d2b03b0586581e417f42a3562480df8c1e4383c491b974d5bb87708c0e3fd2dc"
+    }
+  },
+  "preserved_files": {
+    "config/settings.json": "7e5866561d07f6b8c26c08239f8e530a340e73cc78fe7bde8fd6e4216b095ac1",
+    "config/settings.single-pass.json": "29861cb07a41cc000b17e898dd61979f91179d29a61839d58bc4a2fca2bba2f1",
+    "soprano_qa/single_pass_prompt.py": "4083bb71143b01b1ac5b99bcdf345bc162dc3b8fe2d759b1b2e9e54d422ed005",
+    "soprano_qa/dense.py": "22105af5e2942261cd3415878d34b1a580668ec138f7f557b87eb448c443c4dd",
+    "soprano_qa/retrieval.py": "d050e962dcbcccb099c04b65fcb4a89b84bf224dd6e79ec3d2e05d31e31c7261",
+    "soprano_qa/translation.py": "5c88e4a8749632b5be9ef3e1e0bde7d7b76920f89b4ef05817a1d6eef0bcc8de"
+  },
+  "snapshot_matches_live_code": true,
+  "provider_model_verified_in_responses": "gemini-3.8-flash",
+  "same_prompt_builder_and_writing_policy_as_j": true,
+  "tests": 693,
+  "main_original_corpus_and_460demo_preserved": true,
+  "api_failures_retained_separately": true,
+  "metric_hyperparameters_unchanged": {
+    "model_type": "xlm-roberta-large",
+    "num_layers": 18,
+    "idf": false,
+    "rescale_with_baseline": false,
+    "use_fast_tokenizer": false,
+    "lang": "ko"
+  }
+}

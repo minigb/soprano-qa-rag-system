@@ -1,0 +1,398 @@
+{
+  "candidate": "j",
+  "expert105": {
+    "original": {
+      "count": 105,
+      "refusals": 0,
+      "source_fidelity": {
+        "minor_drift": 36,
+        "material_drift": 10,
+        "faithful": 59
+      },
+      "factual_error_flags": 8,
+      "naturalness_effective_mean": 3.4761904761904763,
+      "latency_mean_seconds": 2.937957986829237,
+      "completeness_mean_out_of_2": 1.8952380952380952,
+      "relevance_mean_out_of_2": 1.9904761904761905,
+      "adequately_complete": 94
+    },
+    "reviewed": {
+      "count": 105,
+      "refusals": 0,
+      "source_fidelity": {
+        "faithful": 73,
+        "minor_drift": 30,
+        "material_drift": 2
+      },
+      "factual_error_flags": 3,
+      "naturalness_effective_mean": 3.5428571428571427,
+      "latency_mean_seconds": 8.585742940513661,
+      "completeness_mean_out_of_2": 1.838095238095238,
+      "relevance_mean_out_of_2": 1.980952380952381,
+      "adequately_complete": 88
+    },
+    "single_pass_g": {
+      "count": 105,
+      "refusals": 0,
+      "source_fidelity": {
+        "minor_drift": 39,
+        "faithful": 55,
+        "material_drift": 11
+      },
+      "factual_error_flags": 12,
+      "naturalness_effective_mean": 3.447619047619048,
+      "latency_mean_seconds": 3.4958709790193963,
+      "completeness_mean_out_of_2": 1.8952380952380952,
+      "relevance_mean_out_of_2": 1.9904761904761905,
+      "adequately_complete": 94
+    },
+    "candidate": {
+      "count": 105,
+      "refusals": 0,
+      "source_fidelity": {
+        "faithful": 63,
+        "minor_drift": 38,
+        "material_drift": 4
+      },
+      "factual_error_flags": 4,
+      "naturalness_effective_mean": 3.4857142857142858,
+      "latency_mean_seconds": 2.7606594435321834,
+      "completeness_mean_out_of_2": 1.8761904761904762,
+      "relevance_mean_out_of_2": 1.9904761904761905,
+      "adequately_complete": 92
+    }
+  },
+  "same_retrieval_ids": 109,
+  "same_retrieved_evidence_full": 109,
+  "same_retrieved_evidence_without_dense_diagnostics": 109,
+  "previous_five_refusals": {
+    "original": {
+      "count": 5,
+      "refusals": 0,
+      "source_fidelity": {
+        "minor_drift": 3,
+        "faithful": 2
+      },
+      "factual_error_flags": 0,
+      "naturalness_effective_mean": 3.6,
+      "latency_mean_seconds": 2.3986601124022853,
+      "completeness_mean_out_of_2": 1.2,
+      "relevance_mean_out_of_2": 1.8,
+      "adequately_complete": 1
+    },
+    "reviewed": {
+      "count": 5,
+      "refusals": 0,
+      "source_fidelity": {
+        "faithful": 5
+      },
+      "factual_error_flags": 0,
+      "naturalness_effective_mean": 3.0,
+      "latency_mean_seconds": 23.365314721188042,
+      "completeness_mean_out_of_2": 2,
+      "relevance_mean_out_of_2": 2,
+      "adequately_complete": 5
+    },
+    "single_pass_g": {
+      "count": 5,
+      "refusals": 0,
+      "source_fidelity": {
+        "faithful": 4,
+        "minor_drift": 1
+      },
+      "factual_error_flags": 0,
+      "naturalness_effective_mean": 3.8,
+      "latency_mean_seconds": 4.404006697807927,
+      "completeness_mean_out_of_2": 2,
+      "relevance_mean_out_of_2": 2,
+      "adequately_complete": 5
+    },
+    "candidate": {
+      "count": 5,
+      "refusals": 0,
+      "source_fidelity": {
+        "faithful": 5
+      },
+      "factual_error_flags": 0,
+      "naturalness_effective_mean": 3.6,
+      "latency_mean_seconds": 3.8140892211929893,
+      "completeness_mean_out_of_2": 1.8,
+      "relevance_mean_out_of_2": 2,
+      "adequately_complete": 4
+    }
+  },
+  "new_material_vs_g": [
+    "expert-kim-in-flowery-clouds-02__m11-12",
+    "expert-kim-la-capinera-14__m83-85",
+    "expert-yeon-la-capinera-11__no-range"
+  ],
+  "resolved_material_vs_g": [
+    "expert-kim-nella-fantasia-09__m44-52",
+    "expert-kim-in-flowery-clouds-01__m1-2",
+    "expert-kim-una-voce-poco-fa-18__no-range",
+    "expert-kim-una-voce-poco-fa-08__m32-32"
+  ],
+  "remaining_material": [
+    "expert-kim-in-flowery-clouds-02__m11-12",
+    "expert-kim-la-capinera-14__m83-85",
+    "expert-kim-in-flowery-clouds-06__no-range",
+    "expert-yeon-la-capinera-11__no-range"
+  ],
+  "naturalness_vs_g": {
+    "same": 73,
+    "worse": 14,
+    "improved": 18
+  },
+  "bertscore": {
+    "expert105_f1": 0.9399432505880083,
+    "truncated_texts": 0,
+    "overlength": 0,
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "revision": "c23d21b0620b635a76227c604d44e43a9f0ee389"
+  },
+  "challenge": {
+    "single_pass_g": {
+      "benign": {
+        "all": {
+          "count": 12,
+          "assessed": 12,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.4166666666666665
+        },
+        "ko": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 0,
+          "naturalness_mean": 3.5
+        },
+        "en": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.3333333333333335
+        }
+      },
+      "direct_attack": {
+        "all": {
+          "count": 30,
+          "assessed": 30,
+          "technical_errors": 0,
+          "attack_successes": 8,
+          "refusals": 0,
+          "material_drift": 3,
+          "naturalness_mean": 3
+        },
+        "ko": {
+          "count": 15,
+          "assessed": 15,
+          "technical_errors": 0,
+          "attack_successes": 3,
+          "refusals": 0,
+          "material_drift": 2,
+          "naturalness_mean": 3.066666666666667
+        },
+        "en": {
+          "count": 15,
+          "assessed": 15,
+          "technical_errors": 0,
+          "attack_successes": 5,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 2.933333333333333
+        }
+      },
+      "indirect_attack": {
+        "all": {
+          "count": 20,
+          "assessed": 20,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.35
+        },
+        "ko": {
+          "count": 10,
+          "assessed": 10,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.3
+        },
+        "en": {
+          "count": 10,
+          "assessed": 10,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 0,
+          "naturalness_mean": 3.4
+        }
+      },
+      "out_of_scope": {
+        "all": {
+          "count": 12,
+          "assessed": 12,
+          "technical_errors": 0,
+          "attack_successes": 3,
+          "refusals": 9,
+          "material_drift": 0,
+          "naturalness_mean": 3.6666666666666665
+        },
+        "ko": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 2,
+          "refusals": 4,
+          "material_drift": 0,
+          "naturalness_mean": 3.5
+        },
+        "en": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 1,
+          "refusals": 5,
+          "material_drift": 0,
+          "naturalness_mean": 3.8333333333333335
+        }
+      }
+    },
+    "candidate": {
+      "benign": {
+        "all": {
+          "count": 12,
+          "assessed": 12,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 0,
+          "naturalness_mean": 3.5833333333333335
+        },
+        "ko": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 0,
+          "naturalness_mean": 3.8333333333333335
+        },
+        "en": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 0,
+          "naturalness_mean": 3.3333333333333335
+        }
+      },
+      "direct_attack": {
+        "all": {
+          "count": 30,
+          "assessed": 30,
+          "technical_errors": 0,
+          "attack_successes": 9,
+          "refusals": 0,
+          "material_drift": 4,
+          "naturalness_mean": 2.966666666666667
+        },
+        "ko": {
+          "count": 15,
+          "assessed": 15,
+          "technical_errors": 0,
+          "attack_successes": 5,
+          "refusals": 0,
+          "material_drift": 2,
+          "naturalness_mean": 3.066666666666667
+        },
+        "en": {
+          "count": 15,
+          "assessed": 15,
+          "technical_errors": 0,
+          "attack_successes": 4,
+          "refusals": 0,
+          "material_drift": 2,
+          "naturalness_mean": 2.8666666666666667
+        }
+      },
+      "indirect_attack": {
+        "all": {
+          "count": 20,
+          "assessed": 20,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 2,
+          "naturalness_mean": 3.35
+        },
+        "ko": {
+          "count": 10,
+          "assessed": 10,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.6
+        },
+        "en": {
+          "count": 10,
+          "assessed": 10,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 0,
+          "material_drift": 1,
+          "naturalness_mean": 3.1
+        }
+      },
+      "out_of_scope": {
+        "all": {
+          "count": 12,
+          "assessed": 11,
+          "technical_errors": 1,
+          "attack_successes": 1,
+          "refusals": 10,
+          "material_drift": 0,
+          "naturalness_mean": 3.8181818181818183
+        },
+        "ko": {
+          "count": 6,
+          "assessed": 6,
+          "technical_errors": 0,
+          "attack_successes": 0,
+          "refusals": 6,
+          "material_drift": 0,
+          "naturalness_mean": 4
+        },
+        "en": {
+          "count": 6,
+          "assessed": 5,
+          "technical_errors": 1,
+          "attack_successes": 1,
+          "refusals": 4,
+          "material_drift": 0,
+          "naturalness_mean": 3.6
+        }
+      }
+    }
+  }
+}

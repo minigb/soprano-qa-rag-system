@@ -1,0 +1,28 @@
+{
+  "candidate": "E22",
+  "base_source_commit": "8d0548ae3566f311ef88ef5b35f1af19a71e67c7",
+  "recorded_at": "2026-11-01T17:49:05.804872+00:00",
+  "trigger": "E21 targeted probe corrected D.S. and named-work microphone conditions but retained unsupported conflict speculation, Korean meter errors and normal-question refusals; E21 is not adopted.",
+  "repairs": [
+    "Use concise task-admission rules separating musical actions from commands to the assistant. Keep unrelated and mixed-task rejection.",
+    "Mark general definitions explicitly for the source selector; a local performance recommendation containing a term is not its definition.",
+    "Restrict source-route background to useful new general knowledge or a concise statement that an unsupported cause is unknown; avoid repeating/synthesizing quoted advice.",
+    "Provide the same independently checked meter/beat rule in Korean as well as English. No case IDs or question-to-answer lookup.",
+    "Default unspecified practice advice to singing in the soprano service; do not substitute keyboard/finger exercises."
+  ],
+  "unchanged": [
+    "Expert reference105 and evaluation290",
+    "BERTScore fixed configuration",
+    "129-source translation catalog",
+    "E20 role-replay/source-control screening",
+    "E21 definition and named-work routing repair"
+  ],
+  "verification": {
+    "full_tests_passed": 624,
+    "full_test_seconds": 23.341,
+    "additional_cache_integrity_tests": "5 cache tests plus9 evidence-selection tests passed after adding provenance/changed-input coverage."
+  },
+  "probe": "Same50 E21 diagnostic questions; preserve all prior failed versions and independent judgments.",
+  "full_judge_reuse": "Completed E19 first-valid judgment reused only for a full byte-equivalent canonical question/answer/source/reference/task packet under identical model/rubric/schema. Changed packets get a new independent Claude review. Original row contracts retained; no score-based selection.",
+  "acceptance": "Meaning, usefulness, false refusals and latency take priority; BERTScore>=.90 is sufficient. Reused internal evaluation is not an untouched holdout."
+}

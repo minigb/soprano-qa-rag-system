@@ -1,0 +1,59 @@
+{
+  "generation_python": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "metric_python": "/home/minhee/.cache/soprano-rag-eval-venv/bin/python",
+  "cases": "evaluation/expanded_460_2026-11-02/cases.json",
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "output": "evaluation/expanded_460_2026-11-02",
+  "warmup_case": "expert-kim-die-forelle-03__no-range",
+  "systems": [
+    {
+      "name": "candidate-e37",
+      "variant": "hardened",
+      "root": "evaluation/ku_background_2026-10-31/runtime/followup-e37/snapshots/hardened",
+      "source_commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/followup-e37/snapshots/hardened/settings.json",
+      "settings_sha256": "6dd676ab833283cc1fd7daaf6b0ad12fd2f9da1eacc8f6a33c0439c398be2f71",
+      "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+      "corpus_records": 953,
+      "missing_from_current_corpus": []
+    },
+    {
+      "name": "pre-security",
+      "variant": "original",
+      "root": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original",
+      "source_commit": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original/settings.json",
+      "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329",
+      "corpus_sha256": "6a6ae7eda781a3ff7391f6a0b6a7f4f5c9fee81c3ed49c592e89d3c2bb98a44c",
+      "corpus_records": 946,
+      "missing_from_current_corpus": [
+        "sumijo-nella-fantasia-036-ku-01",
+        "sumijo-nella-fantasia-037-ku-01",
+        "sumijo-nella-fantasia-038-ku-01",
+        "sumijo-nella-fantasia-039-ku-01",
+        "sumijo-nella-fantasia-040-ku-01",
+        "sumijo-nella-fantasia-040-ku-02",
+        "sumijo-nella-fantasia-041-ku-01"
+      ]
+    }
+  ],
+  "protocol": {
+    "cases_per_system": 460,
+    "repetitions": 1,
+    "generation": "All920 requests newly run through each native public service; no historical answer reuse. Same frozen case order, one untimed warmup per system, serial GPU use.",
+    "reference": "Full finalized expert KU text; original question, range, reference and metric setting are unchanged.",
+    "judge": "Fresh blinded Claude Opus5.5 judgments with source-fidelity and a separate0-4 naturalness scale; exact full-packet duplicates judged once and mapped back.",
+    "metric": "Frozen xlm-roberta-large18 raw F1, IDFfalse, slow tokenizer; no tuning. Whole visible answers, errors/refusals zero. Report original105, original-development43, original-validation62, paraphrase306, KU-derived49 and total460.",
+    "primary_bertscore_floor": {
+      "cohort": "original_validation",
+      "count": 62,
+      "f1": 0.9
+    },
+    "interpretation": "Shared-source, reused internal evaluation; grouped question variants are correlated. Naturalness and factual meaning assessed separately from BERTScore.",
+    "corpus_policy": "Native version corpora: original946 records, E37 adds7 Sumi Jo feedback records. All946 shared records are byte-content equivalent, including all122 expert KUs. The original validator does not support sumijo_feedback. This is a full-system comparison, not a code-only effect estimate.",
+    "no_score_based_retries": true,
+    "no_production_changes_during_run": true,
+    "usage_reset_stop": false,
+    "notifier_used": false
+  }
+}

@@ -1,0 +1,404 @@
+[
+  {
+    "id": "a5c6276c0a8fd214258d",
+    "question": "dim.은 왜 있을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      17,
+      19
+    ],
+    "language": "ko",
+    "answer": "‘dim.’은 이 가사를 더욱 표현하기 위한 지시로 보입니다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지를 고려하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해서 노래해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 17,
+          "voice": "sung",
+          "lyric_lines": [
+            "pur, o"
+          ]
+        },
+        {
+          "measure": 18,
+          "voice": "sung",
+          "lyric_lines": [
+            "mia gen-"
+          ]
+        },
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "-til"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-005",
+        "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            17,
+            19
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              17,
+              19
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3a4dc02384829aa92367",
+    "question": "셋잇단음표에서 모음은 어디에 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      25,
+      25
+    ],
+    "language": "ko",
+    "answer": "셋잇단음표에서 모음은 첫머리에 붙이는 것이 좋습니다. 같은 모음을 유지하면서 음정이 바뀌는 경우, 모음을 다시 발음하지 말고 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 25,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ra- -i, la vin- -ce-",
+            "sworn it, for weal or"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              23,
+              23
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              36,
+              36
+            ],
+            [
+              38,
+              38
+            ],
+            [
+              58,
+              58
+            ],
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5112aaee76301c231b63",
+    "question": "악보 전반의 부점은 어떻게 처리할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보 전반의 부점은 리듬을 명확히 전달하고 표현을 강조하기 위해 과장된 방식으로 처리하는 것이 좋습니다. 특히, 뒤따르는 짧은 음표(예: 16분음표, 32분음표)는 다음 음에 아주 가까운 위치에서 부르는 것이 중요합니다. 이는 리듬이 혼동되지 않도록 하기 위함입니다. 또한, 이 곡에서는 로지나의 성격을 표현하기 위해 부점을 일반적인 것보다 더 강조하여 부르는 것이 일반적입니다. 따라서 성악가는 부점을 과장하여 당차고 활발한 성격을 표현하는 연기가 필요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            17,
+            19
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ],
+          [
+            63,
+            63
+          ],
+          [
+            111,
+            111
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

@@ -1,0 +1,191 @@
+{
+  "method": "Unblinded Codex review of all 25 real HTTP outputs against their returned Korean evidence. Qualitative product audit, separate from the 120-case comparison; no independent expert review or quality score claimed.",
+  "decision": "Keep the complete export as a review artifact. Do not replace the displayed static samples: there are new diction/lyric errors and two withheld answers. No answers were hand-edited or cherry-picked into the site.",
+  "requests": 25,
+  "delivered_answers": 23,
+  "withheld": 2,
+  "pipeline_identity": {
+    "generated_at": "2026-10-30T16:59:48.609936+00:00",
+    "pipeline_source_sha256": "0786becab696f69841fce289c76240d60a495d2cd1ed99fe6134fa2d7cc5ab22",
+    "settings_sha256": "545e606b62c041212613bc6e9f1e5ed1046dd36de38733dc88c2c4829aa0f9fe",
+    "demo_server_sha256": "2be8e00e06a25b6098411f14d9627e6d5961d79d655aa55e956da56617bc796b",
+    "scope": "Real requests to a temporary loopback demo; preview artifacts only. No publication."
+  },
+  "reviews": [
+    {
+      "file": "answers/die-forelle/1.json",
+      "question": "What does the accent on the second beat in the piano part express?",
+      "saved_sha256": "9285d4bfb0b2e91ec022a1ed879b7cd53552d8632ffc9a0a8e70b13e13788e14",
+      "status": "supported",
+      "rationale": "Directly answers the accent question from the local evidence."
+    },
+    {
+      "file": "answers/die-forelle/2.json",
+      "question": "Why is this piece difficult to sing even though its notes are not high?",
+      "saved_sha256": "6a8e9b12c595d76a78a6e0c6ef82a38db1cd439b9955e5ba71e5f41fa7d1d21e",
+      "status": "minor_imprecision",
+      "rationale": "The main tempo/diction explanation is supported; bar stress becomes phrase accents."
+    },
+    {
+      "file": "answers/die-forelle/3.json",
+      "question": "How should a change in the piece's mood be expressed?",
+      "saved_sha256": "a873ab94aaf3ab4903e96407caae2a815288134377a9f9e9c18a6d578c0e84b0",
+      "status": "minor_imprecision",
+      "rationale": "The narrative and performance advice are supported; changing musical figures becomes changing rhythms, and dynamics is less precise than tension."
+    },
+    {
+      "file": "answers/die-forelle/4.json",
+      "question": "What should a singer do when German pronunciation is difficult?",
+      "saved_sha256": "966f5679decbfe754d8349101ec2d556271db4673930273e4087ad79e7284f7f",
+      "status": "supported",
+      "rationale": "Preserves slow-to-fast and pitch-free diction practice."
+    },
+    {
+      "file": "answers/die-forelle/5.json",
+      "question": "What should a singer do to sing this piece well?",
+      "saved_sha256": "a1ccbb623f66ce02e1500c57409ecc5be862f11351bf52c34b92bd0009220c22",
+      "status": "minor_imprecision",
+      "rationale": "Correct broad stress/diction advice; bar stress becomes phrase stress and the final-beat-to-next-downbeat detail is omitted."
+    },
+    {
+      "file": "answers/una-voce-poco-fa/1.json",
+      "question": "Why did Rossini use a double-dotted rhythm instead of a standard dotted rhythm?",
+      "saved_sha256": "e662d3a741bdd5336c8297cf37956c3a79c755b2d895b4486e899131ec2b7352",
+      "status": "withheld",
+      "rationale": "The output guard withheld the response; no generated prose was released."
+    },
+    {
+      "file": "answers/una-voce-poco-fa/2.json",
+      "question": "How can rapid diction be practiced in passages with many short notes?",
+      "saved_sha256": "c40bb213f18cd69fb01f89e0979c1a257e349f8d50c35762e94fd5e7eb4670f8",
+      "status": "material_error",
+      "rationale": "Adds emphasizing consonants as a practice alternative, where ku-014 recommends removing consonants and practicing vowels/legato."
+    },
+    {
+      "file": "answers/una-voce-poco-fa/3.json",
+      "question": "The interludes in this piece are so long that I don't know what to do during them.",
+      "saved_sha256": "0e8690624a1e8b8a4dc88dddcd723b07fff1757866f01c9476a546a0259055b9",
+      "status": "supported",
+      "rationale": "Gives the dramatic-transition context and concrete expressive responses to interludes."
+    },
+    {
+      "file": "answers/una-voce-poco-fa/4.json",
+      "question": "How should one practice coloratura technique effectively?",
+      "saved_sha256": "9c033384cf536d7a30f3677280e61bdcadee20d9d28019f118390ba314da2b92",
+      "status": "supported_with_tangents",
+      "rationale": "Supported sectional practice and integration; vocal-type and orchestration paragraphs are less relevant to coloratura technique."
+    },
+    {
+      "file": "answers/una-voce-poco-fa/5.json",
+      "question": "Why does this aria contain so many ornaments?",
+      "saved_sha256": "3d8c72ef7ffcc5f1b8eddc630bade18f741d7e9ec7ee20b928118a1e9fb64804",
+      "status": "supported",
+      "rationale": "Explains period technique and characterization without importing a new cause."
+    },
+    {
+      "file": "answers/la-capinera/1.json",
+      "question": "What musical effect does the contrast between ff and pp express?",
+      "saved_sha256": "fe08632bc77e9b7d26cc6f1c3866d65cabfb032ae1dfd3cfc7d12f37139524db",
+      "status": "qualification_strengthened",
+      "rationale": "The source describes an interpretation of composer intention; the answer states that intention without the interpretive qualification."
+    },
+    {
+      "file": "answers/la-capinera/2.json",
+      "question": "How should a trill be sung?",
+      "saved_sha256": "5a87358e8f93563089a1514b6540770416e16f88a3ea1b4b7f2007116817e239",
+      "status": "supported",
+      "rationale": "Preserves trill completion and slow practice."
+    },
+    {
+      "file": "answers/la-capinera/3.json",
+      "question": "How should the beat and rhythm be maintained in a passage without accompaniment?",
+      "saved_sha256": "36c1f5317b7ac679e5b378f7a6df72aff0dbfe1a4eb4fc9038d54ef142787187",
+      "status": "supported",
+      "rationale": "Preserves precise practice followed by flexible performance in unaccompanied passages."
+    },
+    {
+      "file": "answers/la-capinera/4.json",
+      "question": "How should a slashed ornament be fitted into the rhythm?",
+      "saved_sha256": "d88da8c2977dc1eeed9c48e98b5c6b05924ea2be0abb452e8dddca144ee25819",
+      "status": "supported",
+      "rationale": "Places the slashed ornament before the main note without disrupting rhythm."
+    },
+    {
+      "file": "answers/la-capinera/5.json",
+      "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+      "saved_sha256": "3626edcbd4d1f1078cf44d941779f66a1e020766e49075b6dee1ae60e282f6da",
+      "status": "material_error",
+      "rationale": "Invents a vowel link between erbe and fior and says both boundary vowels are e. The source refers to adjacent e vowels; fior is not the following e-initial word."
+    },
+    {
+      "file": "answers/nella-fantasia/1.json",
+      "question": "How should a sudden upward leap be sung?",
+      "saved_sha256": "95f33324d5cc35813fc94d81061ac6b34d9c1ac832a9a30e9ce69467de57bdc6",
+      "status": "supported",
+      "rationale": "Preserves relaxed transitions, resonance, gentle endings and rests. Some additional source practice options are omitted."
+    },
+    {
+      "file": "answers/nella-fantasia/2.json",
+      "question": "What should a singer do when singing is difficult or breath runs short?",
+      "saved_sha256": "7c267ccec31b901fd61bd7a4160df2fa5aa8c389538d3c4714a4d0a16ddc3619",
+      "status": "supported",
+      "rationale": "Uses rests rather than commas and keeps the word-boundary breathing caution. The second sentence repeats the first advice."
+    },
+    {
+      "file": "answers/nella-fantasia/3.json",
+      "question": "How long should the final note be held?",
+      "saved_sha256": "b2525ccb9af639a58c18950d6bdd990cfe493df938070a647af6baee8ba2d41f",
+      "status": "withheld",
+      "rationale": "The output guard withheld the answer to the final-note duration question; the original saved sample supplies an answer."
+    },
+    {
+      "file": "answers/nella-fantasia/4.json",
+      "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+      "saved_sha256": "13e55bc83008a8b49063c0e46c7ecbb041bcb3a7270f148ceeb9e08abe40f8b9",
+      "status": "supported",
+      "rationale": "Preserves the genre/performance distinction without the old unsupported claim of unrestricted vocal range."
+    },
+    {
+      "file": "answers/nella-fantasia/5.json",
+      "question": "With what dynamic should the opening note begin?",
+      "saved_sha256": "55c91c4119efe31379a361f6319245ef60d58edfdcd5fb4b57ea95a3837adb0d",
+      "status": "supported",
+      "rationale": "Uses accompaniment piano to recommend a soft entrance."
+    },
+    {
+      "file": "answers/in-flowery-clouds/1.json",
+      "question": "If kkotbaram (\"flower breeze\") is often sung staccato in recordings but has no such marking in the score, what should guide the performance?",
+      "saved_sha256": "5dc53a5582b6a21999460cfd8c62ba22195883cefab3f8c1925fa471e37a4be6",
+      "status": "material_error",
+      "rationale": "Adds kko-cho-pba-ram as a pronunciation rendering; the source has 꼬-ㅊ-빠-람, a consonant separation rather than the inserted cho vowel."
+    },
+    {
+      "file": "answers/in-flowery-clouds/2.json",
+      "question": "Why does the meter change, and how does the mood of the piece change?",
+      "saved_sha256": "9b6183563f26eee8f73d0940385c13285c82ad3b67f5ba665454ddd1db750834",
+      "status": "supported",
+      "rationale": "Links meter change to the explicitly described change in mood and text."
+    },
+    {
+      "file": "answers/in-flowery-clouds/3.json",
+      "question": "How slowly should Larghetto be taken?",
+      "saved_sha256": "70888235a431c3989844e8e7fd6548c2af580425f0da67a5f136db1a0fd1d467",
+      "status": "minor_imprecision",
+      "rationale": "Translates each bar as each phrase and omits the performer-dependent qualification."
+    },
+    {
+      "file": "answers/in-flowery-clouds/4.json",
+      "question": "If this song is too high, may I adjust or arrange it?",
+      "saved_sha256": "a900ad40e7672de34d2a93cc7cf22794d016482f5540c3544fa979ece73ca55a",
+      "status": "supported",
+      "rationale": "Answers transposition directly without inventing an interval."
+    },
+    {
+      "file": "answers/in-flowery-clouds/5.json",
+      "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+      "saved_sha256": "d444a0607b79ea12e64edcd67681c3545bf17983620210e540b9ecf3cdef731b",
+      "status": "minor_imprecision",
+      "rationale": "Corrects second note to half note, but garbles the quoted Korean lyric in romanization and omits the conditional breathing alternative."
+    }
+  ]
+}

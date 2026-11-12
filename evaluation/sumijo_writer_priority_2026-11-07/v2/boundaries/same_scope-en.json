@@ -1,0 +1,114 @@
+{
+  "case_id": "same_scope-en",
+  "variant": "synthetic-boundary",
+  "status": "response",
+  "elapsed_seconds": 82.42250354902353,
+  "response": {
+    "answer": "Begin the first sung note softly and gently.",
+    "evidence": [
+      {
+        "id": "fictional-same_scope-en-expert_annotation",
+        "piece_id": "nella-fantasia",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "Begin the first sung note of this fictional practice piece strongly.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      },
+      {
+        "id": "fictional-same_scope-en-sumijo_feedback",
+        "piece_id": "nella-fantasia",
+        "kind": "sumijo",
+        "evidence_type": "sumijo_feedback",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "Begin the first sung note of this fictional practice piece softly and gently.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": null,
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 1,
+        "text_score": 1,
+        "dense_score": 0.0,
+        "dense_content_score": 0.0,
+        "fusion_score": 0.0,
+        "retrieval_mode": "lexical",
+        "measure_score": 0,
+        "alias_score": 0.0,
+        "concept_coverage": 0.0,
+        "content_concept_coverage": 0.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [],
+        "web_source_ids": [],
+        "sumijo_source": {
+          "speaker": "Sumi Jo"
+        },
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "generation_mode": "llm_single_pass",
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-3.8-flash",
+      "model_version": "gemini-3.8-flash",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 82.42234882409684,
+      "usage": {
+        "candidates_token_count": 9,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 9
+          }
+        ],
+        "prompt_token_count": 1695,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 1695
+          }
+        ],
+        "total_token_count": 1704,
+        "traffic_type": "ON_DEMAND"
+      }
+    }
+  }
+}

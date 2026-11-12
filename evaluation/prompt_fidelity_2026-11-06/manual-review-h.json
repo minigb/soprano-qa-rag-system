@@ -1,0 +1,14 @@
+{
+  "reviewer": "Codex; diagnostic review, not independent music-expert adjudication",
+  "scope": "Read all six Claude material-drift flags against the actual answers and exact source excerpts; preserve all judge scores.",
+  "confirmed": {
+    "expert-kim-una-voce-poco-fa-03__m21-22": "해석을 로시니의 확정된 창작 의도로 서술합니다.",
+    "expert-kim-una-voce-poco-fa-20__m42-42": "뒤따르는 짧은 음표를 늦게 놓으라는 조언의 대상을 부점으로 바꾸고 겹점 8분음표를 짧은 음표 예로 듭니다.",
+    "expert-kim-la-capinera-15__m86-88": "자료의 e 모음 유지 조언에 체일이라는 근거 없는 발음 표기를 덧붙입니다.",
+    "expert-kim-una-voce-poco-fa-05__m22-24": "각 박자의 꾸밈음을 각 마디 시작으로 바꿉니다.",
+    "expert-kim-in-flowery-clouds-09__no-range": "자연스럽게 커져도 괜찮다는 설명을 힘을 더하라는 지시로 바꿉니다.",
+    "expert-yeon-nella-fantasia-07__no-range": "대중음악의 현상을 조건 없이 단어 중간 호흡 허용으로 확장합니다."
+  },
+  "selection_note": "H is not selected on meaning count alone; its expert naturalness also needs comparison. I was frozen before the full H result and is evaluated separately.",
+  "additional_regression": "p/PP no-range answer incorrectly expands p as 포코 피아노. This is a factual/terminology error even though it is not among the six material-drift flags. Check this case explicitly in I."
+}

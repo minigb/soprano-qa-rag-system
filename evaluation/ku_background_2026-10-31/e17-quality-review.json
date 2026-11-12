@@ -1,0 +1,47 @@
+{
+  "candidate": "E17",
+  "requests": 70,
+  "delivered": 69,
+  "development_expert_f1": 0.9720738294512726,
+  "independent_judge": {
+    "source_fidelity": {
+      "faithful": 59,
+      "not_applicable": 11
+    },
+    "material_drift": 0,
+    "substantial_factual_error": 0,
+    "effective_rubric_percent": 95.45454545454545
+  },
+  "manual_known_english": {
+    "faithful": 9,
+    "material_drift": 0,
+    "checked_cases": [
+      "static-07-en",
+      "static-11-en",
+      "static-15-en",
+      "static-17-en",
+      "static-18-en",
+      "static-19-en",
+      "static-21-en",
+      "static-23-en",
+      "static-25-en"
+    ],
+    "checked_distinctions": [
+      "Sustain breath / musical rest, not comma.",
+      "Half note, not ordinal or quarter note.",
+      "Each measure, not each phrase.",
+      "Composer interpretation remains tentative.",
+      "Pronunciation preference and alternatives retain their direction.",
+      "Falsetto/head/chest list and classical vocal qualifier retained.",
+      "Unavoidable breathing alternative and original lyric spelling retained."
+    ]
+  },
+  "remaining_issues": [
+    "One known no-range accent question remains refused by semantic output review.",
+    "General slow-practice questions receive irrelevant/redundant KU collections.",
+    "Some source collections repeat advice, including microphone/genre and long-breath guidance.",
+    "First-person statements in English source translation need explicit source attribution.",
+    "Some general duration examples still omit the BPM beat-unit assumption."
+  ],
+  "next": "E18 bounded explicit practice routing plus visible translated-source attribution, same source catalog and metric."
+}

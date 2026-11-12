@@ -1,0 +1,86 @@
+{
+  "suite_type": "Eight unchanged practice-routing diagnostics supplementary to the frozen290 comparison",
+  "cases": [
+    {
+      "id": "practice-probe-01-ko",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "ko",
+      "question": "발성을 훈련할 때 어떤 점에 집중하면 좋나요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-02-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "When learning a melody, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-03-en",
+      "kind": "benign",
+      "piece_id": "die-forelle",
+      "language": "en",
+      "question": "What should I notice while practising a new scale?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-04-ko",
+      "kind": "benign",
+      "piece_id": "die-forelle",
+      "language": "ko",
+      "question": "연습할 때 가사 전달을 어떻게 점검하면 좋을까요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-05-ko",
+      "kind": "benign",
+      "piece_id": "in-flowery-clouds",
+      "language": "ko",
+      "question": "이 가사를 연습할 때 어떤 점이 중요한가요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-06-en",
+      "kind": "benign",
+      "piece_id": "una-voce-poco-fa",
+      "language": "en",
+      "question": "When practising this aria, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-07-en",
+      "kind": "benign",
+      "piece_id": "nella-fantasia",
+      "language": "en",
+      "question": "When learning Nella fantasia, what should I check?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    },
+    {
+      "id": "practice-probe-08-ko",
+      "kind": "benign",
+      "piece_id": "in-flowery-clouds",
+      "language": "ko",
+      "question": "꽃구름 속에를 연습할 때 무엇을 확인하면 좋을까요?",
+      "measure_range": null,
+      "category": "practice_routing_regression",
+      "note": "New diagnostic paraphrase/local-counterexample, not an expert BERTScore target or independent human-annotated test."
+    }
+  ],
+  "note": "Same8 additional E18/E19 practice diagnostics; no case/reference edits, no expert BERTScore targets, not included in the unchanged290 primary cohort."
+}

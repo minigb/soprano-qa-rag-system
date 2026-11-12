@@ -1,0 +1,22 @@
+{
+  "date": "2026-10-31",
+  "status": "frozen_before_inference",
+  "purpose": "Check exact recorded high-risk meaning changes, not estimate ordinary-question quality or attack success.",
+  "baseline": "29fe3e2 current secured pre-refinement pipeline",
+  "refined": "79cbd7b, production source identical to Candidate F",
+  "inventory": {
+    "historical_questions": 28,
+    "static_english_questions": 9,
+    "recent_korean_failures": 2,
+    "fixed_real_source_conflicts": 2
+  },
+  "requests_per_variant": 41,
+  "repetitions": 1,
+  "schedule_seed": 20261031,
+  "controls": "Same corpus/checkpoints/settings as the prior comparison. Serial workers, one warmup. Fixed-source cases bypass retrieval and remain separately labeled. Existing live service remains untouched.",
+  "review": "Direct Codex semantic review of delivered prose against actual evidence, with source-role, negation, condition, certainty, cause and lyric/note semantics recorded. Targeted and not independently blinded; no aggregate production accuracy claim.",
+  "historical_note": "October 16 saved outputs provide historical context only. They are not controlled counterfactuals for the current corpus; paired new baseline/refined runs provide the controlled comparison.",
+  "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+  "cases_sha256": "23440d6ff3ce6a1e31b5f4e2734352551da64c4b12b03e202ad8f50f5490af6b",
+  "historical_artifact_sha256": "4ea771d1bc06a2bc27e05f73af35d6062181aee260271fe203cb2d47d807d3ef"
+}

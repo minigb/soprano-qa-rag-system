@@ -1,0 +1,111 @@
+{
+  "diagnostic_only": true,
+  "note": "Known historical Korean examples, outside the target cohort; no metric tuning.",
+  "contract": {
+    "packets_sha256": "2bed611356de357e72d9962a5b78888df9d0b5e25cc174f16596f8f999099be6",
+    "key_sha256": "4f81d483477ea90a9e0d93be5273ac19fc5246b49deb695e9ab8bb027cf03e77",
+    "settings_sha256": "485a35410e4a1bd808e04945e2d34cec197b6bad69a1c9eee1245f9c3d8a24ba",
+    "runner_sha256": "8875d9f7de61763baa85743b3e1cc54ead757a7c3411bbb7d71cb98cb441450f",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "max_input_tokens": 69,
+    "truncated_texts": 0,
+    "packages": {
+      "bert-score": "0.3.13",
+      "transformers": "5.10.2",
+      "torch": "2.7.1+cu128"
+    }
+  },
+  "cases": [
+    {
+      "id": "eb63c35214f69ad2",
+      "original_id": "hardened:history-kim-la-capinera-14__m83-85",
+      "expected_fidelity": "material_drift",
+      "answer": "‘linguaggio’의 겹자음 ‘gg’는 두 자음 사이에 짧은 시간을 두고 발음하는 것이 좋습니다. 자음 하나처럼 발음하지 않고, 두 번 발음되는 느낌으로 노래하는 것이 도움이 됩니다.",
+      "reference": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+      "precision": 0.9488226175308228,
+      "recall": 0.93583083152771,
+      "f1": 0.94228196144104
+    },
+    {
+      "id": "75b7e057db2d3b1a",
+      "original_id": "original:history-kim-in-flowery-clouds-09__m67-69",
+      "expected_fidelity": "minor_drift",
+      "answer": "크레센도 부분이 잘되지 않으면 자연스럽게 소리가 커지는 경향을 이용할 수 있습니다.",
+      "reference": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "precision": 0.910020112991333,
+      "recall": 0.8983337879180908,
+      "f1": 0.9041392207145691
+    },
+    {
+      "id": "ac48c5c5fa7e7589",
+      "original_id": "original:history-kim-la-capinera-14__m83-85",
+      "expected_fidelity": "faithful",
+      "answer": "‘linguaggio’의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 짧은 시간의 간격을 두고 발음하는 것이 좋습니다.",
+      "reference": "linguaggio의 ‘gg’처럼 같은 자음이 겹칠 때에는 두 자음 사이에 멈추는 듯한 짧은 시간을 둔다. 많은 경우 자음 하나처럼 발음하지만, 자음이 두 번 발음되는 느낌으로 노래하는 것이 도움이 된다.",
+      "precision": 0.9505769610404968,
+      "recall": 0.9251892566680908,
+      "f1": 0.9377112984657288
+    },
+    {
+      "id": "4976d6724b6e4b92",
+      "original_id": "hardened:history-kim-la-capinera-11__no-range",
+      "expected_fidelity": "material_drift",
+      "answer": "페르마타는 일반적으로 해당 음의 길이의 2~3배로 끌어내리는 것이 원칙이며, 'l’amor'의 경우에도 이 규칙을 따르되, 악센트가 놓인 'mor'를 강조하는 것이 좋습니다.",
+      "reference": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+      "precision": 0.9492775797843933,
+      "recall": 0.9498557448387146,
+      "f1": 0.9495666027069092
+    },
+    {
+      "id": "5d600a4eb989114d",
+      "original_id": "hardened:history-kim-in-flowery-clouds-09__m67-69",
+      "expected_fidelity": "material_drift",
+      "answer": "크레센도 부분이 잘되지 않으면 자연스럽게 소리가 커지는 경향이 있는 음역으로 연주하는 것이 좋습니다.",
+      "reference": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "precision": 0.9016143679618835,
+      "recall": 0.8945679664611816,
+      "f1": 0.8980773091316223
+    },
+    {
+      "id": "6c15624a2a38ef7e",
+      "original_id": "original:recent-benign-14-ko",
+      "expected_fidelity": "faithful",
+      "answer": "고음의 끝을 부드럽게 처리하여 힘을 줄이고, 쉼표를 충분히 활용해 숨을 쉬는 것이 좋습니다.",
+      "reference": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+      "precision": 0.9503681659698486,
+      "recall": 0.9066396951675415,
+      "f1": 0.92798912525177
+    },
+    {
+      "id": "bffc7f7936b53ff7",
+      "original_id": "hardened:recent-benign-14-ko",
+      "expected_fidelity": "material_drift",
+      "answer": "고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 하면 다음 프레이즈에서 숨이 모자라지 않습니다.",
+      "reference": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+      "precision": 0.9642854928970337,
+      "recall": 0.934296727180481,
+      "f1": 0.9490543007850647
+    },
+    {
+      "id": "70929c0f5f53bad0",
+      "original_id": "original:history-kim-la-capinera-11__no-range",
+      "expected_fidelity": "faithful",
+      "answer": "페르마타는 일반적으로 해당 음의 길이의 2~3배로 끌어야 합니다.",
+      "reference": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+      "precision": 0.9669843912124634,
+      "recall": 0.8936001658439636,
+      "f1": 0.9288451075553894
+    }
+  ],
+  "known_material_errors_at_or_above_090": 3,
+  "known_material_errors": 4
+}

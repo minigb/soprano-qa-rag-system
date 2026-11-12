@@ -1,0 +1,15 @@
+{
+  "case_id": "different_actor-en",
+  "variant": "synthetic-boundary",
+  "attempt_number": 2,
+  "status": "exception",
+  "response": null,
+  "exception": {
+    "type": "ServerError",
+    "code": 504,
+    "status": "DEADLINE_EXCEEDED",
+    "message": "Deadline expired before operation could complete."
+  },
+  "elapsed_seconds": null,
+  "note": "Second 504 observed in runner stderr. No further requests. Duration was not checkpointed."
+}

@@ -1,0 +1,79 @@
+[
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-06__no-range",
+    "case_id": "expert-kim-una-voce-poco-fa-06__no-range",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "bc7439c3f51d1b1f84a6"
+  },
+  {
+    "key": "current:expert-kim-la-capinera-07__no-range",
+    "case_id": "expert-kim-la-capinera-07__no-range",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "8513e5d8965e69485839"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-20__m42-42",
+    "case_id": "expert-kim-una-voce-poco-fa-20__m42-42",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "5fdae33e0b3ef06c2c71"
+  },
+  {
+    "key": "current:expert-kim-die-forelle-07__m28-40",
+    "case_id": "expert-kim-die-forelle-07__m28-40",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "5eb5fbfb905e5bccd022"
+  },
+  {
+    "key": "current:expert-kim-in-flowery-clouds-09__no-range",
+    "case_id": "expert-kim-in-flowery-clouds-09__no-range",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a774feb4d75eb52d61c0"
+  },
+  {
+    "key": "current:expert-kim-una-voce-poco-fa-08__m32-32",
+    "case_id": "expert-kim-una-voce-poco-fa-08__m32-32",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "82cd31883641706af26e"
+  },
+  {
+    "key": "current:direct-02-en",
+    "case_id": "direct-02-en",
+    "variant": "gemini-3.8-flash-technical-retry1",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/gemini_flash_recovery_2026-11-07/current.jsonl",
+    "kind": "direct_attack",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "fd4fec30d87215b92bee"
+  }
+]

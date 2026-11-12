@@ -1,0 +1,449 @@
+[
+  {
+    "id": "762a86bbf5434d3e645e",
+    "question": "Larghetto의 템포는 어느 정도로 느리게 잡아야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "Larghetto는 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 표현할 수 있도록 여유를 가진 정도로 느려집니다. 템포는 연주자의 해석에 따라 달라질 수 있으며, 느린 템포를 유지하면서도 각 음을 충분히 강조하고 문장을 이어가는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-012",
+        "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            74,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              74,
+              79
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e1d598005dbca5812a7b",
+    "question": "lo의 이음줄이 끝 음표에는 닿지 않는 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      37,
+      37
+    ],
+    "language": "ko",
+    "answer": "이음줄은 앞의 두 음을 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있습니다. 이는 가사의 단어나 음절 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, lo giu-",
+            "mine, I have"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-015",
+        "text": "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            16,
+            16
+          ],
+          [
+            20,
+            20
+          ],
+          [
+            24,
+            24
+          ],
+          [
+            37,
+            37
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음 중 앞의 두 음표에만 이음줄(slur)이 표시된 경우, 앞의 두 음은 부드럽게 연결하고 마지막 음은 구분하여 표현하라는 의미로 해석할 수 있다. 이는 가사의 단어나 음절 사이의 경계를 분명히 하거나, 마지막 음에서 시작되는 말을 강조하려는 의도일 수 있다. 따라서 가사와 음악 기호의 관계를 살펴 작곡가의 표현 의도를 생각하며 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              16,
+              16
+            ],
+            [
+              20,
+              20
+            ],
+            [
+              24,
+              24
+            ],
+            [
+              37,
+              37
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "367cf0d47f9595ac005c",
+    "question": "독일어 발음이 잘되지 않을 때는 어떻게 해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "독일어는 모음이 길고 중요하지만, 자음을 명확하게 발음하지 않으면 알아듣기 어렵습니다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하지만, 노래에 적용하면서 좋은 발성을 유지하기는 어렵습니다. 느리게 연습한 뒤 점차 빠르게 하거나, 음정 없이 발음만 연습하는 것도 도움이 될 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-005",
+        "text": "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "독일어는 다른 유럽 언어들과 마찬가지로 모음의 길이가 길고 모음이 중요하지만, 자음을 명료하게 발음하지 않으면 알아듣기 쉽지 않다. 성악가는 명료한 자음과 부드럽게 이어지는 모음으로 발음해야 하는데, 이를 노래에 적용하면서 좋은 발성을 유지하기가 어렵다. 먼저 느리게 연습한 뒤 점차 빠르게 하고, 음정 없이 발음만 연습하는 것도 도움이 될 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "82da5c29a6441ed63a86",
+    "question": "이 아리아의 더블 자음과 싱글 자음을 왜 세심하게 공부해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 아리아에는 더블 자음과 싱글 자음이 세밀하게 표현되어 있어, 캐릭터를 표현하는 중요한 장치이기 때문에 세심하게 공부해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-031",
+        "text": "이 아리아에는 특히 더블자음과 싱글자음 등이 세밀하게 나오며, 이런 자음은 캐릭터를 표현하는 장치이기도 하므로 주의해서 공부해야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 아리아에는 특히 더블자음과 싱글자음 등이 세밀하게 나오며, 이런 자음은 캐릭터를 표현하는 장치이기도 하므로 주의해서 공부해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 아리아에는 특히 더블자음과 싱글자음 등이 세밀하게 나오며, 이런 자음은 캐릭터를 표현하는 장치이기도 하므로 주의해서 공부해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-031"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d8650c9c57f1000bde84",
+    "question": "피아노 파트에서 두 번째 박의 악센트는 무엇을 표현할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "피아노 파트에서 두 번째 박의 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.\n슈베르트는 단순히 곡의 수가 많아서가 아니라, 당시 상황과 음악사 흐름에서 가곡의 질을 높이고 시와 반주, 성악의 위상을 높였기 때문에 ‘가곡의 왕’ 또는 ‘예술가곡의 왕’으로 불린다. 이전 작곡가들과 달리 시를 피아노 반주로 표현한 첫 번째 작곡가이며, 반주부의 격을 성악가와 동등한 위치로 높였다. 《Die Forelle》에서도 피아노 반주가 곡의 분위기와 배경, 상황을 표현한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              2,
+              27
+            ],
+            [
+              41,
+              54
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-002"
+        },
+        {
+          "reference_id": "R002",
+          "text": "슈베르트는 단순히 곡의 수가 많아서가 아니라, 당시 상황과 음악사 흐름에서 가곡의 질을 높이고 시와 반주, 성악의 위상을 높였기 때문에 ‘가곡의 왕’ 또는 ‘예술가곡의 왕’으로 불린다. 이전 작곡가들과 달리 시를 피아노 반주로 표현한 첫 번째 작곡가이며, 반주부의 격을 성악가와 동등한 위치로 높였다. 《Die Forelle》에서도 피아노 반주가 곡의 분위기와 배경, 상황을 표현한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d2db17aabc7886554d52",
+    "question": "음이 갑자기 올라갈 때 어떻게 부르는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요합니다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 합니다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-006",
+        "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            11,
+            17
+          ],
+          [
+            28,
+            34
+          ],
+          [
+            40,
+            46
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "음의 도약이 있는 부분에서는 좋은 소리와 울림을 유지하며 부르는 것이 중요하다. 단숨에 힘을 주기보다 충분한 시간을 두고 자연스러운 모음과 소리, 울림이 나게 하며, 발음이나 음정을 위해 부자연스러운 힘이 들어가지 않도록 자연스럽게 이완된 상태에서 음정이 바뀌게 연습해야 한다. 레가토를 유지하기 위해 고음보다 직전의 중저음을 더 연습하는 것도 해결책이 될 수 있으며, 프레이즈를 시작할 때 높은음 위치의 공간을 확보하고 숨을 쉬는 것을 추천한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              11,
+              17
+            ],
+            [
+              28,
+              34
+            ],
+            [
+              40,
+              46
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "dfd7fb952a70d24d0ac6",
+    "question": "장식음 처리는 어떻게 하는 것이 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "꾸밈음에 사선이 없으면 꾸밈음과 원음은 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많습니다. 원음이 4분음표인 경우 꾸밈음은 16분음표 네 개의 음형으로 균일하게 나누어 부릅니다.\n같은 음형을 부점 리듬으로 장식할 때는 짧은 음에 기대고 긴 음은 사그라들게 둔 채 잊어버리기 쉽습니다. 이는 주의해야 할 점입니다.\n가수들은 대부분 전통적 장식에 의존하지만, 자신의 능력에 맞고 돋보이게 하는 변형만 선택하는 것이 좋습니다.\n장식은 인물에 봉사해야 하며, 반복 소재에 턴과 변형을 더할 때는 그 선택이 목적이 되지 않도록 합니다.\n반복 부분에서 장식을 넣을 때는 자신이 잘하는 것을 보여 주는 장식을 선택하고, 지나치게 고민하지 말아야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-009",
+        "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0028",
+        "text": "필자는 같은 음형을 부점 리듬으로 장식할 때 긴 음을 어떻게 부르는지에 주의하라고 하며, 이 리듬에서는 짧은 음에 기대고 긴 음은 사그라들게 둔 채 잊어버리기 쉽다고 지적한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0040",
+        "text": "필자는 대부분의 가수가 자기 목소리에 맞든 안 맞든 '전통적' 장식에 의존한다고 지적하며, 자신의 능력에 맞고 그것을 돋보이게 하는 변형만 고르라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0055",
+        "text": "글은 이 악보에서 장식이 기대되며 가수들이 반복 소재에 턴과 변형을 더하지만, 그 선택은 그 자체가 목적이 되지 말고 인물에 봉사해야 한다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0015",
+        "text": "필자는 반복 부분에서 장식을 넣을 때 희망사항이 아니라 실제로 자신이 잘하는 것을 보여 주는 장식을 고르고, 선택을 지나치게 고민하지 말라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

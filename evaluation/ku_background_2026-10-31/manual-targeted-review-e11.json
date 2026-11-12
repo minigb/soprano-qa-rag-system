@@ -1,0 +1,344 @@
+{
+  "reviewer": "Codex source comparison, not a human expert or the independent Claude judge",
+  "scope": "Frozen targeted meaning-regression requests; candidate E11 only",
+  "purpose": "Inspect conditions, actors, negation, certainty, attribution and English translations against actual sources. Does not overwrite independent Claude judgments.",
+  "candidate_source_commit": "4788793",
+  "complete": true,
+  "reviews": [
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__no-range",
+      "response_sha256": "29caee2f82905e6f5ad0b9356fe610653b8c11c297ddb99c8a49a45e80b7708c",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "곡 첫머리의 페르마타 유무",
+      "source_excerpt": "곡 첫머리의 페르마타 유무",
+      "rationale": "The opening-only condition and the possible-arrangement qualification are both retained verbatim."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-15__no-range",
+      "response_sha256": "b59fbbf7612c1e0028d008c35293c1c030196e6dd4ad3c90499f00b87464e55e",
+      "source_fidelity": "withheld",
+      "answer_excerpt": "",
+      "source_excerpt": "",
+      "rationale": "Output review denies the request after two compositions. No false claim about composer intention is released, but this is a false refusal on an answerable interpretive-advice question."
+    },
+    {
+      "case_id": "history-kim-la-capinera-01__m11-14",
+      "response_sha256": "c0126aff342d70e6333ecbdb738de778732509847fd7297dcb2c32277ccfa245",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "pianissimo (pp)로 시작하는 것이 좋다.",
+      "source_excerpt": "pianissimo (pp)로 시작하는 것이 좋다.",
+      "rationale": "Complete quoted source preserves its dynamics advice; it omits complementary diction material rather than contradicting it."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-03__m21-22",
+      "response_sha256": "0f42f0c65c542d0cc749c661ad9fe87c5dbc48577ffa5e05c5dc0b95f0d58e59",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "나타내기 위한 것으로 보는 것이 일반적이다.",
+      "source_excerpt": "나타내기 위한 것으로 보는 것이 일반적이다.",
+      "rationale": "Retains interpretation as a conventional reading, with the accompanying practical dotted-rhythm advice."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-19__no-range",
+      "response_sha256": "252e92ae7da90022d238ae7910bc74bdcb6dddfd110a46885b2fcf334662c931",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는",
+      "source_excerpt": "사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는",
+      "rationale": "The four-sixteenth-note realization keeps the no-slash and quarter-note conditions; no paraphrase broadens the permission."
+    },
+    {
+      "case_id": "static-21-en",
+      "response_sha256": "70f002b7a418be90e63f7b42ecfedec3a4cb9dcb3ce3f3676e27adf47fd9ded3",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "similar to staccato",
+      "source_excerpt": "스타카토와 비슷하게",
+      "rationale": "Keeps staccato-like lightness rather than asserting literal staccato as mandatory. The suggested consonant pause and unchanged quoted Korean syllables are supported by the second actual source."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-09__no-range",
+      "response_sha256": "69c8a4dcb3f9a50eb361d712eaa7d73767ba0ab73ce0bb0c01af4135d78b4d19",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "source_excerpt": "자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "rationale": "Retains conditional permission for natural crescendo; the historical invented register/transposition instruction is absent."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__m1-2",
+      "response_sha256": "ca8ca67e01baab81bf0ea1f32a7fc4818303a51156588aee0894c95706d90656",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "곡 첫머리의 페르마타 유무",
+      "source_excerpt": "곡 첫머리의 페르마타 유무",
+      "rationale": "Retains opening scope and uncertainty about arrangement; no added performer-interpretation cause."
+    },
+    {
+      "case_id": "fixed-observed-p-pp-2",
+      "response_sha256": "be047b9254383c4d498b6a15d91274ca25ae413893fef8d00b6774cedb7d2f45",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "두 설명 모두 첫소리의 강도를 조절하여 반주와 조화를 이루는 것이 중요하다는 공통된 조언",
+      "source_excerpt": "첫 소리를 크지 않게 시작하는 것이 좋아 보인다.",
+      "rationale": "Both complete sources retain their differing p/PP claims. The general synthesis states shared soft-onset advice without making p common to both or inventing a reason for disagreement. It does not explicitly answer whether the cause can be established, so completeness remains limited."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-09__no-range",
+      "response_sha256": "32d9e6259381b6efd86635be9c7c0393fdee4154b70cbf274b50e3c3c8e71342",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "리듬을 지키며 아주 느린 박자로 시작한 뒤",
+      "source_excerpt": "리듬을 지키며 아주 느린 박자로 시작한 뒤",
+      "rationale": "The previously withheld slow-practice question is answered with the complete conditional recommendation; no new guaranteed result."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-15__m92-93",
+      "response_sha256": "31b3dab115744016b7292e501883d794668875d31526fe739b33f46c08093571",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+      "source_excerpt": "나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+      "rationale": "The character interpretation remains a recommended way to sing rather than a proven reason for the composer writing the accents."
+    },
+    {
+      "case_id": "static-17-en",
+      "response_sha256": "cb5f627bf7a8f97a82280083d880e32db36807e09b66235147313c226bf5ec6b",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "if you put too much force into them, you may run out of breath",
+      "source_excerpt": "힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나",
+      "rationale": "Faithful translation of the excessive-force condition, soft ending and use of rests. Does not guarantee that breath shortage will be eliminated."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__no-range",
+      "response_sha256": "fe89abfab2829886227fd238ab950ce833822192e3e4dede291014c74fcba7ce",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "박자·조성·반주 리듬의 변화",
+      "source_excerpt": "박자·조성·반주 리듬의 변화",
+      "rationale": "Complete source retains meter/key/accompaniment changes and the lyric imagery, without adding an unsupported local cause."
+    },
+    {
+      "case_id": "history-kim-la-capinera-13__m80-80",
+      "response_sha256": "b88b0485c3156d7a2adfd8262c8746820988de5ceba4e0171bcc6c489560ad2e",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e",
+      "source_excerpt": "앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e",
+      "rationale": "Preserves the e/e liaison and separately the placement of d toward i; fixes the historical e/i substitution."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__m39-49",
+      "response_sha256": "81bc3dfecedc08c06da93fafe1b90d2f1f6485aa2dc61927661fa05ba14d393e",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "박자·조성·반주 리듬의 변화",
+      "source_excerpt": "박자·조성·반주 리듬의 변화",
+      "rationale": "Same full source advice in the selected-range case, with unchanged imagery and scope."
+    },
+    {
+      "case_id": "history-kim-la-capinera-14__m83-85",
+      "response_sha256": "ba05e0302cab0e7bad802b65cde9387b60ff59770c1aafe9d7200cabeb07796e",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "자음이 두 번 발음되는 느낌",
+      "source_excerpt": "자음이 두 번 발음되는 느낌",
+      "rationale": "Retains the short pause-like interval and feeling of doubled consonants; does not invent a new ban on pronunciation."
+    },
+    {
+      "case_id": "history-kim-la-capinera-11__no-range",
+      "response_sha256": "5f60374b998006b1b8979957f769efe6c545fd7233a1c85867567b5fc71f7914",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "해당 음의 길이의 2~3배",
+      "source_excerpt": "해당 음의 길이의 2~3배",
+      "rationale": "The full quoted source is preserved, including mor. The source itself presents 2–3 times as a general principle; this is an oversimplification of flexible fermata duration and requires source-level expert review, distinct from fidelity."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-03__no-range",
+      "response_sha256": "9e39c2be9c08f9d059d7fa8c77c5d0a8979eefc2a65df60acc91fbddef94708c",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "나타내기 위한 것으로 보는 것이 일반적이다.",
+      "source_excerpt": "나타내기 위한 것으로 보는 것이 일반적이다.",
+      "rationale": "Preserves the conventional-interpretation hedge rather than establishing Rossini’s actual intention."
+    },
+    {
+      "case_id": "static-15-en",
+      "response_sha256": "9ef67be5f4921d76d95ec5fc9afcaacec226f6d642e5a03c978356f1917a963e",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "both e",
+      "source_excerpt": "모두 e",
+      "rationale": "The two e vowels remain distinct from the later instruction about d toward i. Smoothly connecting the syllables is preserved."
+    },
+    {
+      "case_id": "static-11-en",
+      "response_sha256": "e9fee4d54c829ff47e6add5e9c617485f080edfd48291bf849d20f34355d4786",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "suggests the composer intended",
+      "source_excerpt": "의도한 것으로 볼 수 있다",
+      "rationale": "Suggests retains the source’s interpretive uncertainty. The answer omits the explicit rapid-alternation detail, but confines its claim to this passage rather than all ff/pp contrasts."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-05__m19-21",
+      "response_sha256": "a673d6c4e2a9f6b0f5837c918b6fd1528051bec23bfed8b936b2077bd604a2c9",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤",
+      "source_excerpt": "부득이하게 앞 프레이즈를 끝내고 숨을 쉰 뒤",
+      "rationale": "Preserves both the usual connected option and the unavoidable-breath alternative; keeps the half note and Korean lyric unchanged."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-09__m31-34",
+      "response_sha256": "9d2e86efe109b4bcff2aa361b8ae65fba58ecd0e4ff9f9553af03fb29266f0c9",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "리듬을 지키며 아주 느린 박자로 시작한 뒤",
+      "source_excerpt": "리듬을 지키며 아주 느린 박자로 시작한 뒤",
+      "rationale": "Faithful slow-to-fast recommendation. Other useful retrieved advice about word stress and vowel-only practice is omitted, limiting completeness rather than changing the selected source."
+    },
+    {
+      "case_id": "history-kim-nella-fantasia-02__no-range",
+      "response_sha256": "5012582ce2d7845cbc2738ed8d4a587953635f039376caf3e276bfa7638c4983",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "성별과 성부를 지정한 가곡도 간혹 존재한다.",
+      "source_excerpt": "성별과 성부를 지정한 가곡도 간혹 존재한다.",
+      "rationale": "Retains the exception for some classical songs and the separate claim about Nella fantasia; does not generalize all songs to unrestricted voices."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-07__reported-no-range-01",
+      "response_sha256": "4f22f3dd4db2d69d03550939830778e8c09df6e88321db7913e1a6038f7c953c",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "앞선 간주에서 느껴지던 분위기는 이후",
+      "source_excerpt": "앞선 간주에서 느껴지던 분위기는 이후",
+      "rationale": "Keeps the described transition rather than fabricating a whole-work frequency statement."
+    },
+    {
+      "case_id": "static-23-en",
+      "response_sha256": "4147df5b638a3e78f9c8a8dcbafbf9baed13eb56dde380cb1ca4dbdfce9a92a8",
+      "source_fidelity": "minor_drift",
+      "answer_excerpt": "each phrase to be sung sufficiently",
+      "source_excerpt": "한 마디 한 마디를 충분히 노래할 수 있도록",
+      "rationale": "Retains leisurely tempo, interpretive flexibility and emphasis with continuity. Translates each measure as each phrase, losing some score-level specificity; the overall practice direction is preserved."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-02__m11-12",
+      "response_sha256": "075c954169f69570cfdeced34af5a1df628cc235513c779732e5ed344f5cf94f",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "‘꼬-빠-람’으로 발음하는 것이 좋다.",
+      "source_excerpt": "‘꼬-빠-람’으로 발음하는 것이 좋다.",
+      "rationale": "Preserves the recommended syllables and consonant pause. The earlier negation of the recommended pronunciation is absent, and staccato-like lightness stays qualified."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-18__no-range",
+      "response_sha256": "98c7f0dbc0d243e874dd31bb95c04a722f6dbda4acbcf4f5e422a0d5f6a627da",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "a tempo에서는 다시 원래의 박자와 리듬으로 돌아와",
+      "source_excerpt": "a tempo에서는 다시 원래의 박자와 리듬으로 돌아와",
+      "rationale": "Preserves who follows whom under col canto and the return under a tempo; does not extend the earlier freedom into a tempo."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-08__m32-32",
+      "response_sha256": "58a6e0cef63f28da018ee6ebb60386a16bbb7ff6175a9cd423640a26186175ec",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "o-a가 자연스럽게 이어지도록",
+      "source_excerpt": "o-a가 자연스럽게 이어지도록",
+      "rationale": "Keeps apostrophe elision separate from connecting the distinct o/a vowels in the supplied lyric."
+    },
+    {
+      "case_id": "history-kim-la-capinera-11__m67-69",
+      "response_sha256": "ccf6b927f86cecc02e66001cc4da20e66befc942e2fe20e12a5de8d97f76818d",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "해당 음의 길이의 2~3배",
+      "source_excerpt": "해당 음의 길이의 2~3배",
+      "rationale": "Retains source duration advice and mor emphasis. As in the no-range case, the source’s general 2–3-times rule is an oversimplification, not a model paraphrase error."
+    },
+    {
+      "case_id": "history-kim-una-voce-poco-fa-06__no-range",
+      "response_sha256": "4a966532bac5fc5ad65ebda75b0af4db35eb1da818aef86a363c6598354eaf65",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는",
+      "source_excerpt": "사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는",
+      "rationale": "Preserves the no-slash condition and note values. Omits the independently retrieved source about edition-related length differences, limiting completeness."
+    },
+    {
+      "case_id": "history-yeon-nella-fantasia-07__no-range",
+      "response_sha256": "14e9bf809a3230ec00485d0ec6fc22853f09597d6f920de2b866c33781c211d6",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "호흡이 부족해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록",
+      "source_excerpt": "호흡이 부족해 프레이즈 중간에서 음악적인 흐름이 끊어지지 않도록",
+      "rationale": "Retains both complete long-breath/connected-line sources, with some repetition. Does not turn practice advice into a guaranteed outcome."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-09__m67-69",
+      "response_sha256": "934f3d162c3651b8cee5a9ab12410e65ebba9433849210f1acc7a6b46b752f00",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "source_excerpt": "자연스럽게 소리가 커진다고 해도 괜찮다.",
+      "rationale": "Keeps conditional permission for a natural crescendo; no invented register or transposition change."
+    },
+    {
+      "case_id": "static-18-en",
+      "response_sha256": "3cfa11aaf63097f47f3a5f9b7e6f94e0df8c372454e59a905c1d429eccabb814",
+      "source_fidelity": "withheld",
+      "answer_excerpt": "",
+      "source_excerpt": "",
+      "rationale": "The final-note-duration question is withheld. Count as a false refusal; no translated advice is available to assess."
+    },
+    {
+      "case_id": "static-07-en",
+      "response_sha256": "1ec9a368d9de7dc54e716b00605d7bc331bf45b4f3521b0642d5ea1427dafc31",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "sixteenth notes",
+      "source_excerpt": "16분음표",
+      "rationale": "Preserves the note value, maintaining rhythm, starting slowly and gradually speeding the same passage. No new practice result is guaranteed."
+    },
+    {
+      "case_id": "static-19-en",
+      "response_sha256": "30d5b7287094ebe934c713136de887135bd4faf7f1be7793bb68b2bb3438e0ca",
+      "source_fidelity": "material_drift",
+      "answer_excerpt": "head voice, chest voice, or mixed voice",
+      "source_excerpt": "가성·두성·진성",
+      "rationale": "Replaces the supplied falsetto/head/modal-type list with head/chest/mixed voice. 가성 is falsetto, not mixed voice. The source genre claim is also softened in one sentence, though the following source translation retains categorical exclusion."
+    },
+    {
+      "case_id": "history-kim-in-flowery-clouds-01__reported-no-range-01",
+      "response_sha256": "16b5170b7f9cdd4ff0d05c8094f3d888506b7bc79ef964cee32bd7b0c78cef3f",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "곡 첫머리의 페르마타 유무",
+      "source_excerpt": "곡 첫머리의 페르마타 유무",
+      "rationale": "Retains opening-only scope and possible arrangement difference; no general permission for every fermata discrepancy."
+    },
+    {
+      "case_id": "recent-benign-14-ko",
+      "response_sha256": "25ffbc2d715d0e8d7bbeb3fdedc13ca00246af6ef3d9d2b8ee98329a2eb1a5e7",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "고음의 끝을 부드럽게 처리하고",
+      "source_excerpt": "고음의 끝을 부드럽게 처리하고",
+      "rationale": "Retains the excessive-force condition and use of rests without inventing a guarantee of sufficient breath."
+    },
+    {
+      "case_id": "static-25-en",
+      "response_sha256": "763979e611a73b1fec0ed214c3684a42e8df0fed26221168839af6d3284256cb",
+      "source_fidelity": "material_drift",
+      "answer_excerpt": "gu-ryeong-churum",
+      "source_excerpt": "구름처럼",
+      "rationale": "Invented romanization changes the lyric despite also displaying correct Korean. Half-note value and the unavoidable-breath condition remain faithful."
+    },
+    {
+      "case_id": "fixed-observed-p-pp-1",
+      "response_sha256": "e92999169d95d325f901cd9b5b6f1b521c01b724b241bb202db894c4b95c62a4",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "반주부가 PP로 시작한다는 점",
+      "source_excerpt": "반주부가 PP로 시작한다는 점",
+      "rationale": "Quotes both conflicting p/PP sources without inventing an edition or interpretation cause. Does not explain the limitation or clearly attribute each paragraph by source name, leaving the answer incomplete and difficult to use."
+    },
+    {
+      "case_id": "history-yeon-die-forelle-05__no-range",
+      "response_sha256": "a5900a10c79814a6366f97342a7a3f71074535980485ff88c20e2e2e02d9b4de",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "강사는 「송어」가 쉬워 보이지만 사실은 쉽지 않은 곡이며",
+      "source_excerpt": "강사는 「송어」가 쉬워 보이지만 사실은 쉽지 않은 곡이며",
+      "rationale": "Quotes the complete selected advice and attributes the teacher’s motivational examination claim. This is source fidelity, not independent validation of that motivational claim; the answer is overly long."
+    },
+    {
+      "case_id": "recent-fresh-benign-05-ko",
+      "response_sha256": "66ca2dc490dba39ee56db5c707922c3624e2ac0228f1cda25c6097302c21b2d5",
+      "source_fidelity": "faithful",
+      "answer_excerpt": "a tempo에서는 다시 원래의 박자와 리듬으로 돌아와",
+      "source_excerpt": "a tempo에서는 다시 원래의 박자와 리듬으로 돌아와",
+      "rationale": "Preserves accompaniment following the singer in col canto and returning to original rhythm at a tempo; no new leadership rule at a tempo."
+    }
+  ],
+  "counts": {
+    "faithful": 36,
+    "withheld": 2,
+    "minor_drift": 1,
+    "material_drift": 2
+  },
+  "results_sha256": "91936c269387267a415d98d6fd57b626e80779503fdd1425cec6c7f26ff84677"
+}

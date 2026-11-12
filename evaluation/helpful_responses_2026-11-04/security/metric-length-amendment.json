@@ -1,0 +1,12 @@
+{
+  "reason": "Length-only preflight before metric or benchmark judge scores found2 E37 paraphrase answers of600 and730 tokens; frozen encoder maximum512. Original105 answers and all references fit.",
+  "frozen_v1_preserved": true,
+  "original_settings_unchanged": true,
+  "cases_questions_references_answers_unchanged": true,
+  "no_truncation_or_chunking": true,
+  "same_policy_for_both_systems": true,
+  "overlength_policy": "Unscorable full-answer BERTScore, explicitly labelled with token lengths and reason. Retain each case with a zero contribution in the full-denominator conservative aggregate. This contribution is not claimed as a computed BERTScore.",
+  "original_primary": "Original105 and its existing43/62 split have full-answer BERTScore with no candidate overlength cases.",
+  "claude_policy": "Judge every full visible answer, including overlength texts, with the unchanged meaning/naturalness rubric.",
+  "not_score_tuning": "Amendment addresses a detected measurement limit before any benchmark metric or judge scores. No parameter/reference/output tuning and no favorable-case filtering."
+}

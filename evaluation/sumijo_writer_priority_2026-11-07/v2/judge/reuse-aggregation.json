@@ -1,0 +1,43 @@
+{
+  "contract": {
+    "packets_sha256": "e4b81ce7931eec24dc51f077190d819fc2c76c84c72db647c925cf5c1664d33f",
+    "sources_in_priority_order": [
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/judge",
+        "aggregation_sha256": "b9ba0cca36efea1d0adc985131213b54d920d00cbf788e0ce032861e522be450",
+        "assessments_sha256": "7aa9687af3cbac85795dcd16b5238dad04d2cd4f62a22ea84733b5ac73469350"
+      }
+    ],
+    "model": "claude-opus-5-5",
+    "workers": 3,
+    "runner_sha256": "5adeee61b6ffb473b9a2687a440e0858f47e3935f5f973d8a7506f96ba5a12ac",
+    "judge_runner_sha256": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+    "policy": "Exact full packet identity only; retain the first valid prior judgment regardless of score."
+  },
+  "packets": 16,
+  "reused": 8,
+  "fresh": 8,
+  "reused_ids": [
+    "58a7bc1f8def83d306c0",
+    "5b3605e6947f2cb90e6e",
+    "e6b8ddd6217c0828ab77",
+    "8aae58b497948de3e4a2",
+    "8e02c9d6164837e00094",
+    "cab9c95764b3dca298fd",
+    "1e94e1ce9832b38842de",
+    "b0d1d1de6a765ca3c69a"
+  ],
+  "fresh_ids": [
+    "f4ff103bb56429a8f36b",
+    "1a26bbfafe3fba6ac09f",
+    "a50bf98a41293f74a13c",
+    "a8016141c624d5b5a990",
+    "48756bcb9af049792ca5",
+    "f2a40d166b7d7fcf546e",
+    "62f797aa6db88ec07a90",
+    "db4ed4fc4ae26d50ef2e"
+  ],
+  "assessment_sha256": "306885a96df549a052ab71a0b802f0c3bdd6d4b87806885b139deabab46e7748",
+  "fresh_aggregation_sha256": "46eede6d7c8d3b241c8cabfa0f56d211cf117c5cacb13d8a5a378593973d0821",
+  "note": "Rows retain their original contract/model/timing. Reused assessments are not new CLI calls."
+}

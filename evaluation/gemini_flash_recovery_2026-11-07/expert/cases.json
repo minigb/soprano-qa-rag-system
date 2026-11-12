@@ -1,0 +1,414 @@
+{
+  "cases": [
+    {
+      "id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-06",
+      "piece_id": "una-voce-poco-fa",
+      "question": "꾸밈음(grace note)의 길이가 다른 이유와 사선 표시의 의미는 무엇일까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-008",
+        "una-voce-poco-fa-ku-009"
+      ],
+      "reference_answers": [
+        "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.\n꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "오케스트라 총보에서는 꾸밈음(grace note)의 길이가 서로 다르지 않다. 피아노 반주 악보에서 길이가 다르게 보이는 것은 반주 버전을 만들면서 꾸밈음을 강조하려고 의도적으로 바꾸었거나, 작곡가의 오리지널 버전 가운데 이런 형태를 차용했을 가능성이 있다. 총보와 반주 버전의 음악적 해석은 크게 다르지 않으므로 꾸밈음을 강조하는 데 집중해 노래하는 것이 좋겠다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-008"
+          },
+          {
+            "reference_id": "R002",
+            "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-009"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-06__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-una-voce-poco-fa-06",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "native_no_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-06"
+      ]
+    },
+    {
+      "id": "expert-kim-la-capinera-07__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-la-capinera-07",
+      "piece_id": "la-capinera",
+      "question": "leggiero는 어떻게 표현할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "la-capinera-ku-009"
+      ],
+      "reference_answers": [
+        "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                28,
+                35
+              ],
+              [
+                94,
+                101
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "la-capinera-ku-009"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-la-capinera-07__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-la-capinera-07",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-la-capinera-07"
+      ]
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-20__m42-42",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-20",
+      "piece_id": "una-voce-poco-fa",
+      "question": "악보 전반의 부점은 어떻게 처리할까?",
+      "measure_range": [
+        42,
+        42
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-004",
+        "una-voce-poco-fa-ku-005"
+      ],
+      "reference_answers": [
+        "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                18,
+                19
+              ],
+              [
+                22,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+          },
+          {
+            "reference_id": "R002",
+            "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                14,
+                15
+              ],
+              [
+                17,
+                19
+              ],
+              [
+                21,
+                22
+              ],
+              [
+                26,
+                26
+              ],
+              [
+                35,
+                35
+              ],
+              [
+                39,
+                39
+              ],
+              [
+                42,
+                42
+              ],
+              [
+                63,
+                63
+              ],
+              [
+                111,
+                111
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-20__m42-42",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-una-voce-poco-fa-20",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-20"
+      ]
+    },
+    {
+      "id": "expert-kim-die-forelle-07__m28-40",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-die-forelle-07",
+      "piece_id": "die-forelle",
+      "question": "곡의 분위기가 바뀔 때 어떻게 표현하는 것이 좋을까?",
+      "measure_range": [
+        28,
+        40
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "die-forelle-ku-010"
+      ],
+      "reference_answers": [
+        "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                28,
+                40
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "die-forelle-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-die-forelle-07__m28-40",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-die-forelle-07",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "confirmed_measure_range",
+      "source_annotation_ids": [
+        "kim-die-forelle-07"
+      ]
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-09__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-in-flowery-clouds-09",
+      "piece_id": "in-flowery-clouds",
+      "question": "크레센도 부분이 잘되지 않으면 어떻게 해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "in-flowery-clouds-ku-010"
+      ],
+      "reference_answers": [
+        "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                67,
+                69
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "in-flowery-clouds-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-in-flowery-clouds-09__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-in-flowery-clouds-09",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-in-flowery-clouds-09"
+      ]
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-08__m32-32",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-una-voce-poco-fa-08",
+      "piece_id": "una-voce-poco-fa",
+      "question": "io l’ingegno aguzzerò는 발음을 어떻게 이어 붙일까?",
+      "measure_range": [
+        32,
+        32
+      ],
+      "category": "expert_reference",
+      "split": "validation",
+      "gold_evidence_ids": [
+        "una-voce-poco-fa-ku-011"
+      ],
+      "reference_answers": [
+        "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "una-voce-poco-fa-ku-011"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-una-voce-poco-fa-08__m32-32",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-una-voce-poco-fa-08",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "reviewed_hint_evaluation_context_range",
+      "source_annotation_ids": [
+        "kim-una-voce-poco-fa-08"
+      ]
+    }
+  ]
+}

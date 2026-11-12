@@ -1,0 +1,66 @@
+{
+  "source_commit": "93f3552c07fec42613eb59f1476977bbf14f00f0",
+  "source_sha256": {
+    "soprano_qa/answer.py": "00742e7bc443acb687400d4f435ac0b7aa9f09e9bed8ec8d36d243b9b722fee0",
+    "soprano_qa/security.py": "eaa400183ba6a045087be4aa4c895d71d34eac64c1ae06a2da25acc1ec5b7755",
+    "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d",
+    "soprano_qa/llm.py": "af8edc753c6c84f13b84ede75f6f25a7e605c9c10de17437eb2de2aa7f0889b7",
+    "soprano_qa/structured_answer.py": "1eec786effaf9f0a7c91fe3a1443831f16b7cb82292834646f947545a21833ab",
+    "soprano_qa/music_terms.py": "da1d48b4edf6fdf5b7b3f0afc71a7163c57bbf6136066b9ad5fbc3bc8a98758c",
+    "soprano_qa/source_translation.py": "d528aa63ed972257151f61dbfc3c1fa7518d6c593c66053b67c8857b5be60bcd",
+    "soprano_qa/source_translation_catalog.py": "9a0b16e1a44e6f4c93c749c453dbe0ff4d7a1c06499ca8aabea9be7cabd40ab5"
+  },
+  "note": "Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.",
+  "assembly": "soprano_qa.answer.build_messages -> soprano_qa.llm.generate",
+  "retry": "Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.",
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 11567,
+      "sha256": "acf319a9f48b88b58ab706d1e843ca4bcc6b3a7e0179efac6691396337b75c12"
+    },
+    "answer-en.txt": {
+      "characters": 11997,
+      "sha256": "b406090ce1c60408aeafc1d20653d18e4d2b890623b9111de838da67cdfdb2dd"
+    },
+    "answer-preserve-ko.txt": {
+      "characters": 14287,
+      "sha256": "1a69d04f06a8776969dd0f9a4203a33bf093bc8163b1475486ae41e9b239d546"
+    },
+    "answer-preserve-en.txt": {
+      "characters": 14717,
+      "sha256": "eed02fe8fc858ef2156ab35815af5f5e46c747917fde50b25a02fafc6ba4d766"
+    },
+    "answer-select-for-translation-en.txt": {
+      "characters": 13520,
+      "sha256": "f66496f59eb9cd5428295d7e1ff99749ae831afb796cc240e1f94c6ea5a71017"
+    },
+    "source-translation-en.txt": {
+      "characters": 2165,
+      "sha256": "9c8306256463d79d32733ed1ada0baf323469973f3e3159090b1c937e4202d16"
+    },
+    "answer-general.txt": {
+      "characters": 6566,
+      "sha256": "22c7b1a616ada7c698fc3f1bcf4177c40df18758f548bf775bed9a8e7c9fff5d"
+    },
+    "guard-admission.txt": {
+      "characters": 3268,
+      "sha256": "ece59e53fe5076631e5d27efe8cef16fd1f78f6c122cd6de83a3674b4589bb91"
+    },
+    "guard-output.txt": {
+      "characters": 6918,
+      "sha256": "ac35d4a471a57be38d852513ce5710f2c73e46b9e4f5628e77375df3d8d3ca32"
+    },
+    "evidence-selection.txt": {
+      "characters": 1746,
+      "sha256": "a8b1d66990667b187020e7b42b94879f266680d1603d6e6c52688b0eacd59574"
+    },
+    "query-translation.txt": {
+      "characters": 1998,
+      "sha256": "4ed18dac9e862f26651bceb32414b8b1b404a7ab9011efe4723ef01eeb7b1a3b"
+    },
+    "retry-suffix.txt": {
+      "characters": 456,
+      "sha256": "1c2180fb0746de5b4513648bbca1bdea472c5c63d3b2e0bb5aa550acf768c672"
+    }
+  }
+}

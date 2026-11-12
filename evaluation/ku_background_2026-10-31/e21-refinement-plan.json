@@ -1,0 +1,28 @@
+{
+  "candidate": "E21",
+  "base_source_commit": "f72fd24063f5f7ec1048bdfe7626964f82a03ea6",
+  "recorded_at": "2026-11-01T17:39:34.365720+00:00",
+  "trigger": "E19 full independent review exposed material errors not present in the78-case diagnostic subset. E20 was superseded before completing because it retained that route.",
+  "repairs": [
+    "Check named works before all general-intent branches, preserving conditional KU advice for comparisons.",
+    "For explicit definitions/comparisons, assess actual KU relevance even with one candidate. Unrelated candidates may still be rejected; admission and output guards remain mandatory.",
+    "Retain generic practice/universal routing without work/local referents; local examples cannot establish universal claims.",
+    "Add externally checked general beat-vs-division terminology to the existing bilingual aid. It is available uniformly, not keyed by case IDs or exact question wording.",
+    "Ask source-selection composition to explicitly identify concrete source disagreements without inventing their cause.",
+    "Retain E20 role-replay/source-template screening and per-source comparison attribution."
+  ],
+  "references": [
+    {
+      "title": "Gotham and Hamm: Compound Meter and Time Signatures, Open Music Theory",
+      "url": "https://viva.pressbooks.pub/openmusictheory/chapter/compound-meters-and-time-signatures/",
+      "use": "General simple/compound beat and division rules; original paraphrase, not corpus or expert reference changes."
+    }
+  ],
+  "probe_cases": 50,
+  "fixed_full_evaluation": 290,
+  "metric_settings_changed": false,
+  "expert_references_changed": false,
+  "corpus_changed": false,
+  "validation_status": "Reused internal evaluation; observed full E19 failures informed E21. Do not report as untouched holdout.",
+  "acceptance": "BERTScore >=.90 is sufficient. Inspect actual errors, normal availability, independent quality/meaning and original-system latency before adoption."
+}

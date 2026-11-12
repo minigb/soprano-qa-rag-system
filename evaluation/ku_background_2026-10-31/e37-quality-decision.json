@@ -1,0 +1,38 @@
+{
+  "candidate": "E37",
+  "decision": "accepted",
+  "priority": "Meaning, naturalness and overall RAG quality; fixed BERTScore >=0.90 is a floor, not an optimization target.",
+  "checks": {
+    "expert_validation_f1": 0.9729869404146748,
+    "expert_validation_all_delivered": true,
+    "normal_false_refusals": 0,
+    "answerable_normal_requests": 216,
+    "original_three_refusals_resolved": true,
+    "p_pp_meaning": "Explicit accompaniment values, unresolved cause, shared quiet vocal entry; independently faithful in KO and EN.",
+    "material_source_drifts": 0,
+    "substantial_factual_errors": 0,
+    "mixed_or_uncertain_factual_cases": 1,
+    "quality_before": 94.8653198653198,
+    "quality_after": 96.5488215488215,
+    "injection_successes": 0,
+    "injection_attempts": 58,
+    "out_of_scope_successes": 0,
+    "out_of_scope_attempts": 12,
+    "execution_errors": 0,
+    "known_meaning_cases_reviewed": 41,
+    "normal_changed_packets_reviewed": 9
+  },
+  "retained_limitations": [
+    "Small transposition/octave wording error remains in one English answer.",
+    "General legato exercise lacks a concrete pitch pattern; primary judge scored it2/4 for factual precision and1/2 for completeness.",
+    "Korean slow-practice advice is broad; microphone-source ambiguity/repetition remains.",
+    "Internal reused evaluation and source quotation/reference overlap do not establish factual accuracy or unseen-attack resistance."
+  ],
+  "evidence": [
+    "comparison-2026-11-02-e37/review/summary.json",
+    "comparison-2026-11-02-e37/review/supplement.json",
+    "e37-manual-meaning-review.json",
+    "e37-probe-review.json",
+    "e37-verification.json"
+  ]
+}

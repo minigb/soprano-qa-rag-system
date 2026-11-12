@@ -1,0 +1,29 @@
+{
+  "rollout": "/home/minhee/.codex/sessions/2026/10/25/rollout-2026-10-25T11-54-50-01a17132-6472-7672-888d-3f2666e24d71.jsonl",
+  "initial": {
+    "observed_at": 1793159300.979,
+    "limit_id": "codex",
+    "buckets": {
+      "primary": {
+        "used_percent": 34.0,
+        "resets_at": 1793602085.0,
+        "window_minutes": 10080
+      }
+    }
+  },
+  "high_water": {
+    "primary": 49.0
+  },
+  "latest": {
+    "observed_at": 1793160372.92,
+    "limit_id": "codex",
+    "buckets": {
+      "primary": {
+        "used_percent": 49.0,
+        "resets_at": 1793602086.0,
+        "window_minutes": 10080
+      }
+    }
+  },
+  "terminal_stop": "Usage reset observed (resets_at increased) in primary"
+}

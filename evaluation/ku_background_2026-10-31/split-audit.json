@@ -1,0 +1,32 @@
+{
+  "expert_cases_sha256": "dfb49bc7c7845f5e472377669a6965fd97f2d2279994934765c5e455c57066e5",
+  "group_overlap": 0,
+  "shared_expert_ku_count": 6,
+  "shared_expert_ku_ids": [
+    "die-forelle-ku-009",
+    "die-forelle-ku-010",
+    "nella-fantasia-ku-004",
+    "una-voce-poco-fa-ku-003",
+    "una-voce-poco-fa-ku-009",
+    "una-voce-poco-fa-ku-018"
+  ],
+  "splits": {
+    "development": {
+      "requests": 43,
+      "source_question_groups": 32,
+      "expert_ku_count": 37,
+      "languages": {
+        "ko": 43
+      }
+    },
+    "validation": {
+      "requests": 62,
+      "source_question_groups": 47,
+      "expert_ku_count": 55,
+      "languages": {
+        "ko": 62
+      }
+    }
+  },
+  "interpretation": "Separated original question groups, not a source-disjoint or independently collected test set. All target expert questions are Korean; English is evaluated in the broader quality/security suite."
+}

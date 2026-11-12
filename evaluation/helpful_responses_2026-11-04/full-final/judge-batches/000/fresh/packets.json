@@ -1,0 +1,69 @@
+[
+  {
+    "id": "27acb7a608aebd5a8869",
+    "question": "많은 사람들이 이 곡을 부르게 된 배경은 무엇일까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡은 영화 《The Mission》에 사용된 엔리코 모리꼬네의 곡에서 시작되었고, 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지로 인해 세계적으로 사랑받기 시작했습니다.\n나무위키는 이 곡이 몽환적인 멜로디와 평화로운 가사가 잘 어울려 많은 가수와 성악가가 자신만의 스타일로 부르는 곡이라고 평가합니다.\n강사는 이 곡이 드라마 〈베토벤 바이러스〉에 삽입되었고, 예능 〈남자의 자격〉 합창단 프로젝트를 통해 널리 알려졌다고 말합니다.\n\n일반적인 음악 설명입니다.\n한국에서는 예능 프로그램과 합창 프로그램에서 자주 불리며 인기를 끌었습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-013",
+        "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5060",
+        "text": "강사는 이 곡을 보통 여성들이 많이 부르지만 남성들도 조를 낮춰 부르면 매우 멋있을 것 같다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-0019",
+        "text": "나무위키는 몽환적인 멜로디와 평화로운 가사가 잘 맞아떨어지며, 그래서 많은 가수·성악가가 이 곡을 자신만의 스타일로 바꿔 불렀다고 평한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5083",
+        "text": "강사는 이 곡이 드라마 〈베토벤 바이러스〉에 삽입된 적이 있고, 무엇보다 예능 〈남자의 자격〉 합창단 프로젝트를 통해 널리 알려졌다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5025",
+        "text": "강사는 이 곡을 너무 힘을 주어 욕심내서 부르면 어렵고 곡에 어울리지 않지만, 가사에 어느 정도 무게감이 있으므로 너무 가볍게 불러도 안 된다고 말한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Nella fantasia》는 엔리코 모리꼬네의 영화 The Mission에 나온 곡에서 시작되었다. 영화와 어울리는 음악과 평안하고 아름다운 세상을 꿈꾸는 메시지 덕분에 세계적으로 많은 사랑을 받기 시작했으며, 한국에서는 예능 프로그램과 합창 프로그램에서 많이 불리기 시작하면서 더욱 유명해졌다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

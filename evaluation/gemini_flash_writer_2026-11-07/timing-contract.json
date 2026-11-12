@@ -1,0 +1,25 @@
+{
+  "case_ids": [
+    "expert-kim-die-forelle-01__no-range",
+    "expert-yeon-die-forelle-05__no-range",
+    "expert-kim-in-flowery-clouds-01__m1-2",
+    "expert-kim-in-flowery-clouds-02__m11-12",
+    "expert-kim-la-capinera-02__m22-22",
+    "expert-kim-la-capinera-01__m11-14",
+    "expert-kim-nella-fantasia-02__no-range",
+    "expert-kim-nella-fantasia-03__no-range",
+    "expert-kim-una-voce-poco-fa-02__no-range",
+    "expert-kim-una-voce-poco-fa-01__no-range"
+  ],
+  "run_sha256": "a09555b60256a54d2858435199112d63350dcafdd717e9b1be031c8a1dc30daf",
+  "writer_contract_sha256": "75dc02617029b10a5e9fc52dfa4964a58325295939348319128433f930d1c03f",
+  "api_environment": {
+    "source": "/home/minhee/gemini-vertex-3/env.sh",
+    "phase": "Account3 only; user withdrew backup account4 after ADC permission failure",
+    "workers": 1,
+    "minimum_request_start_interval_seconds": 10,
+    "backup": null
+  },
+  "minimum_request_start_interval_seconds": 10,
+  "policy": "One serial observation per case; descriptive comparison with historical two-repetition Qwen writer times. First API connection included. Not used for answer-quality selection."
+}

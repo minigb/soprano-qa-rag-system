@@ -1,0 +1,74 @@
+[
+  {
+    "key": "current:same_scope-ko",
+    "case_id": "same_scope-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "a5fcd1f7e5f6780f8bb5"
+  },
+  {
+    "key": "current:same_scope-en",
+    "case_id": "same_scope-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "7619e395418ebdfd55aa"
+  },
+  {
+    "key": "current:different_condition-ko",
+    "case_id": "different_condition-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "98ac4cb52298892f9ca8"
+  },
+  {
+    "key": "current:different_condition-en",
+    "case_id": "different_condition-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "ca5617131f91bbc1752b"
+  },
+  {
+    "key": "current:different_actor-ko",
+    "case_id": "different_actor-ko",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "ko",
+    "status": "response",
+    "generation_mode": "llm_single_pass",
+    "review_id": "3db6bfb9c4ff7237baff"
+  },
+  {
+    "key": "current:different_actor-en",
+    "case_id": "different_actor-en",
+    "variant": "synthetic-boundary",
+    "source_file": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/sumijo_writer_priority_2026-11-07/v3/boundaries/current.jsonl",
+    "kind": "benign",
+    "language": "en",
+    "status": "exception",
+    "generation_mode": null,
+    "review_id": null,
+    "exception": {
+      "type": "ServerError",
+      "code": 504,
+      "status": "DEADLINE_EXCEEDED",
+      "message": "Deadline expired before operation could complete."
+    }
+  }
+]

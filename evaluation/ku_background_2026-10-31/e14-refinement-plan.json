@@ -1,0 +1,18 @@
+{
+  "recorded_at": "2026-10-31T14:38:02.594205+00:00",
+  "reason": "E13 still invented Korean lyric romanization and an unsupported causal link in English source answers. Its 43-case development F1 was 0.9720738294512726; improving that score is not the objective.",
+  "user_priority": "BERTScore 0.90 is an acceptance floor, not a maximization target. Preserve usefulness, naturalness, meaning, normal-question availability and practical latency. Do not accept padded source copying merely for the metric.",
+  "changes": [
+    "Select source labels before English translation; translate original source sentence slots without the user question.",
+    "Mask quoted Korean strings with opaque per-source literals, validate exact slot/token coverage and restore original spelling in code.",
+    "Retain original-source semantic output review and every existing security check."
+  ],
+  "probe": "First the nine known English meaning cases, then all 70 E13 development/diagnostic cases if the focused probe is useful.",
+  "metric": "Keep the original development-B selected metric, references and split unchanged.",
+  "validation_disclosure": "Previously observed validation failures have informed E12 onward; later validation is reused internal evaluation, not an untouched test set.",
+  "settings": {
+    "llm.evidence_translation": "segmented",
+    "llm.evidence_translation_max_tokens": 1536
+  },
+  "limitation": "Slot coverage and protected literal identity do not prove translation fidelity; independent judging and manual comparison remain required."
+}

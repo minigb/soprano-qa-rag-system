@@ -1,0 +1,352 @@
+[
+  {
+    "id": "9154b9be8ffd38ded5c3",
+    "question": "이 대목에서는 박자를 어떻게 맞춰야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있습니다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-022",
+        "text": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-002",
+        "text": "성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-022"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e04cd67dc90731b05589",
+    "question": "이 곡의 형식을 유절가곡으로 분류할 수 있을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 변형된 유절가곡 형식으로 볼 수 있습니다. 원본 시는 4연이지만 슈베르트는 1-3연만 사용했고, 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡과 다릅니다. 이는 슈베르트가 의도한 극적인 흐름이므로, 노래에서 이를 잘 표현하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-007",
+        "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 변형된 유절가곡 형식으로 보는 것이 맞다. 원본 시는 4연이지만 슈베르트는 4연을 빼고 1-3연만 사용했다. 1연과 2연의 멜로디는 같지만 3연에서 분위기와 멜로디가 바뀌므로 일반적인 유절가곡 형식과 다르다. 이 구성은 슈베르트가 의도한 극적인 흐름이므로, 이를 인지하고 노래에서 잘 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "aa3999e0a583b5fba8ae",
+    "question": "피아노 반주로 노래할 때도 오케스트라의 구성과 그에 따른 느낌을 어떻게 연습에 반영할 수 있을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "피아노 반주로 노래하더라도 오케스트라의 구성과 그에 따른 느낌을 고려해 연습하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-024",
+        "text": "피아노 반주로만 노래하더라도, 곡을 더 잘 표현하려면 오케스트라가 어떻게 구성되어 있는지와 마디마다 그 구성이 주는 다양한 느낌을 고려하며 연습하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "피아노 반주로만 노래하더라도, 곡을 더 잘 표현하려면 오케스트라가 어떻게 구성되어 있는지와 마디마다 그 구성이 주는 다양한 느낌을 고려하며 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 반주로만 노래하더라도, 곡을 더 잘 표현하려면 오케스트라가 어떻게 구성되어 있는지와 마디마다 그 구성이 주는 다양한 느낌을 고려하며 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-024"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9db57cb96bb34b3e6d37",
+    "question": "한국 가곡의 딕션을 자연스럽게 익히려면 어떤 방식으로 연습하는 것이 좋을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "한국 가곡의 딕션을 자연스럽게 익히려면 발음나는 대로 적은 다음 읽어 보는 연습을 하는 것이 좋습니다. 예를 들어 '불어오라'는 [부러오라], '꽃향에'는 [꼬턍에]로 적어 연습합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-017",
+        "text": "한국 가곡의 딕션은 글자를 보이는 그대로 읽기보다 발음나는 대로 적은 다음 읽어 보는 연습을 하는 것이 좋다. 예를 들어 ‘불어오라’는 [부러오라], ‘꽃향에’는 [꼬턍에]로 적어 연습한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "한국 가곡의 딕션은 글자를 보이는 그대로 읽기보다 발음나는 대로 적은 다음 읽어 보는 연습을 하는 것이 좋다. 예를 들어 ‘불어오라’는 [부러오라], ‘꽃향에’는 [꼬턍에]로 적어 연습한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "한국 가곡의 딕션은 글자를 보이는 그대로 읽기보다 발음나는 대로 적은 다음 읽어 보는 연습을 하는 것이 좋다. 예를 들어 ‘불어오라’는 [부러오라], ‘꽃향에’는 [꼬턍에]로 적어 연습한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "cf8a6f0c82ae0958214f",
+    "question": "박자와 리듬을 잡을 때 반주가 없다면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      135,
+      137
+    ],
+    "language": "ko",
+    "answer": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있습니다. 정확한 박자와 리듬으로 충분히 연습한 후, 무대에서는 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 135,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam"
+          ]
+        },
+        {
+          "measure": 136,
+          "voice": "sung",
+          "lyric_lines": [
+            "ah"
+          ]
+        },
+        {
+          "measure": 137,
+          "voice": "sung",
+          "lyric_lines": [
+            "can-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-029",
+        "text": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            135,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              135,
+              137
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-029"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "218bfaf6fd217352bb2e",
+    "question": "악보에 따라 단어를 나누어 적은 방식이 서로 다를 때는 어떻게 처리할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보에 따라 단어를 나누는 방식이 다를 때는 원곡의 가사를 확인하고, 원곡의 단어 구분에 따라 노래하는 것이 좋습니다. 단어 구분에 따라 강세나 강조할 단어, 자음·모음이 달라지므로 유럽 언어의 경우 알파벳 하나의 차이로 뜻이 완전히 달라질 수 있어 주의가 필요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-005",
+        "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "3d6a80df9192c60bff9d",
+    "question": "같은 대목의 음정이 유튜브 영상에 따라 달라지는 것은 왜일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "같은 대목의 음정이 유튜브 영상에 따라 달라지는 것은 이 아리아가 성악가의 능력과 표현 방식에 따라 여러 변주를 허용하기 때문입니다. 특히 낭만시대의 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했으며, 자신의 고음, 저음, 스케일 등의 장점을 표현하기 위해 변주와 꾸밈음을 선택하는 경우가 많습니다. 이러한 변주는 현재 출판된 책(ricci)에서도 확인할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-018",
+        "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

@@ -1,0 +1,194 @@
+{
+  "recorded_at": "2026-11-02T02:31:14.944104+00:00",
+  "phase": "complete",
+  "followup_complete": true,
+  "goal_achieved": true,
+  "branch": "codex/ku-background-knowledge",
+  "candidate": "E37",
+  "candidate_source_commit": "414a6c0a830ffaf9c822574a66853ddcf46ea42c",
+  "worktrees": {
+    "rag": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system",
+    "lab": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab"
+  },
+  "active_controller": null,
+  "evaluation": "comparison-2026-11-02-e37",
+  "config": "comparison-e37.config.json",
+  "report": "followup-report.md",
+  "verification": "e37-verification.json",
+  "quality_decision": "e37-quality-decision.json",
+  "manual_review": "e37-manual-meaning-review.json",
+  "validation_effective_f1": 0.9729869404146748,
+  "validation_count": 62,
+  "validation_delivered": 62,
+  "normal_false_refusals": 0,
+  "answerable_normal_requests": 216,
+  "injection_successes": 0,
+  "injection_attempts": 58,
+  "out_of_scope_successes": 0,
+  "out_of_scope_attempts": 12,
+  "judge_material_drifts": 0,
+  "judge_substantial_factual_errors": 0,
+  "judge_mixed_or_uncertain_cases": 1,
+  "effective_rubric_percent": 96.5488215488215,
+  "normal_service_median_seconds": 5.346797110996704,
+  "tests": {
+    "rag": {
+      "passed": 648,
+      "seconds": 24.608,
+      "exit_code": 0,
+      "log_sha256": "0d55376ea8bbc98de42b1907ba4bea135bbb2c2c8e1e0e9117cc74fc8807533c",
+      "command": "python -m unittest discover -q",
+      "workdir": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system",
+      "local_log": "/tmp/e37-tests.log"
+    },
+    "lab_rag": {
+      "passed": 648,
+      "seconds": 25.196,
+      "exit_code": 0,
+      "log_sha256": "ecba975df10b59132d1fded6d78a4f371810ef5736b8cd9573f11476e177786f",
+      "command": "python -m unittest discover -q",
+      "workdir": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/rag",
+      "local_log": "/tmp/e37-lab-rag-tests.log"
+    },
+    "lab_demo": {
+      "passed": 44,
+      "seconds": 4.918,
+      "exit_code": 0,
+      "log_sha256": "2a04a34bb421949e0d61a241d8693c1f11d90a24636ce8d3328b9df6628f6f3b",
+      "command": "python -m unittest discover -s tests -q",
+      "workdir": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/demo",
+      "local_log": "/tmp/e37-lab-demo-tests-final.log"
+    }
+  },
+  "protected_checkouts": {
+    "rag_main": {
+      "path": "/home/minhee/soprano-qa-rag-system",
+      "head": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+      "status": [],
+      "verified_unchanged": true
+    },
+    "lab_main": {
+      "path": "/home/minhee/soprano-lab",
+      "head": "f3fed8558488eca23c5e213f8ad20d20e82c0e33",
+      "status": [
+        "?? .claude/"
+      ],
+      "verified_unchanged": true
+    },
+    "dataset": {
+      "path": "/home/minhee/soprano-qa-dataset",
+      "head": "1ae33e8e9d0bb2891dde4521e810d45d192cb7fc",
+      "status": [
+        "?? samples/"
+      ],
+      "verified_unchanged": true
+    }
+  },
+  "next": "No required work remains. Do not rerun completed jobs. For a new change, create new source snapshots/config/output paths and preserve existing failures/judgments.",
+  "limitations": [
+    "Small transposition/octave wording error remains in one English answer.",
+    "General legato exercise lacks a concrete pitch pattern; primary judge scored it2/4 for factual precision and1/2 for completeness.",
+    "Korean slow-practice advice is broad; microphone-source ambiguity/repetition remains.",
+    "Internal reused evaluation and source quotation/reference overlap do not establish factual accuracy or unseen-attack resistance."
+  ],
+  "stop_on_usage_reset": false,
+  "notifications_enabled": false,
+  "prior_completed_e25": {
+    "recorded_at": "2026-11-01T19:24:14.995986+00:00",
+    "phase": "complete",
+    "goal_achieved": true,
+    "branch": "codex/ku-background-knowledge",
+    "candidate_source_commit": "a93b10894371a3039cb0ad34ee60a045638fee90",
+    "worktrees": {
+      "rag": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system",
+      "lab": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab"
+    },
+    "active_controller": null,
+    "evaluation": "comparison-2026-11-02-e25",
+    "report": "report.md",
+    "verification": "final-verification.json",
+    "quality_decision": "e25-quality-decision.json",
+    "validation_effective_f1": 0.9734575238920027,
+    "validation_count": 62,
+    "validation_delivered": 62,
+    "injection_successes": 0,
+    "injection_attempts": 58,
+    "normal_false_refusals": 3,
+    "answerable_normal_requests": 216,
+    "judge_material_drifts": 0,
+    "effective_rubric_percent": 94.82323232323232,
+    "tests": {
+      "rag": {
+        "passed": 637,
+        "seconds": 23.299,
+        "exit_code": 0,
+        "log_sha256": "e7780baa5052acd528abafd59bad9e362751a17d869ac82dbfdaf2fcefc37a11",
+        "command": "python -m unittest discover -q"
+      },
+      "lab_rag": {
+        "passed": 637,
+        "seconds": 23.589,
+        "exit_code": 0,
+        "log_sha256": "59af30d96f8a7dcb9df9113284a3af2a412a35a3e235c62d36b38ecd4fa1f52b",
+        "command": "python -m unittest discover -q"
+      },
+      "lab_demo": {
+        "passed": 44,
+        "seconds": 4.683,
+        "exit_code": 0,
+        "log_sha256": "67c7d00ff31888bffab1bc58b01d524e424ae9ff28da6113c05da6f156b60da4",
+        "command": "python -m unittest discover -s tests -q"
+      }
+    },
+    "protected_checkouts": {
+      "rag_main": {
+        "path": "/home/minhee/soprano-qa-rag-system",
+        "head": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+        "status": [],
+        "verified_unchanged": true
+      },
+      "lab_main": {
+        "path": "/home/minhee/soprano-lab",
+        "head": "f3fed8558488eca23c5e213f8ad20d20e82c0e33",
+        "status": [
+          "?? .claude/"
+        ],
+        "verified_unchanged": true
+      },
+      "dataset": {
+        "path": "/home/minhee/soprano-qa-dataset",
+        "head": "1ae33e8e9d0bb2891dde4521e810d45d192cb7fc",
+        "status": [
+          "?? samples/"
+        ],
+        "verified_unchanged": true
+      }
+    },
+    "next": "No remaining work for this goal. Future experiments require new snapshots/output paths and should retain these results. A new expert test set would assess generalization; it is not claimed by this completed internal evaluation.",
+    "limitations": [
+      "Reused internal evaluation with six shared KUs across expert splits",
+      "Raw reference similarity inflated by complete source quotation is not factual accuracy",
+      "Three normal false refusals and p/PP/translation/presentation limitations remain",
+      "Single-run descriptive latency is slower than original by a median paired2.22seconds",
+      "Authored/forced-exposure attacks do not establish universal injection resistance"
+    ],
+    "files_sha256": {
+      "config/settings.json": "0d29d01f676a71020a369afcbd5a5e297de217fecff4e6d66c397c72a4540f85",
+      "config/bertscore.json": "5dbeef02714156a3624b016d52b6930439499bb07a00ec729cba6f1de245c129",
+      "evaluation/ku_background_2026-10-31/report.md": "52475e20c2e23e6d4996e23dc3f6bf1bc0fb6e55d659c8c0952d7668d8c0f9ed",
+      "evaluation/ku_background_2026-10-31/final-verification.json": "4d8de7702d963a1bc5df527eca1541fcc9c0df0e2f6efda7e6a26c3745f635ed",
+      "evaluation/ku_background_2026-10-31/e25-manual-meaning-review.json": "db27db378f31751e352094957d6a5f93b76e4165ebecd8c81be028c671bbbf4e",
+      "evaluation/ku_background_2026-10-31/e25-quality-decision.json": "4ff255526b57f14bdbbd94341f3ccb12ee14e2f88d74a6ac9daf62d63ac35d98",
+      "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25/review/summary.json": "df3cdd19a7a032689d4a695de2fcaecfc6ded740a3d0c46f2d44b9cbee4b49e0"
+    }
+  },
+  "files_sha256": {
+    "followup-report.md": "ca309b7fc61ed289a44345690bb108cdfa98cebdd286d5966f28ff6094d45e31",
+    "followup-reproduce.md": "a82cc1f2b214977be7c7886355f1f12a99cb9cbb6bb057c824d6019c03ae91cc",
+    "e37-verification.json": "1884a3a58ed22a2af68d82f2bcc84e388839d13ce3cccdddffdc150efa09731a",
+    "e37-quality-decision.json": "cafebc4ebfa33ace6761de54ecc1aae205c63ee019f493fb58afd917f4136ee3",
+    "e37-manual-meaning-review.json": "2111b9414e5a5f84a592c8f3dd12b9ee0f71088739d5634c10419df7a7fb8276",
+    "comparison-2026-11-02-e37/review/summary.json": "92dae2d80762a982e541b73080beb25e7968ec5a74dec6d29cf73515bd9f8f0c",
+    "prompts-e37/manifest.json": "aaa94890601791e894aba1eaaf0bf21e0262c5b6f4529854b8980d73b5673b37"
+  }
+}

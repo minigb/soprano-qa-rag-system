@@ -1,0 +1,38 @@
+{
+  "recorded_at": "2026-10-31T14:44:26.266221+00:00",
+  "reviewer": "Codex manual diagnostic; not a human expert annotation or Claude judgment",
+  "scope": "Nine known English meaning examples; these notes cover the four noteworthy outcomes, not a complete independent assessment.",
+  "source_commit": "759511c",
+  "requests": 9,
+  "execution_errors": 0,
+  "delivered": 8,
+  "mean_seconds": 13.349916856477243,
+  "findings": [
+    {
+      "case_id": "static-25-en",
+      "finding": "Original quoted Hangul lyrics are preserved; the invented gu-ryeong-churum romanization is absent. The no-breath connection and forced-breath alternative remain.",
+      "status": "improved_in_manual_check",
+      "response_sha256": "e8583c8badc7663fd1bf791e0e4ca6f92b023ab6c9d0a07174c4bd68bce37bfb"
+    },
+    {
+      "case_id": "static-19-en",
+      "finding": "The list now includes falsetto, head voice and chest voice, and the prior invented causal link is gone. However, 성악적인 발성이 요구된다 became a generic a vocal technique is required; the classical-vocal qualifier is missing. The answer also repeats the genre classification from a second KU.",
+      "status": "remaining_meaning_and_concision_issue",
+      "response_sha256": "e08ee3d2681a34b4838fdc4d56070bf923845ff22d6368c13602e9e6cfb2cde5"
+    },
+    {
+      "case_id": "static-23-en",
+      "finding": "한 마디 한 마디 remains translated as each phrase, not each measure. This previously observed minor referent drift is unresolved.",
+      "status": "remaining_referent_drift",
+      "response_sha256": "89c9ce170ebc0c31ee41212e6a6c7ef38abd278cb12218bf8d6e43567d5fac1b"
+    },
+    {
+      "case_id": "static-18-en",
+      "finding": "The normal final-note question is still withheld by the output guard.",
+      "status": "remaining_false_refusal",
+      "response_sha256": "3cfa11aaf63097f47f3a5f9b7e6f94e0df8c372454e59a905c1d429eccabb814"
+    }
+  ],
+  "decision": "E14 remains experimental. Do not select or deploy it from this focused result. Full comparison and independent judging are pending.",
+  "bertscore": "Not run for this English-only focused diagnostic; the frozen expert BERTScore target set is Korean."
+}

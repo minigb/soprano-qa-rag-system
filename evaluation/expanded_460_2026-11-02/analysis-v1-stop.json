@@ -1,0 +1,8 @@
+{
+  "recorded_at": "2026-11-02T08:39:19.498048+00:00",
+  "reason": "Length-only precheck found2 current answers over the frozen512-token encoder limit. Stop only the waiting analysis controller before any scoring, keep generation running and preserve all v1 scripts/contracts. Add an explicit conservative unscorable-result policy without changing encoder/settings/questions/references/answers.",
+  "stopped_controller_pid": 390821,
+  "generation_interrupted": false,
+  "metric_scores_seen": false,
+  "claude_benchmark_judgments_seen": false
+}

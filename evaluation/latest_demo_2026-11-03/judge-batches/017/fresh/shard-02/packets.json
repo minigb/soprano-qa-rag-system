@@ -1,0 +1,583 @@
+[
+  {
+    "id": "ed0377ffad38d85dbe3b",
+    "question": "노래할 때 각 가사를 어느 음정에 붙이는 것이 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "가사를 어떤 음정에 붙여야 하는지 판단하기 어려울 수 있습니다. 자연스럽고 부드럽게 가사를 전달하기 위해 정박보다 조금 앞이나 뒤에서 발음하는 경우가 일반적입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-003",
+        "text": "대중음악은 처음 작곡할 때 악보가 아니라 코드 진행에서 출발하는 경우가 많아 멜로디의 정확한 리듬을 표기하기 어려울 때가 많다. 따라서 가사를 어떤 음정에 붙여야 하는지 판단하기 어려울 수 있다. 대부분 악보를 참고하여 부르지만, 자연스럽고 부드럽게 가사를 전달하기 위해 정박보다 조금 앞이나 뒤에서 발음하는 경우가 일반적이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5044",
+        "text": "강사는 노래를 잘하는 요령으로 가사 전달, 호흡을 실어 정확하게 모음을 연결해 부르기, 음정과 박자 맞추기를 꼽는다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5104",
+        "text": "강사는 멀리 뛰는 음정은 호흡과 근육을 많이 필요로 하므로 인접한 음의 발성을 먼저 하고 그 다음에 도약이 있는 발성을 하는 것이 좋다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5043",
+        "text": "강사는 고음을 낼 때 음정을 정확히 맞춘다고 생각하면서 부르라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-wc-5106",
+        "text": "강사는 피아노를 치며 노래하는(범주범창) 경우, 이 곡은 오른손으로 멜로디를 치기보다 코드 반주 위주로 연주하는 것이 좋다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "대중음악은 처음 작곡할 때 악보가 아니라 코드 진행에서 출발하는 경우가 많아 멜로디의 정확한 리듬을 표기하기 어려울 때가 많다. 따라서 가사를 어떤 음정에 붙여야 하는지 판단하기 어려울 수 있다. 대부분 악보를 참고하여 부르지만, 자연스럽고 부드럽게 가사를 전달하기 위해 정박보다 조금 앞이나 뒤에서 발음하는 경우가 일반적이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중음악은 처음 작곡할 때 악보가 아니라 코드 진행에서 출발하는 경우가 많아 멜로디의 정확한 리듬을 표기하기 어려울 때가 많다. 따라서 가사를 어떤 음정에 붙여야 하는지 판단하기 어려울 수 있다. 대부분 악보를 참고하여 부르지만, 자연스럽고 부드럽게 가사를 전달하기 위해 정박보다 조금 앞이나 뒤에서 발음하는 경우가 일반적이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ef071215a8a54c1b299e",
+    "question": "하나의 곡에 서로 다른 악보가 존재하는 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "하나의 곡에 서로 다른 악보가 존재하는 이유는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 하기 때문입니다. 또한 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있습니다. 이 중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-001",
+        "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.\n성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "클래식 악보는 작곡가가 여러 번 개선해 만든 여러 버전이 있을 수 있고, 출판사가 사용자가 보기 편하도록 마디와 페이지의 간격 등을 조정해 편집하기도 한다. 유명한 아리아는 한 곡만 따로 떼어 악보로 만들기도 하므로 여러 버전이 생길 수 있다. 그중 작곡가의 의도가 가장 잘 드러나고 원본에 가장 가까운 악보를 찾으려는 노력이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-001"
+        },
+        {
+          "reference_id": "R002",
+          "text": "성악가가 일반적으로 접하는 피아노 반주 악보는 오케스트라 총보를 피아노 반주 형태로 바꾼 것이므로, 정확한 박자와 해석을 찾는 가장 확실한 방법은 오케스트라 총보를 확인하고 그에 맞게 부르는 것이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-002"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "81a1b0151559ae3ad987",
+    "question": "로시니가 일반적인 부점 리듬 대신 겹부점 리듬을 사용한 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "로시니는 <<Una voce poco fa>>에서 로지나의 성격을 표현하기 위해 일반적인 부점 대신 겹부점 리듬을 사용했다고 해석할 수 있습니다. 성악가는 과장된 부점을 통해 당차고 활발하며 확신에 차 있고 쾌활한 성격을 표현하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b380f64947d69e114d64",
+    "question": "어떤 표현 방법이 leggiero에 어울릴까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      28,
+      35
+    ],
+    "language": "ko",
+    "answer": "leggiero에 어울리는 표현 방법은 밝고 가볍게 움직이며, 최대한 가볍고 정확하게 표현하는 것입니다. 이는 새소리처럼 가볍고 유연한 느낌을 주어야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tua"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo- -ce un"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "tal pia-"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cer mi"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "fa Che"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "di can-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tar de- -sio mi"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "dà"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-009",
+        "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            35
+          ],
+          [
+            94,
+            101
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              35
+            ],
+            [
+              94,
+              101
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "f6361d1ef9ecbe581fcb",
+    "question": "악센트가 첫 박이 아닌 곳에 표시된 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      92,
+      93
+    ],
+    "language": "ko",
+    "answer": "악센트가 첫 박이 아닌 곳에 표시된 이유는 피아노/오케스트라 파트의 경쾌한 리듬과 멜로디파트의 첫 박자의 트릴 유사 음형을 고려하여 로지나 캐릭터의 발랄한 이미지를 표현하기 위해서입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 92,
+          "voice": "sung",
+          "lyric_lines": [
+            "toc- -ca- -no dov'- -è‿il mio",
+            "cross my will, or what I"
+          ]
+        },
+        {
+          "measure": 93,
+          "voice": "sung",
+          "lyric_lines": [
+            "de- -bo- -le, sa- -rò‿u- -na",
+            "do take ill, like an- -y"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0dca1d1e107303d2afae",
+    "question": "음정에 ‘l’erbe ed i fior’ 가사를 어떻게 붙이는 것이 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      80,
+      80
+    ],
+    "language": "ko",
+    "answer": "‘l’erbe ed i fior’의 가사는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 다음 단어 i에 가깝게 하도록 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 80,
+          "voice": "sung",
+          "lyric_lines": [
+            "l’er- -be ed i"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-007",
+        "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            80,
+            80
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              80,
+              80
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

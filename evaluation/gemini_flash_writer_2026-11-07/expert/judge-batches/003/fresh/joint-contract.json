@@ -1,0 +1,8 @@
+{
+  "packets_sha256": "1ed4eb582bba7c7114fcf25923ac4cff88b513e5c03f3249ff37fd046dde70e5",
+  "workers": 3,
+  "model": "claude-opus-5-5",
+  "runner_sha256": "d3456e522cac1e2476a985aa750049ee7739d245194c22d6db8bf32ee1db2020",
+  "judge_runner_sha256": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+  "allocation": "frozen packet order, round-robin; exactly one judgment per packet"
+}

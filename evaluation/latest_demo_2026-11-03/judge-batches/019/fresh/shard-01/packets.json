@@ -1,0 +1,514 @@
+[
+  {
+    "id": "32c443e9835b245370eb",
+    "question": "‘vieni a’의 발음을 음정에 어떻게 붙여 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      20,
+      20
+    ],
+    "language": "ko",
+    "answer": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 20,
+          "voice": "sung",
+          "lyric_lines": [
+            "E vie- -ni a"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-006",
+        "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            20,
+            20
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘vieni a’처럼 앞 단어의 끝 글자와 뒤 단어의 첫 글자가 모두 모음일 때에는, 두 모음이 하나로 합쳐지지 않도록 한 음정 안에서 자연스럽게 연음한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              20,
+              20
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "02d982d7fa8d777da627",
+    "question": "노래의 첫 소리를 어느 정도의 셈여림으로 내면 좋을까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보의 반주부가 piano (p)로 표기되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-002",
+        "text": "일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. 이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            7,
+            8
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. 이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적인 가요나 팝 음악은 악보의 표기가 작곡가의 의도대로 되어 있지 않은 경우가 많다. 이 악보에서는 시작 부분의 반주부가 piano (p)로 되어 있으므로, 첫 소리를 크지 않게 시작하는 것이 좋아 보인다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              7,
+              8
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-002"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "1bd02771fe7476345cb4",
+    "question": "페르마타는 얼마나 길게 끄는 것이 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      67,
+      69
+    ],
+    "language": "ko",
+    "answer": "페르마타는 해당 음의 길이의 2~3배로 부르는 것이 일반적입니다. ‘l’amor’의 페르마타는 이 원칙을 따르면서 ‘mor’에 악센트를 주어 강조하도록 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "gio- -ven- -tù l’a-"
+          ]
+        },
+        {
+          "measure": 68,
+          "voice": "sung",
+          "lyric_lines": [
+            "-mor can-"
+          ]
+        },
+        {
+          "measure": 69,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam!"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-013",
+        "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "47df22d69fb2f36b9c73",
+    "question": "어떤 음악적 효과를 위해 ff와 pp가 대비될까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "ff와 pp가 빠르게 번갈아 나오는 부분은 산새의 경쾌함과 메아리 같은 반향 효과를 표현하기 위한 것으로 해석할 수 있습니다. 성악가는 멜로디뿐만 아니라 피아노나 오케스트라의 표기에도 주의하여 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              117,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "26a210e66257fd2557ad",
+    "question": "중간 대목에서 곡의 성격이 달라지는 까닭은 무엇일까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      28,
+      40
+    ],
+    "language": "ko",
+    "answer": "중간 대목에서 곡의 성격이 달라지는 것은 피아노 파트에서 바뀌는 음형이 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 표현하기 때문입니다. 이로 인해 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환이 일어납니다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "end- -lich ward dem"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "Die- -be"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Zeit zu"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "lang,"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "er macht das"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "Bäch- -lein tü- -ckisch"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "trü- -be, und"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "eh' ich es ge-"
+          ]
+        },
+        {
+          "measure": 36,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dacht, so"
+          ]
+        },
+        {
+          "measure": 37,
+          "voice": "sung",
+          "lyric_lines": [
+            "zuck- -te sei- -ne"
+          ]
+        },
+        {
+          "measure": 38,
+          "voice": "sung",
+          "lyric_lines": [
+            "Ru- -the, das"
+          ]
+        },
+        {
+          "measure": 39,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein, das"
+          ]
+        },
+        {
+          "measure": 40,
+          "voice": "sung",
+          "lyric_lines": [
+            "Fisch- -lein zap- -pelt"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      },
+      {
+        "id": "die-forelle-ku-015",
+        "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        },
+        {
+          "reference_id": "R002",
+          "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "faf7df1b335bb294599f",
+    "question": "트릴은 어떤 방식으로 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      137,
+      137
+    ],
+    "language": "ko",
+    "answer": "트릴은 악보에 표시된 형태로 연습한 뒤, 제시된 대로 마무리해 끝맺는 것이 중요합니다. 느린 템포로 연습하는 것도 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 137,
+          "voice": "sung",
+          "lyric_lines": [
+            "can-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-019",
+        "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            137,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              137,
+              137
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

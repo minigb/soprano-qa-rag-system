@@ -1,0 +1,52 @@
+{
+  "output": "evaluation/ku_background_2026-10-31/comparison-e9",
+  "generation_python": "/home/minhee/miniconda3/envs/soprano-qa/bin/python",
+  "metric_python": "/home/minhee/.cache/soprano-rag-eval-venv/bin/python",
+  "cases": "evaluation/ku_background_2026-10-31/all_cases.json",
+  "expert_cases": "evaluation/ku_background_2026-10-31/expert_cases.json",
+  "metric_settings": "evaluation/ku_background_2026-10-31/bertscore-development-b/selected_settings.json",
+  "warmup_case": "expert-kim-die-forelle-03__no-range",
+  "systems": [
+    {
+      "name": "candidate",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e9/snapshots/hardened",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e9/snapshots/hardened/settings.json",
+      "variant": "hardened",
+      "source_commit": "efa6968211d7e5209741fca83cec8b8970d08a4d",
+      "settings_sha256": "e831003800e40a456c44774145a15e63913aaf62816dc8008d23ac8ee395b777"
+    },
+    {
+      "name": "pre-security",
+      "root": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/baseline-pre-security/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "f3074700103d60cf4bd8862fd655e51656f66f0c",
+      "settings_sha256": "a0f387b7117129a6c5a742f2dea3d314102462a398645f04742c93033f34e329"
+    },
+    {
+      "name": "main-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/presecurity/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "29fe3e2db66dde5bb2604652c8f4f8daddb0de46",
+      "settings_sha256": "fdbe2cdfef553abc2165fff89a8bd1633c7cb6028bb5f4a562e73a70f21a7945"
+    },
+    {
+      "name": "strict-baseline",
+      "root": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original",
+      "settings": "evaluation/ku_background_2026-10-31/runtime/probe-e8-final/snapshots/original/settings.json",
+      "variant": "original",
+      "source_commit": "302f8d1afe08e9965a9ba3009a5da2c0f03af49c",
+      "settings_sha256": "68ba9d53530848f1c36e30591cd39719e65ccdc122b1e9a45593de5a97fce98b"
+    }
+  ],
+  "protocol": {
+    "repetitions": 1,
+    "ordering": "serial systems; same seed-shuffled cases within each system",
+    "metric_selection": "development B only; unchanged for E8 and validation",
+    "indirect_attacks": "forced model exposure after clean retrieval; not retrieval poisoning",
+    "case_count_per_system": 290,
+    "validation_expert_requests": 62,
+    "no_candidate_changes_during_comparison": true
+  }
+}

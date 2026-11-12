@@ -1,0 +1,565 @@
+[
+  {
+    "id": "d9f80d59d721bd300ecb",
+    "question": "Lindoro mio sara를 부를 때 가사는 어떻게 붙이면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      22,
+      24
+    ],
+    "language": "ko",
+    "answer": "꾸밈음은 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래해야 합니다.\n\n가사 'Lindoro mio sara'는 22-24절에서 각 박자에 놓인 꾸밈음에서 발음이 시작됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "-gò. Sì, Lin-",
+            "glow, Yes, Lin-"
+          ]
+        },
+        {
+          "measure": 23,
+          "voice": "sung",
+          "lyric_lines": [
+            "-do- -ro mi- -o sa-",
+            "-do- -ro shall be"
+          ]
+        },
+        {
+          "measure": 24,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, lo giu-",
+            "mine, I have"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-007",
+        "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            22,
+            24
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "Lindoro mio sara는 각 박자에 놓인 꾸밈음(grace note)에서 발음을 시작한다. 꾸밈음도 아주 짧은 음표이며 부점 리듬을 띠고 있으므로, 이 리듬을 정확히 지키면서 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              24
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0227c224a391d8d83e61",
+    "question": "악보의 페르마타 표시와 음원 속 음 길이가 서로 안 맞으면 어떻게 하면 좋을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      1,
+      2
+    ],
+    "language": "ko",
+    "answer": "악보의 페르마타 표시와 음원의 음 길이가 다르다면, 이는 악보에 따른 편곡 차이로 볼 수 있습니다. 페르마타가 있는 경우와 없는 경우 모두 허용되므로, 두 버전 모두를 참고하여 연습하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 1,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 2,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "72eac9954974443508b7",
+    "question": "트릴을 구사하려면 어떤 가창 기법을 사용해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "트릴을 구사하려면 느린 템포로 연습하는 것이 좋습니다. 트릴을 마무리할 때는 악보에 표기된 형태대로 끝내는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-019",
+        "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            137,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "악보에 나온 형태의 트릴은 충분히 트릴한 뒤 제시된 대로 마무리해 끝맺는 것이 중요하며, 느린 템포로 연습할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              137,
+              137
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "93be5c0c1265b346511c",
+    "question": "노래하지 않는 간주 부분을 어떤 행동과 표현으로 채우면 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      44,
+      55
+    ],
+    "language": "ko",
+    "answer": "노래하지 않는 간주 부분에서는 앞뒤 가사의 내용과 감정 변화를 살펴보고, 표정, 시선, 움직임 등으로 반응하는 것이 좋습니다. 이는 간주가 단순한 쉼이 아니라 극적 전환의 일부로 작용할 수 있기 때문입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 44,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 45,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 46,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 47,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 48,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 49,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 50,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "no_voice_staff",
+          "lyric_lines": []
+        },
+        {
+          "measure": 55,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b211845e2529e97419d2",
+    "question": "페르마타는 어느 정도까지 늘여 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "페르마타는 해당 음의 길이의 2~3배로 늘려 불러야 하며, 'l’amor'의 경우 악센트가 놓인 'mor'를 강조하면서 같은 방식으로 부릅니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-013",
+        "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "24479b7ed5ac93b708d5",
+    "question": "노래하기 힘들거나 숨이 부족할 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "고음이나 도약음에서 힘을 너무 쓰면 다음 프레이즈에서 숨이 부족해질 수 있습니다. 직전 프레이즈의 끝을 부드럽게 처리하고, 쉼표를 충분히 활용해 호흡을 준비하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-040-ku-01",
+        "text": "고음이나 도약음에서 지나치게 숨을 많이 사용하면 그 순간에는 음을 낼 수 있더라도 이후 프레이즈에 필요한 호흡을 소진하게 되죠. 따라서 문제의 원인이 힘들거나 숨이 부족한 프레이즈 그 자체에 있다고 보기보다는 그 직전 프레이즈에서 불필요하게 많은 에너지를 사용하고 있지는 않은지를 먼저 확인해야 합니다.\n\n예를 들어 직전 프레이즈의 첫음인 2분음표의 끝을 힘주어 끊기보다는 자연스럽게 풀어주고, 이어서는 3박자의 4분쉼표를 충분히 활용하여 다음 프레이즈를 위한 호흡을 준비하는 것이 맞습니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-008",
+        "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            15,
+            23
+          ],
+          [
+            32,
+            35
+          ],
+          [
+            44,
+            52
+          ]
+        ]
+      },
+      {
+        "id": "nella-fantasia-ku-009",
+        "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.\n가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              15,
+              23
+            ],
+            [
+              32,
+              35
+            ],
+            [
+              44,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-008"
+        },
+        {
+          "reference_id": "R002",
+          "text": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0cedf09b9fc11cfd4260",
+    "question": "‘l’erbe ed i fior’의 가사는 음정에 어떤 방식으로 붙여야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      80,
+      80
+    ],
+    "language": "ko",
+    "answer": "‘l’erbe ed i fior’의 가사는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 다음 단어 i에 가깝게 해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 80,
+          "voice": "sung",
+          "lyric_lines": [
+            "l’er- -be ed i"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-007",
+        "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            80,
+            80
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              80,
+              80
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-007"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

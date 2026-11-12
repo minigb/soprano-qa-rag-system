@@ -1,0 +1,22 @@
+{
+  "reviewer": "Codex; diagnostic source comparison, not independent expert adjudication",
+  "scope": "Read all four material-drift flags with actual source texts, all 11 previously flagged G answers, previous five refusals, p/PP and col-canto cases. Claude scores unchanged.",
+  "remaining_material": {
+    "expert-kim-in-flowery-clouds-02__m11-12": "Two pronunciation recommendations are merged without the condition that 꼬-빠-람 makes the ㅊ hard to stress or the 꼬-ㅊ-빠-람 fix.",
+    "expert-kim-la-capinera-14__m83-85": "The feeling of a doubled consonant becomes an instruction to pronounce it twice.",
+    "expert-kim-in-flowery-clouds-06__no-range": "Transposition permission broadens to arrangement and specific original-key exceptions become a claim about classical/vocal music generally.",
+    "expert-yeon-la-capinera-11__no-range": "The word-completion requirement loses its condition and appears to cover the 아- option too."
+  },
+  "improved_examples": {
+    "fermata": "No invented score-priority rule in J m1-2; both versions retained.",
+    "col_canto": "Singer changes timing/figuration; accompaniment follows; a-tempo contrast explicit.",
+    "p_PP": "Both p=piano and PP=pianissimo accounts retained. The final sentence adds a speculative edition/interpretation explanation, so this is not flawless.",
+    "previous_refusals": "All five answer and are judged faithful; naturalness3.6/4. The Die Forelle dynamics answer still lacks practical scene-level details."
+  },
+  "minor_limits": [
+    "Grace-note answer omits the four-sixteenth realization and repeats 의도 wording.",
+    "Larghetto answer still loses a condition and uses plain 다 endings.",
+    "Some source contrasts become less explicit without meeting the judge material-drift threshold."
+  ],
+  "decision": "Meaning improves versus G, but four material errors and attack failures remain. Do not describe the source-preservation or injection problem as solved."
+}

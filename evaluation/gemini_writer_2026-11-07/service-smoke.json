@@ -1,0 +1,153 @@
+{
+  "wall_seconds": 13.014973299985286,
+  "local_writer_loaded": 0,
+  "response": {
+    "piece_id": "una-voce-poco-fa",
+    "scope": "whole_piece",
+    "measure_range": null,
+    "language": "ko",
+    "answer_language": "ko",
+    "evidence_language": "ko",
+    "retrieval_query": "col canto에서는 누가 누구를 따라가나요?",
+    "answer": "*col canto*에서는 피아노 또는 오케스트라 파트인 반주부가 성악가를 따라갑니다. \n\n*Col canto*는 이탈리아어로 '가수와 함께'라는 뜻으로 악보의 피아노 또는 오케스트라 파트에 표시되어 있으며, 이 부분에서는 반주부가 성악가의 프레이징과 표현, 변주를 기다려 맞춥니다. 특히 *col canto*와 *a tempo*가 번갈아 나오는 부분의 *col canto*에서는 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있습니다. \n\n한편 멜로디 파트에 표시되는 *a piacere*('선호하는 대로'라는 뜻)에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율합니다. *col canto*와 *a piacere* 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니므로, 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋습니다.",
+    "generation_mode": "llm_single_pass",
+    "answer_basis": "retrieved_evidence",
+    "unavailable_reason": null,
+    "generation_validation_warning": null,
+    "score_context": null,
+    "has_primary_grounding": true,
+    "has_selected_range_grounding": null,
+    "has_confirmed_local_examples": false,
+    "pipeline": "soprano_qa",
+    "model": {
+      "backend": "vertex_gemini",
+      "model": "gemini-4-argon",
+      "location": "global",
+      "thinking_level": "LOW",
+      "query_translation_backend": "llama-cpp-python",
+      "query_translation_model": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf"
+    },
+    "generation_metadata": {
+      "provider": "vertex_gemini",
+      "requested_model": "gemini-4-argon",
+      "model_version": "gemini-4-argon",
+      "finish_reason": "STOP",
+      "prompt_block_reason": null,
+      "elapsed_seconds": 12.133893960970454,
+      "usage": {
+        "candidates_token_count": 251,
+        "candidates_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 251
+          }
+        ],
+        "prompt_token_count": 2098,
+        "prompt_tokens_details": [
+          {
+            "modality": "TEXT",
+            "token_count": 2098
+          }
+        ],
+        "total_token_count": 2349,
+        "traffic_type": "ON_DEMAND"
+      }
+    },
+    "retrieval": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "hybrid",
+      "query_route": "hybrid",
+      "route_reason": "dense_result_returned",
+      "ambiguous_candidates": [],
+      "dense_attempted": true,
+      "dense_contributed": true
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-021",
+        "piece_id": "una-voce-poco-fa",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "악보에서 col canto는 피아노 또는 오케스트라 파트에, a piacere는 멜로디 파트에 표시되어 있다. Col canto는 이태리어로 ‘가수와 함께’, a piacere는 ‘선호하는 대로’라는 뜻이며, 두 표기 모두 일정한 속도만큼 느리게 하라는 지시는 아니다. col canto에서는 반주부가 성악가의 프레이징과 변주를 기다려 맞추고, a piacere에서는 성악가가 멜로디와 꾸밈음을 유연하게 표현하되 반주부와 진행을 조율한다. 따라서 미리 정한 양만큼 일률적으로 늦추기보다 프레이즈와 꾸밈음에 필요한 범위에서 템포를 유연하게 조절하고 반주자와 합의하는 것이 좋다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": "whole_piece",
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 19.962285,
+        "text_score": 12.295619,
+        "dense_score": 0.67465,
+        "dense_content_score": 0.709867,
+        "fusion_score": 0.994355,
+        "retrieval_mode": "hybrid",
+        "measure_score": 1.0,
+        "alias_score": 0.333333,
+        "concept_coverage": 1.0,
+        "content_concept_coverage": 1.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [
+          "kim-una-voce-poco-fa-16"
+        ],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-022",
+        "piece_id": "una-voce-poco-fa",
+        "kind": "expert",
+        "evidence_type": "expert_annotation",
+        "usage_class": null,
+        "topic": "",
+        "question": "",
+        "text": "col canto와 a tempo가 번갈아 나오는 부분에서는, col canto에서 반주부가 성악가의 표현과 변주를 기다려 맞추는 가운데 성악가가 박자와 음형을 자유롭게 바꿀 수 있다. a tempo에서는 다시 원래의 박자와 리듬으로 돌아와 노래한다.",
+        "measure_ranges": [],
+        "is_local": false,
+        "measure_scope": "global",
+        "measure_status": "whole_piece",
+        "scope_match": "general_evidence",
+        "generation_role": "general_support",
+        "selected_range_claim_authority": null,
+        "in_requested_scope": true,
+        "score": 21.110473,
+        "text_score": 13.443806,
+        "dense_score": 0.592952,
+        "dense_content_score": 0.602561,
+        "fusion_score": 0.989516,
+        "retrieval_mode": "hybrid",
+        "measure_score": 1.0,
+        "alias_score": 0.333333,
+        "concept_coverage": 1.0,
+        "content_concept_coverage": 1.0,
+        "answer_relation_score": 0.0,
+        "semantic_match_type": "strict",
+        "source_ids": [
+          "kim-una-voce-poco-fa-16",
+          "kim-una-voce-poco-fa-18"
+        ],
+        "web_source_ids": [],
+        "sumijo_source": null,
+        "claim_ids": [],
+        "sources": [],
+        "generated_text_license": null,
+        "attributions": []
+      }
+    ],
+    "evidence_notices": []
+  }
+}

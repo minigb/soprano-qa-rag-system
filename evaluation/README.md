@@ -5,6 +5,53 @@ Run every command in this document from the repository root with the
 pieces: Die Forelle, In Flowery Clouds, La Capinera, Nella fantasia, and Una
 voce poco fa.
 
+## Expanded460 comparison (2026-11-02)
+
+The [new paired evaluation](expanded_460_2026-11-02/report.md) runs all460 existing
+requests on native E37 and pre-security pipelines, with fresh Claude Opus5.5
+meaning/naturalness judgments. Material source drifts fall27→0, but naturalness
+falls3.50→2.89/4. Expert original-validation62 BERTScore is0.972987. Two overlength
+paraphrase answers are explicitly unscorable and contribute zero to conservative
+full-denominator averages; no answer is truncated. This is a reused internal
+benchmark, with a documented7-record native corpus difference. See the report
+for full answers, methodology and remaining defects.
+
+## Meaning fidelity (2026-10-31 follow-up)
+
+The [targeted audit](meaning_fidelity_2026-10-31/report.md) compares 41 cases per
+system, including exact historical questions and English demo examples. It
+finds ten new material regressions; the earlier average quality improvement
+does not establish meaning preservation. Inspect the [interactive comparison](meaning_fidelity_2026-10-31/review.html)
+for actual answers, evidence and explicit editorial alternatives.
+
+```bash
+python evaluation/meaning_fidelity_2026-10-31/review.py summarize
+python evaluation/meaning_fidelity_2026-10-31/export_prompts.py --check
+```
+
+These commands validate frozen reviews/prompts without fresh inference. This
+audit is purposively selected and unblinded; its counts are not production accuracy.
+
+## Quality refinement (2026-10-31)
+
+The [refinement report](quality_refinement_2026-10-31/report.md) compares the
+current secured baseline `29fe3e2` with Candidate F on 120 bilingual cases
+(240 requests). It includes all delivered-answer reviews, false refusals,
+attack success, latency, individual regressions and a separate 25-request
+static-demo audit. The frozen inventory is developer-authored, not held out.
+The raw labels `original` and `hardened` refer to this comparison's two systems,
+not to the older October 25 revisions below.
+
+Reproduce scores and paired details from the saved raw responses and reviews:
+
+```bash
+python evaluation/summarize_refinement.py evaluation/quality_refinement_2026-10-31
+```
+
+The report links source/model hashes, manifests, development attempts and
+limitations. Private rejected drafts and local model/cache directories are
+excluded from Git. No fresh inference is needed to reproduce the summary.
+
 ## Bilingual security comparison (2026-10-25)
 
 The [comparison report](security_comparison_2026-10-25/report.md) evaluates

@@ -1,0 +1,208 @@
+[
+  {
+    "id": "c573e0fda2515ddd2f5c",
+    "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      80,
+      80
+    ],
+    "language": "en",
+    "answer": "In ‘l’erbe ed i fior’, since the final vowel of the preceding word and the initial vowel of the following word are both e, they can be smoothly connected as a legato. The d in ed is pronounced as close to the following i as possible.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 80,
+          "voice": "sung",
+          "lyric_lines": [
+            "l’er- -be ed i"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-007",
+        "text": "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            80,
+            80
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-001",
+        "text": "성악이 ‘Col ritornar’로 시작하는 대목에서는 피아노/오케스트라 부분에서 반복되는 forte (f)와 piano (p)에 유의하고, 피아노 파트의 pianissimo (pp)를 참고하여 pianissimo (pp)로 시작하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            11,
+            13
+          ],
+          [
+            78,
+            81
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-020",
+        "text": "《La capinera》를 피아노와 성악만으로 구성해 연주할 경우, Flauto(Flute) 부분은 피아노 반주가 대체할 수 있다.",
+        "role": "general_context",
+        "measure_ranges": []
+      },
+      {
+        "id": "la-capinera-ku-028",
+        "text": "테크닉이 필요하거나 스케일·트릴 등의 기교를 더하는 부분에서는 가사를 붙여 부르기 어려울 수 있다. 이때는 구절의 특성에 따라 ‘아-’ 또는 해당 단어의 모음으로 선율을 이어갈 수 있다. 다만 단어의 모음으로 이어 부를 경우에는 프레이즈가 끝나기 전에 반드시 해당 단어를 온전히 발음해 마무리해야 한다.\n",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "‘l’erbe ed i fior’에서는 앞 단어의 끝 모음과 뒤 단어의 첫 모음이 모두 e이므로 부드럽게 연음할 수 있으며, ed의 d 발음은 가능하면 다음 단어 i에 가깝게 한다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "8f8f1bbc7f76069bccaf",
+    "question": "How long should the final note be held?",
+    "piece_id": "nella-fantasia",
+    "measure_range": [
+      34,
+      35
+    ],
+    "language": "en",
+    "answer": "I could not find grounded evidence in the reviewed materials to answer this question.",
+    "score_context": null,
+    "evidence": [],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "9a12a9b36f15212a5a95",
+    "question": "How slowly should Larghetto be taken?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      74,
+      79
+    ],
+    "language": "en",
+    "answer": "Larghetto is generally slowed down to a degree that allows each phrase to be sung sufficiently, rather than singing very slowly as per the instruction. Tempo can vary according to the performer's interpretation, and when aiming for a very slow tempo like Larghetto, it is advisable to emphasize each note sufficiently while keeping the sentence flowing.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 74,
+          "voice": "sung",
+          "lyric_lines": [
+            "나 비"
+          ]
+        },
+        {
+          "measure": 75,
+          "voice": "sung",
+          "lyric_lines": [
+            "처"
+          ]
+        },
+        {
+          "measure": 76,
+          "voice": "sung",
+          "lyric_lines": [
+            "럼"
+          ]
+        },
+        {
+          "measure": 77,
+          "voice": "sung",
+          "lyric_lines": [
+            "쓰 러"
+          ]
+        },
+        {
+          "measure": 78,
+          "voice": "sung",
+          "lyric_lines": [
+            "지 게"
+          ]
+        },
+        {
+          "measure": 79,
+          "voice": "sung",
+          "lyric_lines": [
+            "하 - 여"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-012",
+        "text": "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            74,
+            79
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 Larghetto는 지시대로 아주 느리게 노래하기보다 한 마디 한 마디를 충분히 노래할 수 있도록 조금 여유를 가지는 정도로 느려진다. 템포는 연주자의 해석에 따라 달라질 수 있으며, Larghetto처럼 아주 느린 템포로 가려면 각각의 음을 충분히 강조하면서도 문장이 이어지도록 하는 것이 좋다."
+    ],
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

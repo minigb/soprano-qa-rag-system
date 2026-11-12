@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-10-31T14:14:16.758602Z",
+  "contract_id": "598e11be405be32c09cd2555de1dee8abcfeaa28505a3b50a25babfe69b89ad1",
+  "contract": {
+    "schema_version": 1,
+    "runner_sha256": "c01ce89a8ba7fcfc339f8d8e634e076f2023b7982084524fee9903556e7da11f",
+    "helper_sha256": "271890735ea22725a888db58fbe4d28f5444eeac803733d51fcecd5b22c399eb",
+    "source_sha256": "5dc4a6b8210631332628c9548b1964a69864fe204e34e348b746f836722b3d7c",
+    "settings_sha256": "0ecabb8fbb40bdb192e15f48794a15dc27f0940da6fde071f6c11eeed9dc661a",
+    "cases_sha256": "80886b7fe20412414740d6e374d0b11798947f3e041d238c3c8ce8470f310210",
+    "variant": "hardened",
+    "warmup_case": "expert-kim-die-forelle-03__no-range",
+    "usage_rollout": null
+  },
+  "sessions": [
+    {
+      "started_at": "2026-10-31T14:14:16.758657Z",
+      "private_trace_file": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/probe-e13.jsonl.private-traces.jsonl",
+      "ready": {
+        "settings": {
+          "dataset_root": "/home/minhee/soprano-qa-dataset",
+          "corpus_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e13/snapshots/hardened/data/corpus.json",
+          "stats_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e13/snapshots/hardened/data/corpus_stats.json",
+          "feature_overrides_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e13/snapshots/hardened/data/feature_overrides.json",
+          "web_export_files": [
+            "research-open.jsonl",
+            "research-conditional.jsonl"
+          ],
+          "model_repo_id": "Qwen/Qwen3-14B-GGUF",
+          "model_filename": "Qwen3-14B-Q6_K.gguf",
+          "model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-14B-Q6_K.gguf",
+          "embedding_model_repo_id": "Qwen/Qwen3-Embedding-0.6B-GGUF",
+          "embedding_model_filename": "Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_model_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+          "embedding_cache_path": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/evaluation/ku_background_2026-10-31/runtime/probe-e13/snapshots/hardened/data/embedding-cache.json",
+          "retrieval": {
+            "mode": "hybrid",
+            "dense_min_score": 0.44,
+            "dense_min_content_score": 0.43,
+            "dense_max_alias_gap": 0.2,
+            "dense_candidate_k": 24,
+            "lexical_weight": 0.35,
+            "dense_weight": 0.65,
+            "rrf_k": 60,
+            "query_cache_size": 128,
+            "n_ctx": 2048,
+            "n_batch": 2048,
+            "embedding_batch_size": 8,
+            "n_gpu_layers": -1,
+            "query_instruction": "Given a Korean question about soprano singing and musical scores, retrieve the relevant evidence passage that answers the question.",
+            "source_priority": true
+          },
+          "llm": {
+            "n_ctx": 8192,
+            "n_gpu_layers": -1,
+            "temperature": 0.0,
+            "top_p": 0.8,
+            "max_tokens": 768,
+            "source_preservation": "verbatim_or_translation"
+          },
+          "web_coaching": {
+            "enabled": true,
+            "generation_supplement": 4,
+            "generation_supplement_gate": "dense_margin",
+            "generation_supplement_margin": 0.05
+          },
+          "score_context": {
+            "lyrics": true
+          },
+          "sumijo": {
+            "enabled": true,
+            "dense_min_score": 0.6,
+            "dense_margin": 0.04
+          }
+        },
+        "chat_format": "chat_template.default",
+        "model_name": "Qwen3 14B Instruct"
+      },
+      "status": "complete",
+      "finished_at": "2026-10-31T14:21:44.461125Z"
+    }
+  ]
+}

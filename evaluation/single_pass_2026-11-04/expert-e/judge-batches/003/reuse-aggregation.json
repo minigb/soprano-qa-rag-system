@@ -1,0 +1,56 @@
+{
+  "contract": {
+    "packets_sha256": "692d84bff4af938a903a9d707feb27ff2de432f33cec5710254034acbf6e5591",
+    "sources_in_priority_order": [
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/single_pass_2026-11-04/expert-e/judge-batches/000",
+        "aggregation_sha256": "0c6e962501c0d6eb43bae6d36097b2c46d26044d92362ab05db82cfbd12b7592",
+        "assessments_sha256": "d62a669a13d54e892d43ad04e0245760b70e296c3a388324839de035ea98d8b9"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/single_pass_2026-11-04/expert-e/judge-batches/001/fresh",
+        "aggregation_sha256": "e78126e500e5ca8f5155c52efdda58801ae499f2a04d16205f608ad298bd9ee8",
+        "assessments_sha256": "046a681ff9a3824a1f99cb5985cbf6705d6f73f7f3257b2f8f1b0467379ca48c"
+      },
+      {
+        "directory": "/home/minhee/.codex/worktrees/rag-helpful-responses/soprano-qa-rag-system/evaluation/single_pass_2026-11-04/expert-e/judge-batches/002/fresh",
+        "aggregation_sha256": "b34213976cae2ff1f9dd314358eaad9707d48e095962cad6d828d7e6a2d4f253",
+        "assessments_sha256": "c63c53b743051244f7b7b17c27493f0022086ef70ff6d77ddaf9ad303665e960"
+      }
+    ],
+    "model": "claude-opus-5-5",
+    "workers": 3,
+    "runner_sha256": "5adeee61b6ffb473b9a2687a440e0858f47e3935f5f973d8a7506f96ba5a12ac",
+    "judge_runner_sha256": "63a97bb4733f6a27c94ca50fa83f935de53cb2480e5a3d93ef719fe033ead319",
+    "policy": "Exact full packet identity only; retain the first valid prior judgment regardless of score."
+  },
+  "packets": 20,
+  "reused": 0,
+  "fresh": 20,
+  "reused_ids": [],
+  "fresh_ids": [
+    "8344960f4c0e05c669ec",
+    "b55fe3dbdb3c5ab0a2af",
+    "e0bb493d6106102f999d",
+    "70ff49015c21ee9a6f9b",
+    "92b085f90988037b1ca4",
+    "8dbe2502ea8cfd00b619",
+    "09c8e0ca2ac13a7308a8",
+    "fc5845fae9de85aeb691",
+    "e8d4b8d1f03169d92ed2",
+    "246ec6a1296e0d1fb185",
+    "b3090189d316e844a192",
+    "3ccbcd9009b770f72686",
+    "fc2fef43431c135cc3ee",
+    "c76106ce5a1fe783a89d",
+    "56b8c8baca10376cf4f2",
+    "c040ca63a8b77e0871a4",
+    "193fcbbcbea5075086a2",
+    "4cab8beec051ff279cbc",
+    "a6472e15d0820998d591",
+    "d30e0ba65aad19ecc6c0"
+  ],
+  "assessment_sha256": "674508e545b2e8ff724635ce527b85b7adffad0057f8330f57e3eb421667b4de",
+  "fresh_aggregation_sha256": "729814dcdf7dc9451ecd1530af2fa5978de4555fc43b642655ccaac139b1286d",
+  "note": "Rows retain their original contract/model/timing. Reused assessments are not new CLI calls."
+}

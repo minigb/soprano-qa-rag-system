@@ -1,0 +1,29 @@
+{
+  "data": {
+    "status": "passed",
+    "cases": 460,
+    "full_answers_verified": 920,
+    "expert_references": "exact",
+    "judge_and_score_mapping": "exact",
+    "unscorable_scores_are_null": 2,
+    "private_execution_metadata": "excluded"
+  },
+  "latest": {
+    "cases": 460,
+    "full_answers_verified": 920,
+    "left": "unchanged",
+    "right": "exact current 14B service outputs",
+    "production_code": "unchanged",
+    "stale_scores": "excluded",
+    "notes": "separate version keys"
+  },
+  "helpful": {
+    "cases": 460,
+    "full_answers_verified": 920,
+    "left": "unchanged",
+    "right": "exact current 14B service outputs",
+    "implementation": "capture commit verified against frozen source hashes",
+    "stale_scores": "excluded",
+    "notes": "separate version keys"
+  }
+}

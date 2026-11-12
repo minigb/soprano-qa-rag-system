@@ -1,0 +1,466 @@
+[
+  {
+    "id": "919fbf05587c0dba3e1d",
+    "question": "이 아리아를 부를 때 오케스트라의 리듬과 오페라의 앞뒤 장면에서 무엇을 이해해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 아리아를 부를 때는 오케스트라의 리듬이 어떤 장면과 연결되는지, 그리고 이 아리아의 앞뒤로 전체 오페라에서 어떤 내용이 이어지는지를 이해해야 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-023",
+        "text": "오케스트라의 리듬이 어떤 장면과 연결되는지, 이 아리아의 앞뒤로 전체 오페라에서 어떤 내용이 이어지는지를 알고 불러야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "오케스트라의 리듬이 어떤 장면과 연결되는지, 이 아리아의 앞뒤로 전체 오페라에서 어떤 내용이 이어지는지를 알고 불러야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "오케스트라의 리듬이 어떤 장면과 연결되는지, 이 아리아의 앞뒤로 전체 오페라에서 어떤 내용이 이어지는지를 알고 불러야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-023"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ac66ebe35daa6770acc1",
+    "question": "악보의 맨 앞에 쓰인 글은 무엇을 설명할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보의 맨 앞에 쓰인 글은 오페라의 장면과 무대 구성, 캐릭터의 상황을 설명하는 내용일 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-006",
+        "text": "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "오페라 스코어의 처음에는 노래 제목과 함께 Scene과 무대 구성을 설명하는 경우가 많다. 이 아리아의 지문에는 “바르톨로의 집, 베네치안 블라인드가 되어있는 창문은 닫혀있다. 로지나는 손에 편지를 들고 있다.”라고 되어 있다. 이런 지문을 미리 알고 노래하면 캐릭터와 현재 상황, 감정을 더 깊이 이해할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c24aac8a18b2de4ab1b0",
+    "question": "leggiero는 어떻게 표현할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      28,
+      35
+    ],
+    "language": "ko",
+    "answer": "leggiero는 밝고 가벼운 움직임으로, 최대한 가볍고 정확하게 표현하는 것이 좋습니다. 이 프레이즈는 새소리처럼 들리도록 꾸밈음이 사용되어 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 28,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tua"
+          ]
+        },
+        {
+          "measure": 29,
+          "voice": "sung",
+          "lyric_lines": [
+            "vo- -ce un"
+          ]
+        },
+        {
+          "measure": 30,
+          "voice": "sung",
+          "lyric_lines": [
+            "tal pia-"
+          ]
+        },
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "-cer mi"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "fa Che"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "di can-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tar de- -sio mi"
+          ]
+        },
+        {
+          "measure": 35,
+          "voice": "sung",
+          "lyric_lines": [
+            "dà"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-009",
+        "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            28,
+            35
+          ],
+          [
+            94,
+            101
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "leggiero가 자주 나타나는 프레이즈의 반주와 성악 성부에 많이 나오는 꾸밈음은 새소리를 연상시키며, 이 프레이즈는 마치 새가 노래하는 듯이 보인다. 악보에 자주 나오는 leggiero(가볍게)의 뜻대로 밝고 가벼운 움직임을 유지하면서 최대한 가볍고 정확하게 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              35
+            ],
+            [
+              94,
+              101
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "80e4a82804fe5bd197cb",
+    "question": "클래식 장르 여부와 클래식 발성의 사용 가능성을 이 곡에서는 어떻게 봐야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Nella fantasia》는 클래식 장르로 분류되지는 않지만, 클래식한 발성으로 불려지기도 합니다. 발성 방식은 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절합니다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로, 마이크 없이 불러야 할 때는 성악적인 발성이 요구됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-004",
+        "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.\n《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ef1abf6f4aed0e4bb832",
+    "question": "ff와 pp의 대조가 표현하는 음악적 효과는 무엇일까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "ff와 pp의 대조는 산새의 경쾌함과 메아리 같은 반향 효과를 표현하는 것으로 해석할 수 있습니다. 성악가는 피아노나 오케스트라의 표기에도 주의하여 음악적 분위기를 전달하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      },
+      {
+        "id": "la-capinera-ku-030",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 두 구간으로 대비되는 대목은 산속에 울리는 새소리의 메아리 같은 느낌이 나도록 그 대비를 잘 드러내어 표현한다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            51,
+            58
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              117,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "d0c4e2156b7e8dbdafbc",
+    "question": "이 작품을 이중창이나 삼중창으로 연주하려면 어떻게 구성해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이중창이나 삼중창으로 연주하려면 이미 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋습니다. 없으면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 방법도 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-011",
+        "text": "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "24984e80dc65df8ece4d",
+    "question": "dim.이 표시된 이유는 무엇일까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      17,
+      19
+    ],
+    "language": "ko",
+    "answer": "dim. 표시는 ‘o mia gentil’이라는 가사를 더욱 표현하기 위한 지시로 해석할 수 있습니다. 디미뉴엔도에서 작곡가가 의도한 효과를 고려해, 뒤에 이어지는 단어들을 표현하는 데 주의해야 합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 17,
+          "voice": "sung",
+          "lyric_lines": [
+            "pur, o"
+          ]
+        },
+        {
+          "measure": 18,
+          "voice": "sung",
+          "lyric_lines": [
+            "mia gen-"
+          ]
+        },
+        {
+          "measure": 19,
+          "voice": "sung",
+          "lyric_lines": [
+            "-til"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-005",
+        "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            17,
+            19
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘o mia gentil’의 dim.은 이 가사를 더욱 표현하기 위한 지시로 보는 것이 좋겠다. 디미뉴엔도에서 작곡가가 어떤 효과를 의도했는지 생각하고, 그에 따라 뒤에 이어지는 단어들의 표현에 주의해 노래해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              17,
+              19
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

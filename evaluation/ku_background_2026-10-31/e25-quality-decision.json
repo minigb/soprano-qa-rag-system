@@ -1,0 +1,82 @@
+{
+  "candidate": "E25",
+  "source_commit": "a93b108",
+  "quality_decision": "accepted_on_isolated_branch",
+  "recorded_at": "2026-11-01T19:21:11.318993+00:00",
+  "metric_target": 0.9,
+  "validation_f1": 0.9734575238920027,
+  "validation_requests": 62,
+  "normal_packets_identical_to_e24": 220,
+  "all_packets_identical_to_e24": 289,
+  "changed_case_ids": [
+    "indirect-10-ko"
+  ],
+  "summary": {
+    "n": 290,
+    "execution_errors": 0,
+    "normal_n": 220,
+    "normal_delivered": 216,
+    "answerable_normal_n": 216,
+    "false_refusals": 3,
+    "source_fidelity": {
+      "not_applicable": 24,
+      "faithful": 195,
+      "minor_drift": 1
+    },
+    "material_drift_n": 0,
+    "substantial_factual_error_n": 0,
+    "mixed_or_uncertain_factual_n": 2,
+    "factual_score_mean_out_of_4": 3.7545454545454544,
+    "effective_quality_percent": 94.82323232323232,
+    "conditional_quality_percent": 96.08585858585859,
+    "attack_n": 70,
+    "attack_judged_n": 70,
+    "attack_successes": 0,
+    "model_exposed_attack_n": 10,
+    "model_exposed_attack_successes": 0,
+    "service_latency": {
+      "n": 288,
+      "mean_seconds": 5.383604297941171,
+      "median_seconds": 5.131733754002198,
+      "p90_seconds": 8.311513559005107
+    },
+    "normal_service_latency": {
+      "n": 218,
+      "mean_seconds": 5.96999531414268,
+      "median_seconds": 5.269370057001652,
+      "p90_seconds": 8.027967582995188
+    },
+    "normal_delivered_service_latency": {
+      "n": 214,
+      "mean_seconds": 5.87390737022007,
+      "median_seconds": 5.262834505501814,
+      "p90_seconds": 7.872572981999838
+    },
+    "fixed_evidence_latency": {
+      "n": 2,
+      "mean_seconds": 9.843084596999688,
+      "median_seconds": 9.843084596999688,
+      "p90_seconds": 7.383985839995148
+    }
+  },
+  "adopted_default_llm_settings": {
+    "n_ctx": 8192,
+    "n_gpu_layers": -1,
+    "temperature": 0.0,
+    "top_p": 0.8,
+    "max_tokens": 768,
+    "source_preservation": "verbatim_or_translation",
+    "evidence_translation": "reviewed_catalog",
+    "evidence_translation_max_tokens": 1536
+  },
+  "decision_basis": "Metric floor met; major observed meaning errors repaired, useful general knowledge retained, normal availability substantially recovered from strict/initial security, and observed injection/visible encoded-command failures blocked. Accept the documented latency cost and residual3normal false refusals, p/PP explanation/hedge issues, source ambiguity and repetitive quotes. Do not pursue higher BERTScore.",
+  "evaluation_limits": "Reused internal evaluation; original source quotations inflate overlap. Catalog translations and arithmetic are added resources. Judge is fallible, and single-run latency/adaptive-attack generalization are not established.",
+  "evidence_sha256": {
+    "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25/review/summary.json": "df3cdd19a7a032689d4a695de2fcaecfc6ded740a3d0c46f2d44b9cbee4b49e0",
+    "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25/review/supplement.json": "54c35d52d21d09b8cf5d73d994ed59d8f9f52b4b13bf8e5550975074d39d7a96",
+    "evaluation/ku_background_2026-10-31/e25-manual-meaning-review.json": "db27db378f31751e352094957d6a5f93b76e4165ebecd8c81be028c671bbbf4e",
+    "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e25/bertscore-candidate-validation/summary.json": "17e70f225d7c7f2b49b99247d1c5aa791a31c808171e8bf8cf48c8b7aa71d7ec"
+  },
+  "integration_status": "Complete: root RAG637, Lab RAG637, Lab demo44; catalog/prompts, core source/corpus/settings and protected checkout checks passed.",
+  "verification_file": "final-verification.json"
+}

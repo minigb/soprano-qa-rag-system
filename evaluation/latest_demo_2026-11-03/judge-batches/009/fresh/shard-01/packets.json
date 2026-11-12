@@ -1,0 +1,575 @@
+[
+  {
+    "id": "3752aa23d6bdd5873586",
+    "question": "짧은 음표가 많은 부분에서 빠른 발음은 어떻게 연습할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      31,
+      34
+    ],
+    "language": "ko",
+    "answer": "짧은 음표가 많은 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 점차 빠르게 연습하는 방식이 좋습니다.\n모든 글자를 힘주어 말하지 말고, 중요한 단어와 악센트를 중심으로 강약을 조절하며 연습하면 빠르게 발음할 때도 좋은 발음이 됩니다.\n자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "Il tu- -tor ri- -cu- -se-",
+            "My in- -tent I’ll not re-"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, io l’in- -ge- -gno a- -guz- -ze-",
+            "-sign, Though my guard- -ian should say"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rò, al- -la fin s’ac- -che- -te-",
+            "no, He my love need not di-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, E con- -ten- -ta io re- -ste-",
+            "-vine, Till my hand I may be-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-012",
+        "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            31,
+            34
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-013",
+        "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+        "role": "general_context",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-014",
+        "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.\n짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.\n16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              31,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-012"
+        },
+        {
+          "reference_id": "R002",
+          "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-013"
+        },
+        {
+          "reference_id": "R003",
+          "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0ebe3e8215f980403f14",
+    "question": "피아노 파트의 두 번째 박에 표시된 악센트는 무엇을 나타낼까?",
+    "piece_id": "die-forelle",
+    "measure_range": [
+      41,
+      54
+    ],
+    "language": "ko",
+    "answer": "피아노 파트의 두 번째 박에 표시된 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "upper printed verse line (stanza 1; the only line from m26 on, stanza 3)",
+        "lower printed verse line (stanza 2, sung on the repeat)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 41,
+          "voice": "sung",
+          "lyric_lines": [
+            "d'ran; und"
+          ]
+        },
+        {
+          "measure": 42,
+          "voice": "sung",
+          "lyric_lines": [
+            "ich mit re- -gem"
+          ]
+        },
+        {
+          "measure": 43,
+          "voice": "sung",
+          "lyric_lines": [
+            "Blu- -te sah"
+          ]
+        },
+        {
+          "measure": 44,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Be- -trog'ne"
+          ]
+        },
+        {
+          "measure": 45,
+          "voice": "sung",
+          "lyric_lines": [
+            "an, und"
+          ]
+        },
+        {
+          "measure": 46,
+          "voice": "sung",
+          "lyric_lines": [
+            "ich mit re- -gem"
+          ]
+        },
+        {
+          "measure": 47,
+          "voice": "sung",
+          "lyric_lines": [
+            "Blu- -te, sah"
+          ]
+        },
+        {
+          "measure": 48,
+          "voice": "sung",
+          "lyric_lines": [
+            "die Be- -trog'ne"
+          ]
+        },
+        {
+          "measure": 49,
+          "voice": "sung",
+          "lyric_lines": [
+            "an."
+          ]
+        },
+        {
+          "measure": 50,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 51,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 52,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 53,
+          "voice": "rest",
+          "lyric_lines": []
+        },
+        {
+          "measure": 54,
+          "voice": "rest",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "die-forelle-ku-002",
+        "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            2,
+            27
+          ],
+          [
+            41,
+            54
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.\n슈베르트는 단순히 곡의 수가 많아서가 아니라, 당시 상황과 음악사 흐름에서 가곡의 질을 높이고 시와 반주, 성악의 위상을 높였기 때문에 ‘가곡의 왕’ 또는 ‘예술가곡의 왕’으로 불린다. 이전 작곡가들과 달리 시를 피아노 반주로 표현한 첫 번째 작곡가이며, 반주부의 격을 성악가와 동등한 위치로 높였다. 《Die Forelle》에서도 피아노 반주가 곡의 분위기와 배경, 상황을 표현한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》 A 세션의 반주 패턴은 파닥거리고 생동감 있는 물고기의 움직임을 나타낸다. 특히 반주부에서 두 번째 박자에 나타나는 악센트는 송어가 뛰어노는 모습을 표현한 것으로 볼 수 있다. 이 악센트가 높은음자리표와 낮은음자리표를 오가며 반복되어, 흐르는 물에서 뛰어오르는 송어의 느낌을 잘 나타낸다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              2,
+              27
+            ],
+            [
+              41,
+              54
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-002"
+        },
+        {
+          "reference_id": "R002",
+          "text": "슈베르트는 단순히 곡의 수가 많아서가 아니라, 당시 상황과 음악사 흐름에서 가곡의 질을 높이고 시와 반주, 성악의 위상을 높였기 때문에 ‘가곡의 왕’ 또는 ‘예술가곡의 왕’으로 불린다. 이전 작곡가들과 달리 시를 피아노 반주로 표현한 첫 번째 작곡가이며, 반주부의 격을 성악가와 동등한 위치로 높였다. 《Die Forelle》에서도 피아노 반주가 곡의 분위기와 배경, 상황을 표현한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "808d53a036751fe6e44d",
+    "question": "페르마타는 얼마나 길게 끄는 것이 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "페르마타는 해당 음의 길이의 2~3배로 부르는 것이 좋습니다. ‘l’amor’의 페르마타에서는 이 원칙을 따르면서 mor를 강조합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-013",
+        "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "일반적으로 페르마타는 해당 음의 길이의 2~3배로 부르는 것을 원칙으로 하므로, ‘l’amor’의 페르마타에서도 같은 방식으로 부르면서 악센트가 놓인 mor를 강조한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7814b46ec34f504e9680",
+    "question": "유튜브 영상에서 guidar 다음에 portamento로 ma를 내는 것은 어떤 이유일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      67,
+      67
+    ],
+    "language": "ko",
+    "answer": "유튜브 영상에서 guidar 다음에 portamento로 ma를 내는 것은 가창자의 해석에 따라 guidar와 ma를 dar, ma 또는 dar/ma처럼 붙일 수 있으며, 이는 전통적인 방식으로 많이 사용되어 왔습니다. 이 방식은 '난 당신이 이끄는 대로 따르죠… ma 하지만'이라는 문장의 표현을 극대화하기 위해 사용되며, ma에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "-dar. Ma se mi",
+            "spurn; But if you"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-019",
+        "text": "유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            67
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.\n유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "유투브 영상이나 드라마(팬트하우스)에서 보이는 것처럼 이 아리아를 악보나 가창자마다 다르게 부르는 데 하나의 정답은 없다. 이 시대의 음악에서는 성악가의 능력과 표현 방식에 따라 여러 변주를 줄 수 있었고, 특히 (낭만시대) 아리아에서는 가창자의 기교와 테크닉을 잘 드러내는 것을 선호했다. 자신의 고음, 저음, 스케일과 같은 장점을 잘 나타내는 변주와 꾸밈음을 선택해 자신을 표현하고 음악적 아름다움을 더하는 것이 좋다. 이 곡의 여러 대목도 가창자에 따라 다르게 부를 수 있다. 그중 한 대목의 음정이 유튜브 영상마다 서로 다른 것은 이런 변주를 사용하기 때문이며, 일반적으로 통용되는 몇 가지 변주는 현재 출판된 책(ricci)에서도 확인할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-018"
+        },
+        {
+          "reference_id": "R002",
+          "text": "유튜브 영상에서 볼 수 있듯 guidar와 ma는 가창자에 따라 dar, ma 또는 dar / ma처럼 다르게 붙일 수 있으며, guidar 뒤에 portamento로 소리를 끌어올려 ma를 내는 전통적인 방식도 많이 사용되어 왔다. 이는 “난 당신이 이끄는 대로 따르죠… ma 하지만”이라는 문장의 표현을 극대화한다. 이 방식을 사용할 때에는 ma(하지만)에서 지금까지와 다른 이야기가 펼쳐진다는 점을 정확히 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              67
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-019"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a277a429dc738d53072a",
+    "question": "부르기 어려운 부분은 어떻게 부르는 것이 좋을까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있습니다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-011",
+        "text": "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "단어의 강한 자음이 악센트를 지닌 모음과 함께 있을 때 요구되는 것보다 소리가 더 강해질 수 있다. 자음과 모음을 활용하되 곡의 분위기를 해치지 않을 정도의 소리를 낼 수 있도록 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "97e3e995a2a61c259be9",
+    "question": "《Die Forelle》에서 다이나믹을 어떻게 활용해 이야기와 메시지를 표현해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다.",
+    "score_context": null,
+    "evidence": [],
+    "reference_answers": [
+      "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-013"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "166c1b8f411ec5058305",
+    "question": "악보마다 전주 유무가 다를 때 어떻게 해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 슈베르트가 여러 차례 개정하고 즉흥적으로 기보한 바 있어 악보에 따라 전주가 있을 수도 있고 없을 수도 있습니다. 일반적으로는 전주가 있는 악보가 많이 사용되며, 전주 유무가 다른 악보는 원본과 비교하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-001",
+        "text": "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 슈베르트가 처음 작곡한 뒤 여러 차례 개정하고 즉흥적으로 기보하는 등 여러 버전의 악보 자료를 남겼기 때문에, 악보에 따라 전주가 있거나 없을 수 있다. 두 경우 모두 가능하지만 일반적으로는 전주가 있는 악보를 많이 사용한다. 전주 유무가 다른 악보는 원본과 비교해 보는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

@@ -1,0 +1,126 @@
+{
+  "created_at": "2026-11-01T17:52:27.024817+00:00",
+  "reason": "Unchanged complete fresh-campaign baselines. Rows and metrics reused byte-identically, not regenerated or mixed with older timings.",
+  "files": [
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/pre-security.jsonl",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/pre-security.jsonl",
+      "sha256": "d9088a08ee990f53fbc5963a3d4cf29ddf297f064aed1a5e70996ca77c867f27"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/pre-security.jsonl.manifest.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/pre-security.jsonl.manifest.json",
+      "sha256": "68839e2e64d696f745bce80f8f9634be249c342c8a25a2558c4a9d1f66e40bf9"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-development/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-development/contract.json",
+      "sha256": "ff0f1f3a4623eaa8776a679753405bdaae246d47d1b9b906b95511e9fb5c9a39"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-development/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-development/summary.json",
+      "sha256": "118f564e21ac77736ceb3193e4f50bd382e405cf171b050a7c50256364f375a6"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-development/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-development/fee65b2b51d0.json",
+      "sha256": "9e2a7432459f50779a1bc8977c9e9edf53dac64cc01ec72b6e8f25f731a3a6fa"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-validation/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-validation/contract.json",
+      "sha256": "836d78e7517fbb9febdd522c70d34426349eb54a0a6fcc5dc71c021cfeb4039e"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-validation/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-validation/summary.json",
+      "sha256": "9deaf10a8eb8a19475c5c0e07b3e83bf28ac93d14663c8ad843664f67d3fc050"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-pre-security-validation/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-pre-security-validation/fee65b2b51d0.json",
+      "sha256": "6daceaeb92aa141360044898d5e9c85b76242122f89941681653a0931b6d2345"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/main-baseline.jsonl",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/main-baseline.jsonl",
+      "sha256": "dc352af82dc377ecdbacca0c541250b44a28cc90f6f9d0a284b4a4611944314a"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/main-baseline.jsonl.manifest.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/main-baseline.jsonl.manifest.json",
+      "sha256": "ca6bae8541f426ee38f9f70248d68278c5fb598934a27500db8adc6033883712"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-development/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-development/contract.json",
+      "sha256": "423f947b3ac2a903af584e8f9eb1f0465ac218b218a40e4efd4b76386b858af9"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-development/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-development/summary.json",
+      "sha256": "43a07b8761a744f33fe6e94ac794412db5b5e362cdd887c5f85b718871c646f1"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-development/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-development/fee65b2b51d0.json",
+      "sha256": "4b7b535786438944bd76e3a4a7b5343698d591f7280244f3cfed0c34cca18866"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-validation/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-validation/contract.json",
+      "sha256": "415c2b464647ddc845f28d5ff25161ad4d81e088ffb102b02066cb098844080c"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-validation/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-validation/summary.json",
+      "sha256": "fea245f9e234771f8cc72e48a58f241d5a7ea98a61b120ac698ac2324756ba19"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-main-baseline-validation/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-main-baseline-validation/fee65b2b51d0.json",
+      "sha256": "c9712135e137af4b4754c00312d16101332d68ee6bc71e1659334c7ad1cedb2e"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/strict-baseline.jsonl",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/strict-baseline.jsonl",
+      "sha256": "7d01de1934e1849a67b13d2f4f300daa8711f0058ace4c986cea1a700df1da3e"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/strict-baseline.jsonl.manifest.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/strict-baseline.jsonl.manifest.json",
+      "sha256": "69fd922271f0c2b8e2c2447b3967df27cc95a7290f803b4a22073364ceb06269"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-development/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-development/contract.json",
+      "sha256": "a9a450ff3cf4af13b7a3690db24a8e4653817d534a1f573d59633b6e8534c884"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-development/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-development/summary.json",
+      "sha256": "cfae969a1a60f03f0ccdc1345a4b52e2f9a2af3314183f5ba703c526c29aabb8"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-development/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-development/fee65b2b51d0.json",
+      "sha256": "a1c385016e1a921c52e3702479a4ba3812e6091e7dc78e41f450a8f27daec42e"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-validation/contract.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-validation/contract.json",
+      "sha256": "ec91c95159578fdcd1c63292f4080f9fe61eb11126970672e96b3abec3382768"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-validation/summary.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-validation/summary.json",
+      "sha256": "f11b9b88522c1f4ab7cb161839e2f05fb89ebd2b980068c6d64c4ceb5d1d5157"
+    },
+    {
+      "source": "evaluation/ku_background_2026-10-31/comparison-2026-11-01/bertscore-strict-baseline-validation/fee65b2b51d0.json",
+      "destination": "evaluation/ku_background_2026-10-31/comparison-2026-11-02-e22/bertscore-strict-baseline-validation/fee65b2b51d0.json",
+      "sha256": "7e1486f6106c9e1651a5d996b7d2399230e8912aa1891c8419eb7f7469b0f0f3"
+    }
+  ]
+}

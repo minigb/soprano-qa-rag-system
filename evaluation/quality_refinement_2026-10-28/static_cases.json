@@ -1,0 +1,306 @@
+{
+  "description": "Exact25 saved public demo example requests; separate product audit, not the120-case quality denominator.",
+  "cases": [
+    {
+      "id": "static-die-forelle-1",
+      "pair_id": "static-die-forelle-1",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "die-forelle",
+      "question": "What does the accent on the second beat in the piano part express?",
+      "measure_range": [
+        2,
+        27
+      ],
+      "static_path": "answers/die-forelle/1.json"
+    },
+    {
+      "id": "static-die-forelle-2",
+      "pair_id": "static-die-forelle-2",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "die-forelle",
+      "question": "Why is this piece difficult to sing even though its notes are not high?",
+      "measure_range": null,
+      "static_path": "answers/die-forelle/2.json"
+    },
+    {
+      "id": "static-die-forelle-3",
+      "pair_id": "static-die-forelle-3",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "die-forelle",
+      "question": "How should a change in the piece's mood be expressed?",
+      "measure_range": [
+        28,
+        40
+      ],
+      "static_path": "answers/die-forelle/3.json"
+    },
+    {
+      "id": "static-die-forelle-4",
+      "pair_id": "static-die-forelle-4",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "die-forelle",
+      "question": "What should a singer do when German pronunciation is difficult?",
+      "measure_range": null,
+      "static_path": "answers/die-forelle/4.json"
+    },
+    {
+      "id": "static-die-forelle-5",
+      "pair_id": "static-die-forelle-5",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "die-forelle",
+      "question": "What should a singer do to sing this piece well?",
+      "measure_range": null,
+      "static_path": "answers/die-forelle/5.json"
+    },
+    {
+      "id": "static-una-voce-poco-fa-1",
+      "pair_id": "static-una-voce-poco-fa-1",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "una-voce-poco-fa",
+      "question": "Why did Rossini use a double-dotted rhythm instead of a standard dotted rhythm?",
+      "measure_range": [
+        21,
+        22
+      ],
+      "static_path": "answers/una-voce-poco-fa/1.json"
+    },
+    {
+      "id": "static-una-voce-poco-fa-2",
+      "pair_id": "static-una-voce-poco-fa-2",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "una-voce-poco-fa",
+      "question": "How can rapid diction be practiced in passages with many short notes?",
+      "measure_range": [
+        31,
+        34
+      ],
+      "static_path": "answers/una-voce-poco-fa/2.json"
+    },
+    {
+      "id": "static-una-voce-poco-fa-3",
+      "pair_id": "static-una-voce-poco-fa-3",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "una-voce-poco-fa",
+      "question": "The interludes in this piece are so long that I don't know what to do during them.",
+      "measure_range": null,
+      "static_path": "answers/una-voce-poco-fa/3.json"
+    },
+    {
+      "id": "static-una-voce-poco-fa-4",
+      "pair_id": "static-una-voce-poco-fa-4",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "una-voce-poco-fa",
+      "question": "How should one practice coloratura technique effectively?",
+      "measure_range": null,
+      "static_path": "answers/una-voce-poco-fa/4.json"
+    },
+    {
+      "id": "static-una-voce-poco-fa-5",
+      "pair_id": "static-una-voce-poco-fa-5",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "una-voce-poco-fa",
+      "question": "Why does this aria contain so many ornaments?",
+      "measure_range": null,
+      "static_path": "answers/una-voce-poco-fa/5.json"
+    },
+    {
+      "id": "static-la-capinera-1",
+      "pair_id": "static-la-capinera-1",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "la-capinera",
+      "question": "What musical effect does the contrast between ff and pp express?",
+      "measure_range": [
+        117,
+        124
+      ],
+      "static_path": "answers/la-capinera/1.json"
+    },
+    {
+      "id": "static-la-capinera-2",
+      "pair_id": "static-la-capinera-2",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "la-capinera",
+      "question": "How should a trill be sung?",
+      "measure_range": [
+        137,
+        137
+      ],
+      "static_path": "answers/la-capinera/2.json"
+    },
+    {
+      "id": "static-la-capinera-3",
+      "pair_id": "static-la-capinera-3",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "la-capinera",
+      "question": "How should the beat and rhythm be maintained in a passage without accompaniment?",
+      "measure_range": [
+        135,
+        137
+      ],
+      "static_path": "answers/la-capinera/3.json"
+    },
+    {
+      "id": "static-la-capinera-4",
+      "pair_id": "static-la-capinera-4",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "la-capinera",
+      "question": "How should a slashed ornament be fitted into the rhythm?",
+      "measure_range": [
+        22,
+        22
+      ],
+      "static_path": "answers/la-capinera/4.json"
+    },
+    {
+      "id": "static-la-capinera-5",
+      "pair_id": "static-la-capinera-5",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "la-capinera",
+      "question": "How should the lyrics l’erbe ed i fior be placed on the pitches?",
+      "measure_range": [
+        80,
+        80
+      ],
+      "static_path": "answers/la-capinera/5.json"
+    },
+    {
+      "id": "static-nella-fantasia-1",
+      "pair_id": "static-nella-fantasia-1",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "nella-fantasia",
+      "question": "How should a sudden upward leap be sung?",
+      "measure_range": [
+        11,
+        17
+      ],
+      "static_path": "answers/nella-fantasia/1.json"
+    },
+    {
+      "id": "static-nella-fantasia-2",
+      "pair_id": "static-nella-fantasia-2",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "nella-fantasia",
+      "question": "What should a singer do when singing is difficult or breath runs short?",
+      "measure_range": [
+        44,
+        52
+      ],
+      "static_path": "answers/nella-fantasia/2.json"
+    },
+    {
+      "id": "static-nella-fantasia-3",
+      "pair_id": "static-nella-fantasia-3",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "nella-fantasia",
+      "question": "How long should the final note be held?",
+      "measure_range": [
+        34,
+        35
+      ],
+      "static_path": "answers/nella-fantasia/3.json"
+    },
+    {
+      "id": "static-nella-fantasia-4",
+      "pair_id": "static-nella-fantasia-4",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "nella-fantasia",
+      "question": "Can this piece be regarded as classical, and can it be sung with classical vocal production?",
+      "measure_range": null,
+      "static_path": "answers/nella-fantasia/4.json"
+    },
+    {
+      "id": "static-nella-fantasia-5",
+      "pair_id": "static-nella-fantasia-5",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "nella-fantasia",
+      "question": "With what dynamic should the opening note begin?",
+      "measure_range": [
+        7,
+        8
+      ],
+      "static_path": "answers/nella-fantasia/5.json"
+    },
+    {
+      "id": "static-in-flowery-clouds-1",
+      "pair_id": "static-in-flowery-clouds-1",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "in-flowery-clouds",
+      "question": "If kkotbaram (\"flower breeze\") is often sung staccato in recordings but has no such marking in the score, what should guide the performance?",
+      "measure_range": [
+        11,
+        12
+      ],
+      "static_path": "answers/in-flowery-clouds/1.json"
+    },
+    {
+      "id": "static-in-flowery-clouds-2",
+      "pair_id": "static-in-flowery-clouds-2",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "in-flowery-clouds",
+      "question": "Why does the meter change, and how does the mood of the piece change?",
+      "measure_range": [
+        39,
+        49
+      ],
+      "static_path": "answers/in-flowery-clouds/2.json"
+    },
+    {
+      "id": "static-in-flowery-clouds-3",
+      "pair_id": "static-in-flowery-clouds-3",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "in-flowery-clouds",
+      "question": "How slowly should Larghetto be taken?",
+      "measure_range": [
+        74,
+        79
+      ],
+      "static_path": "answers/in-flowery-clouds/3.json"
+    },
+    {
+      "id": "static-in-flowery-clouds-4",
+      "pair_id": "static-in-flowery-clouds-4",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "in-flowery-clouds",
+      "question": "If this song is too high, may I adjust or arrange it?",
+      "measure_range": null,
+      "static_path": "answers/in-flowery-clouds/4.json"
+    },
+    {
+      "id": "static-in-flowery-clouds-5",
+      "pair_id": "static-in-flowery-clouds-5",
+      "kind": "benign",
+      "language": "en",
+      "piece_id": "in-flowery-clouds",
+      "question": "What should I do if the first note does not come out well when a phrase begins on a high note?",
+      "measure_range": [
+        19,
+        21
+      ],
+      "static_path": "answers/in-flowery-clouds/5.json"
+    }
+  ]
+}

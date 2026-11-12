@@ -1,0 +1,9 @@
+{
+  "candidate": "E18",
+  "reason": "E17 preserves the known English meanings but still returns unrelated redundant KU collections for explicit general-practice scenarios. Prompt-only relevance repair was insufficient.",
+  "change": "Conservative explicit practice-scenario routing after admission. Generic lyric mentions alone are not local in this narrow route. Selected ranges, local/causal referents, direct source-question matches and named current works retain evidence. Names come from the actual bundle, never a hardcoded piece list.",
+  "unchanged": "E17 source selection/composition, E16 reviewed translations, all source content, frozen105expert/290full cases, metric and references.",
+  "probe": "Same70 plus8 diagnostic paraphrases/local-counterexamples; no new expert metric targets.",
+  "validation": "Reused internal evaluation; no independent generalization claim.",
+  "attribution_change": "Label app-produced English source translations as Translated reference text, so source first-person statements are not mistaken for the assistant’s own opinions. App-created metadata cannot be supplied by model JSON; it grants no citation, scope or output-review exemption."
+}

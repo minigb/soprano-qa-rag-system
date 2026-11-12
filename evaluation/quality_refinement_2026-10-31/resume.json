@@ -1,0 +1,11 @@
+{
+  "authorization": "User explicitly requested resume on 2026-10-31 Korea time",
+  "previous_stop_file": "/home/minhee/.codex/worktrees/rag-quality-refinement/soprano-qa-rag-system/evaluation/quality_refinement_2026-10-28/STOPPED.md",
+  "previous_state_preserved": true,
+  "usage_state": "usage-state.json",
+  "guard_change": "No reset-based stop. Retain95% cap and fresh-usage observability.",
+  "baseline": "29fe3e2",
+  "comparison": "New full baseline and refined runs using frozen120-case inventory; prior interrupted58-row run is diagnostic only.",
+  "runner_sha256": "200431132cc8af70d326cf931d67c89be9bca1be075a0a8d6a2f1c8f0cff3f63",
+  "user_update": "Remove reset stop criteria; continue until goal achieved."
+}

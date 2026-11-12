@@ -1,0 +1,15 @@
+{
+  "retained_candidate": "j",
+  "disposition": "Best observed source meaning among completed expert runs; explicit single-pass candidate only. Not accepted as a secure default replacement.",
+  "reason": "User prioritizes source meaning. J material drift4 beats H6 and L8, retains both p/PP accounts and correct col-canto actors. J naturalness3.4857 is slightly above G3.4476. All previously refused cases answer faithfully.",
+  "unmet_security_criterion": "Direct attacks9/30 exceeds G8/30. J also has one English out-of-scope query-translation exception, not a defense success.",
+  "pending": [],
+  "production_default": "Preserve previously validated config/settings.json; no online checks are added to the updated single-pass candidate. Main/live/demo remain unchanged.",
+  "metric_policy": "Selection is made for meaning before computing BERTScore; >=0.90 remains required. No hyperparameter changes.",
+  "fixed_bertscore_expert105": 0.9399432505880083,
+  "validation": "684 tests and source/model/retrieval/original/demo integrity checks passed.",
+  "decision": "Retain J as opt-in meaning-improved single-pass candidate; do not promote the default. Prompt-injection problem remains unsolved.",
+  "comparison_l": "L passes aggregate comparisons versus G but has8 material flags versus J4 and regresses previously important fermata/p-PP details. Preserve the isolated comparison, do not imply it is uniformly worse or J uniformly better.",
+  "implementation_commit": "9da2bda",
+  "completed_at": "2026-11-06T15:40:53.944376+00:00"
+}

@@ -1,0 +1,624 @@
+[
+  {
+    "id": "2af656bea74036d2a21e",
+    "question": "악센트가 첫 박이 아닌 곳에 표시된 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악센트가 첫 박이 아닌 곳에 표시된 이유는 피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬과, 멜로디 파트의 첫 번째 박자가 트릴과 유사한 형태로 이음줄이 되어 있는 음형이라는 점에서, 로지나라는 캐릭터를 표현하기 위해 발랄하고 경쾌한 이미지를 나타내기 위해서라고 해석할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "651a29ba6500331143e2",
+    "question": "왜 꾸밈음이 곡 전반에 많이 사용되었을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있습니다. Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼기 때문에 꾸밈음이 많이 사용되었고, 이는 Rosina의 캐릭터를 표현하는 데도 기여합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-035",
+        "text": "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이 곡에는 특히 꾸밈음이 많은 것처럼 보일 수 있다. 꾸밈음이 쓰이는 이유는 곡마다 시대 상황과 작곡가의 의도에 따라 다르지만, Rossini와 그가 속한 시대에는 화려한 기교를 중요하게 여겼다. 이 아리아의 꾸밈음과 스케일은 Rosina의 캐릭터를 더 잘 표현하는 테크닉이기도 하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-035"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "38949b20375a6fdf8cf5",
+    "question": "장식음을 부를 때는 어떻게 다루어야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "꾸밈음에 사선이 없으면 원음과 균등하게 나누어 부르고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많습니다. 원음이 4분음표인 경우 꾸밈음은 16분음표 네 개로 나누어 부릅니다.\n같은 음형을 부점 리듬으로 장식할 때는 짧은 음에 기대고 긴 음은 사그라들게 둔 채 잊어버리기 쉽습니다. 이는 주의해야 할 점입니다.\n벨칸토에서 장식은 표현이며, 모든 런과 장식은 가수의 결정입니다. 이 결정들은 가수의 개성을 보여준다고 합니다.\n마지막 'farò giocar' 부분에서는 악보대로 부를지, 장식을 넣을지, 고음을 낼지 가수의 선택이지만, 무엇을 선택하든 압박 속에서도 해낼 수 있어야 합니다.\n반복 부분에서 장식을 넣을 때는 자신이 잘하는 것을 보여 주는 장식을 선택하고, 지나치게 고민하지 말라고 조언합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-009",
+        "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0028",
+        "text": "필자는 같은 음형을 부점 리듬으로 장식할 때 긴 음을 어떻게 부르는지에 주의하라고 하며, 이 리듬에서는 짧은 음에 기대고 긴 음은 사그라들게 둔 채 잊어버리기 쉽다고 지적한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0090",
+        "text": "글은 벨칸토에서 장식은 표현이며 같은 방식으로 장식하는 가수는 없고, 모든 런과 장식이 하나의 결정이며 그 결정들이 로지나가 누구인지 말해 준다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0033",
+        "text": "필자는 마지막 'farò giocar'를 악보대로 부를지, 장식을 넣을지, 갑자기 고음을 낼지는 가수의 선택이지만, 무엇을 고르든 압박 속에서도 해낼 수 있는 것이어야 한다고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-wc-0015",
+        "text": "필자는 반복 부분에서 장식을 넣을 때 희망사항이 아니라 실제로 자신이 잘하는 것을 보여 주는 장식을 고르고, 선택을 지나치게 고민하지 말라고 조언한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "꾸밈음에 사선이 없으면 대부분 꾸밈음과 원음이 박자를 나누어 균등하게 노래하고, 사선이 있으면 원음 앞에서 미리 노래하는 경우가 많다. 사선 없는 꾸밈음이 원음인 4분음표와 함께 나오는 부분에서는 원음을 균일하게 나누어 16분음표 네 개의 음형으로 노래한다. 이 곡의 다른 두 꾸밈음 대목에서도 꾸밈음에 유의한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "5ddfcaaeae512d950ab6",
+    "question": "이 곡의 가창 완성도를 높이는 데에는 어떤 접근이 필요할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Die Forelle》는 템포가 빠르고 발음이 정확해야 하며, 단어의 악센트와 마디의 강약을 파악하는 것이 중요합니다. 탄력 있고 밝은 음색으로 표현해야 하며, 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현해야 합니다. 파사지오 지나갈 때는 약간의 리타르단도로 표현하거나, 공간감 있게 준비해서 바로 지나가는 방법이 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-009",
+        "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      },
+      {
+        "id": "die-forelle-ku-016",
+        "text": "《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-ku-017",
+        "text": "《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5042",
+        "text": "강사는 1절에서 처음으로 파사지오를 지나는 음이 나올 때 두 가지 방법이 있다고 설명한다. 소리를 정확히 내는 데 시간이 필요하므로 약간의 리타르단도로 표현하거나, 그러지 않으려면 처음부터 파사지오의 느낌을 가지고 공간감 있게 준비해서 바로 지나가며 노래하는 것이다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "die-forelle-wc-5034",
+        "text": "강사는 이 곡에서 피아노가 단순한 반주가 아니라 피아노와 노래의 듀오라 부를 수 있는 역할을 하며, 전주와 노래 중간에서 곡의 분위기를 나타내 주므로 반주자가 정말 중요하다고 설명한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.\n《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.\n《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《Die Forelle》는 전체적으로 높은 음이나 기교가 있는 곡은 아니지만 결코 쉬운 곡은 아니다. 상대적으로 템포가 빠르고 빠르게 발음해야 하는 단어가 많다. 단어의 악센트와 마디의 강박·약박을 파악해야 하며, 많은 경우 마디의 마지막 박자에 놓인 단어가 다음 마디 첫 박자에 놓인 단어의 악센트로 향한다는 점에 유의해 노래하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-009"
+        },
+        {
+          "reference_id": "R002",
+          "text": "《Die Forelle》는 탄력 있고 밝고 깔끔한 음색으로 표현하는 것이 매우 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-016"
+        },
+        {
+          "reference_id": "R003",
+          "text": "《Die Forelle》에서는 딕션의 장단과 열고 닫기를 정확히 공부해 단어를 잘 표현하는 것이 매우 중요하다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e79ce2cb542c8a590f0c",
+    "question": "‘아득하니 꽃구름 속에’의 고음을 부드럽게 내려면 어떻게 호흡하고 발성해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      67,
+      69
+    ],
+    "language": "ko",
+    "answer": "‘아득하니 꽃구름 속에’는 한국어 딕션 때문에 발성적으로 걸릴 수 있습니다. 숨을 쉴 때부터 고음을 낼 때의 포지션을 잡아 공간을 확보하고, 부드럽게 고음을 내는 연습을 하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "아 득 하 니"
+          ]
+        },
+        {
+          "measure": 68,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 구 름 속"
+          ]
+        },
+        {
+          "measure": 69,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-022",
+        "text": "‘아득하니 꽃구름 속에’는 한국어 딕션 때문에 발성적으로 걸릴 수 있다. 숨을 쉴 때부터 고음을 낼 때의 포지션을 잡아 공간을 확보하고, 부드럽게 고음을 내는 연습을 하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘아득하니 꽃구름 속에’는 한국어 딕션 때문에 발성적으로 걸릴 수 있다. 숨을 쉴 때부터 고음을 낼 때의 포지션을 잡아 공간을 확보하고, 부드럽게 고음을 내는 연습을 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘아득하니 꽃구름 속에’는 한국어 딕션 때문에 발성적으로 걸릴 수 있다. 숨을 쉴 때부터 고음을 낼 때의 포지션을 잡아 공간을 확보하고, 부드럽게 고음을 내는 연습을 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-022"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "cd245e11f35ac87a3011",
+    "question": "크레센도 부분이 뜻대로 되지 않는다면 어떤 방법으로 해결할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      67,
+      69
+    ],
+    "language": "ko",
+    "answer": "크레센도 부분이 뜻대로 되지 않는다면, 사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있으므로, 이 부분에서 크레센도의 효과가 자연스럽게 나타나는 것으로 받아들일 수 있습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "아 득 하 니"
+          ]
+        },
+        {
+          "measure": 68,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 구 름 속"
+          ]
+        },
+        {
+          "measure": 69,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-010",
+        "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "76f358c1666bdeb5d3f2",
+    "question": "여러 곳에 표시된 부점들을 어떻게 처리하는 것이 좋을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋습니다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            17,
+            19
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ],
+          [
+            63,
+            63
+          ],
+          [
+            111,
+            111
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

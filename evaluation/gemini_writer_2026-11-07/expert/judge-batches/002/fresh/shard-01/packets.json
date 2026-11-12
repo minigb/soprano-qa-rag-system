@@ -1,0 +1,451 @@
+[
+  {
+    "id": "ed55fde76f9d697fb626",
+    "question": "ff와 pp의 대비는 어떤 음악적 효과를 표현할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      117,
+      124
+    ],
+    "language": "ko",
+    "answer": "117~124마디에서 fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있습니다. 성악가는 멜로디뿐만 아니라 피아노나 오케스트라에 놓인 이러한 기호도 함께 살펴서 음악적 분위기와 느낌을 전달하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 117,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam. La la"
+          ]
+        },
+        {
+          "measure": 118,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 119,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 120,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 121,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 122,
+          "voice": "sung",
+          "lyric_lines": [
+            "la la"
+          ]
+        },
+        {
+          "measure": 123,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 124,
+          "voice": "sung",
+          "lyric_lines": []
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-018",
+        "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            117,
+            124
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "fortissimo (ff)와 pianissimo (pp)가 빠르게 번갈아 나오는 대목은 작곡가가 산새의 경쾌함과 메아리 같은 반향 효과를 의도한 것으로 볼 수 있다. 성악가는 멜로디뿐 아니라 피아노/오케스트라에 놓인 이런 기호도 살펴 음악적 분위기와 느낌을 전달하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              117,
+              124
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-018"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "aca2848efcf37bc557bc",
+    "question": "악보마다 단어를 나누는 방식이 다를 때 어떻게 해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "악보마다 가사 속 단어 구분이나 배치가 원곡과 다를 때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래합니다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-005",
+        "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b07c9304fec92f2097b5",
+    "question": "이 곡에 간주가 너무 길어서 그동안 뭘 해야할지 모르겠다",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "긴 간주 구간에서는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 합니다. \n\n긴 간주는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있지만, 단순히 노래를 쉬며 기다리는 부분이 아니라 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있기 때문입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-016",
+        "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            44,
+            55
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "아리아의 긴 간주에서는 무엇을 하며 어떻게 표현해야 할지 막막할 수 있다. 그러나 긴 간주는 단순히 노래를 쉬며 기다리는 부분이 아니라, 한 장면에서 다음 장면으로 이야기를 이어 가거나 캐릭터의 감정 변화를 보여 주는 극적 전환 구간일 수 있다. 따라서 성악가는 앞뒤 가사의 내용과 정서가 어떻게 달라지는지 살펴보고, 그 흐름에 맞추어 표정과 시선, 움직임 등으로 간주에 반응해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              44,
+              55
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-016"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "b858a90400192c852aae",
+    "question": "사선이 그어진 꾸밈음은 리듬에 맞춰 어떻게 불러야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      22,
+      22
+    ],
+    "language": "ko",
+    "answer": "22마디의 사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 22,
+          "voice": "sung",
+          "lyric_lines": [
+            "la tua can-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-003",
+        "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            14,
+            14
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            29,
+            30
+          ],
+          [
+            80,
+            80
+          ],
+          [
+            88,
+            88
+          ],
+          [
+            95,
+            95
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사선이 그어진 꾸밈음은 원래의 박자와 리듬을 방해하지 않도록 원음보다 앞서 미리 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              14
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              29,
+              30
+            ],
+            [
+              80,
+              80
+            ],
+            [
+              88,
+              88
+            ],
+            [
+              95,
+              95
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-003"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "985b31a2203592c25de8",
+    "question": "악보의 페르마타 표시가 음원에서 들리는 음 길이와 일치하지 않을 때는 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《꽃구름 속에》의 곡 첫머리에서 페르마타 유무가 다른 것은 악보에 따른 편곡의 차이일 수 있습니다. 이 부분에서는 페르마타가 있는 경우와 없는 경우 모두 허용됩니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-001",
+        "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            1,
+            2
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "《꽃구름 속에》 곡 첫머리의 페르마타 유무는 악보에 따른 편곡의 차이일 수 있다. 페르마타가 있는 경우와 없는 경우 모두 허용된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              1,
+              2
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-001"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "851ab4b1ab81f82bb0b3",
+    "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선입니다. 클래식에서는 작곡가의 의도가 들어가 있다고 생각하고 악보에 적힌 것을 지키려고 노력합니다.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면, 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다 반주의 흐름과 함께 호흡하며 자연스럽게 종결감을 만드는 것도 가능합니다. 대중적인 곡에서는 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우가 있으며, 대중적인 곡이나 가벼운 가요, 대중적인 레퍼토리에서는 반주가 끝날 때까지나 반주의 마지막 울림까지 성악 소리를 지속하고 연결해 곡 전체를 하나의 호흡으로 마무리하는 느낌을 만들어 내는 경우도 있습니다.\n\n따라서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "sumijo-nella-fantasia-039-ku-01",
+        "text": "기본적으로는 악보에 표시된 음가와 프레이즈의 구조를 존중하는 것이 우선이에요.\n\n다만 이 곡의 장르적 특성과 실제 연주 환경을 고려하면 마지막 음을 단순히 악보에 적힌 길이에서 기계적으로 끊기보다는 반주의 흐름과 함께 호흡하면서 자연스럽게 종결감을 만드는 것도 가능합니다.\n\n특히 대중적인 레파토리에서는 반주의 마지막 울림까지 성악의 소리를 연결하여 곡 전체를 하나의 호흡으로 마무리하는 경우가 있어요. 그래서 음을 무조건 길게 끄는 것이 중요한 것이 아니라, 마지막 음이 음악적으로 자연스럽게 사라지면서 곡의 정서가 완결되도록 하는 것이 중요합니다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-010",
+        "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            22,
+            23
+          ],
+          [
+            34,
+            35
+          ],
+          [
+            51,
+            52
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              22,
+              23
+            ],
+            [
+              34,
+              35
+            ],
+            [
+              51,
+              52
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

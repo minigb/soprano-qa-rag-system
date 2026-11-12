@@ -1,0 +1,127 @@
+{
+  "summary": {
+    "config_id": "fee65b2b51d0",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 8,
+    "delivered": 8,
+    "scored": 8,
+    "unscorable_overlength_cases": 0,
+    "overlength_texts": 0,
+    "truncated_texts": 0,
+    "length_policy": "No truncation/chunking/encoder change. Explicitly unscorable overlength cases retained as zero contributions, not claimed computed scores.",
+    "max_input_tokens": 279,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8853935897350311,
+      "recall": 0.899632140994072,
+      "f1": 0.8923197910189629
+    },
+    "conditional_scorable": {
+      "precision": 0.8853935897350311,
+      "recall": 0.899632140994072,
+      "f1": 0.8923197910189629
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 4.056481912964955
+  },
+  "cases": [
+    {
+      "id": "expert-kim-nella-fantasia-05__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 170,
+      "reference_tokens": 279,
+      "precision": 0.8983592391014099,
+      "recall": 0.8753901720046997,
+      "f1": 0.8867260217666626
+    },
+    {
+      "id": "expert-kim-nella-fantasia-09__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 131,
+      "reference_tokens": 127,
+      "precision": 0.907820463180542,
+      "recall": 0.9005640149116516,
+      "f1": 0.9041776657104492
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 155,
+      "reference_tokens": 100,
+      "precision": 0.8857036232948303,
+      "recall": 0.9000481367111206,
+      "f1": 0.8928182125091553
+    },
+    {
+      "id": "expert-kim-nella-fantasia-03__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 221,
+      "reference_tokens": 59,
+      "precision": 0.8579090237617493,
+      "recall": 0.9059514999389648,
+      "f1": 0.88127601146698
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 135,
+      "reference_tokens": 100,
+      "precision": 0.8924002647399902,
+      "recall": 0.9012746810913086,
+      "f1": 0.8968154788017273
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-07__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 238,
+      "reference_tokens": 93,
+      "precision": 0.8691084384918213,
+      "recall": 0.9123335480690002,
+      "f1": 0.8901966214179993
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 158,
+      "reference_tokens": 100,
+      "precision": 0.8862196207046509,
+      "recall": 0.900978684425354,
+      "f1": 0.893538236618042
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__no-range",
+      "delivered": true,
+      "scored": true,
+      "unscorable_reason": null,
+      "candidate_tokens": 162,
+      "reference_tokens": 100,
+      "precision": 0.8856280446052551,
+      "recall": 0.9005163908004761,
+      "f1": 0.8930100798606873
+    }
+  ]
+}

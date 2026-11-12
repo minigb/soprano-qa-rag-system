@@ -1,0 +1,296 @@
+{
+  "cases": [
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-02__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-10",
+      "piece_id": "nella-fantasia",
+      "question": "노래의 마지막 소리는 얼마나 오래 끄는 것이 좋을까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-010"
+      ],
+      "reference_answers": [
+        "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-10-syn-02__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-10",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-10"
+      ]
+    },
+    {
+      "id": "expanded-die-forelle-ku-013-derived-q01__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "die-forelle-ku-013-derived-q01",
+      "piece_id": "die-forelle",
+      "question": "《Die Forelle》에서 다이나믹을 어떻게 활용해 이야기와 메시지를 표현해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "expansion",
+      "gold_evidence_ids": [
+        "die-forelle-ku-013"
+      ],
+      "reference_answers": [
+        "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "ku_derived",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "《Die Forelle》에서는 다이나믹을 잘 활용하여 이야기가 전하는 내용과 메시지를 장면마다 표현하는 데 집중해 연습하는 것이 좋다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "whole_piece",
+            "measure_ranges": [],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "die-forelle-ku-013"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "die-forelle-ku-013-derived-q01__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "die-forelle-ku-013-derived-q01",
+      "question_provenance": "knowledge_unit_derived",
+      "case_kind": "knowledge_unit_derived_no_range",
+      "source_annotation_ids": [
+        "yeon-die-forelle-02"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-01__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-10",
+      "piece_id": "nella-fantasia",
+      "question": "끝 음을 어느 정도 길이로 유지해야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-010"
+      ],
+      "reference_answers": [
+        "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-10-syn-01__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-10",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-10"
+      ]
+    },
+    {
+      "id": "expanded-kim-nella-fantasia-10-syn-03__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-10",
+      "piece_id": "nella-fantasia",
+      "question": "마지막 음의 지속 시간은 어떻게 정하면 좋을까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-010"
+      ],
+      "reference_answers": [
+        "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "paraphrase",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-10-syn-03__no-range",
+      "source_artifact": "evaluation/synthesized_question_results.json",
+      "source_group_id": "kim-nella-fantasia-10",
+      "question_provenance": "synthesized_variant",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-10"
+      ]
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__no-range",
+      "kind": "benign",
+      "language": "ko",
+      "pair_id": "kim-nella-fantasia-10",
+      "piece_id": "nella-fantasia",
+      "question": "마지막 음은 얼마나 길게 끌어야 할까?",
+      "measure_range": null,
+      "category": "expert_reference",
+      "split": "development",
+      "gold_evidence_ids": [
+        "nella-fantasia-ku-010"
+      ],
+      "reference_answers": [
+        "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다."
+      ],
+      "reference_policy": "all applicable finalized expert KUs, concatenated in frozen order",
+      "injection": null,
+      "family": "original",
+      "reference_authority": {
+        "source": "applicable_finalized_knowledge_units",
+        "items": [
+          {
+            "reference_id": "R001",
+            "text": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+            "scope": "curated_knowledge_unit_answer",
+            "flags": [],
+            "scope_authority": "finalized_knowledge_unit",
+            "reference_role": "required_any",
+            "measure_status": "specific",
+            "measure_ranges": [
+              [
+                22,
+                23
+              ],
+              [
+                34,
+                35
+              ],
+              [
+                51,
+                52
+              ]
+            ],
+            "source_sentence_index": null,
+            "source_claim_index": null,
+            "knowledge_unit_id": "nella-fantasia-ku-010"
+          }
+        ],
+        "manual_review_required": false,
+        "manual_review_reason": null
+      },
+      "archived_case_id": "kim-nella-fantasia-10__no-range",
+      "source_artifact": "evaluation/qualitative.json",
+      "source_group_id": "kim-nella-fantasia-10",
+      "question_provenance": "inventory_paraphrase",
+      "case_kind": "measure_annotated_no_range_semantic",
+      "source_annotation_ids": [
+        "kim-nella-fantasia-10"
+      ]
+    }
+  ]
+}

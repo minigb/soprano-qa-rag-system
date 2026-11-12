@@ -1,0 +1,21 @@
+{
+  "verified": true,
+  "default": "gemini-priority-20261107",
+  "destinations": [
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/sites/answer-review/dist",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/demo/static/answer-review",
+    "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-lab/rag/sites/answer-review/dist"
+  ],
+  "files": {
+    "data-helpful-14b-20261104.json": "710ccc400d45396462df2d01f6e5e8fedea1fe5e71d7e7e39bc24b30f1c2cd6b",
+    "data-gemini-20261107.json": "8cb7d74fc62cb4967fdd649f01e9a49785d8a3c9070c51e592d03336550c93d4",
+    "data-latest-14b-20261103.json": "f372acc6066b6916af329f6a0ffe96c8b8a50b237918a092aeff6ba93aa85e2e",
+    "styles.css": "b513f02a2bfa1e6eacf825a93b40f642596d1aa3333a040425ba35143566edd1",
+    "data.json": "c617d19539a137f52bc1dbf8fc7183a4f86d8ae241366a8ec98489ef74991285",
+    "app.js": "9657117baefa1c0ca4223e563bf43f81ef6e6cc9bae23975513b4e5abeb11fb8",
+    "data-gemini-priority-20261107.json": "93afdf8d91782be9f4409783206601b740abbf04416d06e58f639c2bd81e02a2",
+    "evaluations.json": "46255113291a058a59d89a8a1d49660285e50de3a58b0cc64f85453920b7f979",
+    "index.html": "942a9fdb750a343de61f31a8ba5ca084c50d0f640480e9b1312b7091bf69e5cb"
+  },
+  "scope": "Static demo mirrors only; no mirrored backend or main checkout changes"
+}

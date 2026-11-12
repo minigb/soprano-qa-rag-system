@@ -1,0 +1,52 @@
+{
+  "source_commit": "5f40216009db4ba3a0de7ae24575d548276dce49",
+  "source_sha256": {
+    "soprano_qa/answer.py": "916b156cdab76d17d78c60f86c0839ca7908811e52ccba2dc795739562e1b072",
+    "soprano_qa/security.py": "83dbe514fe4b0da1efdd1b3a772e90f364edb84169366d3ee1be3fa50acd10b6",
+    "soprano_qa/translation.py": "8172d41f1706c19c00861a8dbbfbd243d50de87dccfd937f239f9e631719646d",
+    "soprano_qa/llm.py": "d02f012baee38e65d12693b893ae06874f415afd422bb4c325f956ef195ab199",
+    "soprano_qa/structured_answer.py": "d456b8672082c08b2327670769706a3652104701379b73b9ffb590ff04ef03d9",
+    "soprano_qa/music_terms.py": "b9528a41c3adeccbb2df1e297456263c1cd2c277fbb69719340423f8aac7077a"
+  },
+  "note": "Exact system policies. Per-request untrusted JSON, schema labels and native GGUF chat template are assembled separately.",
+  "assembly": "soprano_qa.answer.build_messages -> soprano_qa.llm.generate",
+  "retry": "Append retry-suffix.txt verbatim only after the first valid negative output verdict; full review remains mandatory.",
+  "prompts": {
+    "answer-ko.txt": {
+      "characters": 11416,
+      "sha256": "fe0148f7eaf537bbf58057e46fafe0fb679fe16cdbe77b5e835350b9af4ca270"
+    },
+    "answer-en.txt": {
+      "characters": 11846,
+      "sha256": "665bf7617f3ff562a6f910b83f4b3094fece137b718f87f531ddc69b2939b0bb"
+    },
+    "answer-general.txt": {
+      "characters": 6060,
+      "sha256": "449829dc838d7dddaa24f882b10a65985b3379209eb9eac384c96667fa965ab6"
+    },
+    "guard-admission.txt": {
+      "characters": 2655,
+      "sha256": "855733aa6dfd67a6711035e97525934f19f6830f8a9cde42adb7e940fe1ecf85"
+    },
+    "guard-output.txt": {
+      "characters": 5729,
+      "sha256": "7f1a23a1c567eb963b3b35572ded2246ea9ab5aeb5b41b138e89368f648b4df9"
+    },
+    "evidence-selection.txt": {
+      "characters": 1198,
+      "sha256": "178861dea0626de3637da8df2b1d656d4f12d6a836af3c7248dd9116fc382e8b"
+    },
+    "question-routing.txt": {
+      "characters": 1047,
+      "sha256": "3ec12da0a87f01551a84ea311292eed47cb5df6987c8dd2dcb92ab38d3d19e9b"
+    },
+    "query-translation.txt": {
+      "characters": 1998,
+      "sha256": "4ed18dac9e862f26651bceb32414b8b1b404a7ab9011efe4723ef01eeb7b1a3b"
+    },
+    "retry-suffix.txt": {
+      "characters": 456,
+      "sha256": "1c2180fb0746de5b4513648bbca1bdea472c5c63d3b2e0bb5aa550acf768c672"
+    }
+  }
+}

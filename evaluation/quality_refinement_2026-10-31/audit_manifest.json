@@ -1,0 +1,27 @@
+{
+  "sha256": {
+    "validation_cases.json": "017d38684ccff70ff40e342399ad9ed9759687df36af6e4a7febcea8af4da879",
+    "validation_baseline.jsonl": "cbd2c646f0882bfb38fae30549164bb0e4733708db5b24a4020cae32de02e107",
+    "validation_refined.jsonl": "67c9d9f405851f9d7f3a63b14d55a8e9b5a80a727600b11f26c072a8463b27a4",
+    "results.jsonl": "56b61c4011d0537e69dba0777130c44762ef89877e3e87931654e75f23f94369",
+    "review/assessments.json": "6bdf4642840ba13f9a11539a73340b468d95f00f74eb7da0c3e601bfdeb35e90",
+    "review/blind_review_packets.json": "07753cc333e3312e100fa4ee8fb9d055b75c3520b0b06fe38aee46f962afed4c",
+    "review/review_mapping.json": "ad5b50cf3f97a1e95dc05e337f36832069cdcef81b69baaa09bede708bee1716",
+    "summary.json": "08dd9d8a924e46e1bdd642fd5b1711ab144aad2f5e4eb567aa4401439c704cc2",
+    "comparison_details.json": "0306988a75ad7c621b327971f34a1af20a19ba648c45fcf496941268c9e0af91",
+    "static_review.json": "68036489cf95013d33b1ada6c2a5fce512a9f0253c2f0222fc16745313fd7663",
+    "static-preview/identity.json": "4fe481394b0379d9eb2a46b4574070ae4279ad99fffead3f9019b152a82be099",
+    "static-preview/requests.jsonl": "2a6fd126172593728f74a29051e26b940af20b6fe0d259a53601b46119b04b3f",
+    "static-preview/answers/manifest.json": "15d6587ada26fe929660aef88034983e311aeb1671ec9fff47863761cd2a6b19",
+    "candidate-f.json": "1481f90706280e972a7375e37c9cd8c12e4ded63322b1cd2f7f88b3cc98bc016",
+    "candidate-f-source.tar.gz": "206c1b99ab8b607a6dcc506fa0e41d06f984621aeb11a45aeb061b67332060e9",
+    "protocol.json": "9e742908c30b7c2bd90c0ab535e742fa3b3b5126c0ea06e326b31b2b35c33c53",
+    "environment.json": "c87a32111715e8480bd11b1e01a2a7fa9169fe83937f8e373ec7feb79f5563f5",
+    "unit-tests.txt": "48c1d7d9a1ba854f413f079e1c1ea32ede48197a3e0bb7d4e6fb9beeaf51654e",
+    "lab-tests.txt": "9e60b14e7942ec7c94f9d97e99fdc6d91c710063e449cbadb82f70ffa15c8be5"
+  },
+  "analysis_scripts_sha256": {
+    "evaluation/analyze_security_comparison.py": "3d3306cf1411146bd1d81c6a6eaef2ae0df551fea1280da8c9a46a28e71538d2",
+    "evaluation/summarize_refinement.py": "bc21546d52a152f1d07b9048e9829a5d151ce56bd6575bc44be8092e8a186f95"
+  }
+}

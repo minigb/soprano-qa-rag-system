@@ -1,0 +1,10 @@
+{
+  "candidate_answers": 460,
+  "references": 460,
+  "max_candidate_tokens": 730,
+  "max_reference_tokens": 315,
+  "tokenizer_max_length": 512,
+  "over_limit_candidate_answers": 2,
+  "over_limit_references": 0,
+  "purpose": "Length-only check; full GPU BERTScore follows both inference runs."
+}

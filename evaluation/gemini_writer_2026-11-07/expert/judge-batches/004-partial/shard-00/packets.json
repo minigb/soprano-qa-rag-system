@@ -1,0 +1,441 @@
+[
+  {
+    "id": "16646f82f78a1ed62245",
+    "question": "반주가 없는 곳에서는 박자와 리듬을 어떻게 잡아야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡의 반주가 없는 구간을 다룰 때는 먼저 정확한 박자와 리듬으로 충분히 연습합니다. 이후 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하면서 아리아의 카덴차처럼 자유롭게 표현할 수 있습니다. 이러한 구간에서의 해석은 곡의 성격과 캐릭터에 따라 달라지며, 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 합니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "la-capinera-ku-029",
+        "text": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            135,
+            137
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "반주가 없는 구간에서는 박자와 리듬을 어떻게 이끌어 가야 할지 고민될 수 있다. 곡의 성격과 캐릭터에 따라 해석은 달라지지만, 이러한 구간은 가창자의 기교와 음악적 해석을 드러낼 수 있는 대목이기도 하다. 먼저 정확한 박자와 리듬으로 충분히 연습하되, 실제 무대에서는 반주가 있는 부분보다 템포와 리듬을 유연하게 운용하며 아리아의 카덴차처럼 자유롭게 표현할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              135,
+              137
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-029"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e2db240ccdad57ea5065",
+    "question": "‘Col ritorna’와 ‘Tu torni’를 더 정확하게 발음하려면 어떻게 해야 할까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      16,
+      16
+    ],
+    "language": "ko",
+    "answer": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요합니다. 또한 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 16,
+          "voice": "sung",
+          "lyric_lines": [
+            "Tu tor- -ni"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-004",
+        "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            12,
+            14
+          ],
+          [
+            16,
+            16
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘Col ritorna’와 ‘Tu torni’에서 자음이 노래에 영향을 줄 때에는 천천히 발음하거나 뒤 단어의 첫 자음을 강조하는 방식으로 연습하는 것이 중요하다. 이태리 가곡에서는 단어의 악센트가 놓인 모음이 명료하게 들리도록, 말의 흐름이 그 모음으로 향한다고 생각하며 노래한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              12,
+              14
+            ],
+            [
+              16,
+              16
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-004"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a97e8f2fe8173123563d",
+    "question": "io l’ingegno aguzzerò는 발음을 어떻게 이어 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      32,
+      32
+    ],
+    "language": "ko",
+    "answer": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많습니다. `l’ingegno`처럼 결합할 수 있는 경우에는 아포스트로피(`’`)를 사용해 생략하고, `l’ingegno aguzzerò`처럼 결합할 수 없는 경우에는 두 모음을 연음으로 발음하여 `o-a`가 자연스럽게 이어지도록 하는 것이 좋습니다. \n\n참고로 일반적인 이태리어 딕션 원리상, 앞의 `io` 역시 두 모음을 끊지 않고 한 음절 안에서 자연스럽게 연결해 발음합니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, io l’in- -ge- -gno a- -guz- -ze-",
+            "-sign, Though my guard- -ian should say"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-011",
+        "text": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "이태리어 가사에서는 앞 단어의 마지막 모음과 뒤 단어의 첫 모음을 이어 발음하는 경우가 많다. 예를 들어 결합할 수 있는 l’ingegno 같은 경우에는 (‘)를 사용해 생략하고, 결합할 수 없는 l’ingegno aguzzerò 같은 경우에는 두 모음을 연음으로 발음하여 o-a가 자연스럽게 이어지도록 하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "ec3e2bf6691037a603bd",
+    "question": "이 곡을 클래식 장르로 볼 수 있을까? 클래식 발성으로 불러도 될까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이므로, 곡의 장르로 봤을 때 정통 클래식으로 분류할 수는 없습니다.\n\n하지만 이 곡은 클래식한 발성으로 불리기도 합니다. 대중적인 노래를 부를 때는 상황과 환경을 고려해야 하는데, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절합니다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 하며, 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구됩니다.\n\n가사의 뜻과 전체적인 메시지가 일관적으로 서정적이고 희망적이기 때문에, 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결이나 다이나믹 등 음악적인 표현을 깊이 있게 고민해 보는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-004",
+        "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      },
+      {
+        "id": "nella-fantasia-ku-014",
+        "text": "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.\n《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "대중적인 노래를 부를 때는 상황과 환경을 고려해야 한다. 《Nella fantasia》는 클래식한 발성으로 불리기도 하지만, 발성은 곡에 따라 나누기보다 마이크 유무, 음역대, 가성·두성·진성 등 가창법에 따라 구분하는 것이 더 적절하다. 마이크가 있거나 작은 공간에서 부를 때는 편안한 음색으로 부르는 것이 좋지만, 마이크 없이 불러야 할 때는 성악적인 발성이 요구된다. 연주 장소의 분위기나 요청에 따라 마이크를 놓고 부르기도 한다.\n\n이 곡이 클래식 장르에 포함되는지에 관해서는 곡의 장르로 봤을 때 정통 클래식으로 분류될 순 없지만, 클래식한 발성으로 불려지곤 한다. 이 곡은 다른 예술 가곡이나 정통클래식 보다는 대중적이고 자유로운 곡이다. 또한 연주되어지는 곳에 분위기나 요청에 따라 마이크를 놓고 부르기도 한다. 가사의 뜻과 전체적인 메시지도 일관적으로  서정적이고 희망적이다. 그렇기 때문에 가창자의 입장에서 좀 더 아카데믹하게 표현하기 위해서는 호흡의 연결, 다이나믹 등 음악적인 표현을 깊이있게 고민해 보는 것을 추천한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "《Nella fantasia》는 다른 예술 가곡이나 정통 클래식보다 대중적이고 자유로운 곡이며, 장르상 정통 클래식으로 분류할 수는 없다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "e77802f4574426b632ac",
+    "question": "dolce amorosa를 이어 발음할 때 모음은 언제 어떻게 바꿀까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      62,
+      62
+    ],
+    "language": "ko",
+    "answer": "62마디에서 'dolce amorosa'를 이어 발음할 때처럼 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우에는, 리듬을 잘 나누어 모음을 전환해야 합니다. 긴 음정에서는 모음 변환이 수월한 편이지만, 이 구간처럼 빠르게 변화하는 3연음보 안에서 모음이 바뀌는 경우는 까다로울 수 있기 때문입니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "dol- -ce,‿a- -mo-",
+            "all soft e-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-017",
+        "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "c6d6a4d75d0e8f6b653d",
+    "question": "악센트가 첫 박이 아닌 곳에 표시된 이유는 무엇일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      92,
+      93
+    ],
+    "language": "ko",
+    "answer": "선택하신 92~93마디 구간에서는 피아노·오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이고, 멜로디 파트의 첫 번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어 있는 음형이라는 점을 통해 볼 때, 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래 부르는 것이 좋겠습니다. 다만 이는 해설자의 해석에 따른 권장 사항이며, 작곡가의 실제 의도로 확정된 사실은 아닙니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 92,
+          "voice": "sung",
+          "lyric_lines": [
+            "toc- -ca- -no dov'- -è‿il mio",
+            "cross my will, or what I"
+          ]
+        },
+        {
+          "measure": 93,
+          "voice": "sung",
+          "lyric_lines": [
+            "de- -bo- -le, sa- -rò‿u- -na",
+            "do take ill, like an- -y"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-020",
+        "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            68,
+            69
+          ],
+          [
+            72,
+            73
+          ],
+          [
+            92,
+            93
+          ],
+          [
+            96,
+            97
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노/오케스트라 파트의 음형이 스타카토로 이루어진 경쾌한 리듬이라는 점, 멜로디파트의 첫번째 박자가 트릴과 유사한 형태와 함께 이음줄이 되어있는 음형이라는 점등을 통해서 볼때 로지나라는 캐릭터를 표현하기 위해 조금 더 발랄하고 경쾌한 이미지를 나타낸 것이라고 생각하고 노래부르는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              68,
+              69
+            ],
+            [
+              72,
+              73
+            ],
+            [
+              92,
+              93
+            ],
+            [
+              96,
+              97
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-020"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

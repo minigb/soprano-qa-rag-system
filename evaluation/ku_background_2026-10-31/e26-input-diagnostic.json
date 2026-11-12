@@ -1,0 +1,213 @@
+[
+  {
+    "case_id": "background-transpose-en",
+    "context": {
+      "answer_language": "en",
+      "piece": "nella-fantasia",
+      "measure_range": "(none selected)",
+      "question": "Is transposing a song the same as lowering just a few notes by an octave?",
+      "Score context": null,
+      "Retrieved evidence": [
+        {
+          "citation_label": "E1",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "unspecified_scope",
+          "evidence_role": "unconfirmed_scope_support",
+          "measure_range": [],
+          "measure_scope": "global",
+          "answer": "다른 악보와 단어 구분이 조금씩 다를 때 어떻게 해야할지 궁금할 수 있다. 노래를 악보에 표기할 때 가사 안의 단어 구분이나 배치가 원곡과 다를 수 있다. 이때는 원곡의 가사를 확인하고 원곡의 단어 구분에 따라 노래한다. 단어 구분에 따라 강세와 강조해야 할 단어 또는 자음·모음이 달라지며, 유럽 언어는 알파벳 하나의 차이로 완전히 다른 뜻의 단어가 되기도 하므로 주의하는 것이 좋다.",
+          "piece_title": "Nella fantasia",
+          "question": "다른 악보와 단어 구분이 좀 다를때는 어떻게 해야 할까?"
+        },
+        {
+          "citation_label": "E2",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "general_evidence",
+          "evidence_role": "general_support",
+          "measure_range": [],
+          "measure_scope": "global",
+          "answer": "원래 독창인 곡을 여러 명이 부르려면 이미 이중창이나 삼중창으로 만들어진 악보가 있는지 확인하고, 있다면 그 악보를 사용하는 것이 좋다. 독창 악보를 나누어 불러야 한다면 각 사람이 한 부분씩 독창하고 뒤에서 함께 멜로디를 부르거나, 3도나 5도 화음을 만들어 노래하는 것이 좋다.",
+          "piece_title": "Nella fantasia",
+          "question": "이중창이나 삼중창으로 노래하고 싶은데, 어떻게 하면 좋을까?"
+        },
+        {
+          "citation_label": "E3",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "general_evidence",
+          "evidence_role": "general_support",
+          "measure_range": [],
+          "measure_scope": "global",
+          "answer": "가요나 대중음악에서는 단어 중간에서 숨을 쉬는 경우가 많지만, 클래식에서는 작곡가가 의도적으로 단어 사이를 쉼표로 나누지 않았다면 이를 경계하고 온전한 한 단어가 잘 들리게 노래하는 것이 중요하다.",
+          "piece_title": "Nella fantasia",
+          "question": "17마디부터 부를때 힘들거나 숨이 모자라면 어떻게 할까?"
+        },
+        {
+          "citation_label": "E4",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "general_evidence",
+          "evidence_role": "general_support",
+          "measure_range": [],
+          "measure_scope": "global",
+          "answer": "《Nella fantasia》는 여러 버전으로 존재하여 상황에 따라 솔로곡·중창·합창, 오케스트라 반주·피아노 반주, 전주·후주·간주 등의 구성이 모두 다를 수 있고 연주나 가창자에 따라 자유롭게 편곡할 수 있다. 음원을 악보로 옮기는 과정에서도 피아노용이나 오케스트라용 등 목적에 따라 변화가 생길 수 있고, 음원 자체도 다양한 목적에 맞게 변형되는 경우가 있다. 따라서 가진 악보와 음원이 다르면 어떤 형태로 부를지 미리 확인하고 어느 부분을 생략하거나 반복할지 계획하는 것이 중요하다.",
+          "piece_title": "Nella fantasia",
+          "question": "내가 들은(혹은 가지고 있는) 음원과 악보가 다른 경우에는 어떻게 해야 할까?"
+        },
+        {
+          "citation_label": "E5",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "local_example",
+          "evidence_role": "local_example",
+          "answer": "고음, 도약음 등을 부를 때 힘을 너무 주어서 부르면 다음 프레이즈에서 숨이 모자라거나 숨을 제대로 쉴 수 없는 상황이 발생한다. 고음의 끝을 부드럽게 처리하고, 음표 사이에 있는 쉼표를 충분히 활용해서 쉴 수 있도록 한다.",
+          "piece_title": "Nella fantasia",
+          "question": "17마디부터 부를때 힘들거나 숨이 모자라면 어떻게 할까?"
+        },
+        {
+          "citation_label": "E6",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "local_example",
+          "evidence_role": "local_example",
+          "answer": "대중적인 곡의 경우 곡이나 절의 마지막 음을 어느 정도 길게 지속해야 하는지 애매한 경우들이 있다. 클래식의 경우, 작곡가의 의도가 들어가있다고 생각하고, 악보에 적힌 것을 지키려고 노력한다. 하지만 대중적인 곡이거나 가벼운 가요의 경우, 반주가 끝날때까지 소리를 지속하기도 하며, 이를 통해서 노래를 마무리 하는 느낌을 만들어내는 경우가 많다.",
+          "piece_title": "Nella fantasia",
+          "question": "34마디의 마지막 음은 얼마나 끌어야 할까?"
+        }
+      ]
+    },
+    "retrieval_diagnostics": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "lexical_route",
+      "query_route": "lexical",
+      "route_reason": "no_domain_anchor_or_lexical_match",
+      "ambiguous_candidates": [],
+      "dense_attempted": false,
+      "dense_contributed": false
+    },
+    "candidates": []
+  },
+  {
+    "case_id": "benign-17-ko",
+    "context": {
+      "answer_language": "ko",
+      "piece": "una-voce-poco-fa",
+      "measure_range": "14-15",
+      "question": "선택한 부분의 과장된 부점 리듬은 로지나의 어떤 성격을 표현하는 것으로 볼 수 있나요?",
+      "Score context": null,
+      "Retrieved evidence": []
+    },
+    "retrieval_diagnostics": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "hybrid_no_dense_match",
+      "query_route": "hybrid",
+      "route_reason": "source_family_missing_causal_authority",
+      "ambiguous_candidates": [],
+      "dense_attempted": true,
+      "dense_contributed": false
+    },
+    "candidates": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": false
+      }
+    ]
+  },
+  {
+    "case_id": "background-breath-en",
+    "context": {
+      "answer_language": "en",
+      "piece": "nella-fantasia",
+      "measure_range": "(none selected)",
+      "question": "Could you suggest a general legato exercise, without assuming you know my breathing ability?",
+      "Score context": null,
+      "Retrieved evidence": [
+        {
+          "citation_label": "E1",
+          "evidence_type": "expert_annotation",
+          "piece": "nella-fantasia",
+          "work": "Morricone - \"Nella fantasia\"",
+          "query_scope_relation": "general_evidence",
+          "evidence_role": "general_support",
+          "measure_range": [],
+          "measure_scope": "global",
+          "answer": "《Nella fantasia》는 음 자체가 높거나 빠르지는 않지만 긴 호흡으로 전체적인 레가토를 유지하는 것이 관건이다. 마치 하나의 선을 그리듯 서정적인 라인을 부드럽고 유연하게 불러야 한다. 많은 성악가가 호흡 부족으로 프레이즈를 끊으므로, 안정된 호흡 연습을 통해 레가토를 유지하는 것이 중요하다.",
+          "piece_title": "Nella fantasia",
+          "question": "어떻게 하면 잘 표현할 수 있는지?"
+        }
+      ]
+    },
+    "retrieval_diagnostics": {
+      "configured_mode": "hybrid",
+      "active_mode": "hybrid",
+      "dense_available": true,
+      "embedding_model": "/home/minhee/.codex/worktrees/rag-background-knowledge/soprano-qa-rag-system/models/Qwen3-Embedding-0.6B-Q8_0.gguf",
+      "embedding_dimension": 1024,
+      "last_dense_error": null,
+      "last_search_mode": "hybrid",
+      "query_route": "hybrid",
+      "route_reason": "dense_result_returned",
+      "ambiguous_candidates": [],
+      "dense_attempted": true,
+      "dense_contributed": true
+    },
+    "candidates": [
+      {
+        "id": "nella-fantasia-ku-015",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": true
+      },
+      {
+        "id": "nella-fantasia-ku-006",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": true
+      },
+      {
+        "id": "nella-fantasia-ku-004",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": true
+      },
+      {
+        "id": "nella-fantasia-ku-016",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": false
+      },
+      {
+        "id": "nella-fantasia-ku-002",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": true
+      },
+      {
+        "id": "nella-fantasia-ku-008",
+        "scope": null,
+        "relevance": null,
+        "causal_authority": false
+      }
+    ]
+  }
+]

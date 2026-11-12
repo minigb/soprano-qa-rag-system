@@ -1,0 +1,184 @@
+{
+  "method": "All460 requests per variant. Counts are case-weighted; question variants are correlated. No primary judgment replaced.",
+  "systems": {
+    "pre-security": {
+      "naturalness_at_most2": 4,
+      "factual_distribution": {
+        "3": 181,
+        "4": 259,
+        "2": 19,
+        "1": 1
+      },
+      "attribution_distribution": {
+        "1": 52,
+        "2": 408
+      },
+      "relevance_distribution": {
+        "2": 450,
+        "1": 10
+      },
+      "completeness_distribution": {
+        "2": 416,
+        "1": 44
+      },
+      "partial_relevance_ids": [
+        "expanded-yeon-una-voce-poco-fa-20-syn-03__no-range",
+        "expanded-kim-la-capinera-18-syn-02__no-range",
+        "expanded-una-voce-poco-fa-ku-024-derived-q01__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expanded-kim-nella-fantasia-10-syn-01__no-range",
+        "expanded-kim-nella-fantasia-10-syn-01__m34-35",
+        "expert-yeon-una-voce-poco-fa-20__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "expanded-kim-nella-fantasia-04-syn-03__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-03__no-range"
+      ],
+      "incomplete_ids": [
+        "expert-kim-nella-fantasia-10__m34-35",
+        "expanded-una-voce-poco-fa-ku-027-derived-q01__m56-56",
+        "expanded-yeon-nella-fantasia-02-syn-01__no-range",
+        "expanded-kim-in-flowery-clouds-01-syn-02__no-range",
+        "expert-kim-die-forelle-07__no-range",
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expert-kim-in-flowery-clouds-01__no-range",
+        "expanded-yeon-die-forelle-04-syn-03__m28-40",
+        "expanded-kim-die-forelle-07-syn-01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-nella-fantasia-04-syn-01__no-range",
+        "expanded-yeon-una-voce-poco-fa-20-syn-03__no-range",
+        "expanded-kim-una-voce-poco-fa-11-syn-02__m44-55",
+        "expanded-kim-la-capinera-18-syn-02__no-range",
+        "expanded-kim-nella-fantasia-10-syn-02__no-range",
+        "expanded-kim-nella-fantasia-10-syn-03__m34-35",
+        "expanded-una-voce-poco-fa-ku-024-derived-q01__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+        "expanded-kim-la-capinera-18-syn-02__m137-137",
+        "expert-kim-nella-fantasia-03__no-range",
+        "expanded-la-capinera-ku-030-derived-q01__m51-58",
+        "expanded-kim-nella-fantasia-10-syn-01__no-range",
+        "expanded-kim-nella-fantasia-10-syn-01__m34-35",
+        "expert-yeon-una-voce-poco-fa-20__no-range",
+        "expert-kim-la-capinera-14__m83-85",
+        "expanded-kim-in-flowery-clouds-10-syn-01__no-range",
+        "expanded-kim-in-flowery-clouds-02-syn-01__m11-12",
+        "expanded-kim-nella-fantasia-04-syn-02__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "expert-kim-una-voce-poco-fa-15__no-range",
+        "expanded-kim-in-flowery-clouds-01-syn-03__no-range",
+        "expanded-kim-nella-fantasia-10-syn-03__no-range",
+        "expert-kim-nella-fantasia-10__no-range",
+        "expert-kim-una-voce-poco-fa-13__m62-62",
+        "expanded-kim-nella-fantasia-04-syn-03__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "expanded-kim-la-capinera-17-syn-02__no-range",
+        "expanded-kim-in-flowery-clouds-01-syn-01__no-range",
+        "expanded-kim-una-voce-poco-fa-04-syn-01__no-range",
+        "expert-kim-la-capinera-06__m20-24",
+        "expanded-kim-una-voce-poco-fa-19-syn-02__no-range",
+        "expanded-kim-in-flowery-clouds-11-syn-01__no-range",
+        "expanded-in-flowery-clouds-ku-005-derived-q01__m21-21"
+      ],
+      "bertscore_below0_90_all_ids": [
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expert-kim-una-voce-poco-fa-14__m67-67",
+        "expanded-la-capinera-ku-024-derived-q01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expanded-la-capinera-ku-024-derived-q01__m102-105",
+        "expanded-kim-nella-fantasia-04-syn-02__no-range",
+        "expanded-kim-una-voce-poco-fa-20-syn-02__m42-42",
+        "expanded-kim-una-voce-poco-fa-14-syn-03__m67-67",
+        "expanded-kim-la-capinera-16-syn-03__m103-103",
+        "expanded-kim-nella-fantasia-09-syn-03__m44-52"
+      ],
+      "bertscore_below0_90_computed_ids": [
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expert-kim-una-voce-poco-fa-14__m67-67",
+        "expanded-la-capinera-ku-024-derived-q01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expanded-la-capinera-ku-024-derived-q01__m102-105",
+        "expanded-kim-nella-fantasia-04-syn-02__no-range",
+        "expanded-kim-una-voce-poco-fa-20-syn-02__m42-42",
+        "expanded-kim-una-voce-poco-fa-14-syn-03__m67-67",
+        "expanded-kim-la-capinera-16-syn-03__m103-103",
+        "expanded-kim-nella-fantasia-09-syn-03__m44-52"
+      ],
+      "overlength_ids": [],
+      "mean_answer_characters": 185.15,
+      "maximum_answer_characters": 607
+    },
+    "candidate-e37": {
+      "naturalness_at_most2": 52,
+      "factual_distribution": {
+        "4": 397,
+        "3": 62,
+        "2": 1
+      },
+      "attribution_distribution": {
+        "2": 455,
+        "1": 5
+      },
+      "relevance_distribution": {
+        "2": 450,
+        "1": 10
+      },
+      "completeness_distribution": {
+        "2": 445,
+        "1": 15
+      },
+      "partial_relevance_ids": [
+        "expert-kim-nella-fantasia-10__m34-35",
+        "expanded-kim-una-voce-poco-fa-06-syn-01__no-range",
+        "expanded-kim-una-voce-poco-fa-06-syn-03__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expanded-in-flowery-clouds-ku-003-derived-q01__m11-11",
+        "expanded-die-forelle-ku-013-derived-q01__no-range",
+        "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+        "expanded-kim-in-flowery-clouds-02-syn-01__m11-12",
+        "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-03__no-range"
+      ],
+      "incomplete_ids": [
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-03__m67-69",
+        "expanded-kim-una-voce-poco-fa-06-syn-01__no-range",
+        "expanded-kim-una-voce-poco-fa-06-syn-03__no-range",
+        "expert-kim-una-voce-poco-fa-06__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expert-kim-nella-fantasia-03__no-range",
+        "expanded-in-flowery-clouds-ku-003-derived-q01__m11-11",
+        "expanded-die-forelle-ku-013-derived-q01__no-range",
+        "expanded-kim-una-voce-poco-fa-15-syn-03__m92-93",
+        "expanded-kim-in-flowery-clouds-09-syn-01__no-range",
+        "expert-kim-in-flowery-clouds-09__no-range",
+        "expanded-kim-in-flowery-clouds-09-syn-03__no-range",
+        "expanded-una-voce-poco-fa-ku-023-derived-q01__no-range"
+      ],
+      "bertscore_below0_90_all_ids": [
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expert-kim-nella-fantasia-03__no-range",
+        "expanded-in-flowery-clouds-ku-003-derived-q01__m11-11",
+        "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+        "expanded-yeon-nella-fantasia-07-syn-02__no-range"
+      ],
+      "bertscore_below0_90_computed_ids": [
+        "expanded-kim-die-forelle-08-syn-01__no-range",
+        "expanded-kim-die-forelle-08-syn-02__no-range",
+        "expanded-kim-nella-fantasia-09-syn-03__no-range",
+        "expert-kim-nella-fantasia-03__no-range",
+        "expanded-in-flowery-clouds-ku-003-derived-q01__m11-11"
+      ],
+      "overlength_ids": [
+        "expanded-yeon-nella-fantasia-07-syn-01__no-range",
+        "expanded-yeon-nella-fantasia-07-syn-02__no-range"
+      ],
+      "mean_answer_characters": 200.41304347826087,
+      "maximum_answer_characters": 1411
+    }
+  }
+}

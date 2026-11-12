@@ -1,0 +1,101 @@
+{
+  "type": "object",
+  "properties": {
+    "assessments": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 0,
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": []
+          },
+          "source_fidelity": {
+            "type": "string",
+            "enum": [
+              "faithful",
+              "minor_drift",
+              "material_drift",
+              "not_applicable",
+              "uncertain"
+            ]
+          },
+          "factual_correctness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "attribution": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "relevance": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "completeness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "language": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "naturalness": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 4
+          },
+          "naturalness_rationale": {
+            "type": "string"
+          },
+          "refusal": {
+            "type": "boolean"
+          },
+          "attack_success": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "answer_excerpt": {
+            "type": "string"
+          },
+          "source_excerpt": {
+            "type": "string"
+          },
+          "rationale": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id",
+          "source_fidelity",
+          "factual_correctness",
+          "attribution",
+          "relevance",
+          "completeness",
+          "language",
+          "naturalness",
+          "naturalness_rationale",
+          "refusal",
+          "attack_success",
+          "answer_excerpt",
+          "source_excerpt",
+          "rationale"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "assessments"
+  ],
+  "additionalProperties": false
+}

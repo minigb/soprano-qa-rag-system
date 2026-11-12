@@ -1,0 +1,560 @@
+[
+  {
+    "config_id": "75aab66ae8f0",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 8,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L8_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.7371973520101502,
+      "recall": 0.7115661890007728,
+      "f1": 0.7221295098925746
+    },
+    "conditional": {
+      "precision": 0.8341970035904333,
+      "recall": 0.8051933191324535,
+      "f1": 0.8171465506679133
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 3.5950614009052515
+  },
+  {
+    "config_id": "cb3be193a92b",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 8,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L8_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.7232301928276239,
+      "recall": 0.7075617687646732,
+      "f1": 0.7129334377688031
+    },
+    "conditional": {
+      "precision": 0.8183920603049429,
+      "recall": 0.8006620014968672,
+      "f1": 0.806740469054172
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 3.9744087271392345
+  },
+  {
+    "config_id": "b292277e7924",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 9,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L9_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.755960880323898,
+      "recall": 0.7385777359785035,
+      "f1": 0.745972755343415
+    },
+    "conditional": {
+      "precision": 0.8554294172086214,
+      "recall": 0.8357590170283067,
+      "f1": 0.8441270652570223
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 2.816476095933467
+  },
+  {
+    "config_id": "3a4e26f86042",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 9,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L9_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.7430324457412543,
+      "recall": 0.7343585615934327,
+      "f1": 0.7372253162916317
+    },
+    "conditional": {
+      "precision": 0.8407998728124719,
+      "recall": 0.8309846881188845,
+      "f1": 0.8342286473826358
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 3.999084390234202
+  },
+  {
+    "config_id": "64274c06d97c",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 10,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L10_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.7786110542541327,
+      "recall": 0.7657583037088084,
+      "f1": 0.771451520365338
+    },
+    "conditional": {
+      "precision": 0.881059877182308,
+      "recall": 0.866515975249441,
+      "f1": 0.8729582993607772
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 2.9112399499863386
+  },
+  {
+    "config_id": "ef73360a4edf",
+    "settings": {
+      "model_type": "bert-base-multilingual-cased",
+      "num_layers": 10,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "bert-base-multilingual-cased_L10_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "3f076fdb1ab68d5b2880cb87a0886f315b8146f8",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 396,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.7675612028255019,
+      "recall": 0.7633947660756666,
+      "f1": 0.7646480549213498
+    },
+    "conditional": {
+      "precision": 0.8685560979341206,
+      "recall": 0.8638414458224648,
+      "f1": 0.8652596410952116
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 3.924946108367294
+  },
+  {
+    "config_id": "3b0b74e6f668",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 8,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L8_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8286609580350477,
+      "recall": 0.8107581097026204,
+      "f1": 0.8191211389940839
+    },
+    "conditional": {
+      "precision": 0.9376952946186066,
+      "recall": 0.917436808347702,
+      "f1": 0.9269002362301475
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 11.194640177767724
+  },
+  {
+    "config_id": "f2626aa5fb62",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 8,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L8_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8210755655931872,
+      "recall": 0.8062474658322889,
+      "f1": 0.8129661097082981
+    },
+    "conditional": {
+      "precision": 0.9291118242238697,
+      "recall": 0.9123326587049585,
+      "f1": 0.9199353346699163
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 8.361049667932093
+  },
+  {
+    "config_id": "7c9f7d329cde",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 9,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L9_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8386843093605929,
+      "recall": 0.8229195406270582,
+      "f1": 0.8303782094356625
+    },
+    "conditional": {
+      "precision": 0.9490375079606709,
+      "recall": 0.931198427551671,
+      "f1": 0.9396385001508814
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 4.608626618981361
+  },
+  {
+    "config_id": "385ec8a015b1",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 9,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L9_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8311362585356069,
+      "recall": 0.8179060816764832,
+      "f1": 0.8240133856618127
+    },
+    "conditional": {
+      "precision": 0.9404962925534499,
+      "recall": 0.9255253029497046,
+      "f1": 0.9324361995646828
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 8.249676952138543
+  },
+  {
+    "config_id": "cdf59f4c3830",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 10,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L10_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8442355990409851,
+      "recall": 0.8305336833000183,
+      "f1": 0.8370637893676758
+    },
+    "conditional": {
+      "precision": 0.9553192304937463,
+      "recall": 0.9398144311026523,
+      "f1": 0.9472037616528963
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 4.633900517132133
+  },
+  {
+    "config_id": "574ad3d3fe75",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 10,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L10_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8355293260064236,
+      "recall": 0.8259246155273082,
+      "f1": 0.8303480009699977
+    },
+    "conditional": {
+      "precision": 0.9454673952177951,
+      "recall": 0.9345989070440593,
+      "f1": 0.9396043168871027
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 8.269759457092732
+  },
+  {
+    "config_id": "144eb6a6b0e1",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 16,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L16_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8440274055614028,
+      "recall": 0.8300953202469404,
+      "f1": 0.8366909553838331
+    },
+    "conditional": {
+      "precision": 0.9550836431352716,
+      "recall": 0.9393183887004852,
+      "f1": 0.9467818705659163
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 9.938345551025122
+  },
+  {
+    "config_id": "c3a24a3cd279",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 16,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L16_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8367815821669823,
+      "recall": 0.8253935076469598,
+      "f1": 0.8306682068248128
+    },
+    "conditional": {
+      "precision": 0.9468844219257957,
+      "recall": 0.9339979165478757,
+      "f1": 0.9399666550912356
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 8.907956890296191
+  },
+  {
+    "config_id": "8307bc0e5f71",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 17,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L17_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8438976032789364,
+      "recall": 0.8303353024083514,
+      "f1": 0.8367574852566386
+    },
+    "conditional": {
+      "precision": 0.9549367616051122,
+      "recall": 0.9395899474620819,
+      "f1": 0.9468571543693542
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 5.245218177326024
+  },
+  {
+    "config_id": "7933e2481249",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 17,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L17_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8365442087483961,
+      "recall": 0.8255268792773403,
+      "f1": 0.830629849156668
+    },
+    "conditional": {
+      "precision": 0.9466158151626587,
+      "recall": 0.9341488370769903,
+      "f1": 0.9399232503614927
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 8.807786048389971
+  },
+  {
+    "config_id": "fee65b2b51d0",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8448645320049551,
+      "recall": 0.83195505169935,
+      "f1": 0.8380860589271368
+    },
+    "conditional": {
+      "precision": 0.9560309177950809,
+      "recall": 0.9414228216597909,
+      "f1": 0.9483605403649179
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 5.241497235838324
+  },
+  {
+    "config_id": "1343c6c0dfb4",
+    "settings": {
+      "model_type": "xlm-roberta-large",
+      "num_layers": 18,
+      "idf": true,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-large_L18_idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "c23d21b0620b635a76227c604d44e43a9f0ee389",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.837676536205203,
+      "recall": 0.8272880357365275,
+      "f1": 0.832121514996817
+    },
+    "conditional": {
+      "precision": 0.9478971330743087,
+      "recall": 0.9361417246492285,
+      "f1": 0.9416111880227139
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 9.058861824218184
+  }
+]

@@ -1,0 +1,342 @@
+[
+  {
+    "id": "323d514dedf93891dcc6",
+    "question": "노래가 계속 끊기는 것처럼 들리면 어떻게 해야 할까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "노래가 계속 끊기는 것처럼 들리면 자음을 강하게 발음하려는 경향을 줄이고, 모음만으로 먼저 연습한 뒤 자음을 짧고 명료하게 더해 보는 것이 도움이 됩니다. 또한 문장 안의 단어들을 연속적으로 발음해 보는 연습도 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-006",
+        "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "노래가 자꾸 끊겨 들리는 것은 자음을 강하게 발음하려 하기 때문일 가능성이 높다. 이때 자음을 모두 빼고 모음만으로 노래한 뒤, 자음을 아주 짧고 명료하게 더해 보는 연습이 도움이 될 수 있다. 또한 단어를 하나씩 따로 발음하기보다 한 문장 안의 단어들을 연속적으로 발음해 보는 것이 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-006"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "4f56e91aa9740895376f",
+    "question": "어떻게 연습해야 콜로라투라 기교를 잘 해낼 수 있을까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "콜로라투라 기교를 연습할 때는 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋습니다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋습니다. 이 방법은 이 곡에만 해당하는 것이 아니라 일반적으로 적용할 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-036",
+        "text": "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "콜로라투라 테크닉을 잘하고 싶다면 콜로라투라 테크닉은 처음부터 끝까지 반복하기 전에 부분적으로 끊어 연습하는 것이 좋다. 악센트를 한 곳에만 주거나 스타카토, 부점 등 자신만의 여러 방법을 연구해 부분 연습을 한 뒤 전체를 연습하는 것이 좋다. 이는 이 곡에만 해당하는 방법이 아니라 일반적으로 적용할 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-036"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "0f465b1e7c86b67ff50d",
+    "question": "D.S. al Coda 지시를 만나면 어떤 뜻으로 이해해야 할까?",
+    "piece_id": "nella-fantasia",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "D.S. al Coda 지시는 악보의 앞부분으로 돌아가 같은 부분을 다시 연주하거나 노래하라는 뜻입니다. 이는 도돌이표, Da Capo, Dal Segno, Coda 등과 같은 음악적 지시 기호 중 하나로, D.S. Dal Segno의 줄임말로 Segno 표시로 돌아간다는 뜻이며, al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻입니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "nella-fantasia-ku-012",
+        "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+        "role": "unconfirmed_scope_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "D.S. al Coda는 악보의 앞부분으로 돌아가 같은 부분을 다시 노래하기 위한 장치 중 하나이다. 이와 같은 음악적 지시 기호에는 도돌이표, Da Capo, Dal Segno, Coda 등이 있다. D.S.는 Dal Segno의 축약형으로, Segno 표시로 돌아간다는 뜻이다. al Coda는 Coda 표시에서 다음 Coda 사인으로 넘어간다는 뜻이다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "unspecified",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "nella-fantasia-ku-012"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6bdde25b7818e0dd8768",
+    "question": "크레센도 처리가 자꾸 잘 안 되면 뭘 하면 좋을까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "크레센도를 연습할 때는 높은 음을 향해 자연스럽게 소리가 커지는 경향이 있으므로, 그 효과를 살려서 연습해 볼 수 있습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-010",
+        "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "6a316443b428ccac8742",
+    "question": "곡이 중간쯤 가면 음악이 달라지는데, 왜 그런 걸까?",
+    "piece_id": "die-forelle",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "곡 중간에서 음악이 달라지는 이유는 피아노 파트의 음형 변화가 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 장면을 표현하기 위해서입니다. 이 변화는 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만듭니다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "die-forelle-ku-010",
+        "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            28,
+            40
+          ]
+        ]
+      },
+      {
+        "id": "die-forelle-ku-015",
+        "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+        "role": "general_support",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.\n각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "피아노 파트에서 바뀌는 음형은 낚시꾼이 물을 흐트러뜨리며 물고기를 잡는 모습을 그려, 곡의 내용과 밀접하게 연결된 긴장감과 분위기 전환을 만든다. 노래하는 사람은 이를 이해하고 피아노가 만드는 긴장감을 이용해 가사를 표현하며, 전환이 느껴지도록 주의해서 부르는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              28,
+              40
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-010"
+        },
+        {
+          "reference_id": "R002",
+          "text": "각 절의 멜로디가 비슷하더라도 절마다 단어의 뜻과 분위기가 다르므로, 각 절의 색채를 바꾸어 생동감 있게 표현하는 데 주의해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "die-forelle-ku-015"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "a5ced6455240e297771a",
+    "question": "크레센도를 표현하기 어려울 때는 어떻게 해야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      67,
+      69
+    ],
+    "language": "ko",
+    "answer": "크레센도를 표현하기 어려울 때는 자연스럽게 소리가 커지는 경향이 있는 음성의 특성을 활용할 수 있습니다. 이 부분에서는 크레센도의 효과가 나는 것처럼 소리가 점점 커지는 방식으로 표현해도 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 67,
+          "voice": "sung",
+          "lyric_lines": [
+            "아 득 하 니"
+          ]
+        },
+        {
+          "measure": 68,
+          "voice": "sung",
+          "lyric_lines": [
+            "꽃 구 름 속"
+          ]
+        },
+        {
+          "measure": 69,
+          "voice": "sung",
+          "lyric_lines": [
+            "에"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-010",
+        "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            67,
+            69
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "사람의 음성은 높은 음을 향할 때 자연스럽게 점점 강해지는 경향이 있다. 만약 이 부분에서 크레센도의 효과가 나는 것처럼 자연스럽게 소리가 커진다고 해도 괜찮다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              67,
+              69
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

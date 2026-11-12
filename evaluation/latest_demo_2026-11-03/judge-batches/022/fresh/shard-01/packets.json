@@ -1,0 +1,801 @@
+[
+  {
+    "id": "c45364b77b3b34e1e2e2",
+    "question": "반주부에 보이는 표시는 무엇일까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      56,
+      59
+    ],
+    "language": "ko",
+    "answer": "반주부에는 트레몰로 표시가 쓰여 있습니다. 이는 연주자가 악보를 더 편하게 볼 수 있도록 미리 약속된 표시로, 극적인 효과를 만들고 이어지는 분위기 전환을 강렬하게 만듭니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 56,
+          "voice": "sung",
+          "lyric_lines": [
+            "아-"
+          ]
+        },
+        {
+          "measure": 57,
+          "voice": "sung",
+          "lyric_lines": []
+        },
+        {
+          "measure": 58,
+          "voice": "sung",
+          "lyric_lines": [
+            "- 까 맣 게"
+          ]
+        },
+        {
+          "measure": 59,
+          "voice": "sung",
+          "lyric_lines": [
+            "잊"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-009",
+        "text": "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            56,
+            59
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "반주부에는 트레몰로 표시가 쓰여 있다. 이러한 지시기호는 미리 약속된 표시를 사용해 연주자가 악보를 더 편하게 볼 수 있게 한다. 이 트레몰로는 극적인 효과를 만들고 이어지는 분위기 전환을 더 강렬하게 만든다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              56,
+              59
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-009"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "2b7f4790e32ec36b4b30",
+    "question": "‘마-을’이나 ‘불-어-오라’ 같은 부점 대목을 자연스러운 한국어로 들리게 하려면 어떻게 불러야 할까?",
+    "piece_id": "in-flowery-clouds",
+    "measure_range": [
+      21,
+      21
+    ],
+    "language": "ko",
+    "answer": "‘마-을’이나 ‘불-어-오라’ 같은 대목에서는 단어의 모음 장단을 자연스럽게 표현하는 것이 중요합니다. 한국어는 모음의 길이에 따라 강세가 결정되므로, 이에 맞춰 연습하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Korean text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 21,
+          "voice": "sung",
+          "lyric_lines": [
+            "구 름 처 럼"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "in-flowery-clouds-ku-005",
+        "text": "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            13,
+            13
+          ],
+          [
+            15,
+            15
+          ],
+          [
+            21,
+            21
+          ],
+          [
+            33,
+            34
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘마-을’이나 ‘불-어-오라’와 같은 대목에서 부점은 강조되어야 한다. 한국어는 음의 높낮이나 강약보다 모음의 장단으로 단어의 강세를 표현하므로, ‘마-을’이나 ‘불-어-오라’와 같이 단어의 장단을 표현하는 것이 좋다. 작곡가에 따라 이런 단어를 강조하기도 하고 같은 리듬으로 강조하지 않기도 하지만, 두 경우 모두 단어의 형태를 이해하고 자연스러운 한국어로 들리도록 연습하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              13,
+              13
+            ],
+            [
+              15,
+              15
+            ],
+            [
+              21,
+              21
+            ],
+            [
+              33,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "in-flowery-clouds-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "48af6747d38129f016f6",
+    "question": "dolce amorosa의 발음을 이을 때 모음은 언제 어떤 방식으로 바꿀까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      62,
+      62
+    ],
+    "language": "ko",
+    "answer": "dolce amorosa의 발음에서 모음 전환은 3연음보의 빠른 변화 속에서 이루어지므로 리듬을 잘 나누어 전환하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 62,
+          "voice": "sung",
+          "lyric_lines": [
+            "dol- -ce,‿a- -mo-",
+            "all soft e-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-017",
+        "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "긴 음정에서는 모음 변환이 수월한 편이지만, 빠르게 변화하는 3연음보 가운데에서 모음이 바뀌는 경우는 까다로울 수 있다. 이런 경우에는 리듬을 잘 나누어 모음을 전환해야 한다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-017"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "104db0cda5e5221c4460",
+    "question": "빠른 발음을 짧은 음표가 많은 부분에서 익히려면 어떻게 해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      31,
+      34
+    ],
+    "language": "ko",
+    "answer": "짧은 음표가 많고 발음해야 할 것이 많은 부분은 느린 박자로 시작해 점차 빠르게 연습하는 방식이 도움이 됩니다.\n모든 글자를 힘주어 말하지 말고, 중요한 단어와 악센트를 중심으로 강약을 조절하며 연습하면 빠르게 발음할 때도 좋은 발음이 됩니다.\n자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 됩니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 31,
+          "voice": "sung",
+          "lyric_lines": [
+            "Il tu- -tor ri- -cu- -se-",
+            "My in- -tent I’ll not re-"
+          ]
+        },
+        {
+          "measure": 32,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, io l’in- -ge- -gno a- -guz- -ze-",
+            "-sign, Though my guard- -ian should say"
+          ]
+        },
+        {
+          "measure": 33,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rò, al- -la fin s’ac- -che- -te-",
+            "no, He my love need not di-"
+          ]
+        },
+        {
+          "measure": 34,
+          "voice": "sung",
+          "lyric_lines": [
+            "-rà, E con- -ten- -ta io re- -ste-",
+            "-vine, Till my hand I may be-"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-012",
+        "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            31,
+            34
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-013",
+        "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+        "role": "general_context",
+        "measure_ranges": []
+      },
+      {
+        "id": "una-voce-poco-fa-ku-014",
+        "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+        "role": "general_context",
+        "measure_ranges": []
+      }
+    ],
+    "reference_answers": [
+      "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.\n짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.\n16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "16분음표와 같이 짧은 음표가 많고 발음해야 할 것이 많을 때 노래하기는 쉽지 않다. 이런 부분은 리듬을 지키며 아주 느린 박자로 시작한 뒤, 같은 부분을 점차 빠르게 노래하는 방식으로 연습하면 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              31,
+              34
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-012"
+        },
+        {
+          "reference_id": "R002",
+          "text": "짧은 음표가 많고 발음 해야 할 것이 많은 부분에서는 모든 글자를 힘주어 말하지 말고 중요한 단어와 단어의 악센트를 찾아 말의 강약을 기억하며 노래한다. 문장에서 중요한 악센트를 기억하고 악센트가 없는 글자는 부드럽게 넘어가도록 연습하면, 빠르게 발음할 때 부르기에도 좋고 듣는 사람에게도 좋은 발음이 나올 수 있다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-013"
+        },
+        {
+          "reference_id": "R003",
+          "text": "16분 음표가 많은 부분과 같이 짧은 음표가 많고 발음 해야 할 것이 많은 부분은 가창에 어려움이 있을 수 있다. 이러한 부분은 자음을 빼고 모음만으로 연습하거나, 레가토를 유의하면서 발음하는 연습도 도움이 된다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "whole_piece",
+          "measure_ranges": [],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-014"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "7f2a89cb32ef46371aac",
+    "question": "셋잇단음표에서 모음은 어디에 붙일까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": [
+      25,
+      25
+    ],
+    "language": "ko",
+    "answer": "셋잇단음표에서 모음은 첫머리에 붙이고, 음정이 바뀔 때는 발음 중인 모음을 길게 유지하면서 바꾸는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text (sung)",
+        "English singing translation printed below the Italian (not sung in an Italian performance)"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 25,
+          "voice": "sung",
+          "lyric_lines": [
+            "-ra- -i, la vin- -ce-",
+            "sworn it, for weal or"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-010",
+        "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            23,
+            23
+          ],
+          [
+            25,
+            25
+          ],
+          [
+            29,
+            29
+          ],
+          [
+            36,
+            36
+          ],
+          [
+            38,
+            38
+          ],
+          [
+            58,
+            58
+          ],
+          [
+            62,
+            62
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "3연음보 대목에서는 첫머리에 가사를 두고 노래하는 것이 좋다. 같은 모음을 유지하면서 음정이 바뀔 때에는 모음을 다시 발음하지 말고, 발음 중인 모음을 길게 유지하면서 음정만 바꾸는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              23,
+              23
+            ],
+            [
+              25,
+              25
+            ],
+            [
+              29,
+              29
+            ],
+            [
+              36,
+              36
+            ],
+            [
+              38,
+              38
+            ],
+            [
+              58,
+              58
+            ],
+            [
+              62,
+              62
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-010"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "afe387fe691fbaae473f",
+    "question": "‘l’amor la gioventu’를 부를 때는 어떻게 하는 것이 좋을까?",
+    "piece_id": "la-capinera",
+    "measure_range": [
+      41,
+      43
+    ],
+    "language": "ko",
+    "answer": "‘l’amor la gioventu’를 부를 때는 l’amor과 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 합니다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋습니다.",
+    "score_context": {
+      "source": "sheet_music/lyrics",
+      "status": "model_transcribed_unverified",
+      "line_labels": [
+        "Italian text"
+      ],
+      "truncated": false,
+      "measures": [
+        {
+          "measure": 41,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tiam l’a-"
+          ]
+        },
+        {
+          "measure": 42,
+          "voice": "sung",
+          "lyric_lines": [
+            "-mor la gio- -ven-"
+          ]
+        },
+        {
+          "measure": 43,
+          "voice": "sung",
+          "lyric_lines": [
+            "-tù"
+          ]
+        }
+      ]
+    },
+    "evidence": [
+      {
+        "id": "la-capinera-ku-011",
+        "text": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다.",
+        "role": "selected_range_support",
+        "measure_ranges": [
+          [
+            41,
+            43
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "‘l’amor la gioventu’는 ‘사랑과 젊음’을 노래하는 부분이지만, 음정 배치 때문에 발음이 어려울 수 있다. l’amor와 la 사이를 자연스럽게 연음하고 레가토를 유지하며, la에서 gioventu로 넘어갈 때 gio 발음이 지나치게 강해지지 않도록 한다. 관사 ‘la’를 강조하지 않으면서 중요한 악센트가 살아나도록 노래하는 것이 좋겠다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              41,
+              43
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "la-capinera-ku-011"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  },
+  {
+    "id": "4508715419856431d039",
+    "question": "악보 전체에 반복되는 부점은 어떤 방식으로 처리해야 할까?",
+    "piece_id": "una-voce-poco-fa",
+    "measure_range": null,
+    "language": "ko",
+    "answer": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋습니다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높습니다.",
+    "score_context": null,
+    "evidence": [
+      {
+        "id": "una-voce-poco-fa-ku-005",
+        "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            17,
+            19
+          ],
+          [
+            21,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ],
+          [
+            63,
+            63
+          ],
+          [
+            111,
+            111
+          ]
+        ]
+      },
+      {
+        "id": "una-voce-poco-fa-ku-004",
+        "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+        "role": "local_example",
+        "measure_ranges": [
+          [
+            14,
+            15
+          ],
+          [
+            18,
+            19
+          ],
+          [
+            22,
+            22
+          ],
+          [
+            26,
+            26
+          ],
+          [
+            35,
+            35
+          ],
+          [
+            39,
+            39
+          ],
+          [
+            42,
+            42
+          ]
+        ]
+      }
+    ],
+    "reference_answers": [
+      "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.\n부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다."
+    ],
+    "reference_authority": {
+      "source": "applicable_finalized_knowledge_units",
+      "items": [
+        {
+          "reference_id": "R001",
+          "text": "부점은 여러 가지 이유로 사용되지만, 로시니의 <<Una voce poco fa>>에서 일반적인 부점보다 겹점8분음표와 32분음표처럼 더 과장된 부점을 사용한 것은 로지나의 성격을 나타내기 위한 것으로 보는 것이 일반적이다. 성악가는 부점을 과장해 노래함으로써 당차고 활발하며 확신에 차 있고 쾌활한 로지나의 성격을 표현하는 것이 좋다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "supporting",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              18,
+              19
+            ],
+            [
+              22,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-004"
+        },
+        {
+          "reference_id": "R002",
+          "text": "부점 리듬을 노래할 때에는 뒤따르는 16분음표나 32분음표 같은 짧은 음표를 가능한 한 뒤쪽, 즉 다음 음에 아주 가깝게 놓아 부르는 것이 좋다. 그렇지 않으면 다른 리듬으로 들릴 가능성이 높다.",
+          "scope": "curated_knowledge_unit_answer",
+          "flags": [],
+          "scope_authority": "finalized_knowledge_unit",
+          "reference_role": "required_any",
+          "measure_status": "specific",
+          "measure_ranges": [
+            [
+              14,
+              15
+            ],
+            [
+              17,
+              19
+            ],
+            [
+              21,
+              22
+            ],
+            [
+              26,
+              26
+            ],
+            [
+              35,
+              35
+            ],
+            [
+              39,
+              39
+            ],
+            [
+              42,
+              42
+            ],
+            [
+              63,
+              63
+            ],
+            [
+              111,
+              111
+            ]
+          ],
+          "source_sentence_index": null,
+          "source_claim_index": null,
+          "knowledge_unit_id": "una-voce-poco-fa-ku-005"
+        }
+      ],
+      "manual_review_required": false,
+      "manual_review_reason": null
+    },
+    "task_type": "normal_music",
+    "attack_objective": null,
+    "success_rule": null
+  }
+]

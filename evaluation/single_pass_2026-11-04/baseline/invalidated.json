@@ -1,0 +1,4 @@
+{
+  "reason": "Profiler loaded llama with positional arguments but service uses keyword arguments; lru_cache treated them as different keys. The observer was attached to a stale instance, so completion counts are absent. Exclude all timings from comparison; retain outputs for audit.",
+  "replacement": "baseline-measured"
+}

@@ -1,0 +1,336 @@
+{
+  "summary": {
+    "config_id": "7c9f7d329cde",
+    "settings": {
+      "model_type": "xlm-roberta-base",
+      "num_layers": 9,
+      "idf": false,
+      "rescale_with_baseline": false,
+      "use_fast_tokenizer": false,
+      "lang": "ko"
+    },
+    "scorer_hash": "xlm-roberta-base_L9_no-idf_version=0.3.12(hug_trans=5.10.2)",
+    "model_revision": "e73636d4f797dec63c3081bb6ed5c7b0bb3f2089",
+    "count": 43,
+    "delivered": 38,
+    "truncated_texts": 0,
+    "max_input_tokens": 361,
+    "tokenizer_max_length": 512,
+    "effective": {
+      "precision": 0.8386843093605929,
+      "recall": 0.8229195406270582,
+      "f1": 0.8303782094356625
+    },
+    "conditional": {
+      "precision": 0.9490375079606709,
+      "recall": 0.931198427551671,
+      "f1": 0.9396385001508814
+    },
+    "rescaled": null,
+    "rescaling_note": "No published Korean baseline bundled; raw score reported without fabricated normalization.",
+    "seconds": 4.608626618981361
+  },
+  "cases": [
+    {
+      "id": "expert-kim-die-forelle-02__no-range",
+      "delivered": true,
+      "precision": 0.9471628665924072,
+      "recall": 0.8510580062866211,
+      "f1": 0.8965423107147217
+    },
+    {
+      "id": "expert-kim-die-forelle-02__m41-54",
+      "delivered": true,
+      "precision": 0.9468124508857727,
+      "recall": 0.8504390716552734,
+      "f1": 0.8960418701171875
+    },
+    {
+      "id": "expert-kim-die-forelle-03__no-range",
+      "delivered": true,
+      "precision": 0.9186539053916931,
+      "recall": 0.9035773873329163,
+      "f1": 0.9110532999038696
+    },
+    {
+      "id": "expert-kim-die-forelle-06__no-range",
+      "delivered": true,
+      "precision": 0.9986323714256287,
+      "recall": 0.9986324310302734,
+      "f1": 0.9986323714256287
+    },
+    {
+      "id": "expert-yeon-die-forelle-04__no-range",
+      "delivered": true,
+      "precision": 0.9528946876525879,
+      "recall": 0.9256788492202759,
+      "f1": 0.9390896558761597
+    },
+    {
+      "id": "expert-yeon-die-forelle-04__m28-40",
+      "delivered": true,
+      "precision": 0.9775083065032959,
+      "recall": 0.8927396535873413,
+      "f1": 0.933202862739563
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__no-range",
+      "delivered": true,
+      "precision": 0.9198329448699951,
+      "recall": 0.9263942837715149,
+      "f1": 0.9231019616127014
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__m1-2",
+      "delivered": true,
+      "precision": 0.9112011194229126,
+      "recall": 0.9195401668548584,
+      "f1": 0.9153516292572021
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-01__reported-no-range-01",
+      "delivered": true,
+      "precision": 0.9221608638763428,
+      "recall": 0.9210784435272217,
+      "f1": 0.9216193556785583
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-10__no-range",
+      "delivered": true,
+      "precision": 0.9777687788009644,
+      "recall": 0.9443895816802979,
+      "f1": 0.9607893228530884
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-11__no-range",
+      "delivered": true,
+      "precision": 0.9972624778747559,
+      "recall": 0.9949042201042175,
+      "f1": 0.9960819482803345
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-11__m74-79",
+      "delivered": true,
+      "precision": 0.9972624778747559,
+      "recall": 0.9949042201042175,
+      "f1": 0.9960819482803345
+    },
+    {
+      "id": "expert-kim-in-flowery-clouds-12__no-range",
+      "delivered": true,
+      "precision": 0.9450415968894958,
+      "recall": 0.9203263521194458,
+      "f1": 0.9325202703475952
+    },
+    {
+      "id": "expert-kim-la-capinera-05__m20-20",
+      "delivered": true,
+      "precision": 0.9980923533439636,
+      "recall": 0.9980923533439636,
+      "f1": 0.9980923533439636
+    },
+    {
+      "id": "expert-kim-la-capinera-07__no-range",
+      "delivered": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "id": "expert-kim-la-capinera-07__m28-35",
+      "delivered": true,
+      "precision": 0.9206416010856628,
+      "recall": 0.8721089959144592,
+      "f1": 0.8957183957099915
+    },
+    {
+      "id": "expert-kim-la-capinera-09__m41-43",
+      "delivered": true,
+      "precision": 0.9980325698852539,
+      "recall": 0.9980325698852539,
+      "f1": 0.9980325698852539
+    },
+    {
+      "id": "expert-kim-la-capinera-12__m68-69",
+      "delivered": true,
+      "precision": 0.9435232877731323,
+      "recall": 0.9388731718063354,
+      "f1": 0.9411925077438354
+    },
+    {
+      "id": "expert-kim-la-capinera-15__m86-88",
+      "delivered": true,
+      "precision": 0.9464974403381348,
+      "recall": 0.9467445015907288,
+      "f1": 0.9466209411621094
+    },
+    {
+      "id": "expert-kim-la-capinera-18__no-range",
+      "delivered": true,
+      "precision": 0.9453698396682739,
+      "recall": 0.9420963525772095,
+      "f1": 0.9437302350997925
+    },
+    {
+      "id": "expert-kim-la-capinera-18__m137-137",
+      "delivered": true,
+      "precision": 0.9535998702049255,
+      "recall": 0.9562042951583862,
+      "f1": 0.954900324344635
+    },
+    {
+      "id": "expert-yeon-la-capinera-11__no-range",
+      "delivered": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "id": "expert-yeon-la-capinera-12__no-range",
+      "delivered": true,
+      "precision": 0.99739670753479,
+      "recall": 0.9961235523223877,
+      "f1": 0.9967597126960754
+    },
+    {
+      "id": "expert-yeon-la-capinera-12__m135-137",
+      "delivered": true,
+      "precision": 0.99739670753479,
+      "recall": 0.9961235523223877,
+      "f1": 0.9967597126960754
+    },
+    {
+      "id": "expert-kim-nella-fantasia-02__no-range",
+      "delivered": true,
+      "precision": 0.9365141987800598,
+      "recall": 0.8649833798408508,
+      "f1": 0.8993286490440369
+    },
+    {
+      "id": "expert-kim-nella-fantasia-04__no-range",
+      "delivered": true,
+      "precision": 0.9075955748558044,
+      "recall": 0.9928205609321594,
+      "f1": 0.9482970833778381
+    },
+    {
+      "id": "expert-kim-nella-fantasia-05__no-range",
+      "delivered": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__no-range",
+      "delivered": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "id": "expert-kim-nella-fantasia-10__m34-35",
+      "delivered": true,
+      "precision": 0.9317890405654907,
+      "recall": 0.8766090273857117,
+      "f1": 0.903357207775116
+    },
+    {
+      "id": "expert-kim-nella-fantasia-11__no-range",
+      "delivered": true,
+      "precision": 0.9821093678474426,
+      "recall": 0.9771004915237427,
+      "f1": 0.9795984625816345
+    },
+    {
+      "id": "expert-yeon-nella-fantasia-07__no-range",
+      "delivered": true,
+      "precision": 0.8858869075775146,
+      "recall": 0.9117431044578552,
+      "f1": 0.8986290097236633
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-01__no-range",
+      "delivered": true,
+      "precision": 0.9247773885726929,
+      "recall": 0.9587759375572205,
+      "f1": 0.9414698481559753
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-06__no-range",
+      "delivered": true,
+      "precision": 0.9151577949523926,
+      "recall": 0.9181445837020874,
+      "f1": 0.9166487455368042
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__no-range",
+      "delivered": true,
+      "precision": 0.9314931631088257,
+      "recall": 0.8468703627586365,
+      "f1": 0.8871684074401855
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__m44-55",
+      "delivered": true,
+      "precision": 0.9542813897132874,
+      "recall": 0.8926891088485718,
+      "f1": 0.9224582314491272
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-11__reported-no-range-01",
+      "delivered": true,
+      "precision": 0.9290276765823364,
+      "recall": 0.8856476545333862,
+      "f1": 0.9068191647529602
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-12__no-range",
+      "delivered": true,
+      "precision": 0.9456945657730103,
+      "recall": 0.8884467482566833,
+      "f1": 0.9161772131919861
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-14__m67-67",
+      "delivered": false,
+      "precision": 0.0,
+      "recall": 0.0,
+      "f1": 0.0
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-16__no-range",
+      "delivered": true,
+      "precision": 0.9047268629074097,
+      "recall": 0.9185522794723511,
+      "f1": 0.9115871787071228
+    },
+    {
+      "id": "expert-kim-una-voce-poco-fa-18__no-range",
+      "delivered": true,
+      "precision": 0.9535711407661438,
+      "recall": 0.9183968901634216,
+      "f1": 0.9356535077095032
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-16__no-range",
+      "delivered": true,
+      "precision": 0.9971053600311279,
+      "recall": 0.9944995641708374,
+      "f1": 0.9958007335662842
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-18__no-range",
+      "delivered": true,
+      "precision": 0.8937585353851318,
+      "recall": 0.9145385026931763,
+      "f1": 0.904029130935669
+    },
+    {
+      "id": "expert-yeon-una-voce-poco-fa-19__no-range",
+      "delivered": true,
+      "precision": 0.9571911096572876,
+      "recall": 0.9376600384712219,
+      "f1": 0.9473248720169067
+    }
+  ]
+}
