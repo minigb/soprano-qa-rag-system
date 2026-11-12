@@ -192,14 +192,19 @@ def screen_text(text: str, *, source: str = "question") -> None:
         raise SecurityViolation(reason)
 
 
-def screen_question(question: str) -> None:
-    """Apply the cheap boundary before translation, retrieval, or inference."""
+def validate_question_input(question: str) -> None:
+    """Validate transport/input shape without classifying the user's task."""
     if not isinstance(question, str):
         raise SecurityViolation("invalid_question")
     if len(question) > MAX_QUESTION_CHARS:
         raise SecurityViolation("question_too_long")
     if not _normalized_screen_text(question):
         raise SecurityViolation("invalid_question")
+
+
+def screen_question(question: str) -> None:
+    """Apply the historical rule-based task screen before model inference."""
+    validate_question_input(question)
     screen_text(question)
 
 

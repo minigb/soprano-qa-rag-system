@@ -27,6 +27,11 @@ from soprano_qa.settings import load_settings
 class ServicePipelineTests(unittest.TestCase):
     def setUp(self) -> None:
         """Isolate generation while exercising configured strict retrieval."""
+        # These historical validation contracts belong to the reviewed path.
+        # test_single_pass exercises the shipped default without those gates.
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
         self._generation_preflight_patch = mock.patch.object(
             qa,
             "validate_generation_requirements",

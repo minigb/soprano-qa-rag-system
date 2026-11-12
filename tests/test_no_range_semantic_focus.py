@@ -397,6 +397,11 @@ class NoRangeSemanticFocusTests(unittest.TestCase):
 
 
 class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
+    def setUp(self):
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
+
     @staticmethod
     def _index_with_results(results: list[SearchResult]) -> Any:
         class FixedIndex:

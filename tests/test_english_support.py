@@ -105,6 +105,11 @@ class LanguageValidationTests(unittest.TestCase):
 
 
 class KoreanDefaultUnchangedTests(unittest.TestCase):
+    def setUp(self):
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
+
     def test_korean_system_prompt_retains_domain_and_security_contract(self) -> None:
         self.assertIn("Answer in Korean using formal-polite 합니다체", SYSTEM_PROMPT)
         self.assertIn(SECURITY_SYSTEM_POLICY, SYSTEM_PROMPT)
@@ -383,6 +388,9 @@ class TranslationHelperTests(unittest.TestCase):
 
 class EnglishServiceTests(unittest.TestCase):
     def setUp(self) -> None:
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
         patcher = mock.patch.object(qa, "validate_generation_requirements")
         self.preflight = patcher.start()
         self.addCleanup(patcher.stop)
