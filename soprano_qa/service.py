@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import threading
 from pathlib import Path
 from typing import Optional
@@ -51,6 +52,7 @@ from soprano_qa import single_pass
 from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
 from soprano_qa.security import SecurityViolation, screen_question, screen_text, validate_question_input
 from soprano_qa.translation import (
+    query_translation_generate_fn,
     translate_question_to_korean,
     validate_language,
 )
@@ -64,6 +66,8 @@ _corpus_signature: Optional[
     tuple[tuple[int, int], tuple[int, int], Optional[tuple[int, int]]]
 ] = None
 
+
+HANGUL_RE = re.compile(r"[가-힣]")
 
 def _file_identity(path: str) -> tuple[int, int]:
     stat = Path(path).stat()
@@ -111,6 +115,14 @@ def _get_index() -> SearchIndex:
 
 def model_status() -> dict:
     model_path = Path(SETTINGS["model_path"])
+    if SETTINGS['llm'].get('answer_provider') == 'vertex_gemini':
+        from soprano_qa.vertex_gemini import options
+        model, _, location, level, _, _ = options(SETTINGS['llm'])
+        remote_translation = SETTINGS['llm'].get('query_translation_provider') == 'vertex_gemini'
+        return {"backend": "vertex_gemini", "model": model, "location": location,
+                "thinking_level": level,
+                "query_translation_backend": "vertex_gemini" if remote_translation else "llama-cpp-python",
+                "query_translation_model": model if remote_translation else str(model_path)}
     return {
         "path": str(model_path),
         "checkpoint_exists": model_path.is_file(),
@@ -245,9 +257,12 @@ def _ask(
     validate_language(language)
     direct = single_pass.enabled(SETTINGS['llm'])
     make_messages = single_pass.build_messages if direct else build_messages
-    # English questions need the local model for translation even when no
-    # answer is generated.
-    if generate or language != "ko":
+    # Korean-oriented retrieval and gating always see Korean text: English
+    # questions are translated, and so is a question without Hangul asked for
+    # a Korean answer (the web page's language toggle can pair them).
+    translate_query = language == "en" or not HANGUL_RE.search(question)
+    # Translation needs the model even when no answer is generated.
+    if generate or translate_query:
         validate_generation_requirements(
             SETTINGS["model_path"],
             SETTINGS["llm"],
@@ -268,15 +283,14 @@ def _ask(
     measures = format_measure_range(measure_ranges) if measure_ranges else ""
 
     index = _get_index()
-    # Korean-oriented retrieval and gating always see Korean text.
     retrieval_query = (
         translate_question_to_korean(
             question,
             model_path=SETTINGS["model_path"],
             llm_settings=SETTINGS["llm"],
-            generate_fn=generate_llm,
+            generate_fn=query_translation_generate_fn(SETTINGS["llm"], generate_llm),
         )
-        if language == "en"
+        if translate_query
         else question
     )
     # The extractive path returns Korean evidence text in either language.
@@ -443,6 +457,8 @@ def _ask(
         ),
         "pipeline": "soprano_qa",
         "model": status,
+        **({"generation_metadata": raw_answer.generation_metadata}
+           if generate and hasattr(raw_answer, 'generation_metadata') else {}),
         "retrieval": retrieval_diagnostics(index),
         "evidence": [
             _result_to_evidence(
@@ -524,4 +540,6 @@ def ask(
                 generation_mode=recovered.generation_mode if direct else 'llm_general_fallback',
                 answer_basis=recovered.answer_basis if direct else 'general_music_knowledge', unavailable_reason=None,
                 generation_validation_warning='unsafe_source_excluded')
+            if hasattr(recovered, 'generation_metadata'):
+                response['generation_metadata'] = recovered.generation_metadata
         return response

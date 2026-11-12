@@ -119,6 +119,19 @@ def validate_generation_requirements(
     not merely a missing Python module or path.
     """
 
+    provider = llm_settings.get("answer_provider", "local")
+    if provider == "vertex_gemini":
+        from soprano_qa.vertex_gemini import validate_requirements
+        try:
+            validate_requirements(llm_settings)
+        except Exception as exc:
+            raise GenerationBackendUnavailable(
+                "Vertex Gemini configuration/ADC unavailable; install requirements-vertex.txt "
+                "and source your Vertex env.sh. Error type: " + type(exc).__name__
+            ) from exc
+        return
+    if provider != "local":
+        raise GenerationBackendUnavailable("Unknown answer_provider: " + str(provider))
     configured_path = str(model_path or "").strip()
     if not configured_path or not os.path.isfile(configured_path):
         display_path = configured_path or "(model_path is not configured)"
