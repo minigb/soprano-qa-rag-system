@@ -13,7 +13,7 @@ from soprano_qa.corpus import corpus_input_fingerprint, file_sha256
 from soprano_qa.dense import build_retrieval_index
 from soprano_qa.retrieval import load_corpus
 from soprano_qa.settings import load_settings
-from soprano_qa.source_priority import SOURCE_PRIORITY, CONTEXT_ONLY
+from soprano_qa.source_priority import SOURCE_PRIORITY, CONTEXT_ONLY, scope_tier
 
 
 def main():
@@ -52,7 +52,8 @@ def main():
             "sumijo_false_positives": sum(any(h["lineage"] == "sumijo_feedback" for h in r["conditions"][name]) for r in negatives),
             "negative_questions": len(negatives),
             "authority_order_violations": sum(
-                (tiers := [SOURCE_PRIORITY[h["lineage"]] for h in r["conditions"][name]
+                (tiers := [(scope_tier(h["scope"]), SOURCE_PRIORITY[h["lineage"]])
+                           for h in r["conditions"][name]
                            if h["scope"] not in CONTEXT_ONLY]) != sorted(tiers)
                 for r in rows),
         }

@@ -28,6 +28,12 @@ class PriorityTests(unittest.TestCase):
                    hit("expert_annotation", "e", scope="overlaps_query_range")]
         self.assertEqual(prioritize(results)[0].record["id"], "e")
 
+    def test_whole_piece_ranks_between_range_evidence_and_context(self):
+        results = [hit("sumijo_feedback", "other", scope="other_range_context"),
+                   hit("sumijo_feedback", "whole", scope="global_context"),
+                   hit("expert_annotation", "local", scope="overlaps_query_range")]
+        self.assertEqual([r.record["id"] for r in prioritize(results)], ["local", "whole", "other"])
+
     def test_stability_deduplication_and_budget(self):
         a, b = hit("expert_annotation", "a"), hit("expert_annotation", "b")
         self.assertEqual(merge_evidence([a], [b, a], 2), [a, b])
@@ -51,6 +57,23 @@ class SumijoIntegrationTests(unittest.TestCase):
         self.assertTrue(all("source_ids" not in r and "web_source_ids" not in r for r in self.records))
         self.assertTrue(all(r["sumijo_source"]["speaker"] == "Sumi Jo" for r in self.records))
 
+    def test_reviewed_measure_scopes(self):
+        scopes = {r["id"].removeprefix("sumijo-nella-fantasia-"):
+                  (r["measure_status"], r["measure_scope"], r["measure_range"]) for r in self.records}
+        self.assertEqual(scopes, {
+            "036-ku-01": ("specific", "local", [[7, 10]]),
+            "037-ku-01": ("whole_piece", "global", []),
+            "038-ku-01": ("whole_piece", "global", []),
+            "039-ku-01": ("specific", "local", [[33, 35]]),
+            "040-ku-01": ("specific", "local", [[15, 22]]),
+            "040-ku-02": ("whole_piece", "global", []),
+            "041-ku-01": ("whole_piece", "global", []),
+        })
+        record = copy.deepcopy(self.records[1])
+        record["measure_range"] = [[1, 2]]
+        with self.assertRaises(ValueError):
+            validate_release_corpus([record])
+
     def test_all_original_questions_find_their_source(self):
         index = self.index()
         for record in self.records:
@@ -65,7 +88,10 @@ class SumijoIntegrationTests(unittest.TestCase):
         query = "마이크를 사용할 때 어떤 음색으로 노래해야 하나요?"
         self.assertTrue(index.search(query, piece="nella-fantasia"))
         self.assertEqual(index.search(query, piece="die-forelle"), [])
-        self.assertEqual(index.search(query, piece="nella-fantasia", measure_ranges=[[1, 4]]), [])
+        # Whole-piece feedback applies inside any selected range.
+        ranged = index.search(query, piece="nella-fantasia", measure_ranges=[[1, 4]])
+        self.assertEqual(ranged[0].record["id"], "sumijo-nella-fantasia-037-ku-01")
+        self.assertEqual(ranged[0].scope_match, "global_context")
 
     def test_unrelated_question_abstains(self):
         self.assertEqual(self.index().search("이 곡의 작곡가는 누구인가요?", piece="nella-fantasia"), [])
@@ -135,7 +161,12 @@ class SumijoIntegrationTests(unittest.TestCase):
         self.assertEqual(index.search(query, piece="nella-fantasia"), [])
         embedder.query = [1, 0]
         self.assertEqual(index.search(query, piece="die-forelle"), [])
+        # The opening-dynamics unit covers measures 7-10: a ranged query can
+        # match it semantically only when the range overlaps.
         self.assertEqual(index.search(query, piece="nella-fantasia", measure_ranges=[[1, 4]]), [])
+        overlapping = index.search(query, piece="nella-fantasia", measure_ranges=[[8, 9]])
+        self.assertEqual(overlapping[0].record["id"], self.records[0]["id"])
+        self.assertEqual(overlapping[0].scope_match, "overlaps_query_range")
 
     def test_invalid_semantic_threshold_is_rejected(self):
         with self.assertRaises(ValueError):

@@ -1,8 +1,8 @@
 {
   "corpus_schema_version": 9,
   "dataset_root": "/home/minhee/soprano-qa-dataset",
-  "input_fingerprint": "3bca212d397f13664f32564f5ffd8363bdd1c52935f7b58cf7e2de8c1e58a86a",
-  "corpus_sha256": "40f34eaeb5e5a643eaa0e9443b2238cb94b9310473f6350aee5eaf42a5b5a3e4",
+  "input_fingerprint": "6f49653c8740b85d8f9bc32134c5414bd276d0ebe74f4fd202bbaaa234b7d624",
+  "corpus_sha256": "e90ec752b61e7781aec390ef7f5662157d651936ca6f05cab1ad4e9de0081c14",
   "total_records": 953,
   "records_by_evidence_type": {
     "expert_annotation": 122,
@@ -18,10 +18,9 @@
     "una-voce-poco-fa": 243
   },
   "records_by_measure_scope": {
-    "global": 881,
-    "local": 38,
-    "multi_range": 27,
-    "unspecified": 7
+    "global": 885,
+    "local": 41,
+    "multi_range": 27
   },
   "expert_records_by_measure_status": {
     "specific": 65,

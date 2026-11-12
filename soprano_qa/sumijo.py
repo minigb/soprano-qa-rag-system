@@ -39,8 +39,9 @@ def build_records(dataset_root):
             "piece": unit["piece"], "piece_title": piece["title"],
             "work": piece["work"], "composer": piece["composer"],
             "genre": piece["genre"], "language": piece["language"],
-            "measure_range": [], "measure_scope": "unspecified",
-            "measure_status": "unspecified",
+            "measure_range": unit["measure_ranges"],
+            "measure_scope": measure_scope(unit["measure_status"], unit["measure_ranges"]),
+            "measure_status": unit["measure_status"],
             "retrieval_aliases": [source["question"]] if unit["knowledge_unit_id"].endswith("-01") else [],
             "answer": unit["answer"],
             "sumijo_source": {
@@ -56,6 +57,17 @@ def build_records(dataset_root):
     return records
 
 
+def measure_scope(status, ranges):
+    """Match the expert convention; only reviewed units carry a location."""
+    from soprano_qa.corpus import default_measure_scope, normalize_ranges
+
+    if status == "unspecified":
+        return "unspecified"
+    if status not in {"specific", "whole_piece"} or bool(ranges) != (status == "specific"):
+        raise ValueError("Sumi Jo measure ranges contradict status %r: %r" % (status, ranges))
+    return default_measure_scope(normalize_ranges(ranges))
+
+
 def validate_record(record):
     from soprano_qa.corpus import EXPERT_RELEASE_RECORD_KEYS, expect_exact_keys
 
@@ -69,7 +81,7 @@ def validate_record(record):
             or not source.get("attribution_basis")
             or set(source["files"]) != {"raw", "reviewed", "audio"}
             or set(source["sha256"]) != set(source["files"])
-            or record["measure_status"] != "unspecified"
-            or record["measure_scope"] != "unspecified"
-            or record["measure_range"] or not record["answer"].strip()):
+            or not record["answer"].strip()):
         raise ValueError("Invalid Sumi Jo release provenance or scope")
+    if record["measure_scope"] != measure_scope(record["measure_status"], record["measure_range"]):
+        raise ValueError("Invalid Sumi Jo measure scope: " + record["id"])

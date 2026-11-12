@@ -6,13 +6,22 @@ from soprano_qa.retrieval import BM25Index, SearchResult, measure_scope_match
 
 SOURCE_PRIORITY = {"sumijo_feedback": 0, "expert_annotation": 1,
                    "web_coaching": 2, "web_database": 2}
-CONTEXT_ONLY = {"other_range_context", "unspecified_context", "global_context"}
+CONTEXT_ONLY = {"other_range_context", "unspecified_context"}
+# In a ranged query, whole-piece evidence still grounds an answer but ranks
+# after evidence located in the selected range.
+RANGED_SEMANTIC_SCOPES = {"overlaps_query_range", "global_context"}
+
+
+def scope_tier(scope_match):
+    if scope_match in CONTEXT_ONLY:
+        return 2
+    return 1 if scope_match == "global_context" else 0
 
 
 def prioritize(results):
     """Stable ordering preserves relevance ranking within each authority tier."""
     return sorted(results, key=lambda r: (
-        r.scope_match in CONTEXT_ONLY,
+        scope_tier(r.scope_match),
         SOURCE_PRIORITY.get(r.record.get("evidence_type"), 3),
     ))
 
@@ -48,11 +57,15 @@ class SumijoIndex:
         if top_k < 1:
             return []
         lexical = self.lexical.search(query, piece, measure_ranges, topic, top_k)
-        if not self.vectors or measure_ranges:
+        if not self.vectors:
             return lexical
+        # A ranged query may semantically match only units that apply there:
+        # passages overlapping the range, or the whole piece.
         eligible = [i for i, r in enumerate(self.records)
                     if (not piece or r["piece"] == piece)
-                    and (not topic or topic in r.get("topic", ""))]
+                    and (not topic or topic in r.get("topic", ""))
+                    and (not measure_ranges
+                         or measure_scope_match(r, measure_ranges) in RANGED_SEMANTIC_SCOPES)]
         if not eligible:
             return lexical
         from soprano_qa.dense import _normalized_vector, dense_query_text, missing_dense_answer_constraints
