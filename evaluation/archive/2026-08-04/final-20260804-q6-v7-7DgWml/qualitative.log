@@ -1,0 +1,88 @@
+{
+  "artifact": "/home/minhee/soprano-qa-evaluation-final-20260804-q6-v7-7DgWml/qualitative.json",
+  "attempted_cases": 105,
+  "run_status": "completed",
+  "summary": {
+    "question_count": 79,
+    "case_count": 105,
+    "representative_measure_range_case_count": 43,
+    "reviewed_hint_context_range_case_count": 1,
+    "excluded_inference_case_count": 1,
+    "excluded_inference_cases": [
+      {
+        "source_id": "kim-la-capinera-01",
+        "measure_range": [
+          78,
+          81
+        ],
+        "reason": "The linked unit transfers an opening pp idea to the reprise, but its lyric anchor does not support this question at measures 78-81."
+      }
+    ],
+    "case_statuses": {
+      "completed": 105
+    },
+    "per_piece_case_statuses": {
+      "die-forelle": {
+        "completed": 13
+      },
+      "in-flowery-clouds": {
+        "completed": 16
+      },
+      "la-capinera": {
+        "completed": 26
+      },
+      "nella-fantasia": {
+        "completed": 18
+      },
+      "una-voce-poco-fa": {
+        "completed": 32
+      }
+    },
+    "completed_generation_modes": {
+      "llm": 105
+    },
+    "completed_answer_bases": {
+      "retrieved_evidence": 105
+    },
+    "retrieval_diagnostics": {
+      "completed_cases": 105,
+      "source_retrieved_cases": 105,
+      "cases_with_expected_eligible_target": 105,
+      "cases_retrieving_any_expected_target": 105,
+      "cases_retrieving_all_expected_targets": 97
+    },
+    "evaluation_cohorts": {
+      "measure_scoped_question_no_range": {
+        "case_count": 26,
+        "case_statuses": {
+          "completed": 26
+        },
+        "per_piece_case_statuses": {
+          "die-forelle": {
+            "completed": 3
+          },
+          "in-flowery-clouds": {
+            "completed": 6
+          },
+          "la-capinera": {
+            "completed": 6
+          },
+          "nella-fantasia": {
+            "completed": 4
+          },
+          "una-voce-poco-fa": {
+            "completed": 7
+          }
+        },
+        "semantic_target_cases_completed": 26,
+        "semantic_target_hit_at_1_cases": 26,
+        "semantic_target_hit_at_3_cases": 26,
+        "semantic_target_hit_at_3_rate": 1.0,
+        "semantic_target_hit_at_k_cases": 26,
+        "semantic_target_mean_reciprocal_rank": 1.0
+      }
+    },
+    "automatic_quality_verdict": null,
+    "automatic_quality_verdict_note": "This qualitative artifact records inference and retrieval diagnostics only; answer-fidelity judgment is a separate run."
+  }
+}

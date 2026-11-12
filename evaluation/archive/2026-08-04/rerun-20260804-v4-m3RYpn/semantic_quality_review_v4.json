@@ -1,0 +1,2844 @@
+{
+  "artifact_type": "soprano_qa_semantic_quality_review",
+  "schema_version": "1.0",
+  "review_status": "complete",
+  "review_method": "direct_codex_review",
+  "assessments": [
+    {
+      "case_id": "kim-die-forelle-01__no-range",
+      "semantic_hash": "d92bd919db3a3eff61ee0644d6b18a2bedd563f88a0dc5469d3b0de0e2ea8998",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-01-syn-01__no-range",
+      "semantic_hash": "0b0921b0398606027296fa3d3ae4f10fa3cece7ae8b83edf8cabc685dad7366f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-01-syn-02__no-range",
+      "semantic_hash": "adc2b1f0101166db97fa124804a0faf7b3e3bbca3ff4ff1d8e738740bd6afb8d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-01-syn-03__no-range",
+      "semantic_hash": "726845c1d1eb43863bb115eed72797c6213e4a97119d1841c2a89c9e2106df8d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02__no-range",
+      "semantic_hash": "2998ab9f1b455106d98454fcb4cbc383b6a55960f57fc78617feee1cfbaa23db",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-01__no-range",
+      "semantic_hash": "92df59a95a136fd4577c4d96c7a813d43c2f4bb6fd9748184e6aedcd2a7ec7c4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-02__no-range",
+      "semantic_hash": "cc336f4035317dd525562604ce75ac25398e87da86415d42cf1810d531acfa1a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-03__no-range",
+      "semantic_hash": "78da628c0ce86f7c36e69c1b8a4ec1cf521d7506c27dd0b409c63b74606bbaea",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02__m41-54",
+      "semantic_hash": "079b6dbbfb19b3e8fd62cdbaaec4c415ea3f0ec21be87487d3561180292fed25",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-01__m41-54",
+      "semantic_hash": "e16696fa0feaf92c92c41cb3ef4946d72921ad1b489d53c05ac3ecfadfabaefa",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-02__m41-54",
+      "semantic_hash": "e8b2ebd897ed01c60591b3afb0c06c978d4d453a1b10284e5ee9eb8264643aea",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-02-syn-03__m41-54",
+      "semantic_hash": "f0bb015996fc7c36c2b75d293481956986d155dbb864dbaad64d8d0ac7b83996",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-03__no-range",
+      "semantic_hash": "c0834567f5e1b7a89ad0fcb17426c315758f2ee94dfffadb7f74ce90c00c57ff",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-03-syn-01__no-range",
+      "semantic_hash": "f937c9cc6a4760ba555b99175054ee76fc2e8aa939ce3d8e4693cd5369fa3a3b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-03-syn-02__no-range",
+      "semantic_hash": "ae9a55f03af59543d886595faa529c9de943d59f5fccaf86f2c6d071d2e3beb8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-03-syn-03__no-range",
+      "semantic_hash": "299073e7530359eb742ca6fe5ce17b5ca4499248844edaddb3c9db124137868b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-04__no-range",
+      "semantic_hash": "fd91549af3551d093ab525fc571e17ef149fa03532a8f08971ced6dc02c974e2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-04-syn-01__no-range",
+      "semantic_hash": "c1c99b42d72209163b372651715e2312e002eb0950e479e52d674f8117128b2b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-04-syn-02__no-range",
+      "semantic_hash": "97c1b18bc0f51842ac5e3a9e11dac118bd19437d6b72dd8ac67f2fc685d99e6a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-04-syn-03__no-range",
+      "semantic_hash": "6593d98107f5eca394353f6196b55987f587812c40463c96123c8c8d3aca1cbf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-05__no-range",
+      "semantic_hash": "a8daa9ac124012b1d0af1577dfbca152f459e3e8d16b7959b18fd6660297ba6a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-05-syn-01__no-range",
+      "semantic_hash": "000c57bc0c23a30260dc63a47d6a805235004fed4b6c05bcc3f899d8221e459a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-05-syn-02__no-range",
+      "semantic_hash": "75548f427fd79cdf1c266cdd7d112a80b97db1df9406ae135c13c6889605ecb7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-05-syn-03__no-range",
+      "semantic_hash": "ee61af820be757992f122476e07504b485b7a4ca5cc26ffb4fdc0d768a6ec797",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-06__no-range",
+      "semantic_hash": "5bb6b439ec68403818bf3c6de01fb2bb32700725c294a956b4d07c0c9ee8c5fd",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-06-syn-01__no-range",
+      "semantic_hash": "25d7a9296fb819539c60c36170a285b15eeb77e361877ce4cdf2dc3ee201676b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-06-syn-02__no-range",
+      "semantic_hash": "f6f986b30acee8eeaba9ecef11bc6a7fd824b7721b955134f8b0c01b78af213a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-06-syn-03__no-range",
+      "semantic_hash": "bc3755b8c1ae7afa4b796f12e3f43fa7559ff3741f88320c8215f65fedec3071",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07__no-range",
+      "semantic_hash": "3b69e69f0ea120ee17cb0b69de08e1c9eebfadeba42e39854668df1c62976f3f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-01__no-range",
+      "semantic_hash": "f166dff42def274145facb50da5f5efed7fe7beab690d19ec581a427cb93962e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-02__no-range",
+      "semantic_hash": "ef1b6afb038f2d2b0d78959e859a60d14a433c1947120e4eb2afcdc9de22f61a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-03__no-range",
+      "semantic_hash": "3dc798d7c042d64a057837fae3edac96c5b205489202b9f905aebf777570e1e3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07__m28-40",
+      "semantic_hash": "1a75bc03287a604aa1ef646f1fb86b6eb6d57831def82f4bdc00177577102b9e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-01__m28-40",
+      "semantic_hash": "45cebac2bc1d31be80a775bd648332d011bc3c220d242bc007525481eb1c909f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-02__m28-40",
+      "semantic_hash": "d98a80e6f388467b9893c3225d4c666667b5a03957d14c46c6f6e52d8c37bbcf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-07-syn-03__m28-40",
+      "semantic_hash": "1adbe7f1ec9ad0b30aa75176338ce14a66be342e2716baffdcab9a9e3ecb01a8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-08__no-range",
+      "semantic_hash": "6884f18767cff892c0df2e1f5ee29782e87045a12d5276693200b6c224832668",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-08-syn-01__no-range",
+      "semantic_hash": "9576707581a62fad48b33d03eb2a405f20c3e74c790a9d13925eb64b9edd0748",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-08-syn-02__no-range",
+      "semantic_hash": "eec77448e93f91fea47178adbca1cd41cb663bb96583bd214de20b7d5ff5b90f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-die-forelle-08-syn-03__no-range",
+      "semantic_hash": "2e8e180efb603fe9ccd4d469499874a5cfdc717ef54115af312b94ad7891b1dc",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04__no-range",
+      "semantic_hash": "aef4658c2d539d913ad52c1f02444fe0b7c1f0bea5ca34acfcaa71cfe40cceeb",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-01__no-range",
+      "semantic_hash": "a719446e00d4a18df3ab8eceb527c30165722b317c6548e60d59922dba5f09bd",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-02__no-range",
+      "semantic_hash": "18dbe1b38ab3924b8bc0fd804df007ddd1f0a87331c4d0186973f446a7b995be",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-03__no-range",
+      "semantic_hash": "7c96cf345b796655c63b92b0a860184bbe36a514ca2bc5954ab8bf3ccb764e5a",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04__m28-40",
+      "semantic_hash": "ddb594e1a497976f156bafc7532ef020655ce7285b1615ba04238eb9a5340caf",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-01__m28-40",
+      "semantic_hash": "89072019de632eb6fa75395f96c64b78c8637a39a5518cd6ac140e12e0b69f98",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-02__m28-40",
+      "semantic_hash": "f308e45ae5e6827de2720354ec3b4951ff593289da14afb3502ffcc6e6aedb38",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-04-syn-03__m28-40",
+      "semantic_hash": "8cb8ada4e7d2dc5c9ce2be599f6a33f247422d2e646ff51ab5b500aaa3f86b5a",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-05__no-range",
+      "semantic_hash": "364a7992ecef24b09ad97056fe627cd3efb3bb2d7fd7367959c23bf76d068c9e",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "awkward_repetition"
+      ],
+      "rationale": "The final two sentences repeat the same “매우 중요합니다” frame. The advice is grounded, but the duplicated structure makes the broad answer noticeably unnatural."
+    },
+    {
+      "case_id": "yeon-die-forelle-05-syn-01__no-range",
+      "semantic_hash": "01e67858082a66359189bb7b1ef1a639c70a55e300cf3b608eca87c3549a407f",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_changed"
+      ],
+      "rationale": "The answer advises practicing to produce a strong sound with consonants and vowels. The reviewed evidence instead warns that this combination can make the sound stronger than required and recommends controlling it so the song’s atmosphere is not harmed. This reverses the emphasis of that technical advice, although the rest of the broad answer is supported."
+    },
+    {
+      "case_id": "yeon-die-forelle-05-syn-02__no-range",
+      "semantic_hash": "dced8f82fc840884ba9227a5cdec302602c790682b3dff311a8f2a82e20de3dd",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-die-forelle-05-syn-03__no-range",
+      "semantic_hash": "a06113b4c617d2e6e42fba10cb1b7e0943d698c3e04423b0c806cd1e5cbe05e1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01__no-range",
+      "semantic_hash": "d1e40a764a91d6a551fb34473acfd5fe388a2220b34e91f06acf6447ab29446e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-01__no-range",
+      "semantic_hash": "47d23f7abf7232edfd79accb0f50cb3aa0363b535ac0d9bb21909e6634cea0d1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-02__no-range",
+      "semantic_hash": "35d34a5f9e26201134cbfa6de0ef655e14a0d57afc8090ed80184b8a7ac8769a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-03__no-range",
+      "semantic_hash": "1b8e2c8baf06e52380255c8316b11e514277b021e82fadd9c6799d88877885d5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01__m1-2",
+      "semantic_hash": "2462d9d18ac9e494a166ee159f9b7f659bd9ed4984faf46077bd34dc9e17c38f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-01__m1-2",
+      "semantic_hash": "fc6a9ee7cf306c668693884c37f68067ae2165128d716b56c1f96a2960dfdb3f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-02__m1-2",
+      "semantic_hash": "15418d5fae92e056f39bf8d08c91eb2957155441e3e4803338ceac5070b1a42f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01-syn-03__m1-2",
+      "semantic_hash": "1cbf98fc81a7f88f87bc8fce17c59fa26cf8ac553e17a532162215cf1c9c86b3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-01__reported-no-range-01",
+      "semantic_hash": "47d882d4a311577712a723f43aee6dc18afb5bafc9742cd93aecd426e8cbc36f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02__no-range",
+      "semantic_hash": "1a15da3789b2bd7f2e1cbc307402b9669d5ec2cbea8fb77ca5d81138b14d45ac",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-01__no-range",
+      "semantic_hash": "765a3279efe8e2583deaf1eef74684727389d170d779da8d5b1966bbafd696b9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-02__no-range",
+      "semantic_hash": "1454e4dd8cc4f1bcce000ea8fc10345f1676f1bb5e4abf1d9765f026fc739eaf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-03__no-range",
+      "semantic_hash": "e3cd36bffcbb47f8e2a81f6a3abbebb7b0fe1ba1d46e64be518d748789047afc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02__m11-12",
+      "semantic_hash": "454d431e16e68caf7fa410be7ec13e09081d3153c277601a40d50af4fc674350",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-01__m11-12",
+      "semantic_hash": "8b304e15775ee52f745e3e809f7fb367cda6fa1f9fa59dfe852627f49f1d1aed",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-02__m11-12",
+      "semantic_hash": "49d84fd442496cb5ade107ae214f6361eb3344bbe6123f507a7f31b74ce719b4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-02-syn-03__m11-12",
+      "semantic_hash": "f6b496e0908c9b03639af16c3d6d97dc2343d6a796c232a4c01d14c496c230bc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-05__m19-21",
+      "semantic_hash": "11d09fe96c7c756ea7756bce7caf4d42a0f728e30a0cdbbf95d99f49f8828251",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-05-syn-01__m19-21",
+      "semantic_hash": "51560f97b4b6c0cd7d9f92d1a2c45164148de14e1220e5dca1a1eac08b2a8863",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The first-note guidance is correct, but the final discussion of Korean word duration, dotted rhythms, and composer-dependent emphasis is unrelated to solving the difficult phrase entrance and substantially distracts from the answer."
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-05-syn-02__m19-21",
+      "semantic_hash": "5257f7266c70403147652efb36e0f942f5d759041e4acfee18120e51686f2eb0",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The answer correctly explains how to connect into the difficult first note, then appends unrelated advice about practicing Korean word duration."
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-05-syn-03__m19-21",
+      "semantic_hash": "bdf16147f1ae0e0527f6b545928e41ecd8b0ca0700a3a039e7d97e390a564a6e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-06__no-range",
+      "semantic_hash": "249dce8143e737025f68ee44d3ae59c5815101aae36510763e24ff627afaf786",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-06-syn-01__no-range",
+      "semantic_hash": "3546c1e53c381f1fae617578fc9d4ec8eef9d6b709603c17b9f27138766ab01f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-06-syn-02__no-range",
+      "semantic_hash": "b2da63cb08a0d204af60b10ff9d18c1aa0ba85c9c0dab6061d9d61e7a56585a5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-06-syn-03__no-range",
+      "semantic_hash": "f04e9c45511e3715c1d9eabd9adf3455b42fec5f345ed7830666d2986f272459",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07__no-range",
+      "semantic_hash": "f1a57d78b574b76efde92c616a3e7f1d3af839ba866f4b52b3078dc8125f684f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-01__no-range",
+      "semantic_hash": "e6075e7def06a48e4e356e97bf0532611c66b4496d69c21e466df586fb6b1541",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-02__no-range",
+      "semantic_hash": "60d2b7721461cecdd6a4c6ea6fe9e30745bbebf8d0b1a3a791589d0cd8e0db00",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-03__no-range",
+      "semantic_hash": "bf9ef21e0e53b1e4a11bfb4ca9ad19447adf5c871bd8c7e09bd3b1f2c6fbbadc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07__m39-49",
+      "semantic_hash": "c2a6e030fb2c18f8259f6a1235fc7465c76840a5a0f6e85e881e2f76df408feb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-01__m39-49",
+      "semantic_hash": "1fbfac558a62ccbdbbaad92555fd88615a5c8626eb99a108c657395fa2beee5e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-02__m39-49",
+      "semantic_hash": "fcadcf700ef912cec37c3227820d69f252948349da3e50d8aa8cb1fb430f6cde",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07-syn-03__m39-49",
+      "semantic_hash": "0dfcea093a5b4b3693024f3b08d9c62752db2acf693127d59bba1e3c07418ab5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-07__reported-no-range-01",
+      "semantic_hash": "35a02b0cb88fde33053d2b3c08a9957a6ab8097fa8dfa1eba46c0c262be7c61d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-08__m56-59",
+      "semantic_hash": "c042e1ebcc08c67a8f1793765a927371d642894ec32ee99a2b14503309068216",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-08-syn-01__m56-59",
+      "semantic_hash": "c5004e8470ba24aa104ffbc4ffe7d7bb217ce28a07a08cb84eb25197fcb19bc4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-08-syn-02__m56-59",
+      "semantic_hash": "1f096e5e3c871a63c11bb8a07e8bfb30acd942722d572107dabc3458c755845e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-08-syn-03__m56-59",
+      "semantic_hash": "96840643f102059f5c3758f57d7c2e802fa50f69ae2a3edc93b70acd947d72fd",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09__no-range",
+      "semantic_hash": "fd143fb0fab5e5a52304483dbdc0f7e1e4706af0f1c8b30a56770155356ea0ae",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-01__no-range",
+      "semantic_hash": "e7b27e45eb67c3030c274952a112df2145abfa349aa6312cb939a88200b093e6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-02__no-range",
+      "semantic_hash": "6043d305ffe1d3899d50afc64afbaeea327c0229be311b56b56a2c7a6b34daab",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-03__no-range",
+      "semantic_hash": "c6c74085488cf5a932fe1425948b75f7866e9e926e4eddbb922157ac62a1f9a4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09__m67-69",
+      "semantic_hash": "b4789370f8ded33e0e6711aba2a0732597b274550cc301e09993d9cadea9018b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-01__m67-69",
+      "semantic_hash": "645b2cb69df95742b7b426cbb84340fe3c5986675548246ecc12759a2697bc7e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-02__m67-69",
+      "semantic_hash": "cd03d46d61d03c2d97289cb7befbaad5fd8906040637727a7297afd394fe30c0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-09-syn-03__m67-69",
+      "semantic_hash": "7f9816b4ec05f73b33bc3600ea1d6b6e6f8a70c7f6144030bc5de21fea3f36c6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-10__no-range",
+      "semantic_hash": "417476b766dce276bb56f3f4228f1617d84282eb0fdbcf5914bbbf32912cdd8b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-10-syn-01__no-range",
+      "semantic_hash": "7e1c3c93398367367556070afce8e931fe4d10808a71e887d52ecdbffc69bc25",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-10-syn-02__no-range",
+      "semantic_hash": "dc4e8235391ced47a37fd4c04f0f9f7ea1dccd601e6a7a14b3eaa0514ca57f6e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-10-syn-03__no-range",
+      "semantic_hash": "6e80add31bf3b20434eafd40a4944b39eed75118fc4b691aa8924008fd384a36",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11__no-range",
+      "semantic_hash": "dd05755be38ef85c3ff95c3ce8847ec0752a61ce67d153fd9522f0b6cd900fb4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-01__no-range",
+      "semantic_hash": "62f37acbd33f32f2dc96f7c4311cd118579beac21a64e9d8f0da1be83150c7c3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-02__no-range",
+      "semantic_hash": "1d3f7931251f853d7522bff2d2796826e4f0c620a88843b2eb7eecf41a78d75c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-03__no-range",
+      "semantic_hash": "3c77321dbdb0de1e9dba87e6507838c653da2d4dfc521848d918e538db0bb249",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11__m74-79",
+      "semantic_hash": "efc4c9ccf1232576dfaa270f5bacdd642a6011950fb7dab58942b9595e780bdf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-01__m74-79",
+      "semantic_hash": "11fe7e8d7c31e3a7c64b943072bc617b500dc86282a258624561f3151cb7ea98",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-02__m74-79",
+      "semantic_hash": "f98654ccfd81c4309d72bbdb5b193481b1136ca254d51b588a26830e0b79b04d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-11-syn-03__m74-79",
+      "semantic_hash": "943b7084a970b6f42a30dab4ce0a5eed25387766545e695330df85502734d202",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-12__no-range",
+      "semantic_hash": "d59e94a27f5a90148046cb374a2574403ec4ca5e3181a6704086d877e27716bc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-12-syn-01__no-range",
+      "semantic_hash": "b894506c654e6f17407b1ef300736d48d689a5400eb39e40f54ee59154064dc8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-12-syn-02__no-range",
+      "semantic_hash": "76fc0ea9e5501c64406b77f1c9d2b05b141f30af03b782a3ea17a692dbc2e60a",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The optional-note explanation fully answers the question, but the added crescendo advice concerns a separate performance issue and is not relevant to identifying or using the small notes."
+    },
+    {
+      "case_id": "kim-in-flowery-clouds-12-syn-03__no-range",
+      "semantic_hash": "60eb4c5f56010b06638190c64b3bf9b473f3bb93151869c7455ce320acfd2289",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-01__m11-14",
+      "semantic_hash": "3bbd8af094be4c4ccc3076536e46391d28330cc1c05d251bb041a91763a7a9b2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-01-syn-01__m11-14",
+      "semantic_hash": "6db0535bf904a6d5c000043abef4ab8f73acc6e06a2070b104d3bc1a61bbc7d3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-01-syn-02__m11-14",
+      "semantic_hash": "2d2e480bdca97b49717bb14b52de05456403f3c08105497357608fbf1b83b58d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-01-syn-03__m11-14",
+      "semantic_hash": "19acb2fccd67af4cd6b5ac5277bc8ccf578329210f1047f0da84e97981681a4a",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "wrong_range_addition"
+      ],
+      "rationale": "The pianissimo opening guidance correctly answers the question, but the lengthy second half switches to diction advice for the later “Col ritorna” and “Tu torni” material instead of the selected opening range."
+    },
+    {
+      "case_id": "kim-la-capinera-02__no-range",
+      "semantic_hash": "71e5812d0bb5788a1efe9fdc4dc6dac9b10f23d661d6ce30a46668aca672fb5e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-01__no-range",
+      "semantic_hash": "8ce1bf102369e1851cd8977f61c213e024fba99bd9402da8421b2d0ef320c364",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-02__no-range",
+      "semantic_hash": "734fafe607a5ab025f9e07e29363752cc54fd847a6fe4758dc9aea29cfe490a5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-03__no-range",
+      "semantic_hash": "45de0a4e36623363b18b5be1fcf9e7250df8b4a76a62c22a16fda59ec8e712a1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02__m22-22",
+      "semantic_hash": "459753034cab85242853154dfd828bbea0b94d144fc3a36fe8e170e11e018702",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-01__m22-22",
+      "semantic_hash": "9f500aa98b55942e35f8e5c71ad7d9fe7cae1bb274e9148c99ae91d3f6f77607",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-02__m22-22",
+      "semantic_hash": "ad4780d31ed66c6876fdaaf0966dfd45e3ca6a500cf94577577e79b912039baf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-02-syn-03__m22-22",
+      "semantic_hash": "73e81468e8be44b72d4cd4d3461806b77a19c9101fc01591a7aa087d2f7badb9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03__no-range",
+      "semantic_hash": "a1f1e70af866a5445ff0a779cd4847f7a70370ba96bcde5c87eb980babe00705",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-01__no-range",
+      "semantic_hash": "5118ae37275b9ac576b8e774a6d8ab510a499be05cf28f6a768f029fb6ade3da",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-02__no-range",
+      "semantic_hash": "95660331eb18065c3e3493ee2adce32ff781edf4c5ea0e0658c796a61913009c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-03__no-range",
+      "semantic_hash": "b03152ac9e57fff9fc557e677f8391a4d5e07b4028f9c58e9b1c6028ed5cbb4f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03__m16-16",
+      "semantic_hash": "4f15aeb13d8ac53c1af3bab3408d1dbdc345071ff2eebb63da51cfc76b1e3537",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-01__m16-16",
+      "semantic_hash": "f073a112301e9ccf830bf8d3b643f2b9438595c0ad188ece40e1d8f00bb4578b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-02__m16-16",
+      "semantic_hash": "0aaa5379847a6772be7c63014f8d14eb63451358b3fa74ffaf3fece641fbb009",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-03-syn-03__m16-16",
+      "semantic_hash": "4ac533cf5b047d737442920b6fe83f88eaf25ccf450045b296638b9749ac82c9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-04__m17-19",
+      "semantic_hash": "5eb3670ec1df3eed06223e5ef5434f7b51ff5ce667c289f1e49bdb08ec874631",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-04-syn-01__m17-19",
+      "semantic_hash": "73ddf76749265c354adca60e516ae9856c269d1ae4759a53b8a592468f4f0b8e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-04-syn-02__m17-19",
+      "semantic_hash": "3b902af96b50f220c7c0c1fabfa36194ec4f5cc01306aed40516f2f9b55f63b2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-04-syn-03__m17-19",
+      "semantic_hash": "e1cae4511f1011d459e9bc2a207e381d469313442953d3f08a0c3a1192223041",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05__no-range",
+      "semantic_hash": "3c6e7dbad065dd9bf85f175bd33d791114ae4c0fdf7872fbaad38a0d96111a56",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-01__no-range",
+      "semantic_hash": "1074eed015a2e1b4850f5d54871331efda418f8fc966d9a61411dbaa09ab5a06",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-02__no-range",
+      "semantic_hash": "7bfd70d1fa638cc9ae9eef59182219354fed7c83d1b0abd15b6c29f76ca9f62d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-03__no-range",
+      "semantic_hash": "a8ea5ef0af950fba9dbed5eabeaa225fba755d0b20962b825ece5b1e7fb67ded",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05__m20-20",
+      "semantic_hash": "a6056a131d2ec9519096af8919e5c9d96e52ce7594a5bd6728a4ed3436f50573",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-01__m20-20",
+      "semantic_hash": "45122d05a2a47a0af9893225f59a073bad68c9636653cade879f4106be413c1f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-02__m20-20",
+      "semantic_hash": "bdef77bb45229f61a581f3b108553a9c3a97d17760193b49fd339c7313e2c744",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-05-syn-03__m20-20",
+      "semantic_hash": "d4d534c40b8137a1a052e9bc59aacf3f55a49382e05d8a6de94a17786cf7210c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06__no-range",
+      "semantic_hash": "58ad8e3bcf2fcc1db1e532120b40eb0eca7aff6cb9aa0a802cad03653551dec2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-01__no-range",
+      "semantic_hash": "04a55fe35685c7caaf7e6fdbc60cc5508e6d007654e150b20d49d3055341c25b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-02__no-range",
+      "semantic_hash": "4f07abb165250ca969439a39886d0140e8c78833c6b87a86f521284f097cf16f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-03__no-range",
+      "semantic_hash": "2373a99df4188495ab2d3696969c3f4ff9ea018c0de83979421d9e566f017e95",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06__m20-24",
+      "semantic_hash": "920fad3d5dfe019e5ec696b0a9a6666db3303905f411e5921aaadfcf3b25cd3a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-01__m20-24",
+      "semantic_hash": "52d70b716fccb019b37dc3354ea6cfbda83ecbb2d01a40f7d59a49fb07a99978",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-02__m20-24",
+      "semantic_hash": "30d89b93ec31af5f972dd7eb20a9577b0fe3f0871f30ea61fb4f793fe9ae0343",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-06-syn-03__m20-24",
+      "semantic_hash": "c34971965e8411ff53012f17a1fcff82de9b0fcbeddaef2697eaef5459e40a3b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07__no-range",
+      "semantic_hash": "b55ef251e60eaaf68ae64e8a2038aebf6f6a106c56cd31c15ae33120c21497eb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-01__no-range",
+      "semantic_hash": "5469ebad7b39723cb1243cbd71db93b37e674dea17cb4bfb6a4f253d6c813812",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-02__no-range",
+      "semantic_hash": "35f9db446b95c7e75277fb4365b8111022af969ee3a14a3f8d13ccc77243244f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-03__no-range",
+      "semantic_hash": "8d1e7b405f9ecc3a29780b66f84f0a2eb0d6d3d6c69691fb9855de3927dfefa0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07__m28-35",
+      "semantic_hash": "b06d50a3be36b37fce31ea0f8994c1af36a7c8609c35e541e1dba1477b8233c7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-01__m28-35",
+      "semantic_hash": "02c8bfc9bdb9d5a4327292ef18d0eb9f53f1d4755a6ed7681c74c5b5de3a2a55",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-02__m28-35",
+      "semantic_hash": "f43da036f1eb343872b99390626a254f05b49b6a9a36b954bb8a5bde9a5438a9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-07-syn-03__m28-35",
+      "semantic_hash": "af1106eede20404ff97f81b7a1fd487d902bb9f3688e8c03dce01eb85e488553",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-08__m95-96",
+      "semantic_hash": "30adf642c97a0073fc1c0b36c4503d5a7c99ceaa824eff52ab8c762ec00717f4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-08-syn-01__m95-96",
+      "semantic_hash": "82832577ac602dc10f29d3fd7648f2df52ef2d8e89dc33fc1adac358fd917b78",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_additions",
+        "overinclusive_answer"
+      ],
+      "rationale": "The large-phrase guidance is correct, but the answer omits the useful vowel-connection exercise and appends separate advice about slashed grace notes, whole-song high-note accenting, and leggiero. Much of the response does not solve the sound-disconnection problem."
+    },
+    {
+      "case_id": "kim-la-capinera-08-syn-02__m95-96",
+      "semantic_hash": "92e11e2a217a99c45a14710ef39e0d403210bddae1b0fb38b1cb3caee5e9d675",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "wrong_range_addition"
+      ],
+      "rationale": "The answer correctly gives phrase-level, vowel-connection, and high-leap guidance, but the final leggiero instruction comes from a different phrase and does not help resolve the selected passage’s broken sound."
+    },
+    {
+      "case_id": "kim-la-capinera-08-syn-03__m95-96",
+      "semantic_hash": "61e8a617a01a712724a1f5bb8459f9a3d267e0d7bbbc6821ee6b32c6fbc102db",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "scope_overgeneralization",
+        "materially_irrelevant_additions"
+      ],
+      "rationale": "The answer provides valid large-phrase guidance but omits the reviewed vowel-connection exercise, adds several separate topics, and turns the conditional advice to weight a low strong-beat note before a leap into the broader instruction to weight low notes."
+    },
+    {
+      "case_id": "kim-la-capinera-09__no-range",
+      "semantic_hash": "f29cdd54df8b86247e48232edd7f0a19ccb29fea73279f75b4fa674e33fa4d70",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-01__no-range",
+      "semantic_hash": "e379e6eca6783ac01af6d49ea47487939605453fe5eb38932a811a85a8a7cb6c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-02__no-range",
+      "semantic_hash": "50dacfb27563c7cbc7f5e3afc650c2e6fe7cf23e9fa073590698bcb2551d1833",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-03__no-range",
+      "semantic_hash": "c3c439187ec810959f7d1ff41ca464b931e2e21a6612d19d5b05e64e319cedf3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09__m41-43",
+      "semantic_hash": "bc1a018049eb6f2c1af4a8ea32b1b30635ae44b460ade284bcb1b13891783ce6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-01__m41-43",
+      "semantic_hash": "7abc30372f14ecef5eef0d7be44a11afac3cbe30dd3ede1f437e0010ab8bfcc5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-02__m41-43",
+      "semantic_hash": "10145ea11a932e25269238891854cecbfae0e063170bca963b1c84a7fb7ba0e6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-09-syn-03__m41-43",
+      "semantic_hash": "3532cbf217c80648b7f9174f8d45608cb41548daeec84fc9723288f23c619568",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10__no-range",
+      "semantic_hash": "4bac9aa88e9c2aa16a0a03cf2c71c504e7591608ecc23af3d618c065e379efca",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-01__no-range",
+      "semantic_hash": "8dca53117873802cf3d615c5db999cffdc0b285d91514b850b73126f99769663",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-02__no-range",
+      "semantic_hash": "6e2b06490f223c5d2d913267cf399b55d8d3655135eb5668947df910deab7fd7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-03__no-range",
+      "semantic_hash": "2de2de15856af837dabbb154c6a6a0b83bce84b4561e7522082a0fba16480788",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10__m51-66",
+      "semantic_hash": "9a733a77e316959128976c1f775252fda90ff0ab0ab7441742b981f115778341",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-01__m51-66",
+      "semantic_hash": "527cc49231274392fe744806977d44cddb96939b189d570c8d82b3e09ead3437",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-02__m51-66",
+      "semantic_hash": "21f8f1bad98c659ba41e2ac58fc749cb891a1d4b30ae66cc75933c3cb51b2c49",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-10-syn-03__m51-66",
+      "semantic_hash": "de28a55cfe2635a7e838de9b115c89895ee5ac0bab6b4d8fb6a61cbdcdabca16",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11__no-range",
+      "semantic_hash": "2f37b37d00d3c391b7ec6aecdf7dd63cb209677cf5bebc5fa95b079c51546590",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-01__no-range",
+      "semantic_hash": "5b0f55ecc78c47417647312eb497a8db0291aa67af177ae21c9b0eb5d982e3c9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-02__no-range",
+      "semantic_hash": "da0ea6887a8260e9d7075ed72049df8794e00ff8d916c886a20402971bde051f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-03__no-range",
+      "semantic_hash": "1ceb7ff7679a225b6dc53d1d479621b0888dd5ed12fd6956da9937967a155c8f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11__m67-69",
+      "semantic_hash": "131ca43b2cb161acc6efdd681b7e3ec76023b43fce8d7885f5b52a4f4f68b97c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-01__m67-69",
+      "semantic_hash": "fd761dc9e740c691a2c33320a7ad072bd9c471889e374c45303428e7ff9ace41",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-02__m67-69",
+      "semantic_hash": "419b52ce68cc7106163bcd2e3886d52261d626e9422a2819ff9749788a97488a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-11-syn-03__m67-69",
+      "semantic_hash": "ae8df2ffca4ecf30c0671907e45bc212224288cc1826dbe9b63e31731b0056fa",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-12__no-range",
+      "semantic_hash": "15b5391f586fc037ec966f760f7cb119d5caebbb0458b7109d8a9922be4498e9",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The reviewed advice says clear “can” diction should cue the following accompaniment to enter correctly. The answer changes this into making the accompaniment audible."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-01__no-range",
+      "semantic_hash": "752ff04471a4cca1a091de89493709badfb6c52f9a6f0793b37bbb903fb13699",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The reviewed advice says clear “can” diction should cue the following accompaniment to enter correctly. The answer changes this into making the accompaniment audible."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-02__no-range",
+      "semantic_hash": "a8545a20d938c860444b9f2d5e2a5381b31dcd95f11196a6127159b86c583960",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The answer correctly preserves the phrase connection but misstates the ensemble function of “can”: it should facilitate the accompaniment’s entrance, not its audibility."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-03__no-range",
+      "semantic_hash": "e0066c6421fb0742c56e6605a32f6c7dac9a371c7f3a4d67ee9f0f94939ab780",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The answer changes the purpose of clear “can” diction from coordinating the accompaniment’s entrance to making the accompaniment audible."
+    },
+    {
+      "case_id": "kim-la-capinera-12__m68-69",
+      "semantic_hash": "63f0e327883c3e0a7613ca5f2460b353f137fcc96661cc956c45233e8084a9ef",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The purpose of clearly expressing “can” is changed from helping the accompaniment enter to helping it be heard."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-01__m68-69",
+      "semantic_hash": "b1c4ca9af2784d66cd759af43eba084476e730857312e7bd79fe0c479d1d458b",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The purpose of clearly expressing “can” is changed from helping the accompaniment enter to helping it be heard."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-02__m68-69",
+      "semantic_hash": "36c5c9ab6099bea65c63edbcb09ca30fead9f7930ad859d6c1c99645d137a0f7",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "“The accompaniment’s flow can be heard well” does not preserve the reviewed meaning that clear “can” diction provides a cue for the accompaniment to enter."
+    },
+    {
+      "case_id": "kim-la-capinera-12-syn-03__m68-69",
+      "semantic_hash": "70412709c72508aeecc6c9f37e508c974a791c1172be7237957fa1d0ec87e454",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_shift"
+      ],
+      "rationale": "The accompaniment-entry cue in the reviewed evidence is incorrectly rendered as an audibility instruction."
+    },
+    {
+      "case_id": "kim-la-capinera-13__no-range",
+      "semantic_hash": "793257060691405b687c804786268184a4a5e938cbaca7299f04fa0bbc9c208a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-01__no-range",
+      "semantic_hash": "d96508c7cb5e4e04bc5b06af6cdd14575a0fab7a59365e86eee0aa3e6befed56",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-02__no-range",
+      "semantic_hash": "61c45f8b01ec4123f83d24f04130447751ef9978c107d430b2352e62ad488861",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-03__no-range",
+      "semantic_hash": "d7c5a97b0af0cd8c01ac1fd3faaa326aa1322fd661c0bd1f62ac77a8553b9f73",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13__m80-80",
+      "semantic_hash": "4514a7db72bef8a07dfa05a44db4114d8be5da10e149c1caf0ff2945c15a31c3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-01__m80-80",
+      "semantic_hash": "a72eea90c06cf86c2957a10d0f2f2ec0bd7098f3a596e3a6eec18a3136d07aeb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-02__m80-80",
+      "semantic_hash": "620aa0f8dbe8b78913e7ec7c83c163f2b2bcf7b85e5acba3a4eadce99ff35fe5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-13-syn-03__m80-80",
+      "semantic_hash": "c52d530749d0e55a242c0928b7c75caf790876a1da07e4b70e7b12209204eff3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14__no-range",
+      "semantic_hash": "1cc2b83606a3eefc3f9af37a3aaf2dc62e0fbc889594d841f63a68dacd229379",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-01__no-range",
+      "semantic_hash": "832177fc7034d51f5d7aa3bfbf8af7a4db918f26b4a4b823b802734a6d393e9d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-02__no-range",
+      "semantic_hash": "dcedac958c4fa4a910c72519cd44e03a9bf48294d6850ad15de0f209c95a1a95",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-03__no-range",
+      "semantic_hash": "728ecd466af19b7b296f584dcf80ad42edf888db4e9606e0d060e1e312d63ec4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14__m83-85",
+      "semantic_hash": "5129996e8324385a0df53bed4ef03c2d931ccbc62908f2b5e0c344fb9a4a45a2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-01__m83-85",
+      "semantic_hash": "9c7fb5a744185773bd8a42d6d7a85a0a4d4ac508d4a8451a7074a5186b998f5e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-02__m83-85",
+      "semantic_hash": "35cc6567142d02eb668f111ee6b88ff11ae028681114559985638f51d12fef3b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-14-syn-03__m83-85",
+      "semantic_hash": "b9b7e13d203006b2cb183f8fe977b2422c4b4fc87b37fa6d9f384af1ae7e63ed",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15__no-range",
+      "semantic_hash": "3e2e09aa7f859839cdafd278f9dfbcd891cd7ca18531404cee4e026ce3ec5bf4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-01__no-range",
+      "semantic_hash": "c5c4b9d7b10c8db5035e234b7afdb40f8b1c9390c00ebf256471a6f18899c876",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-02__no-range",
+      "semantic_hash": "7425c86b8d8ea5da55d8008c6b4d288b6349e49d46a16225316c1935a674b2b2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-03__no-range",
+      "semantic_hash": "834586d1f9b673301f71df1b6ea3554ca6d074eef188c004fcc8c3b438f4c7b7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15__m86-88",
+      "semantic_hash": "438ff384c6b62beaae5f2a0dcd145661c57d9d07a1c3b016f8957c299d17e126",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-01__m86-88",
+      "semantic_hash": "5b921523f2af0b37318c0a684839654dbda871d16168e4970b1ac4a03e376dd6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-02__m86-88",
+      "semantic_hash": "c96ea84783c3e8d86bd4a6f7153c1cf248bb15ac2644894cd4d6cc73470a4abc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-15-syn-03__m86-88",
+      "semantic_hash": "6fdd6af61fc2478a6664e71caced624940031575eef36b62c8b3c918b0fc1b1b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16__no-range",
+      "semantic_hash": "c2f2f341bc3c62a7a63dd8ccb6c1dc5ba193b86605f01ca71d37fa1c37059ddd",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-01__no-range",
+      "semantic_hash": "76503795bc5c9314731b489c243e371a28c802d0f520a5dc31f24b711a60188a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-02__no-range",
+      "semantic_hash": "2a830ba3bbd7e2a0d8e9f10e125d316fbccff926186ed1e9552f2e1bd3f48104",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-03__no-range",
+      "semantic_hash": "347cbd9926ffa7e8c972ff848c6d800272d8ee2df1571410b0d3fc68cd0ff2fd",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16__m103-103",
+      "semantic_hash": "cbc8abb96fa208f2410491aeb8a4ab56e30246a4c556cbfe09a0b9c455b4b58d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-01__m103-103",
+      "semantic_hash": "277a3fa5175b5dea456118965d42b56392f3b111d45280a5e541f80f67f02faf",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-02__m103-103",
+      "semantic_hash": "656c1bb08fc66a6709e8682fe638f2ea131923cf8c83bc2456681945c086e56f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-16-syn-03__m103-103",
+      "semantic_hash": "7f8344836d783123cef390280a14f985aa1b6a9ae2157c6719389241ddfd4122",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17__no-range",
+      "semantic_hash": "fc593ae4ae469a2e912e585c787d6dabfe03e2f7bcb8d562d2f5eb05b1b0018b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-01__no-range",
+      "semantic_hash": "780e21b9e59190dd4bb228943c2471e5ae62ada1b3f9a33c99bcdc2e13b098fb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-02__no-range",
+      "semantic_hash": "f2c2abf4430723b75ec878b55cf8a5f95113be6b3c05704094f295f0b4be2f10",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-03__no-range",
+      "semantic_hash": "74fc8f005bef8ecaecd5bd16ca0f6b3c85ec8b1055e706225774b1ad5ccc1f7c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17__m117-124",
+      "semantic_hash": "0c79f223a0f9f39163f3236c0246120739392ba33881f4acb2418285decd9d54",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-01__m117-124",
+      "semantic_hash": "c354ec4fc0aa60c7209d41a152228bdfeb632797845a11aab36359a7b306faec",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-02__m117-124",
+      "semantic_hash": "35c6802185ffaff233bb1cfd4751d9febc2817f7a5f3e3c43174dbc267b1ebb7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-17-syn-03__m117-124",
+      "semantic_hash": "d5206bc90face59f04b15a2576e0f0e57b5920b2520ab1fb9dd71b9a5acc3f44",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18__no-range",
+      "semantic_hash": "fdce0560347cb4fb8485cc183841413c822d0a52e13628873c79d340a33a6cb1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-01__no-range",
+      "semantic_hash": "d6cc194ba2b368d9e330904e1fecbfd1fd0954764bae94744105f5223317cada",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-02__no-range",
+      "semantic_hash": "015b9b68f8cb34bd887d6f5e6231c69a405c20f8c099ee18c532b1dab2ee352c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-03__no-range",
+      "semantic_hash": "3105b6b788faf33ad8d656d664d2778e7c91032f3c6d630f8d55571c262aa751",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18__m137-137",
+      "semantic_hash": "e3cb1b915d26bfe645411d759ecfe3fc274bfd7f2d3fe717c03d870e389f0f76",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-01__m137-137",
+      "semantic_hash": "569867d833400b16a3ee908d22b4fee3f2650967f41e440c46bec06257092307",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-02__m137-137",
+      "semantic_hash": "143c99581b055978906c01e920aa3e6127b17eb7b52cfdf2b6dc1eb0c8b9d668",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-la-capinera-18-syn-03__m137-137",
+      "semantic_hash": "c80be307c1e14e0902bdcd199f792a6dd37ae2103281d7f94e609b5d625a9047",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-11__no-range",
+      "semantic_hash": "a8a237af4ce6bef710fac4e5eee97c80255b6460b28db8f5bd0861c57e9eb350",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-11-syn-01__no-range",
+      "semantic_hash": "c73f0f21fcebbbea8e7225801934706a874b89c2f61fd15c149cfe5738c4b85e",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-11-syn-02__no-range",
+      "semantic_hash": "e02a71d058a43dfacad73a23a57e4d1d58820de534ff03272611a8e759cc2c44",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-11-syn-03__no-range",
+      "semantic_hash": "03075d1279ea517403ed32e404d744fd6d967d2a2ab64671d6cf0e5caeb3a35a",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12__no-range",
+      "semantic_hash": "b7f4560a97a10ca9e8d43aa21c57ea278192e14e1e7788ac713341f1a6a6d235",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-01__no-range",
+      "semantic_hash": "ab3860d6d96d95df52193ec65572713cd8f648dea8f02f1d1508723d62cba46f",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-02__no-range",
+      "semantic_hash": "186163c2cb6fa05d0cee29b0ff455294b50fd2063f86c543e68206ecf419383e",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-03__no-range",
+      "semantic_hash": "6b461defb63e8b7e02aef24dab09ed547ad86b0d10827a3849529a5c1d094c0c",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12__m135-137",
+      "semantic_hash": "34273fce358edcf283acd5977d648aa1b1cf41a60bbdcbf55dc6ecd93e7c0162",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-01__m135-137",
+      "semantic_hash": "a1a180a68f349b696c3162f799d676780901317ac061668931492aeabf3d182e",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-02__m135-137",
+      "semantic_hash": "8b18ff2a97401cbd35adde89463e4cc177c1222f214b37c6bb9c0e24cd0f5b90",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-la-capinera-12-syn-03__m135-137",
+      "semantic_hash": "c455245408066dd309060fc56372dd06b0d084f9fc2d2a3c34055a1cb01819e4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-02__no-range",
+      "semantic_hash": "7173ac74f832eb7af9648e4bc0352a82be435bf209a1d4201b48600fc02d5994",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-02-syn-01__no-range",
+      "semantic_hash": "0b5414a89209f6748842ebf646751cef516d9e6fdf4bdab15a7347ff6d81b770",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-02-syn-02__no-range",
+      "semantic_hash": "4a5bde197bf530137cf9e37f3b2269c62b002c7f71461ecc5613d44f75bda4ac",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-02-syn-03__no-range",
+      "semantic_hash": "21f9fbfc4811b2f0a9eb5de7cb1379c086d4d9ca7986a98643cee22d155e592c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03__no-range",
+      "semantic_hash": "cf88a1b6faa05210689194e0dfff9d6b789bc1e9948cd63c002c6750650d8623",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-01__no-range",
+      "semantic_hash": "e0de6c5b7be0b5a3a5749fa36c6ef7613db0363badcfe0474746b211fddb3d25",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-02__no-range",
+      "semantic_hash": "64d323107319b0d83f0ad9ca68819c9b987f4bd2d759285ab2e6f540a3d12645",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-03__no-range",
+      "semantic_hash": "6d3e0898f02e437f3d688171fb59d39b72ad5149c6848cde67806c8001209ccb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03__m7-8",
+      "semantic_hash": "5ccfd56266ab6fc97150df94af47a46548809506fa493bf0440221cbffc45b7e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-01__m7-8",
+      "semantic_hash": "cd4781c33d63276f5f0468d26370dcc7bfa80d0aa69d3c3c981165f74b7732b4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-02__m7-8",
+      "semantic_hash": "d4ad55e4cfc61d0ca13fed3ba225c051f4eff7ed6bb307475aa2b9645220881e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-03-syn-03__m7-8",
+      "semantic_hash": "c73d2b6cf4dbcd1fbfcd8fef51f0d5674930ff5cdc548ae1fad7f536d58ca38f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-04__no-range",
+      "semantic_hash": "86579e05d623bf13c9406f4086083aec8c649aa8c2aa10ee292d4859b35b768f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-04-syn-01__no-range",
+      "semantic_hash": "915a4e6da4d57959dd88e849c962bf6efbc45efeb04c9d70a18c44a5d7448bd0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-04-syn-02__no-range",
+      "semantic_hash": "d6c518b2cb41c298f7ff0503622f2a9207dc8f07597c80857f7b7efd319dd998",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-04-syn-03__no-range",
+      "semantic_hash": "df33cb25af29f94024753b1e59314a97339aebc077ee3ac60b50ed165ab9d17c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-05__no-range",
+      "semantic_hash": "bbc7ecc044b980fd994928df20ec5695b945a6c42f1683d96e6eabb453100e7f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-05-syn-01__no-range",
+      "semantic_hash": "a22f597f9b8ed5e80dd37e420ff810bf5a73b21a7fb2ea45c1f59834e484bd16",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-05-syn-02__no-range",
+      "semantic_hash": "f260f967e60d0fd9f2b7816558983a3ecbec1490321c841df8780c7ff97f6cb8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-05-syn-03__no-range",
+      "semantic_hash": "5b0080056de6037b924d1d0a80365be13f54d200fd1e19194caadf2ea4cf1672",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-06__no-range",
+      "semantic_hash": "7108c090ac88583d223cb1e61453531ed06bbea9c6a479e2c1006433623dab26",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-06-syn-01__no-range",
+      "semantic_hash": "eb4ffa8f2bca88ca47196672bb6b73ccf7d3633c75245b2b48122349c595435f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-06-syn-02__no-range",
+      "semantic_hash": "33fa616e3c4f047cf4e305d572cdf52f59ffec8256fd9b14f3c806064bf457f3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-06-syn-03__no-range",
+      "semantic_hash": "d4c762cb61dbce231474af9914672cb2b2195dfb1e6bf541cc7f85bc319d9050",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07__no-range",
+      "semantic_hash": "6f1aba7b2d68f2adfd8fe6cb7b3acd484d154990daa35b99b72a09d9388a6f71",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-01__no-range",
+      "semantic_hash": "af717d6f1bd161ce522488bfd19464b5e2f28442a0bcf9edd35e638f99e6587c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-02__no-range",
+      "semantic_hash": "f664f237c4fd5c559904b05c1d55e4db46ca82f41a854f102f3f6fd3f3db263f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-03__no-range",
+      "semantic_hash": "2abe75b253be4ff71be708fc4003f106b709e4d0082cb557a95a969249814691",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07__m11-17",
+      "semantic_hash": "c145fa0e4f7e080c202b82594308f1691933db70709fa989b01c0b62d65b398b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-01__m11-17",
+      "semantic_hash": "cbc0b024f826190cc58633bd5c3a9f687dfb0a413cfbf3a7078a118775cb3153",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-02__m11-17",
+      "semantic_hash": "37f4fb17bbf5d5214e636dfd9d5df48515eff465e78eb41ee07feb6c4f38df01",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-07-syn-03__m11-17",
+      "semantic_hash": "ff6e3133af363cc6646b081c1f937f54657af646a5ef6f3fec348d4a47b38674",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-08__no-range",
+      "semantic_hash": "cbeed65da66819b37178dcbb4b05c746b804574edd80b719bd2a164d833062f9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-08-syn-01__no-range",
+      "semantic_hash": "3d4533550e00f5bd369644c6abec3151e913233a0fa6eb03d8eaeced0a3b69f9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-08-syn-02__no-range",
+      "semantic_hash": "0cd11e3fde4508a8d0d3823dc803c9cf387653eb1d90f05b99e3fc00ea90567b",
+      "red_flag": true,
+      "severity": "high",
+      "reason_codes": [
+        "failure_to_answer_core",
+        "scope_narrowing"
+      ],
+      "rationale": "The question concerns a general mismatch between the recording and score, but the answer discusses only lyric spelling and word division. It fails to explain that this work has multiple legitimate arrangements and that the performer should first choose the intended version and plan structural differences such as omissions or repetitions. Using the original lyrics alone does not resolve the question’s broader mismatch."
+    },
+    {
+      "case_id": "kim-nella-fantasia-08-syn-03__no-range",
+      "semantic_hash": "e5f6508ecd3716d874f17585cb5f910a391072dd87d9910439cd234309ee0b09",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09__no-range",
+      "semantic_hash": "76702e45b2f922396e9ca0b9c5b34285fed54b9caced353a44a82eec9d4e7a4d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-01__no-range",
+      "semantic_hash": "ade14b1a3374ac91c4d6bd8b033f3bc961bd8a020f52640f84f7c027eb176fe1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-02__no-range",
+      "semantic_hash": "5becf78969a528d5b687860b8df846f655c9dc61d34c8c1d867189da69df1e74",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-03__no-range",
+      "semantic_hash": "1133c2174b0968a7c83d6918809ab07cce52610f17192ac8b912e7ad07ecda96",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09__m44-52",
+      "semantic_hash": "471b46d04849ab43d536fbee5272ab153e0dd8634c33cb39885834dddb8e7da4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-01__m44-52",
+      "semantic_hash": "1480dac86a2df2f7dd64fbf2b2a22e610ace3499c1d62c8499a95dc8681abe5b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-02__m44-52",
+      "semantic_hash": "d3eabbb46824b327f8ed8471a97588f77b4939a14bb6ff23b6fe9626afa6e743",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-09-syn-03__m44-52",
+      "semantic_hash": "43fd9d81676d9721d2c9afbecb8f9d8fa7584485229b5974b94e37ade6dbda9f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10__no-range",
+      "semantic_hash": "66e92aa3d0bce01d80b04ec50c02efbcbaa2fad0f46d41b8affc960013da7e2e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-01__no-range",
+      "semantic_hash": "9a419b3c2bf0cbce8b93675e03fe1301dd3cc541c30775ba93adda2269d95af6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-02__no-range",
+      "semantic_hash": "a1326a0632958c1b4a80e1d502736671bc60c02c698884f2dea9a5fbd589c68f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-03__no-range",
+      "semantic_hash": "ff81b8d9033afdb2740a02f52e2f67ab012fe77523a21a9c79cb1a24b0ae053d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10__m34-35",
+      "semantic_hash": "581d6b6d81b9909f01ed8586ec6e0a214c67b94241fbfe492a149c0679ab2865",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-01__m34-35",
+      "semantic_hash": "6f5d69794fa8b19a6747d2bdf05d5e61d33510666d2702b59fbdb38ab006d710",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-02__m34-35",
+      "semantic_hash": "e9bcfdca66de7de3d173991209b00d433dbe5451fe47f1f1c16ef2d60b8669a9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-10-syn-03__m34-35",
+      "semantic_hash": "d934c65cb805bb70eacc4d1b45a0c9b08423529e31544ffb23b0cdba426d0f66",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-11__no-range",
+      "semantic_hash": "72d8da60adf66511e3dbefbdc9f6cd04db613d61323076a5b1a31da443af89c5",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-11-syn-01__no-range",
+      "semantic_hash": "c7efa329e6dd7347a665f53555af8d2e8fbca5d8fefc6958393c625e864da00b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-11-syn-02__no-range",
+      "semantic_hash": "61119f813eca5de27fac8349e8a6509e7043b4255b268d59da28210653e42d0f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-11-syn-03__no-range",
+      "semantic_hash": "6a2a2669e94504200765fd35bb43bfe6d0c2d9ef720af2ca728b738ae0ec99f7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-12__no-range",
+      "semantic_hash": "550f6104a125c0bb3730d69f55246e550f6e4c3d9db339224942f6c8446a4176",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-12-syn-01__no-range",
+      "semantic_hash": "24b6d7cd7771cf9b1a425c8b8ffab2260df88c7613ce0692a0ee1a3d68b6b89f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-12-syn-02__no-range",
+      "semantic_hash": "da7fb77b4b09a87021737d338d059edab9d2a80475c0d5e9a6d4a0d6347186c8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-nella-fantasia-12-syn-03__no-range",
+      "semantic_hash": "23853b1bc0c1718bc18ba9159da00c0b77e03f96a0cff8120a217e4bc23c0d60",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-01__no-range",
+      "semantic_hash": "05845fd5eba5541ccb159ea49db2fe6e27c1136f7a23ee9fe8efc932bc9ed189",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-01-syn-01__no-range",
+      "semantic_hash": "751aaf24ad94432e853f3c0f9792e31ee4d70129c057571a80d04c2266a8bc2a",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-01-syn-02__no-range",
+      "semantic_hash": "6fbc4690d76e97762bf2706a32dbbad53ea262958bae84ded3e2646574ed7e9f",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-01-syn-03__no-range",
+      "semantic_hash": "716005aa102af2b62fdf180e1f90c16dc129ef9d9bbb7acbdddea4d376b034ca",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-02__no-range",
+      "semantic_hash": "1f22690e97fcb639f2fb078deaeaa194d888e845f4f9bba0046d23de6933a02f",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-02-syn-01__no-range",
+      "semantic_hash": "1dfe03209890d1989b3e264e2af9297a6fa334cfb69dbe88c5e10546b4a0c214",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-02-syn-02__no-range",
+      "semantic_hash": "3cf7d9a8ac0bb782df75a4194f13a50f369d05a69caf25a03fad88ed11509adc",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-02-syn-03__no-range",
+      "semantic_hash": "12bee7c8118f67574aef8e6b0a51b81f64066c98c9366831aad0af0c91236a34",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-07__no-range",
+      "semantic_hash": "e4a0460fa8e2b102ae248656f84c7ab865a863ddbbf3537944fb5dea1c94ef20",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-07-syn-01__no-range",
+      "semantic_hash": "31afd3843267f855600011a2de2f8a97db9763b993f67d1e04c6cd5441f7451e",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-07-syn-02__no-range",
+      "semantic_hash": "fb6d15d0340930733437ffa597ccd4e322581770f6f14670ca2121bba60ac311",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-nella-fantasia-07-syn-03__no-range",
+      "semantic_hash": "2f5a8c17fcdc0911ba7aaf0b2bf196acd29134aceee712eb4bcb4de3d7c82597",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-01__no-range",
+      "semantic_hash": "e62f6606330cee0f299f4d278991fdb987ac341c1fc99adf2aa130c1b8dad474",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-01-syn-01__no-range",
+      "semantic_hash": "9d92fee753691404157eb4a2f8c297e18152484e915811095c8f4eb365ab913d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-01-syn-02__no-range",
+      "semantic_hash": "eb81b36245fdbe26f9f4204a3813d82cc2a90735ad39c546a23e10a855515eb8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-01-syn-03__no-range",
+      "semantic_hash": "930f0da9d8776cbe3e5fc955ef818dc0668ccd3ec0180dc61af820f277d3a5c8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-02__no-range",
+      "semantic_hash": "8abe7b763997e1703aeced8cc0a3ffc366f3f972ffceca5938ad0a5bd057832a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-02-syn-01__no-range",
+      "semantic_hash": "2d8198c3e0ed20b91988013978778ab53eea88e89146e0d3e68a5048edf280f9",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-02-syn-02__no-range",
+      "semantic_hash": "6204e204461173bff45de9d0786ed5b8a11a7c71ff656bdae07666b5b2161231",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-02-syn-03__no-range",
+      "semantic_hash": "5f5df361ca3acf141e872d801301fb8a04771620500719016f50c336c237f48e",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03__no-range",
+      "semantic_hash": "21079d08554690afeba96ebcdb4e44d142867e2ce3aa78e92d45a7b7bad0b582",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-01__no-range",
+      "semantic_hash": "c337964c864a93f55c202cd9aac88ca5fff79fa029cb9cbc0f1c268f5d03ce53",
+      "red_flag": true,
+      "severity": "high",
+      "reason_codes": [
+        "unsupported_composer_intent",
+        "failure_to_answer_core"
+      ],
+      "rationale": "The answer invents an intention to make the flow more natural and flexible. The reviewed evidence says Rossini’s exaggerated double-dotted rhythm represents Rosina’s assertive, lively, confident character. The response never gives that core reason."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-02__no-range",
+      "semantic_hash": "2e52ec97ed5154a7eb5289ff839b2ce79adb9a2b73b4dc50912de9f28863c9f1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-03__no-range",
+      "semantic_hash": "16d35e6ee365744e19b52ccc74fa77f88d3870eee8b15ac17fc1f0d4df888000",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03__m21-22",
+      "semantic_hash": "7b82ab3e36f18c739d4e8576bac5ef65fd79b16b762e73e08aeea78f95ac37dc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-01__m21-22",
+      "semantic_hash": "e402bd50f7bb149e228bfa8da47c731a34bf718de5b7a9b93a819df244ab3836",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-02__m21-22",
+      "semantic_hash": "326e5f958f85f39d9d95098101d49348913c75d657c762f060a83713d4a60d75",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-03-syn-03__m21-22",
+      "semantic_hash": "d07ded38b952968e7b40f9ccf5d128e82bfcb573ca9cfcfa6208b578720731bc",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-04__no-range",
+      "semantic_hash": "e6b7965e996d9a10098e7f2e9922f44b477cc489e7c8ecdd7593c7b73d33d9df",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-04-syn-01__no-range",
+      "semantic_hash": "4ce7fdbdb8a1ddd7cee2f90e67e67b498cdff73def9ac11f813e2fc80726efa2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-04-syn-02__no-range",
+      "semantic_hash": "6d377e7c8185f12b8d1534bcb70d848ac77016bf5e0bd42692b16cc93596a8cb",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "The opening correctly explains the scene and stage directions, but the equally long discussion of editions, page layout, and finding an original score does not answer what the writing at the front contains."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-04-syn-03__no-range",
+      "semantic_hash": "e93b5205c4c61f6bd4444ab9994eb5aba3154f537e42845bf4c53d2b0b265cfe",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05__no-range",
+      "semantic_hash": "c02d1d70ec7ffe19932755054599a9ec469f08e49f1f2d7788e63df59f46e51a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-01__no-range",
+      "semantic_hash": "9cc83e6067452b09a9ac6c10093d206bfc37231dbfffc9430561587db5e428ee",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-02__no-range",
+      "semantic_hash": "f7df49b6bedf84561d6494ffacc7ae27064c5a8c0728cc8c377cd2673157a332",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-03__no-range",
+      "semantic_hash": "ad40770eeedd52c6c75b5523c669d28d5947cbff1cb6f4e191aecc7219315ba1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05__m22-24",
+      "semantic_hash": "e51f22b55c92ae4fd69a58b0d74e9ceb02a35a7df810b896acd9c3e76b418c7a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-01__m22-24",
+      "semantic_hash": "981ebf36f0e30c757f3910c61b9f6a697d13d418f7bbb1fcffaba9705401a136",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-02__m22-24",
+      "semantic_hash": "2196819c90fc25a59cd3185eedefc41da440bef3697f757e963eb612eafa9e4b",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "meaning_changed"
+      ],
+      "rationale": "The reviewed instruction is to begin pronunciation on the grace note placed on each beat. The answer changes this to a grace note in each measure, materially altering the text-placement instruction."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-05-syn-03__m22-24",
+      "semantic_hash": "1773c06d12073481dca9138f58c59c09c31b009bdab06778c7e8640c5e70f19b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-06__no-range",
+      "semantic_hash": "0ac46af50ef13e7a14f2c52ff08daef65737e2f9cfb3544abe8c7c076b5a10e0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-06-syn-01__no-range",
+      "semantic_hash": "48b1a40d281819d81b0c59e15116aab2e81484a3213177279aa6fc60c6e39521",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-06-syn-02__no-range",
+      "semantic_hash": "b9b796ad8cfee7b92d7c8db74de2a51fe73eba6183d06f69d935b85f3c23f808",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-06-syn-03__no-range",
+      "semantic_hash": "b28a2e0db5f3a31ebb75762e0e298dbf81c3cf727804cdd8d0df34b274039b73",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07__no-range",
+      "semantic_hash": "d80061178fbc694a97e2de951b68b1368cb4f515b8c993e8bcf991e1e8d8999b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-01__no-range",
+      "semantic_hash": "6252376790a1ffd1024b2f371b1ec0e25961b45b84d817ea197ecfad8b4cf5a4",
+      "red_flag": true,
+      "severity": "high",
+      "reason_codes": [
+        "meaning_inversion"
+      ],
+      "rationale": "The answer says to place the vowel on the middle triplet note, whereas the authoritative reviewed unit explicitly says to place the text at the beginning of the triplet and sustain the same vowel while changing pitch."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-02__no-range",
+      "semantic_hash": "41926838d56dd1c7d5ba034009ac5e324a2014334b3a32291fd66916685d0307",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-03__no-range",
+      "semantic_hash": "63ea8ff5c6e49c3364b23bc307c742da880c89457e8eea6cf4ab724d378eb301",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07__m25-25",
+      "semantic_hash": "e3d5c5ca3bb821ed65266370e74a198e9da89429e1d0f83db20038687f33df4b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-01__m25-25",
+      "semantic_hash": "088f6b9db2cdbd533db19e10135c9887576920dab59b9b72e3e3d055578d96ac",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-02__m25-25",
+      "semantic_hash": "7d606f55319edfd3f8aba1901a2fa8e98ba7a2bad8597f7347bd187953987af1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-07-syn-03__m25-25",
+      "semantic_hash": "1fb972bb50beaa4f4352b423490cd120d9e28a7faa8048f839daebaad56a23c0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-08__no-range",
+      "semantic_hash": "2d5aa4d2b232c0302fba851c3146eae63ca2943b3b2a44ada14464e02bd332e3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-08-syn-01__no-range",
+      "semantic_hash": "925cc77bafcb2a122f81face0f88159e63f37c2a744bac3ba070ba26d1ee3986",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-08-syn-02__no-range",
+      "semantic_hash": "f6ff1ebee9e68ea7faae719ac1b24e7cf82255393b68126e4462829ce3f60c84",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-08-syn-03__no-range",
+      "semantic_hash": "d19af054f3647b54c62cf68d31e400b358978b80f0835afbac09487627636b31",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09__no-range",
+      "semantic_hash": "830979eaa27a6b9f32b45f393f2c0d773723ebfdf15c2343139df6f6186023eb",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-01__no-range",
+      "semantic_hash": "7a34e4e1e4157b24102c4ee4ba6604698f1a193ea2d6eca414ee2ef41d7a4554",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-02__no-range",
+      "semantic_hash": "7cf544eb62f7aa3802c8781b7bf57984bc2a6e59c07043ddbf7b7e475bbd9209",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-03__no-range",
+      "semantic_hash": "7ccf33ab6e1e1a50e50934bb26fec81c868d3cbccfe69292aad746b5c2c7de8a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09__m31-34",
+      "semantic_hash": "1eefb0c75cbdb430ba2d0d100f28d33d2edca6dc747065413f4234977c2a5875",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-01__m31-34",
+      "semantic_hash": "6c19bc2d831a22ccc574049ecaed84cc5b2993e3d23ee831638fbb30c201954b",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-02__m31-34",
+      "semantic_hash": "94d19efd8cd413fb956c88952e21ae2c8a6e9c6f1d87976041dfcafc77d1b287",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-09-syn-03__m31-34",
+      "semantic_hash": "4ba780e6302a9221460363e7d9cf3081be4b3ca21479827f4b28f554263fff41",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10__no-range",
+      "semantic_hash": "519afaa3ed1acc6dacd7fb36bad8b5919274218147feed0bdde7879ec90c241f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-01__no-range",
+      "semantic_hash": "ea5cb8c358cd1abf0af8b096fadeb5e03031afe4e58cda410adb9c6ee01adfba",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-02__no-range",
+      "semantic_hash": "be17c2821f03d455f5bd47a503c5b0785d0900fdab90f746b97757537c4a9e61",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-03__no-range",
+      "semantic_hash": "bfb30c636f0ae431d675e1c631988277dbf8366cda77a8aff9a5056823c907aa",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10__m37-37",
+      "semantic_hash": "8d88b07db413992791fbcaae2df3c2462a729fd7043aea788b125489d4978f88",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-01__m37-37",
+      "semantic_hash": "342b390b98775a68a17fa72d2cab4c0c3c13794d5dcbd5191a582a7e480890ea",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-02__m37-37",
+      "semantic_hash": "79275cec17971873d709b2a77706d5f4dc3b4aa9fad57df595b747df5cd9d388",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-10-syn-03__m37-37",
+      "semantic_hash": "a9207083bf72915fd3c60b02f775c64f137832e5d07bb44e8b3d6cf803c9cbb2",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11__no-range",
+      "semantic_hash": "9f29dad705f50b8dd51752f8676d70a51b63d7a23b7edd30a0e6238d6a3dfa7a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-01__no-range",
+      "semantic_hash": "c629e40a650c6267f93a60ceb7ab1009b8dc7ab881a99321f9cb8d0ac0e30e48",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-02__no-range",
+      "semantic_hash": "e3964eccf629a0e9b46bbb5bd90eac95f12920a84d583293bc7dc0b1614b5ae0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-03__no-range",
+      "semantic_hash": "ad4d32a8c0275f6953c16ca764fa2f1979b7e8ae6cf5904acbb4660a42077530",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11__m44-55",
+      "semantic_hash": "a1c9ae3f19ece2b1182a76a01c667b63d2781356c22bb5f33a252fd70352b955",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-01__m44-55",
+      "semantic_hash": "dfc23fea5786f37c785d7c6882526b9e6e3478cf6781e97ea3d6cdd3194968aa",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-02__m44-55",
+      "semantic_hash": "056c2c3d7e4bc311c0841c5f4a2f200e42745364d6da262c938f6c7d7b553907",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11-syn-03__m44-55",
+      "semantic_hash": "71ea38ed88beaacfff53ae6c175bc36bdc11efa0b3486af3bddda519e6ba11f3",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-11__reported-no-range-01",
+      "semantic_hash": "e1926522a62bd4ee21f62fbe2d80acdd9d8f50983a47e73d9a24a5d28175bf72",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-12__no-range",
+      "semantic_hash": "52ec88dff3fcbd6b3e8c226821cdf2a55d1881afe86117b0bbf2210a7db1555d",
+      "red_flag": true,
+      "severity": "high",
+      "reason_codes": [
+        "failure_to_answer_core",
+        "unsupported_causal_explanation",
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "The answer does not explain why the vocal part contains p. It turns a general instruction for consulting accompaniment dynamics into the cause of the marking, then adds unrelated jaunty-character guidance."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-12-syn-01__no-range",
+      "semantic_hash": "cea6a2fad30c5d6dd07e4a338dd689ae501521edd2268fa9ecc598de62da8039",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-12-syn-02__no-range",
+      "semantic_hash": "7af82c88ee9108c5f27123cab9bac6fb6ae766f9d5250a8bddbe97bdb5612278",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-12-syn-03__no-range",
+      "semantic_hash": "d3c7903b6415c5476748dacc9be2f2c1a4ae39bdfce4b44065875da21d350a58",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13__no-range",
+      "semantic_hash": "36ce1c26538f2cbae81c002d28f66dc8bc88a92fc9839d0be12201173b6e3252",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-01__no-range",
+      "semantic_hash": "91710100f48906c3515d5893d2cea58bff590f83b2dde6c24a8bdb30a97f6cb6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-02__no-range",
+      "semantic_hash": "b07138d4b9a95f49ea569b4e45b780c9cb8a9baede120b3fcc191c576bb5dbe0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-03__no-range",
+      "semantic_hash": "481ccde5289ab40699e967e2857f81303b4f0897177344bc9ecf0e68e88a408d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13__m62-62",
+      "semantic_hash": "8f68cba515c49c6e988e980d0bbf59ed41ca4397bbcfe219e99e5e31410e29a0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-01__m62-62",
+      "semantic_hash": "f0ff69c407df9e00425a2beaf2c6a4bffba06c9dcf7619b7ed5328af430611c8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-02__m62-62",
+      "semantic_hash": "c9003140a013a1cce25ea8895da72a519f161ea7b532411fc6223c9ec37e9403",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-13-syn-03__m62-62",
+      "semantic_hash": "4f4d8424d17b0ec4550f7a30e788e45874e65c0d8e4084063e71003ce7f5b375",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14__no-range",
+      "semantic_hash": "c98b6a6edaada3b60296b0b552e008d3bc3346e29984eb155407909853b8686a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-01__no-range",
+      "semantic_hash": "faf058eca2290694c8cb4396a78a5ddf0517f653d1fe6d19a06a294a2225743c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-02__no-range",
+      "semantic_hash": "a44fff4003262ee2d874f42fa834cc92033603e88decc4c913a3f616ab036c27",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-03__no-range",
+      "semantic_hash": "f9f4d45601770ab125863665512d1334b94b477fd9b8ff5527a53f9425333960",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14__m67-67",
+      "semantic_hash": "e6568b3e33891bbff87d36e048b8f855fba9fb8b3ac3bfde44a8de3eb62d9de7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-01__m67-67",
+      "semantic_hash": "e15a551e430690035864fb54ef716c6cab10488e699bd736056796239cd02293",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-02__m67-67",
+      "semantic_hash": "dff52eaac829414bf1aaf6eccc3364cd27edfd2c27a730a9b049405e0ab37449",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-14-syn-03__m67-67",
+      "semantic_hash": "566f8c55a06831d5ee7185c922f40b4553405cbb440897ac9b8bf578904c33a8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15__no-range",
+      "semantic_hash": "70f52d501652bcc89fd90fcba8b4885a902dd2c6239ff24dfd3d324c0885eca7",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-01__no-range",
+      "semantic_hash": "29a3b7b9cf49c5625c4017ff980733f622e029b601d85cb117f5271e1ee88915",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-02__no-range",
+      "semantic_hash": "9b0431529da978564e3fd273d0381d2fe7c23a9c5d1075b1ba20e324ac02ee21",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-03__no-range",
+      "semantic_hash": "11a219800b1a0a9a6c56f2867acbeedd0fe3b85ba6ee9a23a1bb881f84c27743",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15__m92-93",
+      "semantic_hash": "a12918e007a90a6cb8f7f516edc5ad3168cdf856ec6d657955220514f81b2457",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-01__m92-93",
+      "semantic_hash": "c52e93ed826ce879f090284f68c7a0ac5e0d14b3520c01d4667c19f006107593",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-02__m92-93",
+      "semantic_hash": "fd1d9f5040bf368a21383cd5b9b9ede2980af280be37b9eb697863ec5d30725a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-15-syn-03__m92-93",
+      "semantic_hash": "2771d553dec93e42eb6dae52f2f7280867d76c4259a3665c16eab298830d7807",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-16__no-range",
+      "semantic_hash": "c1ee44035d556bd14ac855f75afecc0f0818a673f1417887899dd500d69273c4",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-16-syn-01__no-range",
+      "semantic_hash": "5859c6296daf746dcc25ec9b00d278569207e5cd06c5c989dc6c8d5bbe2d2456",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-16-syn-02__no-range",
+      "semantic_hash": "612d0e3f14363535d25e1ed2aafddd53497cb8b41cdcec8c89990c99e45ddd67",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-16-syn-03__no-range",
+      "semantic_hash": "395d8008fd1c9db6d26dba6cf9a28d0594db4a86c24ba4597beba32fdf7a4b46",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-17__no-range",
+      "semantic_hash": "ef56fb113305426e378a69f57dafb073da031b71d15969eb0ea1faca8865c60a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-17-syn-01__no-range",
+      "semantic_hash": "f12617bd69980a8c184da2db4719096f87bc6909cc4ca64e347d7d4cc551f6e8",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-17-syn-02__no-range",
+      "semantic_hash": "4437a3e10d82a27d0589282916a96d262f78e28bd3e0e485145a9d84f431aa1f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-17-syn-03__no-range",
+      "semantic_hash": "56a39780bd224fb30c646feb5e29a711cb6b97d448cdfb2cb5bd367e1074a43f",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-18__no-range",
+      "semantic_hash": "e41efd0ab4fcb6c9b8429f1828b153b165c18050ca11fdc093e2ad50cfe77e8d",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-18-syn-01__no-range",
+      "semantic_hash": "8514116e15482ec5c31751d3eac726384a98909b5394d952cb9886caf1b8e222",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-18-syn-02__no-range",
+      "semantic_hash": "315e7757b8e447ea146bed1c679165f6a33d459a592c321ba11b013b259c1574",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-18-syn-03__no-range",
+      "semantic_hash": "6354b3f8eb21f2935631299b66c466ffb630f75ceac19167f102c108d63cc304",
+      "red_flag": true,
+      "severity": "high",
+      "reason_codes": [
+        "meaning_changed",
+        "a_tempo_scope_error"
+      ],
+      "rationale": "The answer broadly permits changing rhythm and figuration across the passage where col canto and a tempo alternate. That freedom applies during col canto; at a tempo the singer must return to the original beat and rhythm, which the answer omits."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-19__no-range",
+      "semantic_hash": "a552bc49730e0fb29a845c2ad2e8e87ba26cabfced27672c862305452b0639e6",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-19-syn-01__no-range",
+      "semantic_hash": "be6015ffed70123c4b85f81932b17b521dbeea5144e1e1a052cae7828058a68a",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "concept_conflation",
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "Although the answer eventually gives the correct slashed-versus-unslashed grace-note treatment, it first conflates ornaments with exaggerated dotted rhythms and then mixes in ossia alternatives and other separate score issues, obscuring the requested handling."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-19-syn-02__no-range",
+      "semantic_hash": "62b1480ecc08021f3b819bf309f0bfcc8b6803f3f1f9da0b4056c785b9cfe13c",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-19-syn-03__no-range",
+      "semantic_hash": "24d8eac0cda965bef3fd7e37b5c55517e900ddbb74202f55429a6ffba19376c8",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "overgeneralization",
+        "concept_conflation"
+      ],
+      "rationale": "The answer generalizes an ossia-specific choice into a claim that ornaments are normally optional alternatives to the basic melody. It also mixes dotted-rhythm execution into the ornament answer, despite the reviewed grace-note guidance requiring treatment according to the slash marking."
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20__no-range",
+      "semantic_hash": "41125bcb06a0fcb30be9ade702222af25b35bb8fc1e55a19f526d8cd8cb59329",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-01__no-range",
+      "semantic_hash": "fec1f9125de1afb92712df33c326088313eb6bccb0c399c3858c109555088ac0",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-02__no-range",
+      "semantic_hash": "392e6f67abe1ff2f46ccea5a195f5da1b5570bf94f83cf9766a6817ce27f3323",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-03__no-range",
+      "semantic_hash": "f53cefbd1123f925fe221b85aac01f497715836d853bcdb24cdc6eb57757769a",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20__m42-42",
+      "semantic_hash": "b680e5052581763209e46e1072451857822a9d1d6714e7efee47f051a584c3d1",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-01__m42-42",
+      "semantic_hash": "b10d7c92744068c6485fdfd05b7c85c8da5bcada297d477cb8c5a55e74502203",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-02__m42-42",
+      "semantic_hash": "024507eea69bd0e7cff8fccc9626affac569cc3ebf2140566b1d1fef8a7cd1fe",
+      "red_flag": false
+    },
+    {
+      "case_id": "kim-una-voce-poco-fa-20-syn-03__m42-42",
+      "semantic_hash": "2135e3e479ee07ab40066ffc6a6d1104dd29dab26ad774e3dbbf84cb8d7a4886",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-16__no-range",
+      "semantic_hash": "0645721d5654047a000eb9fb516c3e504d5dfc03cf096b658fee4930148ca71d",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-16-syn-01__no-range",
+      "semantic_hash": "adcc03ba7faffed20e4f6943cf6bf5b180bbb1c7d7d73b2cbc0afe730e5537de",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "The answer gives valid guidance for attaching text to scales and trills, but inserts an entire unrelated paragraph about acting during a long orchestral interlude."
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-16-syn-02__no-range",
+      "semantic_hash": "e2f0dcd5ca96176a0628759f651d7a4f4f227a9fe7e28e7c3d381c078e64f0fb",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-16-syn-03__no-range",
+      "semantic_hash": "087a08148e9e93276ff1beeca4b7cfd6ebee3182363a5f25ae38e76520caaa0b",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "The text-connection advice is correct, but the added instruction about facial expression, gaze, and movement during a long interlude is unrelated to attaching lyrics in technical passages."
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-17__no-range",
+      "semantic_hash": "5db9cbfc1ffe6cbfb771e275a1d0ca6c9769dbc996a60fa708583c05aaf96a27",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-17-syn-01__no-range",
+      "semantic_hash": "99779382fceb930f3caf7ed2d2f7663892bafe3c817d40f1dc6a726038686be3",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-17-syn-02__no-range",
+      "semantic_hash": "249a2b645e614e7bb049e627272e8ec6b192f649da49d449cfe02fb275a8aebe",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-17-syn-03__no-range",
+      "semantic_hash": "59d6c707651bc00ad406df506abe8e464631a591cb2901777e844a2a79a577f4",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-18__no-range",
+      "semantic_hash": "976b0076907438ce5859d5a579199b8c40f5b13bf9c020846e23ac014438046a",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-18-syn-01__no-range",
+      "semantic_hash": "d7e5600561c852bff065eb76afb982c6d3d8e7d760567cfacb6ee6911759b5c7",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-18-syn-02__no-range",
+      "semantic_hash": "571fc5dd7fede0ec7c50999b430ce377e32361f5465ad3d04b449e1ef20bc084",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "overgeneralization"
+      ],
+      "rationale": "The answer correctly explains why Rossini used many ornaments, but then states that ornaments generally divide the beat equally with the principal note. That rule applies specifically to unslashed grace notes, not to every ornament."
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-18-syn-03__no-range",
+      "semantic_hash": "7bf4958c7022ff28ded051143574961d76ad401dc51667ea07fd00063dbebbb9",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-19__no-range",
+      "semantic_hash": "73b169cf9f44c51ffe8991d9120b8941a1565a07f733bbc7119d559622421030",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-19-syn-01__no-range",
+      "semantic_hash": "39e66a51b48fc9733c8a17ec19c54ebbb1bd611aea1642fd858a3e06b4312e4b",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-19-syn-02__no-range",
+      "semantic_hash": "2b94c93f070bbdeb4d6a8f62cb85fe3493b42ccdb47e2a76ab82dac0d573b5da",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-19-syn-03__no-range",
+      "semantic_hash": "c7b9b359acc6a3dd358e3485bc3f159798b8f9e73b56b60d24d5c3f3d0b6ad29",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-20__no-range",
+      "semantic_hash": "be5cd4d563edbc2d8c99fe845926946769836e42ae9bba43b4de41c2ff4bad17",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-20-syn-01__no-range",
+      "semantic_hash": "7f97eaa01b511ae2db0c24ebcb7c0f4e896708c17a661316b734c2b2eb0b0b85",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-20-syn-02__no-range",
+      "semantic_hash": "bce28af309719f6248729b051b65fae864cd64b571171e64c4b29985afd4f71c",
+      "red_flag": false
+    },
+    {
+      "case_id": "yeon-una-voce-poco-fa-20-syn-03__no-range",
+      "semantic_hash": "ea980d7c61e4fcaa353c7715479ff06857862dcb0cbd8062e4f1cc1efba6c3c4",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-004-derived-q01__no-range",
+      "semantic_hash": "91d28a438267743256c01806ba2b4a719001a431888b72fcbb533a003ba103e1",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-008-derived-q01__no-range",
+      "semantic_hash": "8eef4cc6dbca3f31fddb78838c63e8f23ca427ff61436e2777b333723f58cb2f",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-012-derived-q01__no-range",
+      "semantic_hash": "9bbb0a4d25de4a52dd55552c5e2c1db26f488dee6d2fab6e240272551dbbfd3b",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-013-derived-q01__no-range",
+      "semantic_hash": "bef2703ef7650366c3b9ded4f2ee504613d68cc5f624c2bb274634c46dd71f7c",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-014-derived-q01__no-range",
+      "semantic_hash": "c9703e9ba75313f287bc1d5f59ab98ab85bbefb6cfb153fbee05576936d52056",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-019-derived-q01__no-range",
+      "semantic_hash": "364a8768b43de7b496299608a66b3b0161b410edafe0e7d989a322c3c2405945",
+      "red_flag": false
+    },
+    {
+      "case_id": "die-forelle-ku-019-derived-q01__m35-36",
+      "semantic_hash": "5a48beb554a1fdc920e1be8d72b0272a84f5fef8f27ff0720e2a4a3ce21bf735",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-003-derived-q01__no-range",
+      "semantic_hash": "0259e80984dc53c63fa352a4d75140747f8806b2cb5c6d868b6d317fe2c0ca95",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-005-derived-q01__no-range",
+      "semantic_hash": "88364dd36d13eb4d995db2b8b7771759914753a3184f0a0c96b97f1550afbd3d",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-005-derived-q01__m21-21",
+      "semantic_hash": "3c7f1f581240f353f1e6473d79809d3b5b07b0ee4013220db793d11a85b9680c",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The dotted-rhythm and Korean-duration guidance is correct, but the final high-note phrase-entrance advice addresses a different problem."
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-014-derived-q01__no-range",
+      "semantic_hash": "375f0a2b536a7d08dc583eee300988248185ff685aed5d6baaebeb5fc15879c4",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-014-derived-q01__m1-10",
+      "semantic_hash": "87742b40102c7e9973762c2ae2aeb5702aca8ebe180d30eef1993652716c3060",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The answer correctly explains how to carry the prelude’s flower-pollen and wind character into the singing, then unnecessarily adds a separate discussion of fermata-version differences."
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-015-derived-q01__no-range",
+      "semantic_hash": "c2f8dde1574ea779e8ad39e346193f399ba37edcbfabe1f033c3ffff13182ebb",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-016-derived-q01__no-range",
+      "semantic_hash": "96343650c84d65e6d807258e164567257575d7448d6e60cebde57895322a516d",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-017-derived-q01__no-range",
+      "semantic_hash": "7d774430779adc68e87d90fa4f2ec06289b598f54b9cfa3c5c59187a6ac07a51",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-018-derived-q01__no-range",
+      "semantic_hash": "eb91a547f2cc087864ffd1700f65f06c338b87f33e7171a84939ee982aa5a653",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The first two sentences correctly address dotted rhythm, but the final sentence shifts to unrelated meter, key, and dramatic-atmosphere changes."
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-018-derived-q01__m33-34",
+      "semantic_hash": "0792e9308f650a72e2cae7b468db3c00f9570b921e2bf7532d8ddf4ada2f015d",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-019-derived-q01__m37-38",
+      "semantic_hash": "c60bf151dc4cf62c2c92fda76592c74dc4c0aff1aed5afb3c0bef8cec210f9e9",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-020-derived-q01__no-range",
+      "semantic_hash": "ba456b9513d8a63252f819255ff75556b923f3159b3a34e98ba3eecf9ee0ae0d",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-020-derived-q01__m54-60",
+      "semantic_hash": "4126d42d7fe530903582c10c9642cd6723193b36c36a795715059c85d329a98e",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The answer correctly says the vocal and accompaniment melodies must align precisely, then appends an unrelated explanation of the tremolo marking and its dramatic effect."
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-021-derived-q01__no-range",
+      "semantic_hash": "2089f0ca121a41caa808f2f8eef2bcd5c6ed5a4b385ae51a07f32b968262dfbc",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-021-derived-q01__m60-83",
+      "semantic_hash": "6c2632db036c5ef1402beb820c24fd44e41608cb6d835e6d2421edc3eee4444d",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_addition"
+      ],
+      "rationale": "The bright-transition and crescendo guidance is correct, but the separate Larghetto-tempo paragraph does not help answer how to express the return to a bright, hopeful atmosphere."
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-022-derived-q01__no-range",
+      "semantic_hash": "1f6d0c98a04b253e95392f579b2ac6f4d033adf46a34565e6edb146693adcd82",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-022-derived-q01__m67-69",
+      "semantic_hash": "1d42bd0c809455455a97d6043317577297f385703ff5fc0cfba14653181960cf",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-023-derived-q01__no-range",
+      "semantic_hash": "59ba91286237e08e5f59297ce186993f66ea4cfa88e0d4541ac4c0c8088ca891",
+      "red_flag": false
+    },
+    {
+      "case_id": "in-flowery-clouds-ku-023-derived-q01__m78-78",
+      "semantic_hash": "e45c6c19628c38beb6e7fcae3b8a9ffdfcabe46afe992d60bf9d22bb1fc7d524",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-020-derived-q01__no-range",
+      "semantic_hash": "e0ffbe588789b0f9d6ee47ebf9e8afe1a4a16c52c3e1b266481d64089e9f658f",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-021-derived-q01__no-range",
+      "semantic_hash": "608881d243de78090860df7c82867b2b71f2852b95153989bac8f6d6fe81d2d6",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-021-derived-q01__m125-125",
+      "semantic_hash": "e652458082e0b5d8358202244572e3c648dd05b8103cf76b628546f657f67bbe",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "wrong_scope_generalization"
+      ],
+      "rationale": "The strong-beat and high-leap guidance correctly answers the question, but the final note-grouping exercise is specifically reviewed for the separate “la la” passage and is generalized to measure 125 without support."
+    },
+    {
+      "case_id": "la-capinera-ku-022-derived-q01__no-range",
+      "semantic_hash": "db143177bdecb664f2cbc7d4e951ef6df66fc0639d2b1def17baf884943ee2d0",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-022-derived-q01__m114-114",
+      "semantic_hash": "de56824c1d0fb4d2e2dc23e1d60ce85554704b993b67819fe25c796930b3323b",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-023-derived-q01__m125-128",
+      "semantic_hash": "df263adee4f5b59ad2e14a6aba5dd1577f460ba9e8dbd62df354d8b0080fc1fa",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-024-derived-q01__no-range",
+      "semantic_hash": "4d12ef2226a749e07c0e0b61c1f2113dc140fac6a95b87bea53866016411d840",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "weak_core_answer",
+        "materially_irrelevant_additions"
+      ],
+      "rationale": "The answer only briefly mentions rhythmic accuracy, then fills most of the response with unrelated guidance for unaccompanied cadenza-like freedom and slashed grace notes. This risks conflating flexible rhythm with the requirement to observe the dotted rhythm."
+    },
+    {
+      "case_id": "la-capinera-ku-024-derived-q01__m102-105",
+      "semantic_hash": "0520a28dccc9e56494c590b460a66e526f6510cdaad963324398bcf95354382c",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "wrong_range_addition"
+      ],
+      "rationale": "The dotted-rhythm instruction is correct, but the added warning about the final eighth-note entrance belongs to a different annotated measure and is not supported for the selected range."
+    },
+    {
+      "case_id": "la-capinera-ku-025-derived-q01__no-range",
+      "semantic_hash": "96029700f16eec4bcf359583a21ad109b1ae0ad766846fc833744f5c46b0d09f",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-025-derived-q01__m53-59",
+      "semantic_hash": "16917615783e5cf3093de8208d8b5a91aede8aa167f2cd5c4e86e553382aee07",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-027-derived-q01__no-range",
+      "semantic_hash": "eff56a5d7297c40223eb11b5b88a24e89dbc9ea3ef60b8297838f5876f08245f",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-027-derived-q01__m134-134",
+      "semantic_hash": "9222ff7eac4b56caca2e9e144b982e0ad54a1daa65aaea702cb1852b9a283768",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-030-derived-q01__no-range",
+      "semantic_hash": "d390c9a6d464e70829d183f11a09adada0aaed56c06e1d9506cf8e80b5ab5d62",
+      "red_flag": false
+    },
+    {
+      "case_id": "la-capinera-ku-030-derived-q01__m51-58",
+      "semantic_hash": "e7360688c0b04bc586b6ce187b76c6848b7cb7ca23a6914eee68c3b2e22cb1ed",
+      "red_flag": true,
+      "severity": "low",
+      "reason_codes": [
+        "materially_irrelevant_additions",
+        "overinclusive_answer"
+      ],
+      "rationale": "The first two sentences correctly explain the ff/pp echo effect, but the response then shifts to separate “la la” phrase-grouping and high-leap weighting advice, which distracts from the specific dynamic-contrast question."
+    },
+    {
+      "case_id": "nella-fantasia-ku-016-derived-q01__no-range",
+      "semantic_hash": "f8c6fe1f87e623ecd67824526f851ead490ae792d27cd4df30211b890c90586d",
+      "red_flag": false
+    },
+    {
+      "case_id": "nella-fantasia-ku-016-derived-q01__m25-26",
+      "semantic_hash": "0661f95b1a0fd223105203f8782018e0e615377f7efbe33e374c8759f1f10bf0",
+      "red_flag": false
+    },
+    {
+      "case_id": "nella-fantasia-ku-018-derived-q01__no-range",
+      "semantic_hash": "5035cd6f09799d86b165e20fefb9bcb7b4aa40d244a8a8855730656638511fa0",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-023-derived-q01__no-range",
+      "semantic_hash": "6b76668aaf4b20f9a5f00e5f94736bfaab73d08e3ee54a5287d9f839e8715dc0",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-024-derived-q01__no-range",
+      "semantic_hash": "40590a768c5325d6638dae0315dd47b42a14628e5f5eee3434a1464b3bf7247c",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-025-derived-q01__no-range",
+      "semantic_hash": "264d8164c1d27c6a8903dd1cdab633ad8b14f794725d86185475df58efbcf559",
+      "red_flag": true,
+      "severity": "medium",
+      "reason_codes": [
+        "distracting_unrelated_addition"
+      ],
+      "rationale": "The opening correctly says to preserve the dotted, triplet, and sextuplet rhythms precisely. Half of the answer then shifts to double consonants and choosing personalized variations, which does not address those rhythms."
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-026-derived-q01__no-range",
+      "semantic_hash": "1270cbdd08504f8357809c6134a5065d4245b2efdb5a9c326d7d05a0d53d434f",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-026-derived-q01__m112-115",
+      "semantic_hash": "27707037ea4cb992c4441798162d23d877672f37be4ef80354090c2dc75efd5d",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-027-derived-q01__no-range",
+      "semantic_hash": "b2ee4be4e3a6bb6f4c181d2e51fe81f106af24a499aae563076fa8d24a69a991",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-027-derived-q01__m56-56",
+      "semantic_hash": "5232d95a2dc7ac12636fb3042814a9956502b73a67ab28434f14d12c2d0a7890",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-028-derived-q01__no-range",
+      "semantic_hash": "ec92611d4e629660626788742df4b07db2d4c26018594e592e9d06a194c98744",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-028-derived-q01__m63-63",
+      "semantic_hash": "7f50474e0ea4038ec0292efc1a7ca4f6aa27b67e3c2fd15fe29e5ae6cf389012",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-030-derived-q01__no-range",
+      "semantic_hash": "b7679fa580a67f451098a413bab6078a657bf1a5331892893e31e677141f4aa6",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-030-derived-q01__m114-114",
+      "semantic_hash": "d05983299173a738437c6628a80dd520d14d1a5df9f8716efbddb2e0da6a53c9",
+      "red_flag": false
+    },
+    {
+      "case_id": "una-voce-poco-fa-ku-031-derived-q01__no-range",
+      "semantic_hash": "e29181a7b01f237e72f990936199f7a3a228a10155b2d6b6a2d1ca099b28570c",
+      "red_flag": false
+    }
+  ]
+}
