@@ -14,7 +14,7 @@ import re
 from typing import Any, Callable, Dict, List
 
 from soprano_qa.llm import generate
-from soprano_qa.security import screen_question, screen_text, serialize_untrusted
+from soprano_qa.security import screen_question, screen_text, serialize_untrusted, validate_question_input
 
 
 SUPPORTED_LANGUAGES = ("ko", "en")
@@ -34,7 +34,15 @@ Rules:
 - Use standard Korean music terms: a verse or stanza of the poem is "절" (for example, "the third
   verse" is "3절"); introduction or prelude "전주"; interlude "간주"; grace note or ornament
   "꾸밈음"; dotted rhythm "부점 리듬"; double-dotted "겹부점"; meter or time signature "박자";
-  the sung text or lyrics "가사"; breath "호흡".
+  the sung text or lyrics "가사"; breath "호흡"; key or tonality "조성"; transpose
+  "조옮김하다"; vocal range "음역"; strophic song "유절가곡"; lyrical line "서정적인 선율".
+- Distinguish note values from pitch intervals and ordinal note numbers:
+  whole note "온음표", half note "2분음표", quarter note "4분음표", eighth note "8분음표";
+  half step or semitone "반음", whole step "온음"; a musical rest "쉼표".
+- Preserve the musical operation and its specificity. Transposing a piece changes its key;
+  it does not mean choosing optional notes or moving a note by an octave. "Down" alone
+  specifies no interval. Do not add an octave, a method, or an alternative absent from
+  the English question. A melodic line is musical phrasing, not a narrative plot.
 - Output only the Korean translation as plain text: no quotation marks, notes, labels,
   alternatives, or romanization.
 /no_think
@@ -56,10 +64,10 @@ def validate_language(language: str) -> str:
     return language
 
 
-def build_translation_messages(question: str) -> List[Dict[str, str]]:
+def build_translation_messages(question: str, *, prompt_only: bool = False) -> List[Dict[str, str]]:
     """Return the strict chat prompt for one English-to-Korean translation."""
 
-    screen_question(question)
+    (validate_question_input if prompt_only else screen_question)(question)
     return [
         {"role": "system", "content": QUERY_TRANSLATION_SYSTEM_PROMPT},
         {"role": "user", "content": serialize_untrusted({"question": question.strip()})},
@@ -90,6 +98,32 @@ def _clean_translation(text: str) -> str:
     return cleaned
 
 
+def query_translation_generate_fn(
+    llm_settings: Dict[str, Any],
+    local_generate: Callable[..., str] = generate,
+) -> Callable[..., str]:
+    """Return the generator used to translate English questions.
+
+    The default is the local model, also when the answer writer is remote.
+    ``query_translation_provider: "vertex_gemini"`` sends the same translation
+    prompt to the configured Vertex model instead, for hosts without the local
+    GGUF such as the web demo.
+    """
+
+    provider = llm_settings.get("query_translation_provider", "local")
+    if provider == "local":
+        return local_generate
+    if provider == "vertex_gemini":
+        from soprano_qa.vertex_gemini import generate as vertex_generate
+
+        def remote(_model_path: str, messages: List[Dict[str, str]],
+                   settings: Dict[str, Any]) -> str:
+            return vertex_generate(messages, settings)
+
+        return remote
+    raise ValueError("Unknown query_translation_provider: " + str(provider))
+
+
 def translate_question_to_korean(
     question: str,
     *,
@@ -107,9 +141,10 @@ def translate_question_to_korean(
 
     if not question.strip():
         raise QueryTranslationFailed("Cannot translate an empty question")
+    prompt_only = llm_settings.get('pipeline') == 'single_pass'
     raw = generate_fn(
         model_path,
-        build_translation_messages(question),
+        build_translation_messages(question, prompt_only=prompt_only),
         llm_settings,
     )
     translation = _clean_translation(raw)
@@ -117,6 +152,9 @@ def translate_question_to_korean(
         raise QueryTranslationFailed(
             "Question translation returned no Korean text"
         )
-    screen_text(raw, source="translation")
-    screen_question(translation)
+    if prompt_only:
+        validate_question_input(translation)
+    else:
+        screen_text(raw, source="translation")
+        screen_question(translation)
     return translation

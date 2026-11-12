@@ -137,6 +137,60 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
 
         self.assertEqual(selected, [strongest_first, strongest_second])
 
+    def test_supported_partial_answer_is_not_a_whole_answer_refusal(self) -> None:
+        for text in (
+            "The edition year cannot be determined because the provided information is insufficient. [E1]\nBegin the phrase softly. [E1]",
+            "제공된 자료만으로는 판본 연도를 확인할 수 없습니다. [E1]\n첫소리는 부드럽게 시작하는 것이 좋습니다. [E1]",
+        ):
+            with self.subTest(text=text):
+                self.assertFalse(is_grounded_insufficiency_answer(text))
+        for text in (
+            "Sorry. The provided information is insufficient. I cannot determine this.",
+            "제공된 자료만으로는 연도를 확인할 수 없습니다. 감사합니다.",
+            "<NO_GROUNDED_ANSWER> Sing softly.",
+        ):
+            with self.subTest(text=text):
+                self.assertTrue(is_grounded_insufficiency_answer(text))
+
+    def test_supported_contrasting_clause_survives_same_sentence_limitation(self) -> None:
+        for text in (
+            "I cannot determine the edition year from the available information alone, but versions with and without a prelude are both possible. [E1]",
+            "Versions with and without a prelude are both possible, but I cannot determine the edition year from the available information alone. [E1]",
+            "I cannot determine the edition year from the available information alone; begin the phrase softly. [E1]",
+            "제공된 자료만으로는 판본 연도를 확인할 수 없지만, 전주가 있는 경우와 없는 경우 모두 가능합니다. [E1]",
+            "제공된 자료만으로는 판본 연도를 확인할 수 없으나 전주가 있는 경우와 없는 경우 모두 가능합니다. [E1]",
+            "제공된 자료만으로는 판본 연도를 확인하기 어렵지만 첫소리는 부드럽게 시작하는 것이 좋습니다. [E1]",
+        ):
+            with self.subTest(text=text):
+                self.assertFalse(is_grounded_insufficiency_answer(text))
+
+    def test_clarification_only_tails_do_not_turn_refusals_into_answers(self) -> None:
+        for text in (
+            "The provided information is insufficient. I cannot answer this question. Please provide more details.",
+            "The provided information is insufficient. I cannot answer this question. Could you clarify your question?",
+            "The provided information is insufficient. I cannot answer this question. Please clarify.",
+            "The provided information is insufficient. I cannot answer this question. Please provide more information about the passage.",
+            "I cannot answer because the provided evidence is insufficient, but could you please share more context?",
+            "I cannot answer because the provided evidence is insufficient. Rephrase the question, please. [E1]",
+            "제공된 자료만으로는 답변할 수 없습니다. 자세한 내용을 알려 주세요.",
+            "제공된 자료만으로는 답변할 수 없지만 추가 정보를 제공해 주세요.",
+            "제공된 자료만으로는 답변할 수 없습니다. 질문을 더 구체적으로 설명해 주세요. [E1]",
+        ):
+            with self.subTest(text=text):
+                self.assertTrue(is_grounded_insufficiency_answer(text))
+
+    def test_polite_musical_advice_is_not_clarification_boilerplate(self) -> None:
+        for text in (
+            "I cannot determine the edition year from the available information alone. Please practise the passage slowly. [E1]",
+            "제공된 자료만으로는 판본 연도를 확인할 수 없습니다. 먼저 모음만으로 노래해 주세요. [E1]",
+            "The information is insufficient to determine the date, but <NO_GROUNDED_ANSWER> sing softly.",
+        ):
+            with self.subTest(text=text):
+                self.assertEqual(
+                    is_grounded_insufficiency_answer(text),
+                    "<NO_GROUNDED_ANSWER>" in text,
+                )
+
     def test_returns_all_results_when_no_positive_expert_alias_exists(
         self,
     ) -> None:
@@ -2040,7 +2094,9 @@ class GenerationEvidenceSelectionTests(unittest.TestCase):
                     "die-forelle", "2-5", "호흡을 어떻게 유지하나요?",
                     [make_result("grounded")], language=language,
                 )
-                self.assertIn("End EACH factual or advisory sentence", messages[0]["content"])
+                self.assertIn("select supporting labels in each", messages[0]["content"])
+                self.assertIn("Do not write inline citations", messages[0]["content"])
+                self.assertNotIn("End EACH factual or advisory sentence", messages[0]["content"])
                 self.assertNotIn("Answer contract", json.loads(messages[1]["content"]))
 
     def test_prompt_preserves_condition_boundaries_and_warning_polarity(

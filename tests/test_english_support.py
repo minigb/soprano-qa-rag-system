@@ -105,6 +105,11 @@ class LanguageValidationTests(unittest.TestCase):
 
 
 class KoreanDefaultUnchangedTests(unittest.TestCase):
+    def setUp(self):
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
+
     def test_korean_system_prompt_retains_domain_and_security_contract(self) -> None:
         self.assertIn("Answer in Korean using formal-polite 합니다체", SYSTEM_PROMPT)
         self.assertIn(SECURITY_SYSTEM_POLICY, SYSTEM_PROMPT)
@@ -187,10 +192,11 @@ class EnglishPromptTests(unittest.TestCase):
             answer_module.ENGLISH_ANSWER_CONTRACT,
             korean[1]["content"],
         )
-        self.assertEqual(
-            messages[1]["content"],
-            korean[1]["content"],
-        )
+        english_payload = json.loads(messages[1]["content"])
+        korean_payload = json.loads(korean[1]["content"])
+        self.assertEqual(english_payload.pop("answer_language"), "en")
+        self.assertEqual(korean_payload.pop("answer_language"), "ko")
+        self.assertEqual(english_payload, korean_payload)
 
     def test_english_prompt_keeps_grounding_rules_and_drops_korean_register(
         self,
@@ -200,8 +206,8 @@ class EnglishPromptTests(unittest.TestCase):
         self.assertNotIn('call its numbers "마디"', SYSTEM_PROMPT_EN)
         self.assertIn('"bar" or "measure"', SYSTEM_PROMPT_EN)
         for rule in (
-            "Use only the retrieved evidence below.",
-            "Do not invent musical advice, measure numbers, lyrics",
+            "Use the reviewed answers as the primary evidence about the selected piece.",
+            "Do not invent score facts, measure numbers, lyrics",
             "Preserve source qualifiers",
             "other_range_context_only",
             "unconfirmed_scope_context_only",
@@ -382,6 +388,9 @@ class TranslationHelperTests(unittest.TestCase):
 
 class EnglishServiceTests(unittest.TestCase):
     def setUp(self) -> None:
+        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
+        pipeline.start()
+        self.addCleanup(pipeline.stop)
         patcher = mock.patch.object(qa, "validate_generation_requirements")
         self.preflight = patcher.start()
         self.addCleanup(patcher.stop)
@@ -491,7 +500,7 @@ class EnglishServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                return_value="송어에 대해 알려 주세요.",
+                side_effect=lambda *a, **k: "A song can portray a scene through phrasing and changes in dynamics." if "security_context" in k else "송어에 대해 알려 주세요.",
             ) as generate,
         ):
             for generate_flag in (True, False):
@@ -505,15 +514,15 @@ class EnglishServiceTests(unittest.TestCase):
                     )
                     self.assertEqual(
                         result["answer"],
-                        NO_CORPUS_EVIDENCE_MESSAGE_EN,
+                        "A song can portray a scene through phrasing and changes in dynamics." if generate_flag else NO_CORPUS_EVIDENCE_MESSAGE_EN,
                     )
                     self.assertEqual(result["answer_language"], "en")
                     self.assertEqual(
                         result["answer_basis"],
-                        "no_corpus_evidence",
+                        "general_music_knowledge" if generate_flag else "no_corpus_evidence",
                     )
-        # One translation call per request and no answer-generation call.
-        self.assertEqual(generate.call_count, 2)
+        # One translation per request, plus a general-answer attempt for generation.
+        self.assertEqual(generate.call_count, 3)
 
     def test_english_extractive_path_reports_korean_evidence_language(
         self,

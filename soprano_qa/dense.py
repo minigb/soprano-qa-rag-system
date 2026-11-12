@@ -1430,6 +1430,10 @@ _VOCAL_CHARACTER_QUALIFIER_RE = re.compile(
     r"(?:가볍|깔끔|밝|어둡|경쾌|부드럽|유연|서정|희망|따뜻|차갑|"
     r"강렬|탄력|편안|맑|무겁|생기|우아|화려|담백|자연스럽|"
     r"아카데믹|활기|날카롭|둥글|섬세|차분|격정|장난스럽|쓸쓸|"
+    # Character interpretation also describes personality, not only vocal
+    # timbre. Keep the same sentence-level link to singing/expression below.
+    r"당차|활발|쾌활|확신|단호|대담|수줍|불안|완고|순진|"
+    r"장엄|익살|유쾌|의기양양|슬프|슬픈|기쁘|기쁜|"
     r"앞쪽|뒤쪽|열린|덮인|두껍|얇|꽃가루|바람|흩뿌리|"
     r"스타카토|레가토|고난|시련|겨울)",
     flags=re.IGNORECASE,

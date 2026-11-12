@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 import threading
 from pathlib import Path
 from typing import Optional
@@ -20,6 +21,7 @@ from soprano_qa.answer import (
     is_underspecified_ranged_query,
     no_corpus_evidence_message,
     retrieve_generation_evidence,
+    sanitize_generation_results,
 )
 from soprano_qa.llm import (
     generate as generate_llm,
@@ -46,8 +48,11 @@ from soprano_qa.score_context import (
     selected_measure_lyrics,
 )
 from soprano_qa.settings import load_settings
-from soprano_qa.security import SecurityViolation, screen_question, screen_text
+from soprano_qa import single_pass
+from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
+from soprano_qa.security import SecurityViolation, screen_question, screen_text, validate_question_input
 from soprano_qa.translation import (
+    query_translation_generate_fn,
     translate_question_to_korean,
     validate_language,
 )
@@ -61,6 +66,8 @@ _corpus_signature: Optional[
     tuple[tuple[int, int], tuple[int, int], Optional[tuple[int, int]]]
 ] = None
 
+
+HANGUL_RE = re.compile(r"[가-힣]")
 
 def _file_identity(path: str) -> tuple[int, int]:
     stat = Path(path).stat()
@@ -108,6 +115,14 @@ def _get_index() -> SearchIndex:
 
 def model_status() -> dict:
     model_path = Path(SETTINGS["model_path"])
+    if SETTINGS['llm'].get('answer_provider') == 'vertex_gemini':
+        from soprano_qa.vertex_gemini import options
+        model, _, location, level, _, _ = options(SETTINGS['llm'])
+        remote_translation = SETTINGS['llm'].get('query_translation_provider') == 'vertex_gemini'
+        return {"backend": "vertex_gemini", "model": model, "location": location,
+                "thinking_level": level,
+                "query_translation_backend": "vertex_gemini" if remote_translation else "llama-cpp-python",
+                "query_translation_model": model if remote_translation else str(model_path)}
     return {
         "path": str(model_path),
         "checkpoint_exists": model_path.is_file(),
@@ -240,9 +255,14 @@ def _ask(
     """Retrieve and compose one answer; the public boundary handles rejection."""
 
     validate_language(language)
-    # English questions need the local model for translation even when no
-    # answer is generated.
-    if generate or language != "ko":
+    direct = single_pass.enabled(SETTINGS['llm'])
+    make_messages = single_pass.build_messages if direct else build_messages
+    # Korean-oriented retrieval and gating always see Korean text: English
+    # questions are translated, and so is a question without Hangul asked for
+    # a Korean answer (the web page's language toggle can pair them).
+    translate_query = language == "en" or not HANGUL_RE.search(question)
+    # Translation needs the model even when no answer is generated.
+    if generate or translate_query:
         validate_generation_requirements(
             SETTINGS["model_path"],
             SETTINGS["llm"],
@@ -263,15 +283,14 @@ def _ask(
     measures = format_measure_range(measure_ranges) if measure_ranges else ""
 
     index = _get_index()
-    # Korean-oriented retrieval and gating always see Korean text.
     retrieval_query = (
         translate_question_to_korean(
             question,
             model_path=SETTINGS["model_path"],
             llm_settings=SETTINGS["llm"],
-            generate_fn=generate_llm,
+            generate_fn=query_translation_generate_fn(SETTINGS["llm"], generate_llm),
         )
-        if language == "en"
+        if translate_query
         else question
     )
     # The extractive path returns Korean evidence text in either language.
@@ -311,11 +330,13 @@ def _ask(
                 )
             ),
             score_context=score_block,
+            **({'message_builder': make_messages} if direct else {}),
         )
+        results = sanitize_generation_results(results)
         if language != "ko":
             # Same frozen evidence bundle; only the system prompt and the
             # displayed question change for the answer language.
-            messages = build_messages(
+            messages = make_messages(
                 piece_id,
                 measures,
                 question,
@@ -343,48 +364,29 @@ def _ask(
         use_score_context = bool(score_context) and (
             ungrounded_reason == "no_corpus_evidence"
         )
-        if not grounded and not use_score_context:
-            answer = no_corpus_evidence_message(language)
-            generation_mode = "unavailable"
-            answer_basis = "no_corpus_evidence"
-            unavailable_reason = ungrounded_reason
-        else:
-            # Without grounding evidence for the selected bars, only the
-            # labelled score context may inform the answer; non-grounding
-            # records stay out of the prompt.
-            generation_results = results if grounded else []
-            if not grounded:
-                messages = build_messages(
-                    piece_id,
-                    measures,
-                    question,
-                    [],
-                    score_context=score_block,
-                    language=language,
-                )
-            raw_answer = generate_llm(
-                SETTINGS["model_path"],
-                messages,
-                SETTINGS["llm"],
-                security_context=json.loads(messages[1]["content"]),
+        # Missing local evidence limits piece-specific claims, but does not
+        # prevent a separately identified general music explanation.
+        generation_results = results if grounded else []
+        if not grounded:
+            messages = make_messages(
+                piece_id, measures, question, [],
+                score_context=score_block if use_score_context else "", language=language,
             )
+        raw_answer = compose_music_answer(
+            SETTINGS["model_path"], messages, SETTINGS["llm"], generation_results, measure_ranges,
+            language=language, generate_fn=generate_llm,
+            finalizer_fn=finalize_grounded_generated_answer,
+        )
+        answer = str(raw_answer) if direct else getattr(raw_answer, "validated_text", None)
+        if answer is None:
             answer = finalize_grounded_generated_answer(
-                raw_answer,
-                generation_results,
-                messages,
-                measure_ranges,
-                language=language,
+                raw_answer, generation_results, messages, measure_ranges, language=language,
             )
-            if grounded:
-                generation_mode = "llm"
-                answer_basis = "retrieved_evidence"
-            elif answer == no_corpus_evidence_message(language):
-                generation_mode = "unavailable"
-                answer_basis = "no_corpus_evidence"
-                unavailable_reason = "score_context_insufficient"
-            else:
-                generation_mode = "llm"
-                answer_basis = "score_context"
+        generation_mode = getattr(raw_answer, "generation_mode", "llm")
+        generation_validation_warning = getattr(raw_answer, "generation_validation_warning", None)
+        answer_basis = getattr(raw_answer, "answer_basis",
+                               "retrieved_evidence" if grounded else "score_context")
+
     else:
         results = index.search(
             query=retrieval_query,
@@ -414,13 +416,11 @@ def _ask(
                 results=results,
             )
 
-    answer = finalize_user_visible_answer(
-        answer,
-        results,
-        language=answer_language,
-    )
+    if not (direct and generate):
+        answer = finalize_user_visible_answer(answer, results, language=answer_language)
     if (
-        answer == no_corpus_evidence_message(answer_language)
+        not (direct and generate)
+        and answer == no_corpus_evidence_message(answer_language)
         and answer_basis not in {
             "no_corpus_evidence",
             "retrieved_secondary_context",
@@ -457,6 +457,8 @@ def _ask(
         ),
         "pipeline": "soprano_qa",
         "model": status,
+        **({"generation_metadata": raw_answer.generation_metadata}
+           if generate and hasattr(raw_answer, 'generation_metadata') else {}),
         "retrieval": retrieval_diagnostics(index),
         "evidence": [
             _result_to_evidence(
@@ -478,17 +480,10 @@ def ask(
     top_k: int = 6,
     language: str = "ko",
 ) -> dict:
-    """Answer only supported music questions, withholding rejected drafts.
-
-    Known control attacks are rejected before model loading, translation or
-    retrieval. Generated answers pass scope/answerability and semantic support
-    checks in the local backend plus deterministic citation/scope validation.
-    Guard errors and rejected drafts return a fixed refusal with no evidence
-    payload. Backend installation errors still propagate.
-    """
+    """Answer using the configured single-pass or historical reviewed pipeline."""
     validate_language(language)
     try:
-        screen_question(question)
+        (validate_question_input if single_pass.enabled(SETTINGS['llm']) else screen_question)(question)
         screen_text(piece_id, source="piece")
         return _ask(
             piece_id=piece_id, question=question, measure_range=measure_range,
@@ -500,7 +495,23 @@ def ask(
             if isinstance(exc, SecurityViolation)
             else "answer_validation_failed"
         )
-        return {
+        recovered = None
+        if generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
+            # Unsafe source material must not deprive a legitimate music
+            # question of a general explanation. Use the original task with
+            # no source/translation text; single-pass still writes only once.
+            ranges = [list(measure_range)] if measure_range else []
+            make_messages = single_pass.build_messages if single_pass.enabled(SETTINGS['llm']) else build_messages
+            messages = make_messages(piece_id, format_measure_range(ranges) if ranges else '',
+                                      question, [], language=language)
+            try:
+                recovered = compose_music_answer(SETTINGS['model_path'], messages, SETTINGS['llm'], [], ranges,
+                    language=language, generate_fn=generate_llm)
+            except (SecurityViolation, GeneratedAnswerRejected) as fallback_error:
+                if isinstance(fallback_error, SecurityViolation):
+                    reason = fallback_error.reason
+        domain = is_scope_rejection(reason)
+        response = {
             "piece_id": piece_id,
             "scope": "range" if measure_range else "whole_piece",
             "measure_range": list(measure_range) if measure_range else None,
@@ -508,9 +519,9 @@ def ask(
             "answer_language": language,
             "evidence_language": "ko",
             "retrieval_query": None,
-            "answer": no_corpus_evidence_message(language),
-            "generation_mode": "unavailable",
-            "answer_basis": "no_corpus_evidence",
+            "answer": domain_guidance(language) if domain else failure_guidance(language),
+            "generation_mode": "domain_guidance" if domain else "response_error",
+            "answer_basis": "service_scope" if domain else "service_status",
             "unavailable_reason": reason,
             "generation_validation_warning": None,
             "score_context": None,
@@ -523,3 +534,12 @@ def ask(
             "evidence": [],
             "evidence_notices": [],
         }
+        if recovered is not None:
+            direct = single_pass.enabled(SETTINGS['llm'])
+            response.update(answer=str(recovered),
+                generation_mode=recovered.generation_mode if direct else 'llm_general_fallback',
+                answer_basis=recovered.answer_basis if direct else 'general_music_knowledge', unavailable_reason=None,
+                generation_validation_warning='unsafe_source_excluded')
+            if hasattr(recovered, 'generation_metadata'):
+                response['generation_metadata'] = recovered.generation_metadata
+        return response

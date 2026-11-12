@@ -5,11 +5,15 @@
 from __future__ import annotations
 
 import argparse
+import copy
+import hashlib
 import json
 import os
 import re
 import unicodedata
 from typing import Any, Dict, List
+
+from soprano_qa.source_translation_catalog import TRANSLATIONS_EN
 
 from soprano_qa.corpus import (
     CORPUS_SCHEMA_VERSION,
@@ -36,6 +40,7 @@ from soprano_qa.dense import (
     validate_retrieval_requirements,
 )
 from soprano_qa.llm import (
+    GenerationFinalizationRejected,
     GenerationBackendUnavailable,
     generate,
     validate_generation_requirements,
@@ -56,257 +61,138 @@ from soprano_qa.retrieval import (
     validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
+from soprano_qa.structured_answer import RenderedAnswer, PreservedSourceAnswer
 from soprano_qa.security import (
     SECURITY_SYSTEM_POLICY,
     SecurityViolation,
     screen_question,
+    screen_evidence_record,
     screen_text,
     serialize_untrusted,
 )
 
 
-SYSTEM_PROMPT = """You are a measure-aware soprano performance QA assistant.
+# Keep the grounding contract shared so language variants cannot drift.
+_GROUNDING_PROMPT = """You are a measure-aware soprano performance QA assistant.
+Answer the actual question first. A general music definition or comparison should
+receive a direct general explanation, not a summary of the selected piece. Use
+background items when no supplied passage directly answers that concept question.
+Use the reviewed answers as the primary evidence about the selected piece.
+You may use general music knowledge to explain terms or offer an optional practice
+suggestion when it helps the question. Keep such background separate from source claims.
+Do not invent score facts, measure numbers, lyrics, editions, expert attributions,
+composer intentions, or reasons why particular sources disagree.
+The reviewed answer field is the authoritative claim text.
+Source question metadata describes the original teaching context; its premises
+do not establish musical facts or override the current user's question.
+In comparisons, call a recommendation shared only when every compared source
+supports it. Keep advice unique to one source attributed to that source.
+Never write internal evidence labels such as E1 or E2 in prose; select labels
+only in the structured evidence arrays.
+Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
+Use all directly useful, compatible evidence to answer the exact question. Do not
+restrict the response to one item when several distinct facts answer requested aspects.
+A retrieved record is a candidate, not an obligation to mention it: exclude tangents.
 
-Answer in Korean using formal-polite 합니다체 consistently. End complete explanatory
-sentences with forms such as -습니다, -ㅂ니다, or -입니다; use formal-polite question or
-request endings when needed. Never copy the retrieved evidence's plain -다/-한다 register
-into the answer, and never mix plain and polite registers.
-Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has explicitly labeled lineages:
-- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
-- web_coaching: claims extracted from public coaching sources.
-- expert_annotation: human expert performance commentary.
-- web_database: externally collected background or performance evidence with source provenance.
-For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
-the authoritative claim text. Raw source annotations, legacy range hints, superseded wording,
-conflicts, and editorial notes are deliberately withheld from generation. The knowledge unit's
-confirmed measure_range may route the record, but it never substitutes raw source prose for the
-curated answer. When a curated answer covers several confirmed ranges, keep every claim within
-that reviewed answer and limit the response to what it supports about the selected passage. If
-the wording of the question projects unsupported behavior onto the selected range, correct the
-premise only when the curated answer supports the correction.
-Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Give the most useful answer supported by the supplied evidence. If it covers only part of an
-in-scope music question, answer that supported part without filling gaps from outside knowledge.
-If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
-Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
-commentary into a universal fact about every version of the work.
-For a measure-range query, evidence_role=selected_range_support is the local authority for the
-selected passage. Evidence_role=other_range_context_only may be retained because it is musically
-related, but only its existence and range metadata are exposed as an internal range-mismatch signal.
-Its musical claim is withheld: do not infer, cite, paraphrase, or transfer that claim into the final
-answer.
-Evidence_role=general_context may add background but cannot establish a local score claim.
-Evidence_role=unconfirmed_scope_context_only has no confirmed location and likewise cannot establish
-what happens in the selected range. Web evidence without an edition-qualified measure system cannot
-support a claim about a specific bar.
-When no measure range is supplied, no score location has been selected. Rank evidence by how
-directly it answers the question, not by whole-piece scope alone. Prefer whole-piece evidence only
-when it is at least as semantically relevant as a local example.
-Evidence_role=local_example is passage-specific evidence that may directly answer the situation
-described by a broad, no-range question. Its canonical location is hidden routing metadata, not a
-range selected by the user. Use its musical advice naturally, cite its short [E#] label while
-drafting for internal validation, and do not print any canonical measure number, range, scope label,
-annotation label, retrieval explanation, or other internal metadata. Refer to the situation itself
-when localization is needed (for example, "긴 간주에서는... [E2]"). A local example cannot by
-itself establish that something happens throughout the work, frequently, or in many places. Do not
-write "곡 전반", "자주", or "많이" unless separate whole-piece evidence explicitly supports
-that claim in that same sentence. Merely retrieving an unrelated whole-piece record does not broaden
-a local claim. A whole-piece or general record has no measure authority, even when its verbatim
-source text mentions a measure; do not print that locator in a no-range answer.
-Preserve the expert's degree of certainty exactly. In particular, wording such as "볼 수 있다",
-"가능하다", "경우가 있다", or a recommendation must not become a definite fact or a claimed
-composer intention.
-Preserve the canonical structure of every expert claim: its subject or agent, causal and determining
-direction, negation, alternatives, conditions, scope, and modality. A premise embedded in the user's
-question is not evidence. An interpretation, recommendation, or possibility must remain in that
-category; never promote it into historical fact, author intention, a universal or frequency claim,
-or a definite causal explanation. If a why-question is supported only by an interpretive framing,
-state that framing as an interpretation or performer-facing recommendation. Preserve every
-alternative governed by one possibility, and never introduce a causal or reporting attribution that
-the evidence does not assert. Keep the core expert predicates close to their reviewed wording; edit
-connectors and speech level rather than changing who did what, why it happened, or what determines
-what.
-Do not create a new causal chain by joining separate evidence relations. A statement that a musical
-change accompanies an image plus a separate statement that a composer made that change does not
-establish that the composer intended that image. Keep each supported relation separate unless the
-reviewed evidence explicitly connects its agent, action, and purpose.
-Preserve condition boundaries and contrasts exactly. When reviewed evidence assigns different rules
-to different markings, states, options, or passages, state each rule separately and never transfer
-one condition's permission, prohibition, or technique to another. Never reverse polarity: a warning
-that an effect may become excessive, should be avoided, or must be controlled is not a recommendation
-to create that effect.
-Evidence is ordered by retrieval relevance. Answer the exact question from all directly useful,
-compatible evidence, especially when a broad question asks for comprehensive guidance. Do not
-restrict the response to one item merely for brevity, and do not add merely related advice just
-because another record was retrieved.
-Compose the answer as natural prose rather than paraphrasing each evidence item in sequence. Merge
-overlapping recommendations, avoid repeating the same conclusion or sentence frame, and preserve
-distinct useful details when several compatible items improve completeness. Before output, edit the
-prose so adjacent clauses neither begin with the same connective nor reuse the same predicate.
-Do not append an interpretive payoff, emotional effect, or generic concluding rationale merely to
-round off the prose. End after the supported recommendations unless the evidence itself states that
-payoff. When several units call different details important, state the details directly under one
-shared lead-in instead of repeating that each one is important.
-As the final silent check, verify every causal phrase, qualifier, attribution, negation, and contrast
-against the evidence, then proofread Korean verb conjugations and collocations. When an evidence
-sentence already states a clear natural predicate that answers the question, prefer that predicate
-with a formal-polite ending instead of inventing a less natural synonym.
-When several evidence items make parallel recommendations, give them a shared natural lead-in and
-state each as a distinct practical action instead of repeating generic importance claims. Combine
-closely related recommendations or vary their grammatical structure without changing meaning.
-Keep expert source_ids separate from web_source_ids and claim_ids.
-Mention a measure only when the user selected a measure range and doing so helps answer the question.
-When you do mention a selected numeric score range, call its numbers "마디"; never relabel measures
-as "절", a verse, a section, or another structural unit.
-Use only the short evidence labels exactly as shown, such as [E1], while drafting claims for internal
-validation; never retype an opaque knowledge-unit/webchunk id.
-Do not add a citation list or evidence footer. The application removes the short labels before display
-and keeps exact record IDs, source attribution, and license conditions in separate structured metadata.
+Preserve source qualifiers and the canonical structure of each claim: its subject,
+causal and determining direction, negation, alternatives, conditions, scope, and modality.
+A premise embedded in the user's question is not evidence. Preserve the expert's degree of certainty exactly.
+An interpretation or performer-facing recommendation must remain an interpretation or recommendation,
+not a fact or composer intention. Preserve every alternative and reporting attribution;
+do not change who did what or what determines what. Do not create a new causal chain
+by joining facts that the source does not causally connect. Preserve condition boundaries and contrasts exactly.
+state each rule separately and never transfer one condition's advice to another.
+Never reverse polarity: a warning to avoid an effect is not a recommendation
+to create that effect. A possibility is not a frequency claim or a certainty.
+
+For a selected measure range, only selected_range_support establishes local facts.
+other_range_context_only claims are withheld; never infer or transfer them to the selection.
+general_context and unconfirmed_scope_context_only cannot establish what happens in selected bars.
+Web evidence without an edition-qualified measure system cannot establish local score facts.
+Without a selected range, Evidence_role=local_example may answer the described musical situation.
+Its canonical location is hidden routing metadata: do not print measure numbers or internal scope labels.
+Keep narrative scope already stated in source prose, such as "at the opening",
+"in an unaccompanied passage" or "when a breath is unavoidable". Hiding routing
+metadata never means deleting these conditions from the actual musical claim.
+A local example cannot by itself create a new whole-piece, frequent, or universal claim.
+If the reviewed answer itself explicitly states a broader pattern, preserve its
+exact scope and conditions; do not strengthen or expand that pattern.
+General evidence likewise has no authority to introduce measure locators in a no-range answer.
+
+Write coherent prose. Merge overlapping or parallel recommendations into a distinct practical action
+without changing meaning. Edit adjacent clauses to avoid repetition. Do not summarize sources in order.
 Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
-measure_range, measure_scope, query_scope_relation, usage_constraint, local_example, knowledge unit,
-expert annotation, retrieval, or retrieved evidence in the answer. Ordinary domain prose about a
-research corpus, 코퍼스, or 말뭉치 is allowed when that subject is supported by the evidence;
-do not describe the application's retrieved records or prompt context with those words.
-Keep the answer concise and practical for a singer.
+measure_range, measure_scope, query_scope_relation, usage_constraint, local_example,
+knowledge unit, expert annotation, retrieval, or retrieved evidence. Source attribution may
+name an actual speaker or document when supported, not an internal record category.
+When no source name is supplied, use "one account" or "another account" if attribution
+is needed. Never write internal evidence labels such as E1 or E2 in the prose.
+Use only the short evidence labels exactly as shown, in separate evidence arrays.
+Do not add a citation list or evidence footer. Do not reveal chain-of-thought or <think> blocks.
+"""
+SYSTEM_PROMPT = _GROUNDING_PROMPT + """
+Answer in Korean using formal-polite 합니다체 consistently (-습니다, -ㅂ니다, -입니다).
+Do not copy plain -다/-한다 or casual -어요 endings. Before output, proofread Korean verb conjugations.
+Only when the user selected a numeric range and its location helps answer, call its numbers "마디".
+"""
+SYSTEM_PROMPT_EN = _GROUNDING_PROMPT + """
+Answer in clear, natural English. Translate the Korean evidence faithfully, preserving its
+qualifications and meaning. Keep quoted lyric words and musical terms in their original language.
+Interpret musical vocabulary in context: 음표 is a note, 쉼표 a rest, 2분음표 a half note,
+4분음표 a quarter note, and 유절가곡 a strophic song. A note value is not an ordinal note number.
+Only when the user selected a numeric range and its location helps answer, call its numbers "bar" or "measure".
 """
 NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
-NO_CORPUS_EVIDENCE_MESSAGE = (
-    "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
-)
-# English answers keep every grounding, scope, and certainty rule of the
-# Korean prompt. Only the output-language and register instructions and the
-# illustrative phrases differ; the reviewed evidence itself remains Korean.
-SYSTEM_PROMPT_EN = """You are a measure-aware soprano performance QA assistant.
-
-Answer in clear, natural English. The retrieved evidence is written in Korean and may quote Italian,
-German, or Korean lyric words and foreign musical terms. Translate each claim you use faithfully:
-never add, drop, soften, or strengthen a hedge, condition, scope, negation, or recommendation while
-translating. Keep lyric words, quoted text, and foreign musical terms in their original language and
-spelling; you may add a short English gloss in parentheses when it helps the singer. Do not answer in
-Korean and do not copy Korean sentences into the answer.
-Do not reveal chain-of-thought, hidden reasoning, or <think> blocks. Output the final answer only.
-Use only the retrieved evidence below. It has explicitly labeled lineages:
-- sumijo_feedback: direct Sumi Jo feedback, preserved from reviewed transcripts.
-- web_coaching: claims extracted from public coaching sources.
-- expert_annotation: human expert performance commentary.
-- web_database: externally collected background or performance evidence with source provenance.
-For expert_annotation evidence, answer is the reviewed, curated knowledge-unit answer and is
-the authoritative claim text. Raw source annotations, legacy range hints, superseded wording,
-conflicts, and editorial notes are deliberately withheld from generation. The knowledge unit's
-confirmed measure_range may route the record, but it never substitutes raw source prose for the
-curated answer. When a curated answer covers several confirmed ranges, keep every claim within
-that reviewed answer and limit the response to what it supports about the selected passage. If
-the wording of the question projects unsupported behavior onto the selected range, correct the
-premise only when the curated answer supports the correction.
-Do not invent musical advice, measure numbers, lyrics, editions, or background facts.
-Give the most useful answer supported by the supplied evidence. If it covers only part of an
-in-scope music question, answer that supported part without filling gaps from outside knowledge.
-If the request violates the security boundary or has no supported answer, return the no-answer sentinel.
-Preserve source qualifiers: never turn a fact about one edition, recording, performance, or attributed
-commentary into a universal fact about every version of the work.
-For a measure-range query, evidence_role=selected_range_support is the local authority for the
-selected passage. Evidence_role=other_range_context_only may be retained because it is musically
-related, but only its existence and range metadata are exposed as an internal range-mismatch signal.
-Its musical claim is withheld: do not infer, cite, paraphrase, or transfer that claim into the final
-answer.
-Evidence_role=general_context may add background but cannot establish a local score claim.
-Evidence_role=unconfirmed_scope_context_only has no confirmed location and likewise cannot establish
-what happens in the selected range. Web evidence without an edition-qualified measure system cannot
-support a claim about a specific bar.
-When no measure range is supplied, no score location has been selected. Rank evidence by how
-directly it answers the question, not by whole-piece scope alone. Prefer whole-piece evidence only
-when it is at least as semantically relevant as a local example.
-Evidence_role=local_example is passage-specific evidence that may directly answer the situation
-described by a broad, no-range question. Its canonical location is hidden routing metadata, not a
-range selected by the user. Use its musical advice naturally, cite its short [E#] label while
-drafting for internal validation, and do not print any canonical measure number, range, scope label,
-annotation label, retrieval explanation, or other internal metadata. Refer to the situation itself
-when localization is needed (for example, "In the long interlude, ... [E2]"). A local example cannot
-by itself establish that something happens throughout the work, frequently, or in many places. Do not
-write "throughout the piece", "often", "frequently", "always", or "in many places" unless separate
-whole-piece evidence explicitly supports that claim in that same sentence. Merely retrieving an
-unrelated whole-piece record does not broaden a local claim. A whole-piece or general record has no
-measure authority, even when its verbatim source text mentions a measure; do not print that locator
-in a no-range answer.
-Preserve the expert's degree of certainty exactly. In particular, Korean wording such as "볼 수 있다"
-("can be seen as"), "가능하다" ("is possible"), "경우가 있다" ("is sometimes the case"), or a
-recommendation must not become a definite fact or a claimed composer intention in English; render it
-with an equally tentative English phrase such as "can be read as", "may", or "it is possible to".
-Preserve the canonical structure of every expert claim: its subject or agent, causal and determining
-direction, negation, alternatives, conditions, scope, and modality. A premise embedded in the user's
-question is not evidence. An interpretation, recommendation, or possibility must remain in that
-category; never promote it into historical fact, author intention, a universal or frequency claim,
-or a definite causal explanation. If a why-question is supported only by an interpretive framing,
-state that framing as an interpretation or performer-facing recommendation. Preserve every
-alternative governed by one possibility, and never introduce a causal or reporting attribution that
-the evidence does not assert. Keep the core expert predicates close to their reviewed meaning; edit
-connectors and phrasing rather than changing who did what, why it happened, or what determines
-what.
-Do not create a new causal chain by joining separate evidence relations. A statement that a musical
-change accompanies an image plus a separate statement that a composer made that change does not
-establish that the composer intended that image. Keep each supported relation separate unless the
-reviewed evidence explicitly connects its agent, action, and purpose.
-Preserve condition boundaries and contrasts exactly. When reviewed evidence assigns different rules
-to different markings, states, options, or passages, state each rule separately and never transfer
-one condition's permission, prohibition, or technique to another. Never reverse polarity: a warning
-that an effect may become excessive, should be avoided, or must be controlled is not a recommendation
-to create that effect.
-Evidence is ordered by retrieval relevance. Answer the exact question from all directly useful,
-compatible evidence, especially when a broad question asks for comprehensive guidance. Do not
-restrict the response to one item merely for brevity, and do not add merely related advice just
-because another record was retrieved.
-Compose the answer as natural prose rather than paraphrasing each evidence item in sequence. Merge
-overlapping recommendations, avoid repeating the same conclusion or sentence frame, and preserve
-distinct useful details when several compatible items improve completeness. Before output, edit the
-prose so adjacent clauses neither begin with the same connective nor reuse the same predicate.
-Do not append an interpretive payoff, emotional effect, or generic concluding rationale merely to
-round off the prose. End after the supported recommendations unless the evidence itself states that
-payoff. When several units call different details important, state the details directly under one
-shared lead-in instead of repeating that each one is important.
-As the final silent check, verify every causal phrase, qualifier, attribution, negation, and contrast
-against the Korean evidence, then proofread the English grammar and word choice. When an evidence
-sentence already states a clear predicate that answers the question, translate that predicate
-directly instead of inventing a looser or stronger synonym.
-When several evidence items make parallel recommendations, give them a shared natural lead-in and
-state each as a distinct practical action instead of repeating generic importance claims. Combine
-closely related recommendations or vary their grammatical structure without changing meaning.
-Keep expert source_ids separate from web_source_ids and claim_ids.
-Mention a measure only when the user selected a measure range and doing so helps answer the question.
-When you do mention a selected numeric score range, call its numbers "bar" or "measure" (for example,
-"bars 2-5"); never relabel measures as a verse, a section, or another structural unit.
-Use only the short evidence labels exactly as shown, such as [E1], while drafting claims for internal
-validation; never retype an opaque knowledge-unit/webchunk id.
-Every English sentence that states a fact or advice needs its own label at its end, even when several
-consecutive sentences come from the same evidence item (for example, "Keep the vowel open [E1]. Breathe
-before the phrase [E1, E2]."). A sentence without a label is treated as unsupported.
-Do not add a citation list or evidence footer. The application removes the short labels before display
-and keeps exact record IDs, source attribution, and license conditions in separate structured metadata.
-Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
-measure_range, measure_scope, query_scope_relation, usage_constraint, local_example, knowledge unit,
-expert annotation, retrieval, or retrieved evidence in the answer. Ordinary domain prose about a
-research corpus is allowed when that subject is supported by the evidence; do not describe the
-application's retrieved records or prompt context with that word.
-Keep the answer concise and practical for a singer.
-"""
+NO_CORPUS_EVIDENCE_MESSAGE = "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
 # Application policy belongs in the privileged channel, never in source text.
 ANSWER_CONTRACT = """Answer contract
-Write one coherent answer, not a list of evidence excerpts. Use every retrieved
-item that materially improves the answer, but omit merely related advice.
-End EACH factual or advisory sentence with its supporting temporary label,
-for example [E1] or [E1, E2], even when consecutive sentences cite the same
-record. Never print an opaque record ID. The application validates and removes
-temporary labels before displaying the answer. Only an answer naming the sung
-words from score context alone has no E# labels.
-For example, if E1 supports both sentences: "호흡을 유지합니다. [E1]
-프레이즈를 연결합니다. [E1]". The model output MUST contain the labels;
-the application, not the model, removes them for the user.
+Write one coherent, question-focused answer using the structured answer format.
+The text fields contain natural prose only; select supporting labels in each
+item's evidence array. The application renders those labels for validation and
+removes them for display. Do not write inline citations or a citation footer.
+Start with the direct answer. Select the source passages that answer the question,
+then retain their relevant explanation, conditions and alternatives. Do not shorten
+away why or how the recommendation works, or the situation to which it applies.
+Write a natural answer to this question using the source's meaning. Retain
+necessary explanations, conditions and alternatives, while removing repeated
+advice and connecting related points. Quote exact lyric words and musical
+symbols when needed; do not replace the answer with complete source paragraphs.
+Do not summarize every retrieved record or add another passage's advice merely
+because it appears in the evidence. Do not announce that you are showing source
+text or describe the retrieval process to the user.
+For a general definition or comparison of musical concepts, explain those concepts
+directly. The selected piece is context, not an obligation to discuss it. If no
+reviewed answer directly explains the requested concept, use background items;
+do not cite a merely related passage or invent a connection to it. Add background
+only for an aspect the relevant source passages do not already explain.
+A passage's advice about one technique is not a definition of a different
+technique. Do not replace its subject with a term from the question. Definitions
+absent from the passage belong in accurate, separately marked background.
+Two examples of the reasoning rule, not additional musical evidence:
+- If one source says to enter gently and another discusses the final release,
+  a question about the entrance needs only the entrance advice.
+- If two accounts give different metronome markings and a general source says
+  notation can vary, the specific reason for the discrepancy is still unknown.
+  State the differing accounts and the uncertainty. Do not invent an explanation
+  about interpretation, editions, or artistic freedom from the generic statement.
+Preserve uncertainty, alternatives, negation, causal direction and attribution.
+If sources disagree and no source explains that disagreement, the answer must state
+that its cause is not established, then attribute the differing statements. Do not offer
+a possible cause from general knowledge, even hedged as "may" or "can be seen as".
+If part of a music question cannot be established, say so briefly and provide
+its supported part. A general music explanation may help even without a relevant
+source, but must not pretend to establish the requested local score fact.
+If neither a source-based nor useful general answer is possible, return {"sentences":[]}.
 """
 SOURCE_PRIORITY_POLICY = """For relevant, scope-applicable evidence, use this authority order:
 sumijo_feedback, then expert_annotation, then web_coaching/web_database.
 Use lower-priority evidence to fill gaps, not override higher-priority advice.
-If sources conflict, preserve attribution and explain the disagreement; do not
-silently blend incompatible advice or claim agreement. Authority never makes
+If sources conflict, attribute each claim and describe the discrepancy; do not
+invent its cause, silently blend incompatible advice, or claim agreement.
+When the evidence does not establish why sources differ, say the cause cannot
+be determined from these materials and give any supported shared guidance.
+A generic remark about editions, notation or interpretation is not evidence
+for the cause of this particular disagreement. Authority never makes
 an unrelated claim relevant or an unconfirmed measure location confirmed.
 Sumi Jo attribution refers to the supplied recordings and reviewed transcripts.
 """
@@ -316,8 +202,9 @@ SYSTEM_PROMPT_EN += "\n" + SOURCE_PRIORITY_POLICY
 SYSTEM_PROMPT += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
 SYSTEM_PROMPT_EN += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
 # Additional English citation examples for the privileged answer contract.
-ENGLISH_ANSWER_CONTRACT = """Write the answer in English. Put a label at the end of every sentence, not
-once per paragraph: "Keep the vowel open [E1]. Breathe before the phrase [E1]."
+ENGLISH_ANSWER_CONTRACT = """Write the text fields in English. Put supporting evidence labels in
+separate evidence arrays, never in the prose. Translate the Korean source's
+meaning and qualifications faithfully; preserve musical terms and quoted lyrics.
 """
 SYSTEM_PROMPT_EN += "\n" + ENGLISH_ANSWER_CONTRACT
 NO_CORPUS_EVIDENCE_MESSAGE_EN = (
@@ -371,8 +258,8 @@ EVIDENCE_FOOTER_LABEL_RE = re.compile(
 )
 
 
-class GeneratedAnswerRejected(RuntimeError):
-    """Raised when the sole generated draft fails grounding/safety checks."""
+class GeneratedAnswerRejected(GenerationFinalizationRejected):
+    """Raised when a generated draft fails grounding or presentation checks."""
 
 
 PIPELINE_TOKEN_SEPARATOR_PATTERN = r"[\s*_~`–—-]*"
@@ -782,16 +669,16 @@ HANGUL_JONGSEONG_BIEUP = 17
 PLAIN_DECLARATIVE_ENDING_RE = re.compile(
     r"(?P<word>[가-힣]+다)"
     r"(?=(?:"
-    r"[.!?;:。！？；：][\"'”’」』】)]*"
-    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"[.!?;。！？；][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;。！？；]"
     r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
     r"))"
 )
 KOREAN_SENTENCE_FINAL_WORD_RE = re.compile(
     r"(?P<word>[가-힣]+)"
     r"(?=(?:"
-    r"[.!?;:。！？；：][\"'”’」』】)]*"
-    r"|[\"'”’」』】)]+[.!?;:。！？；：]"
+    r"[.!?;。！？；][\"'”’」』】)]*"
+    r"|[\"'”’」』】)]+[.!?;。！？；]"
     r"|[\"'”’」』】)]*[ \t]*(?:\n|$)"
     r"))"
 )
@@ -883,6 +770,13 @@ def _formalize_korean_declarative_word(word: str) -> str:
 def formalize_korean_answer(answer: str) -> str:
     """Deterministically normalize sentence-final plain Korean to 합니다체."""
 
+    # These two common polite endings have unambiguous formal equivalents.
+    # Avoid general stemming of -아요/-어요, whose irregular verbs can change
+    # meaning or become ungrammatical under a mechanical replacement.
+    answer = re.sub(
+        r"(있|없)어요(?=[.!?。！？]|\s*$)", r"\1습니다", answer,
+        flags=re.MULTILINE,
+    )
     formalized = PLAIN_DECLARATIVE_ENDING_RE.sub(
         lambda match: _formalize_korean_declarative_word(match.group("word")),
         answer,
@@ -925,6 +819,13 @@ def finalize_user_visible_answer(
     prose is predominantly Hangul. Both share the artifact checks.
     """
 
+    if isinstance(answer, PreservedSourceAnswer):
+        # Only the identity-checked quotation path creates this internal type.
+        # Rewriting a quoted author's register would stop preserving the
+        # source. Generated additions were already finalized independently.
+        if language != "ko" or not answer.strip() or has_forbidden_user_visible_artifact(answer, results):
+            return no_corpus_evidence_message(language)
+        return PreservedSourceAnswer(str(answer).strip())
     cleaned = strip_user_visible_evidence_references(answer, results)
     # Corpus excerpts and generated prose can contain duplicated horizontal
     # whitespace.  Keep paragraph boundaries intact, but never expose those
@@ -1007,10 +908,10 @@ LOCAL_SCOPE_GENERALIZATION_RE = re.compile(
     r"(?:구간|마디|부분|대목|곡|노래|작품)(?:에서|에|이|가)?"
     r"|(?:여러|많은)\s*(?:마디|곳|부분|대목)(?:에서|에|이|가)?"
     r"|(?:경우|부분|대목|음|고음|저음|도약음|현상)"
-    r"(?:이|가|은|는)?\s*많이\s*(?:나오|등장|발생|나타나|있)"
+    r"(?:이|가|은|는)?\s*많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
     r"|(?:경우|부분|대목)(?:이|가|은|는)?\s*많"
-    r"|자주\s*(?:나오|등장|발생|나타나|보이|있)"
-    r"|많이\s*(?:나오|등장|발생|나타나|있)"
+    r"|자주\s*(?:나오|나옵|등장|발생|나타나|나타납|보이|보입|있)"
+    r"|많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
     r"|\b(?:throughout|always|frequently|often|everywhere)\b"
     r"|\b(?:across|all\s+through)\s+(?:the\s+)?"
     r"(?:piece|work|song)\b"
@@ -1416,6 +1317,20 @@ def _claim_has_unauthorized_measure_locator(
 def _claim_has_piece_wide_generalization(claim: str) -> bool:
     """Detect a positive whole-piece or frequency assertion in one claim."""
 
+    # "In phrases where X often appears" limits the recommendation to those
+    # phrases; it does not assert that X is frequent throughout this piece.
+    # Entailment of X and the advice remains the semantic guard's job. Remove
+    # only the relative clause's frequency token, retaining every explicit
+    # whole-piece/universal marker elsewhere in the same claim.
+    claim = _SCOPED_FREQUENCY_CLAUSE.sub(
+        lambda match: match.group().replace(match.group('frequency'), '', 1), claim,
+    )
+    # "음표가 많은 부분은" identifies a passage by its note density;
+    # "많은 부분에서" asserts occurrence in many passages. Remove only the
+    # former relative-clause marker, keeping any separate global assertion.
+    claim = _SCOPED_DENSITY_CLAUSE.sub(
+        lambda match: match.group().replace(match.group('density'), '', 1), claim,
+    )
     for match in LOCAL_SCOPE_GENERALIZATION_RE.finditer(claim):
         before = claim[max(0, match.start() - 12) : match.start()]
         after = claim[match.end() : match.end() + 56]
@@ -1484,6 +1399,7 @@ def answer_overgeneralizes_local_examples(
         if (
             _claim_has_piece_wide_generalization(claim)
             and not cited & general_indices
+            and not _copies_scoped_source_sentence(claim, results, cited_local)
         ):
             return True
 
@@ -1495,18 +1411,75 @@ def answer_overgeneralizes_local_examples(
     return False
 
 
+def _copies_scoped_source_sentence(
+    claim: str, results: List[Any], cited_local: set[int],
+) -> bool:
+    """A verbatim scoped sentence does not create a new frequency assertion.
+
+    The coarse frequency screen also catches faithful source sentences such as
+    "ornaments often appear in this phrase". Allow only a complete matching
+    sentence, with deterministic Korean register normalization. A broader scope
+    explicitly present in that same reviewed sentence is not a new model
+    generalization. Paraphrases and dropped conditions receive no exception;
+    semantic output review and selected-measure authority still apply.
+    """
+    def normalize(text: str) -> str:
+        text = re.sub(r"\[E[0-9]+(?:\s*,\s*E[0-9]+)*\]", "", text)
+        return re.sub(r"\s+", " ", formalize_korean_answer(text)).strip()
+
+    expected = normalize(claim)
+    return any(
+        expected == normalize(sentence)
+        for index in cited_local
+        for sentence in _answer_claims(str(results[index].record.get("answer", "")))
+    )
+
+
+_SCOPED_FREQUENCY_CLAUSE = re.compile(
+    r"(?P<scope>[가-힣A-Za-z·]+[이가]\s+(?P<frequency>자주|흔히|빈번하게)\s+"
+    r"(?:나타나|등장하|반복되|사용되)는\s+(?:프레이즈|구간|부분|대목))"
+    r"(?:에서는|에서)(?=\s|[,.;!?])"
+)
+
+_SCOPED_DENSITY_CLAUSE = re.compile(
+    r"[가-힣A-Za-z·]+[이가]\s+(?P<density>많은)\s*(?:프레이즈|구간|부분|대목)"
+    r"(?:에서는|에서|은|을)(?=\s|[,.;!?])"
+)
+
+
 def suspicious_generation_tokens(
     answer: str,
     messages: List[Dict[str, str]],
 ) -> List[str]:
-    """Find code/UI-like CamelCase tokens not present in the evidence."""
+    """Find code/UI-like CamelCase tokens without source spelling support.
+
+    An exact-source reviewed translation may establish an English spelling
+    absent from the Korean text. This grants no claim/citation/scope exemption.
+    """
 
     prompt_text = "\n".join(message["content"] for message in messages)
+    spellings = []
+    for message in messages:
+        if message.get("role") != "user":
+            continue
+        try:
+            payload = json.loads(message["content"])
+        except (ValueError, TypeError):
+            continue
+        if not isinstance(payload, dict) or not isinstance(payload.get("Retrieved evidence"), list):
+            continue
+        for record in payload["Retrieved evidence"]:
+            source = record.get("answer") if isinstance(record, dict) else None
+            if isinstance(source, str):
+                translated = TRANSLATIONS_EN.get(hashlib.sha256(source.encode("utf-8")).hexdigest())
+                if translated:
+                    spellings.append(translated)
+    supported_text = prompt_text + "\n" + "\n".join(spellings)
     return sorted(
         {
             token
             for token in UNSEEN_CAMEL_CASE_RE.findall(answer)
-            if token not in prompt_text
+            if token not in supported_text
         }
     )
 
@@ -2287,6 +2260,18 @@ def select_generation_evidence(
     ]
 
 
+def sanitize_generation_results(results: List[Any]) -> List[Any]:
+    """Keep safe source bodies when only optional category metadata was unsafe."""
+    cleaned = []
+    for result in results:
+        record = screen_evidence_record(result.record)
+        if record is not result.record:
+            result = copy.copy(result)
+            result.record = record
+        cleaned.append(result)
+    return cleaned
+
+
 def generation_evidence_payload(
     results: List[Any], measure_ranges: List[List[int]],
 ) -> List[Dict[str, Any]]:
@@ -2299,8 +2284,7 @@ def generation_evidence_payload(
     evidence = []
     primary = primary_grounding_results(results)
     for idx, result in enumerate(results, start=1):
-        record = result.record
-        screen_text(json.dumps(record, ensure_ascii=False), source="evidence")
+        record = screen_evidence_record(result.record)
         item = {
             "citation_label": "E%d" % idx if result in primary else None,
             "evidence_type": record.get("evidence_type", "unknown"),
@@ -2309,6 +2293,11 @@ def generation_evidence_payload(
             "query_scope_relation": result.scope_match,
             "evidence_role": scope_evidence_role(result.scope_match),
         }
+        # This is a retriever-computed relevance signal, never source text or
+        # safety approval. Keep a directly matching reviewed question's answer
+        # available even when the user's wording asks for a general definition.
+        if result in primary and getattr(result, "alias_score", 0.0) >= 1.0:
+            item["question_alias_match"] = True
         if measure_ranges or result.scope_match != "local_example":
             item["measure_range"] = record.get("measure_range") or []
             item["measure_scope"] = record.get("measure_scope", "")
@@ -2316,13 +2305,22 @@ def generation_evidence_payload(
             item["content_withheld"] = True
         else:
             for field in (
-                "topic", "question", "answer", "knowledge_scope", "usage_class",
+                "topic", "question", "answer", "piece_title", "knowledge_scope", "usage_class",
                 "lyric_anchor", "web_coaching_source", "sumijo_source", "edition_id",
                 "edition_context", "measure_system", "sources",
                 "generated_text_license", "inherited_licenses",
             ):
                 if field in record:
                     item[field] = record[field]
+            # Finalized KUs store their original teaching questions in retrieval
+            # aliases, often with no question field. Supply that real context
+            # instead of asking the selector to interpret an empty question.
+            if not item.get("question"):
+                aliases = record.get("retrieval_aliases") or []
+                if isinstance(aliases, list):
+                    questions = [q for q in aliases if isinstance(q, str) and q.strip()]
+                    if questions:
+                        item["question"] = "\n".join(dict.fromkeys(questions))
         evidence.append(item)
     return evidence
 
@@ -2347,6 +2345,7 @@ def build_messages(
         # of pseudo-fields or instructions inside that excerpt.
         score_data = score_context
     payload = {
+        "answer_language": language,
         "piece": piece or "(not specified)",
         "measure_range": measures or "(none selected)",
         "question": question,
@@ -2513,12 +2512,16 @@ def _nearby_signal_pair(
 
 
 def is_grounded_insufficiency_answer(answer: str) -> bool:
-    """Recognize a grounded model refusal caused by missing evidence.
+    """Recognize a wholly insufficient answer, preserving supported partial prose.
 
     A bare word such as ``부족`` or a general discussion of missing score
     information is not a refusal. Natural-language detection requires both a
     grounding-information shortfall and an inability to answer, know, or
-    determine something within one short explanation.
+    determine something within one short explanation. A substantive answer can
+    coexist with a limitation, including in a contrasting clause of the same
+    sentence. Its support is checked by the output guard and citation/scope
+    validators, not by this text detector. Clarification requests alone do not
+    supply an answer.
     """
 
     without_footer = _remove_evidence_footer(answer)
@@ -2529,21 +2532,70 @@ def is_grounded_insufficiency_answer(answer: str) -> bool:
         return True
 
     normalized = unicodedata.normalize("NFKC", without_footer)
-    if _nearby_signal_pair(
+    has_refusal = _nearby_signal_pair(
         normalized,
         KOREAN_GROUNDING_SHORTFALL_RE,
         KOREAN_ANSWER_INABILITY_RE,
         max_gap=80,
-    ):
-        return True
-    if ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized):
-        return True
-    return _nearby_signal_pair(
+    ) or bool(ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized)) or _nearby_signal_pair(
         normalized,
         ENGLISH_GROUNDING_SHORTFALL_RE,
         ENGLISH_ANSWER_INABILITY_RE,
         max_gap=120,
     )
+    if not has_refusal:
+        return False
+    signals = (
+        KOREAN_GROUNDING_SHORTFALL_RE, KOREAN_ANSWER_INABILITY_RE,
+        ENGLISH_GROUNDING_SHORTFALL_RE, ENGLISH_ANSWER_INABILITY_RE,
+        ENGLISH_DIRECT_INSUFFICIENCY_RE,
+    )
+    boilerplate = re.compile(
+        r"(?:sorry|i(?:['’]m| am) sorry|thank you|thanks|죄송합니다|감사합니다)",
+        re.IGNORECASE,
+    )
+    clarification = re.compile(
+        r"(?:"
+        r"(?:(?:could|can|would)\s+you\s+)?(?:please\s+)?"
+        r"(?:(?:provide|share|supply|give|add|send)\s+(?:me\s+)?"
+        r"(?:(?:some|more|additional|further|relevant)\s+)*"
+        r"(?:details?|information|context|evidence)"
+        r"(?:\s+(?:about|on|for)\s+(?:(?:your|the|this)\s+)?"
+        r"(?:question|request|passage|issue))?"
+        r"|(?:clarify|rephrase|specify)"
+        r"(?:\s+(?:(?:your|the|this)\s+)?(?:question|request))?"
+        r"|elaborate(?:\s+on\s+(?:(?:your|the|this)\s+)?(?:question|request))?)"
+        r"(?:,?\s+please)?"
+        r"|(?:(?:좀\s*더|더)\s*)?"
+        r"(?:(?:자세한|구체적인|추가적인|추가|관련)\s*)?"
+        r"(?:내용|정보|자료|문맥|근거|질문|상황)(?:을|를)?\s*"
+        r"(?:(?:좀\s*더|더)\s*)?(?:구체적으로\s*)?"
+        r"(?:알려|제공해|설명해|구체화해)\s*(?:주세요|주십시오|주시겠습니까)"
+        r")",
+        re.IGNORECASE,
+    )
+    # Split explicit contrasts, not every comma: a parenthetical fragment in
+    # a refusal is not itself a supported answer. Keep Korean negative stems
+    # intact so the limitation side still matches the existing signals.
+    contrast = re.compile(
+        r"\s*;\s*|\s+(?:but|however|nevertheless|yet)\b[,，]?\s*"
+        r"|(?<=없)(?:지만|으나)[,，]?\s*"
+        r"|(?<=어렵)지만[,，]?\s*|(?<=힘들)지만[,，]?\s*"
+        r"|\s+(?:하지만|그러나|다만)[,，]?\s*",
+        re.IGNORECASE,
+    )
+    for claim in _answer_claims(normalized):
+        for clause in contrast.split(ANSWER_EVIDENCE_LABEL_RE.sub("", claim)):
+            prose = clause.strip(" \t\r\n.!?。！？,，;")
+            if (
+                not _claim_has_substantive_text(prose)
+                or boilerplate.fullmatch(prose)
+                or clarification.fullmatch(prose)
+            ):
+                continue
+            if not any(pattern.search(prose) for pattern in signals):
+                return False
+    return True
 
 
 def _has_direct_query_signal(result: Any) -> bool:
@@ -3375,6 +3427,7 @@ def retrieve_generation_evidence(
     web_coaching_supplement_gate: str = "always",
     web_coaching_supplement_margin: float = 0.0,
     score_context: str = "",
+    message_builder=None,
 ) -> tuple[List[Any], List[Dict[str, str]]]:
     """Retrieve and freeze the one evidence bundle used for generation.
 
@@ -3390,12 +3443,13 @@ def retrieve_generation_evidence(
     """
 
     from soprano_qa.source_priority import SourcePriorityIndex, merge_evidence
+    make_messages = message_builder or build_messages
     priority_index = index if isinstance(index, SourcePriorityIndex) else None
     if priority_index is not None:
         index = priority_index.base_index
 
     if top_k < 1:
-        return [], build_messages(piece, measures, query, [], score_context=score_context)
+        return [], make_messages(piece, measures, query, [], score_context=score_context)
     candidate_limit = (
         max(top_k, NO_RANGE_STABLE_CANDIDATE_MIN)
         if not measure_ranges
@@ -3414,7 +3468,7 @@ def retrieve_generation_evidence(
         # Re-running broad semantic selection here would silently undo the
         # retriever's fail-closed decision and let a procedural neighbor
         # answer a why-question.
-        return [], build_messages(piece, measures, query, [], score_context=score_context)
+        return [], make_messages(piece, measures, query, [], score_context=score_context)
     rejected_candidates = list(
         getattr(index, "last_answer_candidates", []) or []
     )
@@ -3567,7 +3621,7 @@ def retrieve_generation_evidence(
             topic=topic, top_k=top_k,
         )
         results = merge_evidence(direct, results, top_k)
-    return results, build_messages(
+    return results, make_messages(
         piece, measures, query, results, score_context=score_context
     )
 
@@ -3943,7 +3997,7 @@ def finalize_grounded_generated_answer(
     *,
     language: str = "ko",
 ) -> str:
-    """Validate the sole model draft without repair or substitution."""
+    """Validate the reviewed draft without repairing or substituting its claims."""
 
     screen_text(answer, source="answer")
     if not answer.strip() or is_grounded_insufficiency_answer(answer):
@@ -3956,6 +4010,86 @@ def finalize_grounded_generated_answer(
             "Generated answer contains unsupported tokens: %s"
             % ", ".join(suspicious)
         )
+    if isinstance(answer, RenderedAnswer) and any(p.get("source_quotation") for p in answer.parts):
+        if language != "ko":
+            raise GeneratedAnswerRejected("Native source quotation has the wrong language")
+        quotations = []
+        remaining = []
+        primary = primary_grounding_results(results)
+        for part in answer.parts:
+            if not part.get("source_quotation"):
+                remaining.append(part)
+                continue
+            labels = part["evidence"]
+            if len(labels) != 1 or not re.fullmatch(r"E[1-9][0-9]*", labels[0]):
+                raise GeneratedAnswerRejected("Invalid quotation attribution")
+            index = int(labels[0][1:]) - 1
+            if (not 0 <= index < len(results) or results[index] not in primary
+                    or part["text"] != results[index].record.get("answer")):
+                raise GeneratedAnswerRejected("Quotation differs from its complete primary source")
+            if has_forbidden_user_visible_artifact(part["text"], results):
+                raise GeneratedAnswerRejected("Quotation contains forbidden presentation data")
+            quotations.append(part["text"])
+        # Quoted prose still receives the ordinary citation and scope checks.
+        # Only grammatical rewriting of the already verified source is skipped.
+        quote_parts = [p for p in answer.parts if p.get("source_quotation")]
+        cited = RenderedAnswer(quote_parts, language).grounded_text
+        if (answer_references_secondary_evidence(cited, results)
+                or answer_overgeneralizes_local_examples(cited, results, measure_ranges)):
+            raise GeneratedAnswerRejected("Invalid source quotation scope")
+        _validate_primary_citation_per_claim(cited, results)
+        addition = finalize_grounded_generated_answer(
+            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
+        ) if remaining else ""
+        quoted = "참고 자료의 원문입니다.\n" + "\n\n".join(quotations)
+        return PreservedSourceAnswer("\n\n".join(x for x in (quoted, addition) if x))
+    if isinstance(answer, RenderedAnswer) and any(p.get("source_translation") for p in answer.parts):
+        if language != "en":
+            raise GeneratedAnswerRejected("Source translation has the wrong language")
+        # This app-created flag only supplies visible attribution. Remove it
+        # before ordinary finalization: translated text has no native-quotation
+        # exemption and still receives every citation, scope and display check.
+        plain_parts = [{key: value for key, value in part.items() if key != "source_translation"}
+                       for part in answer.parts]
+        checked = finalize_grounded_generated_answer(
+            RenderedAnswer(plain_parts, language), results, messages, measure_ranges, language=language,
+        )
+        return "Translated reference text:\n" + checked
+    if isinstance(answer, RenderedAnswer) and any(p["kind"] == "score_lyrics" for p in answer.parts):
+        # A lyric transcription has its own provenance. Requiring a KU label
+        # for these words falsely rejects a valid mixed answer, or encourages
+        # the writer to misattribute score text to an expert. The output guard
+        # has reviewed each typed part under the existing lyrics-only policy.
+        payload = json.loads(messages[1]["content"])
+        if not payload.get("Score context"):
+            raise GeneratedAnswerRejected("Score lyric text has no supplied score context")
+        lyrics = "\n".join(p["text"] for p in answer.parts if p["kind"] == "score_lyrics")
+        if _claim_has_unauthorized_measure_locator(lyrics, results, set(), measure_ranges):
+            raise GeneratedAnswerRejected("Score lyric text includes an unselected measure")
+        visible_lyrics = finalize_user_visible_answer(lyrics, results, language=language)
+        if visible_lyrics == no_corpus_evidence_message(language):
+            raise GeneratedAnswerRejected("Invalid score lyric presentation")
+        remaining = [p for p in answer.parts if p["kind"] != "score_lyrics"]
+        source = finalize_grounded_generated_answer(
+            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
+        ) if remaining else ""
+        return "\n\n".join(part for part in (source, visible_lyrics) if part)
+    if isinstance(answer, RenderedAnswer) and answer.background_text:
+        # Provenance comes from validated structured output, not a guessed
+        # heading in model prose. Source claims retain all existing checks.
+        source = (
+            finalize_grounded_generated_answer(
+                answer.grounded_text, results, messages, measure_ranges,
+                language=language,
+            ) if answer.grounded_text else ""
+        )
+        background = finalize_user_visible_answer(
+            answer.background_text, results, language=language,
+        )
+        if background == no_corpus_evidence_message(language):
+            raise GeneratedAnswerRejected("Invalid general explanation")
+        prefix = "General explanation: " if language == "en" else "일반적인 음악 설명입니다.\n"
+        return "\n\n".join(part for part in (source, prefix + background) if part)
     if answer_references_secondary_evidence(answer, results):
         raise GeneratedAnswerRejected(
             "Generated answer cites context-only evidence"
@@ -4070,12 +4204,16 @@ def _retrieval_unavailable_reason(
 
 
 def _run_cli(args: argparse.Namespace) -> None:
-    screen_question(args.question)
-    screen_text(args.topic or "", source="topic")
+    from soprano_qa import single_pass
+    from soprano_qa.security import validate_question_input
     settings = load_settings(
         args.settings,
         use_legacy_dataset_env=False,
     ) if args.settings else load_settings(use_legacy_dataset_env=False)
+    direct = single_pass.enabled(settings.get('llm', {}))
+    make_messages = single_pass.build_messages if direct else build_messages
+    (validate_question_input if direct else screen_question)(args.question)
+    screen_text(args.topic or "", source="topic")
     try:
         validate_retrieval_requirements(settings)
         if not args.no_generate:
@@ -4126,36 +4264,34 @@ def _run_cli(args: argparse.Namespace) -> None:
             measures=args.measures,
             topic=args.topic,
             top_k=args.top_k,
+            **({'message_builder': make_messages} if direct else {}),
         )
-        if not results or (
-            args.measure_ranges and not has_primary_grounding(results)
-        ):
-            answer = NO_CORPUS_EVIDENCE_MESSAGE
-            generation_mode = "unavailable"
-            answer_basis = "no_corpus_evidence"
-            unavailable_reason = _retrieval_unavailable_reason(
-                index,
-                question=args.question,
-                piece=args.piece,
-                measure_ranges=args.measure_ranges,
-                results=results,
-            )
-        else:
-            raw_answer = generate(
-                settings["model_path"],
-                messages,
-                settings["llm"],
-                security_context=json.loads(messages[1]["content"]),
-            )
+        results = sanitize_generation_results(results)
+        grounded = bool(results) and (not args.measure_ranges or has_primary_grounding(results))
+        generation_results = results if grounded else []
+        if not grounded:
+            messages = make_messages(args.piece, args.measures, args.question, [])
+        from soprano_qa.response_policy import compose_music_answer
+        raw_answer = compose_music_answer(
+            settings["model_path"], messages, settings["llm"], generation_results, args.measure_ranges,
+            language="ko", generate_fn=generate,
+            finalizer_fn=finalize_grounded_generated_answer,
+        )
+        answer = str(raw_answer) if direct else getattr(raw_answer, "validated_text", None)
+        if answer is None:
             answer = finalize_grounded_generated_answer(
-                raw_answer, results, messages, args.measure_ranges,
+                raw_answer, generation_results, messages, args.measure_ranges,
             )
-            generation_mode = "llm"
-            answer_basis = "retrieved_evidence"
+        generation_mode = getattr(raw_answer, "generation_mode", "llm")
+        generation_validation_warning = getattr(raw_answer, "generation_validation_warning", None)
+        answer_basis = getattr(raw_answer, "answer_basis",
+                               "retrieved_evidence" if grounded else "general_music_knowledge")
 
-    answer = finalize_user_visible_answer(answer, results)
+    if not (direct and not args.no_generate):
+        answer = finalize_user_visible_answer(answer, results)
     if (
-        answer == NO_CORPUS_EVIDENCE_MESSAGE
+        not (direct and not args.no_generate)
+        and answer == NO_CORPUS_EVIDENCE_MESSAGE
         and answer_basis not in {
             "no_corpus_evidence",
             "retrieved_secondary_context",
@@ -4271,13 +4407,29 @@ def main() -> None:
             if isinstance(exc, SecurityViolation)
             else "answer_validation_failed"
         )
+        from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
+        recovered = None
+        if not args.no_generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
+            from soprano_qa import single_pass
+            settings = load_settings(args.settings, use_legacy_dataset_env=False) if args.settings else load_settings(use_legacy_dataset_env=False)
+            make_messages = single_pass.build_messages if single_pass.enabled(settings['llm']) else build_messages
+            messages = make_messages(args.piece, args.measures, args.question, [])
+            try:
+                recovered = compose_music_answer(settings['model_path'], messages, settings['llm'], [], args.measure_ranges,
+                    language='ko', generate_fn=generate)
+            except (SecurityViolation, GeneratedAnswerRejected) as fallback_error:
+                if isinstance(fallback_error, SecurityViolation):
+                    reason = fallback_error.reason
+        domain = is_scope_rejection(reason)
+        direct_recovery = recovered is not None and single_pass.enabled(settings['llm'])
+        guidance = str(recovered) if recovered is not None else domain_guidance("ko") if domain else failure_guidance("ko")
         if args.json:
             print(json.dumps({
-                "answer": NO_CORPUS_EVIDENCE_MESSAGE,
-                "generation_mode": "unavailable",
-                "answer_basis": "no_corpus_evidence",
-                "unavailable_reason": reason,
-                "generation_validation_warning": None,
+                "answer": guidance,
+                "generation_mode": recovered.generation_mode if direct_recovery else "llm_general_fallback" if recovered is not None else "domain_guidance" if domain else "response_error",
+                "answer_basis": recovered.answer_basis if direct_recovery else "general_music_knowledge" if recovered is not None else "service_scope" if domain else "service_status",
+                "unavailable_reason": None if recovered is not None else reason,
+                "generation_validation_warning": "unsafe_source_excluded" if recovered is not None else None,
                 "results": [],
                 "evidence_notices": [],
                 "retrieval": {},
@@ -4285,7 +4437,7 @@ def main() -> None:
                 "has_selected_range_grounding": False if args.measure_ranges else None,
             }, ensure_ascii=False, indent=2))
         else:
-            print(NO_CORPUS_EVIDENCE_MESSAGE)
+            print(guidance)
 
 
 if __name__ == "__main__":
