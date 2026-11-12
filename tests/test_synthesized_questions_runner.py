@@ -459,9 +459,9 @@ class SynthesizedQuestionsRunnerTests(unittest.TestCase):
             {f"{piece_id}.json" for piece_id in runner.TARGET_PIECES},
         )
         self.assertIn(
-            runner.DEFAULT_DATASET_ROOT
+            (runner.DEFAULT_DATASET_ROOT
             / "expert_curation"
-            / "derived_knowledge_unit_questions.py",
+            / "derived_knowledge_unit_questions.py").resolve(),
             benchmark.input_paths,
         )
         source_variant_results = [
