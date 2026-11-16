@@ -115,7 +115,8 @@ class SumijoIntegrationTests(unittest.TestCase):
             piece="nella-fantasia", measure_ranges=[], measures="", topic=None, top_k=2)
         self.assertEqual(results[0].record["evidence_type"], "sumijo_feedback")
         self.assertIn("Sumi Jo", messages[1]["content"])
-        self.assertIn("sumijo_feedback, then expert_annotation", messages[0]["content"])
+        # The priority rule is added only when Sumi Jo's feedback shares the
+        # bundle with other sources (tests/test_single_pass.py).
 
     def test_api_does_not_label_sumijo_as_web(self):
         from soprano_qa.service import _result_to_evidence

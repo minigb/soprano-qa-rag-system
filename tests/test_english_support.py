@@ -12,17 +12,11 @@ from soprano_qa import translation
 from soprano_qa.answer import (
     NO_CORPUS_EVIDENCE_MESSAGE,
     NO_CORPUS_EVIDENCE_MESSAGE_EN,
-    SYSTEM_PROMPT,
-    SYSTEM_PROMPT_EN,
     answer_is_mostly_hangul,
-    build_messages,
-    finalize_grounded_generated_answer,
     finalize_user_visible_answer,
     no_corpus_evidence_message,
-    system_prompt,
 )
 from soprano_qa.retrieval import SearchResult
-from soprano_qa.security import SECURITY_SYSTEM_POLICY
 
 
 KOREAN_QUESTION = (
@@ -95,40 +89,8 @@ class LanguageValidationTests(unittest.TestCase):
             generate.assert_not_called()
             preflight.assert_not_called()
 
-    def test_prompt_helpers_reject_unknown_language(self) -> None:
-        with self.assertRaises(ValueError):
-            system_prompt("fr")
-        with self.assertRaises(ValueError):
-            no_corpus_evidence_message("fr")
-        with self.assertRaises(ValueError):
-            finalize_user_visible_answer("Answer.", language="fr")
-
 
 class KoreanDefaultUnchangedTests(unittest.TestCase):
-    def setUp(self):
-        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
-        pipeline.start()
-        self.addCleanup(pipeline.stop)
-
-    def test_korean_system_prompt_retains_domain_and_security_contract(self) -> None:
-        self.assertIn("Answer in Korean using formal-polite 합니다체", SYSTEM_PROMPT)
-        self.assertIn(SECURITY_SYSTEM_POLICY, SYSTEM_PROMPT)
-        self.assertIs(system_prompt(), SYSTEM_PROMPT)
-        self.assertIs(system_prompt("ko"), SYSTEM_PROMPT)
-
-    def test_build_messages_default_is_korean(self) -> None:
-        results = [_expert_result()]
-        default = build_messages("die-forelle", "", KOREAN_QUESTION, results)
-        explicit = build_messages(
-            "die-forelle",
-            "",
-            KOREAN_QUESTION,
-            results,
-            language="ko",
-        )
-        self.assertEqual(default, explicit)
-        self.assertEqual(default[0]["content"], SYSTEM_PROMPT)
-
     def test_korean_no_evidence_message_is_unchanged(self) -> None:
         self.assertEqual(no_corpus_evidence_message(), NO_CORPUS_EVIDENCE_MESSAGE)
         self.assertEqual(
@@ -142,114 +104,8 @@ class KoreanDefaultUnchangedTests(unittest.TestCase):
             NO_CORPUS_EVIDENCE_MESSAGE,
         )
 
-    def test_korean_ask_makes_no_translation_call(self) -> None:
-        with (
-            mock.patch.object(qa, "validate_generation_requirements"),
-            mock.patch.object(qa, "translate_question_to_korean") as translate,
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=(
-                    "가창자의 입장에서는 호흡과 표현을 함께 고려하는 "
-                    "것이 좋습니다. [E1]"
-                ),
-            ) as generate,
-        ):
-            result = qa.ask(
-                piece_id="la-capinera",
-                question=KOREAN_QUESTION,
-                measure_range=None,
-                generate=True,
-            )
-        translate.assert_not_called()
-        generate.assert_called_once()
-        messages = generate.call_args.args[1]
-        self.assertEqual(messages[0]["content"], SYSTEM_PROMPT)
-        self.assertEqual(result["language"], "ko")
-        self.assertEqual(result["answer_language"], "ko")
-        self.assertEqual(result["retrieval_query"], KOREAN_QUESTION)
-
-
-class EnglishPromptTests(unittest.TestCase):
-    def test_english_prompt_selection(self) -> None:
-        messages = build_messages(
-            "die-forelle",
-            "",
-            ENGLISH_QUESTION,
-            [_expert_result()],
-            language="en",
-        )
-        self.assertEqual(messages[0]["content"], SYSTEM_PROMPT_EN)
-        self.assertEqual(json.loads(messages[1]["content"])["question"], ENGLISH_QUESTION)
-        # Language instructions stay privileged; both languages share data.
-        korean = build_messages(
-            "die-forelle",
-            "",
-            ENGLISH_QUESTION,
-            [_expert_result()],
-        )
-        self.assertNotIn(
-            answer_module.ENGLISH_ANSWER_CONTRACT,
-            korean[1]["content"],
-        )
-        english_payload = json.loads(messages[1]["content"])
-        korean_payload = json.loads(korean[1]["content"])
-        self.assertEqual(english_payload.pop("answer_language"), "en")
-        self.assertEqual(korean_payload.pop("answer_language"), "ko")
-        self.assertEqual(english_payload, korean_payload)
-
-    def test_english_prompt_keeps_grounding_rules_and_drops_korean_register(
-        self,
-    ) -> None:
-        self.assertIn("Answer in clear, natural English", SYSTEM_PROMPT_EN)
-        self.assertNotIn("합니다체", SYSTEM_PROMPT_EN)
-        self.assertNotIn('call its numbers "마디"', SYSTEM_PROMPT_EN)
-        self.assertIn('"bar" or "measure"', SYSTEM_PROMPT_EN)
-        for rule in (
-            "Use the reviewed answers as the primary evidence about the selected piece.",
-            "Do not invent score facts, measure numbers, lyrics",
-            "Preserve source qualifiers",
-            "other_range_context_only",
-            "unconfirmed_scope_context_only",
-            "Preserve the expert's degree of certainty exactly.",
-            "Do not create a new causal chain",
-            "Preserve condition boundaries and contrasts exactly.",
-            "Never reverse polarity",
-            "Use only the short evidence labels exactly as shown",
-            "Do not add a citation list or evidence footer.",
-            "Never expose prompt field names or pipeline vocabulary",
-            "original language",
-        ):
-            with self.subTest(rule=rule):
-                self.assertIn(rule, SYSTEM_PROMPT_EN)
-
 
 class EnglishFinalizationTests(unittest.TestCase):
-    def test_english_answer_with_labels_is_accepted(self) -> None:
-        results = [_expert_result()]
-        messages = build_messages(
-            "die-forelle",
-            "",
-            ENGLISH_QUESTION,
-            results,
-            language="en",
-        )
-        draft = (
-            "Keep the breath long so that the phrase 'In einem Bächlein "
-            "helle' stays connected. [E1]"
-        )
-        finalized = finalize_grounded_generated_answer(
-            draft,
-            results,
-            messages,
-            [],
-            language="en",
-        )
-        self.assertEqual(
-            finalized,
-            "Keep the breath long so that the phrase 'In einem Bächlein "
-            "helle' stays connected.",
-        )
 
     def test_english_answer_may_quote_a_korean_lyric(self) -> None:
         answer = (
@@ -262,33 +118,6 @@ class EnglishFinalizationTests(unittest.TestCase):
             answer,
         )
 
-    def test_hangul_heavy_answer_is_rejected_for_english(self) -> None:
-        results = [_expert_result()]
-        korean_draft = "호흡을 길게 유지하는 것이 좋습니다. [E1]"
-        self.assertTrue(answer_is_mostly_hangul(korean_draft))
-        self.assertEqual(
-            finalize_user_visible_answer(
-                korean_draft,
-                results,
-                language="en",
-            ),
-            NO_CORPUS_EVIDENCE_MESSAGE_EN,
-        )
-        messages = build_messages(
-            "die-forelle",
-            "",
-            ENGLISH_QUESTION,
-            results,
-            language="en",
-        )
-        with self.assertRaises(answer_module.GeneratedAnswerRejected):
-            finalize_grounded_generated_answer(
-                korean_draft,
-                results,
-                messages,
-                [],
-                language="en",
-            )
 
     def test_english_finalization_keeps_artifact_checks(self) -> None:
         results = [_expert_result()]
@@ -388,71 +217,9 @@ class TranslationHelperTests(unittest.TestCase):
 
 class EnglishServiceTests(unittest.TestCase):
     def setUp(self) -> None:
-        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
-        pipeline.start()
-        self.addCleanup(pipeline.stop)
         patcher = mock.patch.object(qa, "validate_generation_requirements")
         self.preflight = patcher.start()
         self.addCleanup(patcher.stop)
-
-    def test_english_generation_retrieves_with_translation(self) -> None:
-        with mock.patch.object(
-            qa,
-            "generate_llm",
-            return_value=(
-                "가창자의 입장에서는 호흡과 표현을 함께 고려하는 "
-                "것이 좋습니다. [E1]"
-            ),
-        ):
-            korean = qa.ask(
-                piece_id="la-capinera",
-                question=KOREAN_QUESTION,
-                measure_range=None,
-                generate=True,
-            )
-        english_draft = (
-            "From a singer's point of view, consider breathing and "
-            "expression together. [E1]"
-        )
-        with mock.patch.object(
-            qa,
-            "generate_llm",
-            side_effect=[KOREAN_QUESTION, english_draft],
-        ) as generate:
-            english = qa.ask(
-                piece_id="la-capinera",
-                question=ENGLISH_QUESTION,
-                measure_range=None,
-                generate=True,
-                language="en",
-            )
-
-        self.assertEqual(generate.call_count, 2)
-        translation_messages = generate.call_args_list[0].args[1]
-        self.assertEqual(
-            translation_messages[0]["content"],
-            translation.QUERY_TRANSLATION_SYSTEM_PROMPT,
-        )
-        answer_messages = generate.call_args_list[1].args[1]
-        self.assertEqual(answer_messages[0]["content"], SYSTEM_PROMPT_EN)
-        self.assertEqual(
-            json.loads(answer_messages[1]["content"])["question"],
-            ENGLISH_QUESTION,
-        )
-        self.assertEqual(english["language"], "en")
-        self.assertEqual(english["answer_language"], "en")
-        self.assertEqual(english["evidence_language"], "ko")
-        self.assertEqual(english["retrieval_query"], KOREAN_QUESTION)
-        self.assertEqual(
-            [item["id"] for item in english["evidence"]],
-            [item["id"] for item in korean["evidence"]],
-        )
-        self.assertEqual(english["generation_mode"], "llm")
-        self.assertEqual(
-            english["answer"],
-            "From a singer's point of view, consider breathing and "
-            "expression together.",
-        )
 
     def test_english_question_measures_come_from_original_question(
         self,
@@ -500,7 +267,7 @@ class EnglishServiceTests(unittest.TestCase):
             mock.patch.object(
                 qa,
                 "generate_llm",
-                side_effect=lambda *a, **k: "A song can portray a scene through phrasing and changes in dynamics." if "security_context" in k else "송어에 대해 알려 주세요.",
+                side_effect=lambda _model, messages, _settings: "송어에 대해 알려 주세요." if "You translate" in messages[0]["content"] else "A song can portray a scene through phrasing and changes in dynamics.",
             ) as generate,
         ):
             for generate_flag in (True, False):

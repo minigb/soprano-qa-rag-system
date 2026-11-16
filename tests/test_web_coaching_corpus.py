@@ -6,11 +6,7 @@ import tempfile
 import unittest
 from types import SimpleNamespace
 
-from soprano_qa.answer import (
-    build_context,
-    build_evidence_notices,
-    supplement_web_coaching_evidence,
-)
+from soprano_qa.answer import build_evidence_notices, supplement_web_coaching_evidence
 from soprano_qa.corpus import (
     WEB_COACHING_RECORD_KEYS,
     build_corpus,
@@ -117,18 +113,6 @@ class WebCoachingRecordTests(unittest.TestCase):
         record = dict(build_web_coaching_records(self.root)[0], excerpt="copied text")
         with self.assertRaises(ValueError):
             validate_release_corpus([record])
-
-    def test_prompt_block_and_notice_carry_source_provenance(self) -> None:
-        write_lineage(self.root)
-        record = build_web_coaching_records(self.root)[0]
-        result = SimpleNamespace(record=record, scope_match="general_evidence")
-        notices = build_evidence_notices([result])
-        self.assertEqual(notices[0]["record_id"], record["id"])
-        self.assertEqual(notices[0]["sources"][0]["url"], SOURCE["url"])
-        self.assertEqual(notices[0]["sources"][0]["locator"], UNIT["locator"])
-        context = build_context([result])
-        self.assertIn("source_kind: video", context)
-        self.assertIn("lyric_anchor: Doch endlich", context)
 
 
 def fake_result(record_id: str, evidence_type: str) -> SimpleNamespace:

@@ -8,14 +8,7 @@ import unittest
 from types import SimpleNamespace
 from unittest import mock
 
-from soprano_qa.answer import (
-    build_context,
-    build_evidence_notices,
-    ensure_corpus,
-    GeneratedAnswerRejected,
-    finalize_answer_citations,
-    format_evidence_notice,
-)
+from soprano_qa.answer import build_evidence_notices, ensure_corpus, format_evidence_notice
 from soprano_qa.corpus import (
     CORPUS_RELEASE_FORBIDDEN_FIELDS,
     EXPERT_RELEASE_RECORD_KEYS,
@@ -490,7 +483,6 @@ class CombinedCorpusTests(unittest.TestCase):
             ensure_corpus(settings, rebuild=False)
             with open(settings["stats_path"], encoding="utf-8") as f:
                 self.assertIsInstance(json.load(f), dict)
-
 
 
     def test_web_chunk_lineage_rejects_unknown_claims_and_wrong_piece_sources(self) -> None:
@@ -1220,90 +1212,6 @@ class CombinedCorpusTests(unittest.TestCase):
             [result.record["id"] for result in imagery],
         )
 
-    def test_context_formats_both_provenance_families(self) -> None:
-        expert = self.index.search(
-            "유절가곡인가요",
-            piece="die-forelle",
-            top_k=1,
-        )
-        web = self.index.search(
-            "정식 표제와 작품 번호",
-            piece="die-forelle",
-            top_k=1,
-        )
-        context = build_context(expert + web)
-        self.assertIn("citation_label: E1", context)
-        self.assertIn("evidence_type: expert_annotation", context)
-        self.assertNotIn("expert_source_ids:", context)
-        self.assertNotIn("measure_status:", context)
-        self.assertNotIn("expert_source_answer", context)
-        self.assertIn(expert[0].record["answer"], context)
-        self.assertIn("evidence_type: web_database", context)
-        self.assertIn("web_source_ids:", context)
-        self.assertIn("web_source:", context)
-        self.assertEqual(expert[0].record["id"], "die-forelle-ku-007")
-        self.assertEqual(
-            expert[0].record["source_ids"],
-            ["kim-die-forelle-05", "kim-die-forelle-09"],
-        )
-        self.assertEqual(
-            web[0].record["id"],
-            "webchunk-cecff2bace03ab67e32d",
-        )
-        self.assertTrue(web[0].record["web_source_ids"])
-        self.assertTrue(web[0].record["claim_ids"])
-
-        notices = build_evidence_notices(web)
-        self.assertEqual(notices[0]["record_id"], "webchunk-cecff2bace03ab67e32d")
-        self.assertEqual(notices[0]["usage_class"], "research_open")
-        formatted_notice = format_evidence_notice(notices[0])
-        self.assertIn("generated_text_license=CC-BY-4.0", formatted_notice)
-        self.assertEqual(
-            notices[0]["generated_text_attribution"],
-            "Soprano QA database project",
-        )
-        self.assertEqual(
-            notices[0]["generated_text_license_url"],
-            "https://creativecommons.org/licenses/by/4.0/",
-        )
-        self.assertIn("generated_text_attribution=Soprano QA database project", formatted_notice)
-        self.assertIn("creativecommons.org/licenses/by/4.0/", formatted_notice)
-        self.assertIn("source: websrc-", formatted_notice)
-
-        labeled = finalize_answer_citations("근거입니다. [E1]", web)
-        self.assertEqual(labeled, "근거입니다.")
-        with self.assertRaises(GeneratedAnswerRejected):
-            finalize_answer_citations(
-                "근거입니다. [webchunk-cecff2bace003ab67e32d]",
-                web,
-            )
-        grouped = finalize_answer_citations("근거입니다. [E1, E2]", expert + web)
-        self.assertEqual(grouped, "근거입니다.")
-        spaced = finalize_answer_citations("근거입니다. [ E1 ]", expert + web)
-        self.assertEqual(spaced, "근거입니다.")
-        trailing = finalize_answer_citations("근거입니다. [E1;]", expert + web)
-        self.assertEqual(trailing, "근거입니다.")
-        for displayed in (labeled, grouped, spaced, trailing):
-            self.assertNotIn("[E", displayed)
-            self.assertNotIn("-ku-", displayed)
-            self.assertNotIn("webchunk-", displayed)
-        expert_source_id = expert[0].record["source_ids"][0]
-        invalid_drafts = (
-            "근거입니다.",
-            "근거입니다. [E99]",
-            "근거입니다. [websrc-fake] [die-forelle-ku-ABC] [A]",
-            "근거입니다. [1] [출처: E99] [Source: webchunk-not-retrieved]",
-            "근거입니다. [%s]" % expert_source_id,
-            "근거입니다. [%s]" % ", ".join(expert[0].record["source_ids"]),
-            "근거입니다.\n\n제공된 검색 근거: [E1]",
-        )
-        for draft in invalid_drafts:
-            with self.subTest(draft=draft):
-                with self.assertRaises(GeneratedAnswerRejected):
-                    finalize_answer_citations(
-                        draft,
-                        expert if expert_source_id in draft else web,
-                    )
 
     def test_conditional_web_evidence_has_deterministic_rights_notice(self) -> None:
         for rights_question in (

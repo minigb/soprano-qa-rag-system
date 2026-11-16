@@ -6,18 +6,15 @@ from __future__ import annotations
 
 import argparse
 import copy
-import hashlib
 import json
 import os
 import re
 import unicodedata
 from typing import Any, Dict, List
 
-from soprano_qa.source_translation_catalog import TRANSLATIONS_EN
 
 from soprano_qa.corpus import (
     CORPUS_SCHEMA_VERSION,
-    PIECES,
     SONG_ORDER,
     build_corpus,
     corpus_input_fingerprint,
@@ -25,188 +22,33 @@ from soprano_qa.corpus import (
     is_web_record,
 )
 from soprano_qa.dense import (
-    DenseRetrievalUnavailable,
     SearchIndex,
     SOURCE_QUESTION_LED_MATCH_TYPE,
     SOURCE_QUESTION_LED_MIN_CONTENT_SCORE,
     SOURCE_QUESTION_LED_MIN_OTHER_SOURCE_MARGIN,
     SOURCE_QUESTION_LED_MIN_RELEVANCE_SCORE,
-    build_retrieval_index,
     is_causal_answer_request,
     missing_dense_answer_constraints,
-    retrieval_abstained_for_ambiguity,
     retrieval_abstained_for_missing_causal_authority,
-    retrieval_diagnostics,
-    validate_retrieval_requirements,
-)
-from soprano_qa.llm import (
-    GenerationFinalizationRejected,
-    GenerationBackendUnavailable,
-    generate,
-    validate_generation_requirements,
 )
 from soprano_qa.retrieval import (
     PERFORMANCE_GUIDANCE_FACETS,
     format_measure_range,
-    format_result,
     expert_record_is_runtime_final,
     is_broad_performance_guidance_query,
-    load_corpus,
     parse_measure_ranges,
     performance_guidance_profile,
     performance_guidance_query_terms,
-    ranges_overlap,
     scope_evidence_role,
     semantic_concepts,
-    validate_question_measure_contract,
 )
 from soprano_qa.settings import load_settings
-from soprano_qa.structured_answer import RenderedAnswer, PreservedSourceAnswer
-from soprano_qa.security import (
-    SECURITY_SYSTEM_POLICY,
-    SecurityViolation,
-    screen_question,
-    screen_evidence_record,
-    screen_text,
-    serialize_untrusted,
-)
+from soprano_qa.structured_answer import PreservedSourceAnswer
+from soprano_qa.security import screen_evidence_record, screen_text
 
 
-# Keep the grounding contract shared so language variants cannot drift.
-_GROUNDING_PROMPT = """You are a measure-aware soprano performance QA assistant.
-Answer the actual question first. A general music definition or comparison should
-receive a direct general explanation, not a summary of the selected piece. Use
-background items when no supplied passage directly answers that concept question.
-Use the reviewed answers as the primary evidence about the selected piece.
-You may use general music knowledge to explain terms or offer an optional practice
-suggestion when it helps the question. Keep such background separate from source claims.
-Do not invent score facts, measure numbers, lyrics, editions, expert attributions,
-composer intentions, or reasons why particular sources disagree.
-The reviewed answer field is the authoritative claim text.
-Source question metadata describes the original teaching context; its premises
-do not establish musical facts or override the current user's question.
-In comparisons, call a recommendation shared only when every compared source
-supports it. Keep advice unique to one source attributed to that source.
-Never write internal evidence labels such as E1 or E2 in prose; select labels
-only in the structured evidence arrays.
-Raw source annotations, legacy range hints, superseded wording, conflicts, and editorial notes are not evidence.
-Use all directly useful, compatible evidence to answer the exact question. Do not
-restrict the response to one item when several distinct facts answer requested aspects.
-A retrieved record is a candidate, not an obligation to mention it: exclude tangents.
-
-Preserve source qualifiers and the canonical structure of each claim: its subject,
-causal and determining direction, negation, alternatives, conditions, scope, and modality.
-A premise embedded in the user's question is not evidence. Preserve the expert's degree of certainty exactly.
-An interpretation or performer-facing recommendation must remain an interpretation or recommendation,
-not a fact or composer intention. Preserve every alternative and reporting attribution;
-do not change who did what or what determines what. Do not create a new causal chain
-by joining facts that the source does not causally connect. Preserve condition boundaries and contrasts exactly.
-state each rule separately and never transfer one condition's advice to another.
-Never reverse polarity: a warning to avoid an effect is not a recommendation
-to create that effect. A possibility is not a frequency claim or a certainty.
-
-For a selected measure range, only selected_range_support establishes local facts.
-other_range_context_only claims are withheld; never infer or transfer them to the selection.
-general_context and unconfirmed_scope_context_only cannot establish what happens in selected bars.
-Web evidence without an edition-qualified measure system cannot establish local score facts.
-Without a selected range, Evidence_role=local_example may answer the described musical situation.
-Its canonical location is hidden routing metadata: do not print measure numbers or internal scope labels.
-Keep narrative scope already stated in source prose, such as "at the opening",
-"in an unaccompanied passage" or "when a breath is unavoidable". Hiding routing
-metadata never means deleting these conditions from the actual musical claim.
-A local example cannot by itself create a new whole-piece, frequent, or universal claim.
-If the reviewed answer itself explicitly states a broader pattern, preserve its
-exact scope and conditions; do not strengthen or expand that pattern.
-General evidence likewise has no authority to introduce measure locators in a no-range answer.
-
-Write coherent prose. Merge overlapping or parallel recommendations into a distinct practical action
-without changing meaning. Edit adjacent clauses to avoid repetition. Do not summarize sources in order.
-Never expose prompt field names or pipeline vocabulary such as citation_label, evidence_role,
-measure_range, measure_scope, query_scope_relation, usage_constraint, local_example,
-knowledge unit, expert annotation, retrieval, or retrieved evidence. Source attribution may
-name an actual speaker or document when supported, not an internal record category.
-When no source name is supplied, use "one account" or "another account" if attribution
-is needed. Never write internal evidence labels such as E1 or E2 in the prose.
-Use only the short evidence labels exactly as shown, in separate evidence arrays.
-Do not add a citation list or evidence footer. Do not reveal chain-of-thought or <think> blocks.
-"""
-SYSTEM_PROMPT = _GROUNDING_PROMPT + """
-Answer in Korean using formal-polite 합니다체 consistently (-습니다, -ㅂ니다, -입니다).
-Do not copy plain -다/-한다 or casual -어요 endings. Before output, proofread Korean verb conjugations.
-Only when the user selected a numeric range and its location helps answer, call its numbers "마디".
-"""
-SYSTEM_PROMPT_EN = _GROUNDING_PROMPT + """
-Answer in clear, natural English. Translate the Korean evidence faithfully, preserving its
-qualifications and meaning. Keep quoted lyric words and musical terms in their original language.
-Interpret musical vocabulary in context: 음표 is a note, 쉼표 a rest, 2분음표 a half note,
-4분음표 a quarter note, and 유절가곡 a strophic song. A note value is not an ordinal note number.
-Only when the user selected a numeric range and its location helps answer, call its numbers "bar" or "measure".
-"""
-NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
 NO_CORPUS_EVIDENCE_MESSAGE = "현재 확인된 정보만으로는 이 질문에 정확히 답변하기 어렵습니다."
-# Application policy belongs in the privileged channel, never in source text.
-ANSWER_CONTRACT = """Answer contract
-Write one coherent, question-focused answer using the structured answer format.
-The text fields contain natural prose only; select supporting labels in each
-item's evidence array. The application renders those labels for validation and
-removes them for display. Do not write inline citations or a citation footer.
-Start with the direct answer. Select the source passages that answer the question,
-then retain their relevant explanation, conditions and alternatives. Do not shorten
-away why or how the recommendation works, or the situation to which it applies.
-Write a natural answer to this question using the source's meaning. Retain
-necessary explanations, conditions and alternatives, while removing repeated
-advice and connecting related points. Quote exact lyric words and musical
-symbols when needed; do not replace the answer with complete source paragraphs.
-Do not summarize every retrieved record or add another passage's advice merely
-because it appears in the evidence. Do not announce that you are showing source
-text or describe the retrieval process to the user.
-For a general definition or comparison of musical concepts, explain those concepts
-directly. The selected piece is context, not an obligation to discuss it. If no
-reviewed answer directly explains the requested concept, use background items;
-do not cite a merely related passage or invent a connection to it. Add background
-only for an aspect the relevant source passages do not already explain.
-A passage's advice about one technique is not a definition of a different
-technique. Do not replace its subject with a term from the question. Definitions
-absent from the passage belong in accurate, separately marked background.
-Two examples of the reasoning rule, not additional musical evidence:
-- If one source says to enter gently and another discusses the final release,
-  a question about the entrance needs only the entrance advice.
-- If two accounts give different metronome markings and a general source says
-  notation can vary, the specific reason for the discrepancy is still unknown.
-  State the differing accounts and the uncertainty. Do not invent an explanation
-  about interpretation, editions, or artistic freedom from the generic statement.
-Preserve uncertainty, alternatives, negation, causal direction and attribution.
-If sources disagree and no source explains that disagreement, the answer must state
-that its cause is not established, then attribute the differing statements. Do not offer
-a possible cause from general knowledge, even hedged as "may" or "can be seen as".
-If part of a music question cannot be established, say so briefly and provide
-its supported part. A general music explanation may help even without a relevant
-source, but must not pretend to establish the requested local score fact.
-If neither a source-based nor useful general answer is possible, return {"sentences":[]}.
-"""
-SOURCE_PRIORITY_POLICY = """For relevant, scope-applicable evidence, use this authority order:
-sumijo_feedback, then expert_annotation, then web_coaching/web_database.
-Use lower-priority evidence to fill gaps, not override higher-priority advice.
-If sources conflict, attribute each claim and describe the discrepancy; do not
-invent its cause, silently blend incompatible advice, or claim agreement.
-When the evidence does not establish why sources differ, say the cause cannot
-be determined from these materials and give any supported shared guidance.
-A generic remark about editions, notation or interpretation is not evidence
-for the cause of this particular disagreement. Authority never makes
-an unrelated claim relevant or an unconfirmed measure location confirmed.
-Sumi Jo attribution refers to the supplied recordings and reviewed transcripts.
-"""
-SYSTEM_PROMPT += "\n" + SOURCE_PRIORITY_POLICY
-SYSTEM_PROMPT_EN += "\n" + SOURCE_PRIORITY_POLICY
 
-SYSTEM_PROMPT += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
-SYSTEM_PROMPT_EN += "\n" + SECURITY_SYSTEM_POLICY + "\n" + ANSWER_CONTRACT
-# Additional English citation examples for the privileged answer contract.
-ENGLISH_ANSWER_CONTRACT = """Write the text fields in English. Put supporting evidence labels in
-separate evidence arrays, never in the prose. Translate the Korean source's
-meaning and qualifications faithfully; preserve musical terms and quoted lyrics.
-"""
-SYSTEM_PROMPT_EN += "\n" + ENGLISH_ANSWER_CONTRACT
 NO_CORPUS_EVIDENCE_MESSAGE_EN = (
     "I could not find grounded evidence in the reviewed materials to "
     "answer this question."
@@ -215,16 +57,6 @@ NO_CORPUS_EVIDENCE_MESSAGE_EN = (
 # answer is treated as a Korean draft rather than English prose that quotes
 # a Korean lyric word.
 ENGLISH_ANSWER_MAX_HANGUL_RATIO = 0.3
-
-
-def system_prompt(language: str = "ko") -> str:
-    """Return the generation system prompt for one answer language."""
-
-    if language == "ko":
-        return SYSTEM_PROMPT
-    if language == "en":
-        return SYSTEM_PROMPT_EN
-    raise ValueError("Unsupported answer language: %r" % (language,))
 
 
 def no_corpus_evidence_message(language: str = "ko") -> str:
@@ -256,10 +88,6 @@ OPAQUE_CITATION_ID_PATTERN = (
 EVIDENCE_FOOTER_LABEL_RE = re.compile(
     r"제공된[\s*_~`]*검색[\s*_~`]*근거[\s*_~`]*[:：]?"
 )
-
-
-class GeneratedAnswerRejected(GenerationFinalizationRejected):
-    """Raised when a generated draft fails grounding or presentation checks."""
 
 
 PIPELINE_TOKEN_SEPARATOR_PATTERN = r"[\s*_~`–—-]*"
@@ -897,52 +725,6 @@ def has_forbidden_user_visible_artifact(
     return False
 
 
-LOCAL_SCOPE_GENERALIZATION_RE = re.compile(
-    r"(?:"
-    r"(?:곡|노래|작품)\s*(?:전체|전반)"
-    r"|(?:전체적|전반적)으로"
-    r"|항상|언제나|곳곳(?:에서|에)?"
-    r"|전\s*(?:곡|노래|작품|구간|마디|부분|대목)"
-    r"(?:에\s*걸쳐|을\s*통틀어|에서|에)?"
-    r"|(?:모든|대부분(?:의)?)\s*"
-    r"(?:구간|마디|부분|대목|곡|노래|작품)(?:에서|에|이|가)?"
-    r"|(?:여러|많은)\s*(?:마디|곳|부분|대목)(?:에서|에|이|가)?"
-    r"|(?:경우|부분|대목|음|고음|저음|도약음|현상)"
-    r"(?:이|가|은|는)?\s*많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
-    r"|(?:경우|부분|대목)(?:이|가|은|는)?\s*많"
-    r"|자주\s*(?:나오|나옵|등장|발생|나타나|나타납|보이|보입|있)"
-    r"|많이\s*(?:나오|나옵|등장|발생|나타나|나타납|있)"
-    r"|\b(?:throughout|always|frequently|often|everywhere)\b"
-    r"|\b(?:across|all\s+through)\s+(?:the\s+)?"
-    r"(?:piece|work|song)\b"
-    r"|\bmost\s+(?:bars?|measures?|places?|passages?)\b"
-    r"|\bmany\s+(?:bars?|measures?|places?|passages?)\b"
-    r")",
-    flags=re.IGNORECASE,
-)
-LOCAL_SCOPE_NEGATION_AFTER_RE = re.compile(
-    r"(?:적용|해당|일반화|확인|뒷받침|입증)"
-    r".{0,24}(?:않|아니|되지|없)"
-    r"|뜻.{0,12}(?:아니|않)"
-    r"|것.{0,8}(?:아니|않)"
-    r"|^\s*지(?:는)?\s*(?:않|아니)"
-    r"|(?:does\s+not|doesn't|cannot|can't|is\s+not)"
-    r".{0,24}(?:apply|establish|support|prove)",
-    flags=re.IGNORECASE,
-)
-ANSWER_LIST_PREFIX_RE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*")
-ANSWER_CLAIM_END_RE = re.compile(
-    r"[.!?。！？]+[\"'”’」』】)]*"
-    r"(?:[ \t]*[\[【][^\]】]+[\]】])*"
-    r"(?=[ \t]+|$|[가-힣])"
-)
-ANSWER_EVIDENCE_LABEL_RE = re.compile(
-    r"[\[【]([^\]】]+)[\]】]",
-    flags=re.IGNORECASE,
-)
-UNSEEN_CAMEL_CASE_RE = re.compile(
-    r"[A-Za-z]*[a-z][A-Z][A-Za-z]*"
-)
 RANGED_PRIMARY_SCOPE_MATCHES = {
     "overlaps_query_range",
     "global_context",
@@ -953,11 +735,6 @@ RANGED_CONTEXT_ONLY_SCOPE_MATCHES = {
 RANGED_NON_GROUNDING_SCOPE_MATCHES = {
     *RANGED_CONTEXT_ONLY_SCOPE_MATCHES,
     "unspecified_context",
-}
-NO_RANGE_SCOPE_MATCHES = {
-    "general_evidence",
-    "local_example",
-    "unspecified_scope",
 }
 # Smaller cosine gaps are treated as a semantic near-tie, not evidence that
 # a measure-local source should displace the normal no-range bundle.
@@ -1058,10 +835,6 @@ RANGED_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE = 0.60
 RANGED_DENSE_AUTHORITY_MIN_CONTENT_SCORE = 0.58
 RANGED_DENSE_AUTHORITY_RELEVANCE_MARGIN = 0.05
 RANGED_DENSE_AUTHORITY_CONTENT_MARGIN = 0.025
-NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE = 0.70
-NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONTENT_SCORE = 0.70
-NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE = 0.50
-NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN = 0.075
 RANGED_DEICTIC_QUERY_RE = re.compile(
     r"(?:이|해당|선택(?:한|된)?)\s*"
     r"(?:부분|구간|대목|마디)|(?:여기|이곳)(?:에서|은|는|을|를)?"
@@ -1105,588 +878,10 @@ def is_underspecified_ranged_query(
     )
 
 
-def _answer_claims(answer: str) -> List[str]:
-    """Split generated prose into citation-bearing claim-sized lines."""
-
-    claims: List[str] = []
-    sanitized_answer = _remove_evidence_footer(answer)
-    for line in unicodedata.normalize("NFKC", sanitized_answer).splitlines():
-        line = ANSWER_LIST_PREFIX_RE.sub("", line.strip())
-        if not line or line.startswith("제공된 검색 근거:"):
-            continue
-        claim_start = 0
-        for match in ANSWER_CLAIM_END_RE.finditer(line):
-            claim = line[claim_start : match.end()].strip()
-            if claim:
-                claims.append(claim)
-            claim_start = match.end()
-            while claim_start < len(line) and line[claim_start].isspace():
-                claim_start += 1
-        trailing_claim = line[claim_start:].strip()
-        if trailing_claim:
-            claims.append(trailing_claim)
-    return claims
-
-
-def _claim_has_substantive_text(claim: str) -> bool:
-    """Return whether a claim contains user-facing prose beyond citations."""
-
-    without_citations = ANSWER_EVIDENCE_LABEL_RE.sub("", claim)
-    return bool(re.search(r"[A-Za-z0-9가-힣]", without_citations))
-
-
-def _validate_primary_citation_per_claim(
-    answer: str,
-    results: List[Any],
-) -> None:
-    """Require every substantive generated claim to cite primary evidence."""
-
-    primary_ids = {
-        id(result)
-        for result in primary_grounding_results(results)
-    }
-    primary_indices = {
-        index
-        for index, result in enumerate(results)
-        if id(result) in primary_ids
-    }
-    for claim in _answer_claims(answer):
-        if not _claim_has_substantive_text(claim):
-            continue
-        if _claim_cited_result_indices(claim, results) & primary_indices:
-            continue
-        raise GeneratedAnswerRejected(
-            "Generated answer contains an uncited substantive claim"
-        )
-
-
-def _claim_cited_result_indices(
-    claim: str,
-    results: List[Any],
-) -> set[int]:
-    """Resolve only unambiguous evidence citations in one generated claim."""
-
-    cited: set[int] = set()
-    bracket_contents = ANSWER_EVIDENCE_LABEL_RE.findall(claim)
-    for content in bracket_contents:
-        cited.update(
-            int(label) - 1
-            for label in re.findall(
-                r"(?<![A-Za-z0-9])E(?:vidence)?\s*([0-9]+)(?![0-9])",
-                content,
-                flags=re.IGNORECASE,
-            )
-            if 0 < int(label) <= len(results)
-        )
-        for index, result in enumerate(results):
-            record_id = str(result.record.get("id") or "")
-            if record_id and re.search(
-                r"(?<![A-Za-z0-9_-])"
-                + re.escape(record_id)
-                + r"(?![A-Za-z0-9_-])",
-                content,
-                flags=re.IGNORECASE,
-            ):
-                cited.add(index)
-
-    outside_brackets = re.sub(
-        r"[\[【][^\]】]*[\]】]",
-        " ",
-        claim,
-    )
-    for pattern in (
-        r"(?<![A-Za-z0-9])Evidence\s*"
-        r"(?:(?:no\.?|number)\s*)?(?:[:：#._–—-]\s*)?"
-        r"([0-9]+)(?![0-9])",
-        r"(?:근거|출처)\s*(?:(?:[:：#._–—-]\s*)"
-        r"(?:E(?:vidence)?\s*)?|E(?:vidence)?\s*)"
-        r"([0-9]+)(?![0-9])",
-    ):
-        cited.update(
-            int(label) - 1
-            for label in re.findall(
-                pattern,
-                outside_brackets,
-                flags=re.IGNORECASE,
-            )
-            if 0 < int(label) <= len(results)
-        )
-    return cited
-
-
-def cited_primary_grounding_results(
-    answer: str,
-    results: List[Any],
-) -> List[Any]:
-    """Return primary evidence explicitly cited by substantive answer claims.
-
-    Review warnings are evidence-specific.  They must not be projected from an
-    unused retrieval candidate onto an answer grounded in a different record.
-    Preserve retrieval order so later citation finalization remains stable.
-    """
-
-    primary_ids = {
-        id(result)
-        for result in primary_grounding_results(results)
-    }
-    cited_indices: set[int] = set()
-    for claim in _answer_claims(answer):
-        cited_indices.update(
-            _claim_cited_result_indices(claim, results)
-        )
-    return [
-        result
-        for index, result in enumerate(results)
-        if index in cited_indices and id(result) in primary_ids
-    ]
-
-
-def _claim_measure_locators(claim: str) -> List[List[int]]:
-    """Extract explicit score locations from generated answer prose."""
-
-    normalized = unicodedata.normalize("NFKC", claim)
-    dash = r"[-–—~〜]"
-    patterns = (
-        re.compile(
-            r"(?<!\d)(\d+)\s*마디\s*부터\s*(\d+)\s*"
-            r"(?:번째\s*)?마디"
-        ),
-        re.compile(
-            rf"(?<!\d)(\d+)\s*{dash}\s*(\d+)\s*"
-            r"(?:번째\s*)?마디"
-        ),
-        re.compile(
-            rf"(?:마디|m\.|measures?|bars?)\s*(\d+)\s*{dash}\s*"
-            r"(\d+)(?!\d)",
-            flags=re.IGNORECASE,
-        ),
-        re.compile(r"(?<!\d)(\d+)\s*(?:번째\s*)?마디"),
-        re.compile(
-            r"(?:마디|m\.|measures?|bars?)\s*(\d+)(?!\d)",
-            flags=re.IGNORECASE,
-        ),
-    )
-    occupied: List[tuple[int, int]] = []
-    locators: List[List[int]] = []
-    for pattern in patterns:
-        for match in pattern.finditer(normalized):
-            if any(
-                match.start() < end and start < match.end()
-                for start, end in occupied
-            ):
-                continue
-            start = int(match.group(1))
-            end = int(match.group(2) or start) if match.lastindex == 2 else start
-            if start < 1 or end < start:
-                continue
-            occupied.append((match.start(), match.end()))
-            locator = [start, end]
-            if locator not in locators:
-                locators.append(locator)
-    return locators
-
-
-def _claim_has_unauthorized_measure_locator(
-    claim: str,
-    results: List[Any],
-    cited: set[int],
-    selected_measure_ranges: List[List[int]],
-) -> bool:
-    """Reject score locations not authorized by the user's selected range.
-
-    A canonical local-example range is routing metadata.  It does not become
-    user-selected merely because that evidence was retrieved, so no-range
-    answers must not volunteer any score locator.
-    """
-
-    locators = _claim_measure_locators(claim)
-    if not locators:
-        return False
-    del results, cited
-    if selected_measure_ranges:
-        return any(
-            not any(
-                selected_start <= start and end <= selected_end
-                for selected_start, selected_end in selected_measure_ranges
-            )
-            for start, end in locators
-        )
-    return True
-
-
-def _claim_has_piece_wide_generalization(claim: str) -> bool:
-    """Detect a positive whole-piece or frequency assertion in one claim."""
-
-    # "In phrases where X often appears" limits the recommendation to those
-    # phrases; it does not assert that X is frequent throughout this piece.
-    # Entailment of X and the advice remains the semantic guard's job. Remove
-    # only the relative clause's frequency token, retaining every explicit
-    # whole-piece/universal marker elsewhere in the same claim.
-    claim = _SCOPED_FREQUENCY_CLAUSE.sub(
-        lambda match: match.group().replace(match.group('frequency'), '', 1), claim,
-    )
-    # "음표가 많은 부분은" identifies a passage by its note density;
-    # "많은 부분에서" asserts occurrence in many passages. Remove only the
-    # former relative-clause marker, keeping any separate global assertion.
-    claim = _SCOPED_DENSITY_CLAUSE.sub(
-        lambda match: match.group().replace(match.group('density'), '', 1), claim,
-    )
-    for match in LOCAL_SCOPE_GENERALIZATION_RE.finditer(claim):
-        before = claim[max(0, match.start() - 12) : match.start()]
-        after = claim[match.end() : match.end() + 56]
-        if re.search(r"\bnot\s+$", before, flags=re.IGNORECASE):
-            continue
-        if LOCAL_SCOPE_NEGATION_AFTER_RE.search(after):
-            continue
-        return True
-    return False
-
-
-def answer_overgeneralizes_local_examples(
-    answer: str,
-    results: List[Any],
-    selected_measure_ranges: List[List[int]] | None = None,
-) -> bool:
-    """Reject unbound or overgeneralized local-example claims.
-
-    Local examples are safe factual context for a broad question only when
-    the generated claim identifies the evidence item internally. Their exact
-    canonical ranges remain hidden routing metadata. A different whole-piece
-    record can support a broad claim only when that record is cited in the
-    same claim.
-    """
-
-    if not answer.strip():
-        return False
-    selected_measure_ranges = selected_measure_ranges or []
-    primary = primary_grounding_results(results)
-    primary_ids = {id(result) for result in primary}
-    local_indices = {
-        index
-        for index, result in enumerate(results)
-        if id(result) in primary_ids
-        and result.scope_match == "local_example"
-    }
-    general_indices = {
-        index
-        for index, result in enumerate(results)
-        if id(result) in primary_ids
-        and result.scope_match == "general_evidence"
-    }
-
-    body_claims = _answer_claims(answer)
-    body_citations: set[int] = set()
-    is_no_range_answer = bool(results) and all(
-        result.scope_match in NO_RANGE_SCOPE_MATCHES
-        for result in results
-    )
-    for claim in body_claims:
-        cited = _claim_cited_result_indices(claim, results)
-        body_citations.update(cited)
-        if (
-            (selected_measure_ranges or is_no_range_answer)
-            and _claim_has_unauthorized_measure_locator(
-                claim,
-                results,
-                cited,
-                selected_measure_ranges,
-            )
-        ):
-            return True
-        cited_local = cited & local_indices
-        if not cited_local:
-            continue
-        if (
-            _claim_has_piece_wide_generalization(claim)
-            and not cited & general_indices
-            and not _copies_scoped_source_sentence(claim, results, cited_local)
-        ):
-            return True
-
-    # With local examples in the prompt, an unlabeled answer makes it
-    # impossible to tell which claim came from which range, so require the
-    # model to identify at least one actual evidence item in the answer body.
-    if local_indices and body_claims and not body_citations:
-        return True
-    return False
-
-
-def _copies_scoped_source_sentence(
-    claim: str, results: List[Any], cited_local: set[int],
-) -> bool:
-    """A verbatim scoped sentence does not create a new frequency assertion.
-
-    The coarse frequency screen also catches faithful source sentences such as
-    "ornaments often appear in this phrase". Allow only a complete matching
-    sentence, with deterministic Korean register normalization. A broader scope
-    explicitly present in that same reviewed sentence is not a new model
-    generalization. Paraphrases and dropped conditions receive no exception;
-    semantic output review and selected-measure authority still apply.
-    """
-    def normalize(text: str) -> str:
-        text = re.sub(r"\[E[0-9]+(?:\s*,\s*E[0-9]+)*\]", "", text)
-        return re.sub(r"\s+", " ", formalize_korean_answer(text)).strip()
-
-    expected = normalize(claim)
-    return any(
-        expected == normalize(sentence)
-        for index in cited_local
-        for sentence in _answer_claims(str(results[index].record.get("answer", "")))
-    )
-
-
-_SCOPED_FREQUENCY_CLAUSE = re.compile(
-    r"(?P<scope>[가-힣A-Za-z·]+[이가]\s+(?P<frequency>자주|흔히|빈번하게)\s+"
-    r"(?:나타나|등장하|반복되|사용되)는\s+(?:프레이즈|구간|부분|대목))"
-    r"(?:에서는|에서)(?=\s|[,.;!?])"
-)
-
-_SCOPED_DENSITY_CLAUSE = re.compile(
-    r"[가-힣A-Za-z·]+[이가]\s+(?P<density>많은)\s*(?:프레이즈|구간|부분|대목)"
-    r"(?:에서는|에서|은|을)(?=\s|[,.;!?])"
-)
-
-
-def suspicious_generation_tokens(
-    answer: str,
-    messages: List[Dict[str, str]],
-) -> List[str]:
-    """Find code/UI-like CamelCase tokens without source spelling support.
-
-    An exact-source reviewed translation may establish an English spelling
-    absent from the Korean text. This grants no claim/citation/scope exemption.
-    """
-
-    prompt_text = "\n".join(message["content"] for message in messages)
-    spellings = []
-    for message in messages:
-        if message.get("role") != "user":
-            continue
-        try:
-            payload = json.loads(message["content"])
-        except (ValueError, TypeError):
-            continue
-        if not isinstance(payload, dict) or not isinstance(payload.get("Retrieved evidence"), list):
-            continue
-        for record in payload["Retrieved evidence"]:
-            source = record.get("answer") if isinstance(record, dict) else None
-            if isinstance(source, str):
-                translated = TRANSLATIONS_EN.get(hashlib.sha256(source.encode("utf-8")).hexdigest())
-                if translated:
-                    spellings.append(translated)
-    supported_text = prompt_text + "\n" + "\n".join(spellings)
-    return sorted(
-        {
-            token
-            for token in UNSEEN_CAMEL_CASE_RE.findall(answer)
-            if token not in supported_text
-        }
-    )
-
-
 def _expert_record_is_finalized(record: Dict[str, Any]) -> bool:
     """Return whether an expert record obeys the release-only runtime schema."""
 
     return expert_record_is_runtime_final(record)
-
-
-def expert_prompt_factuality_material(
-    record: Dict[str, Any],
-    measure_ranges: List[List[int]] | None = None,
-) -> Dict[str, Any]:
-    """Return expert prose that is actually exposed to grounded generation.
-
-    The result intentionally mirrors ``build_context``: raw source Q&A and
-    editorial metadata never become factuality material. Confirmed range
-    metadata may exclude a non-overlapping record, but it never replaces the
-    reviewed knowledge-unit answer with source prose.
-    """
-
-    if record.get("evidence_type") != "expert_annotation":
-        raise ValueError("factuality material requires expert evidence")
-    selected_ranges = measure_ranges or []
-    record_ranges = record.get("measure_range") or []
-    if (
-        selected_ranges
-        and record.get("measure_status") == "specific"
-        and record_ranges
-        and not ranges_overlap(record_ranges, selected_ranges)
-    ):
-        # The complete record remains in retrieval/service output, but its
-        # claim text is deliberately absent from the answer-model prompt.
-        return {
-            "range_partitioned": False,
-            "answer_texts": [],
-            "question_contexts": [],
-            "source_ids": [],
-        }
-    curated_answer = re.sub(
-        r"\s+",
-        " ",
-        record.get("answer", ""),
-    ).strip()
-    return {
-        "range_partitioned": False,
-        "answer_texts": [curated_answer] if curated_answer else [],
-        "question_contexts": [],
-        "source_ids": [],
-    }
-
-
-def build_context(
-    results: List[Any],
-    measure_ranges: List[List[int]] | None = None,
-) -> str:
-    measure_ranges = measure_ranges or []
-    chunks = []
-    for idx, result in enumerate(results, start=1):
-        record = result.record
-        screen_text(json.dumps(record, ensure_ascii=False), source="evidence")
-        evidence_role = scope_evidence_role(result.scope_match)
-        lines = [
-            "Evidence %d" % idx,
-            (
-                "citation_label: (none; context-only evidence is not "
-                "citable)"
-                if result.scope_match
-                in RANGED_CONTEXT_ONLY_SCOPE_MATCHES
-                else "citation_label: E%d" % idx
-            ),
-            "evidence_type: %s" % record.get("evidence_type", "unknown"),
-            "piece: %s" % record["piece"],
-            "work: %s" % record["work"],
-        ]
-        if record.get("topic"):
-            lines.append("topic: %s" % record["topic"])
-        hide_unrequested_local_range = (
-            not measure_ranges and result.scope_match == "local_example"
-        )
-        if not hide_unrequested_local_range:
-            lines.extend(
-                [
-                    "measure_range: %s"
-                    % format_measure_range(
-                        record.get("measure_range") or []
-                    ),
-                    "measure_scope: %s"
-                    % record.get("measure_scope", ""),
-                ]
-            )
-        lines.extend(
-            [
-                "query_scope_relation: %s" % result.scope_match,
-                "evidence_role: %s" % evidence_role,
-            ]
-        )
-        if result.scope_match == "other_range_context":
-            lines.append(
-                "usage_constraint: This evidence has a confirmed location "
-                "outside the selected range. Only its existence and range "
-                "metadata are an internal range-mismatch signal. Its "
-                "musical claim is withheld; do not infer, cite, paraphrase, "
-                "or transfer that claim into the final answer."
-            )
-            lines.append(
-                "content: (withheld from answer generation; inspect the "
-                "returned evidence record separately)"
-            )
-            chunks.append("\n".join(lines))
-            continue
-        elif result.scope_match == "unspecified_context":
-            lines.append(
-                "usage_constraint: This evidence has no confirmed location "
-                "for the selected range. Preserve it as unconfirmed-scope "
-                "context only; never use it to claim what happens in the "
-                "selected range."
-            )
-        elif result.scope_match == "global_context":
-            lines.append(
-                "usage_constraint: This is general background only. Do not "
-                "use it to establish a measure-specific score claim."
-            )
-        elif result.scope_match == "local_example":
-            lines.append(
-                "usage_constraint: This is citable passage-specific advice "
-                "that directly matches a broad, no-range question. Its "
-                "canonical location is hidden presentation metadata. Cite "
-                "the [E#] label for internal validation, phrase the advice "
-                "naturally around the user's situation, and never print a "
-                "measure number, range, local-example label, scope notice, "
-                "or retrieval explanation. It does not establish that the "
-                "claim applies throughout the work, frequently, or in many "
-                "places."
-            )
-        if record.get("evidence_type") == "web_coaching":
-            source = record.get("web_coaching_source") or {}
-            lines.extend(
-                [
-                    "lineage_note: a claim extracted from one public web page or "
-                    "voice-lesson/masterclass video, restating that source's "
-                    "explanation or advice; secondary to expert_annotation.",
-                    "knowledge_scope: %s" % record.get("knowledge_scope", ""),
-                    "category: %s" % record.get("topic", ""),
-                    "lyric_anchor: %s" % (record.get("lyric_anchor") or "(none)"),
-                    "source_kind: %s" % source.get("kind", ""),
-                    "source_title: %s" % source.get("title", ""),
-                    "source_author: %s" % (source.get("author") or "(unknown)"),
-                ]
-            )
-        if record.get("evidence_type") == "web_database":
-            lines.extend(
-                [
-                    "knowledge_scope: %s" % record.get("knowledge_scope", ""),
-                    "usage_class: %s" % record.get("usage_class", ""),
-                    "generated_text_license: %s"
-                    % (record.get("generated_text_license") or "(none)"),
-                    "claim_ids: %s" % ", ".join(record.get("claim_ids", [])),
-                    "web_source_ids: %s" % ", ".join(record.get("web_source_ids", [])),
-                    "edition_id: %s" % (record.get("edition_id") or "(none)"),
-                    "edition_context: %s"
-                    % json.dumps(record.get("edition_context"), ensure_ascii=False, sort_keys=True),
-                    "measure_system: %s"
-                    % json.dumps(record.get("measure_system"), ensure_ascii=False, sort_keys=True),
-                ]
-            )
-            for source in record.get("sources", []):
-                lines.append(
-                    "web_source: %s | %s | %s | %s"
-                    % (
-                        source["web_source_id"],
-                        source.get("title", ""),
-                        source.get("institution", ""),
-                        source.get("url", ""),
-                    )
-                )
-            for inherited in record.get("inherited_licenses", []):
-                allowed = ",".join(
-                    permission
-                    for permission, value in sorted(
-                        (inherited.get("permissions") or {}).items()
-                    )
-                    if value
-                )
-                lines.append(
-                    "license_condition: source=%s; asset=%s (%s); license=%s; "
-                    "rights=%s; jurisdictions=%s; attribution=%s; license_url=%s; "
-                    "terms_url=%s; allowed=%s"
-                    % (
-                        inherited.get("web_source_id") or "(unknown)",
-                        inherited.get("asset_id") or "(unknown)",
-                        inherited.get("asset_type") or "(unknown)",
-                        inherited.get("license_id") or "(unknown)",
-                        inherited.get("rights_status") or "(unknown)",
-                        ",".join(inherited.get("jurisdictions") or []) or "unspecified",
-                        inherited.get("attribution") or "(none recorded)",
-                        inherited.get("license_url") or "(none)",
-                        inherited.get("terms_url") or "(none)",
-                        allowed or "none recorded",
-                    )
-                )
-        if record.get("question"):
-            lines.append("question: %s" % record["question"])
-        lines.append("answer: %s" % record["answer"])
-        chunks.append("\n".join(lines))
-    return "\n\n---\n\n".join(chunks) or "(no relevant evidence retrieved)"
 
 
 def primary_grounding_results(results: List[Any]) -> List[Any]:
@@ -1711,16 +906,6 @@ def has_primary_grounding(results: List[Any]) -> bool:
     """Return whether results contain answer-authoritative evidence."""
 
     return bool(primary_grounding_results(results))
-
-
-def has_only_web_grounding(results: List[Any]) -> bool:
-    """Return whether every answer-authoritative record is web evidence."""
-
-    primary = primary_grounding_results(results)
-    return bool(primary) and all(
-        is_web_record(result.record)
-        for result in primary
-    )
 
 
 def has_selected_range_grounding(results: List[Any]) -> bool:
@@ -1924,170 +1109,6 @@ def semantically_dominant_no_range_local_expert_bundle(
     if not two_view_consensus and not relevance_led:
         return []
     return bundle
-
-
-def semantically_dominant_ranged_expert_bundle(
-    results: List[Any],
-) -> List[Any]:
-    """Return one unambiguous, range-applicable finalized expert family.
-
-    A selected score range is useful routing evidence, but overlap alone does
-    not prove that a dense hit answers the question.  This gate admits a sole
-    strong expert hit, or a winner that independently leads every unrelated
-    overlapping expert in both retrieval and curated-answer embedding views.
-    Exact-source global siblings may accompany it when they also have direct
-    lexical or source-question support.  Ambiguous overlapping families stay
-    unavailable instead of being handed to the answer model.
-    """
-
-    if not results or not any(
-        result.scope_match
-        in RANGED_PRIMARY_SCOPE_MATCHES | RANGED_NON_GROUNDING_SCOPE_MATCHES
-        for result in results
-    ):
-        return []
-    if any(result.alias_score > 0 for result in results):
-        # Positive immutable source-question aliases already have their own
-        # stronger authority path.
-        return []
-
-    overlapping = [
-        result
-        for result in results
-        if (
-            result.scope_match == "overlaps_query_range"
-            and result.record.get("evidence_type") == "expert_annotation"
-            and _expert_record_is_finalized(result.record)
-            and result.retrieval_mode in {"dense", "hybrid"}
-            and result.dense_score
-            >= RANGED_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE
-            and result.dense_content_score
-            >= RANGED_DENSE_AUTHORITY_MIN_CONTENT_SCORE
-        )
-    ]
-    if not overlapping:
-        return []
-    anchor = overlapping[0]
-    anchor_sources = set(anchor.record.get("source_ids") or [])
-    if not anchor_sources:
-        return []
-
-    competing_families = [
-        result
-        for result in results
-        if (
-            result.scope_match == "overlaps_query_range"
-            and result.record.get("evidence_type") == "expert_annotation"
-            and _expert_record_is_finalized(result.record)
-            and not anchor_sources.intersection(
-                result.record.get("source_ids") or []
-            )
-            and result.dense_score > 0
-            and result.dense_content_score > 0
-        )
-    ]
-    if competing_families:
-        if (
-            anchor.dense_score
-            - max(result.dense_score for result in competing_families)
-            < RANGED_DENSE_AUTHORITY_RELEVANCE_MARGIN
-            or anchor.dense_content_score
-            - max(
-                result.dense_content_score
-                for result in competing_families
-            )
-            < RANGED_DENSE_AUTHORITY_CONTENT_MARGIN
-        ):
-            return []
-
-    siblings = [
-        result
-        for result in results
-        if (
-            result is not anchor
-            and result.scope_match == "global_context"
-            and result.record.get("evidence_type") == "expert_annotation"
-            and _expert_record_is_finalized(result.record)
-            and set(result.record.get("source_ids") or []) == anchor_sources
-            and (
-                result.alias_score > 0
-                or result.semantic_match_type
-                == SOURCE_QUESTION_LED_MATCH_TYPE
-                or (
-                    result.semantic_match_type == "strict"
-                    and result.text_score > 0
-                    and _has_answer_side_subject_support(result)
-                )
-            )
-        )
-    ]
-    return [anchor, *siblings]
-
-
-def semantically_dominant_no_range_general_expert_bundle(
-    results: List[Any],
-) -> List[Any]:
-    """Return one exceptionally strong whole/general expert answer.
-
-    This path is deliberately narrower than ordinary dense retrieval.  Both
-    the source-question/relevance view and the finalized-answer view must be
-    strong, explicit query concepts must occur in the answer, and the anchor
-    must lead every unrelated expert family by a material margin.  It recovers
-    self-contained definition-and-application answers without allowing a
-    small embedding lead to rewrite a nearby but different expert meaning.
-    """
-
-    if not results or any(
-        result.scope_match
-        in RANGED_PRIMARY_SCOPE_MATCHES | RANGED_NON_GROUNDING_SCOPE_MATCHES
-        for result in results
-    ):
-        return []
-    anchor = results[0]
-    if (
-        anchor.scope_match not in {
-            "general_evidence",
-            "unspecified_scope",
-        }
-        or anchor.record.get("evidence_type") != "expert_annotation"
-        or not _expert_record_is_finalized(anchor.record)
-        or anchor.retrieval_mode not in {"dense", "hybrid"}
-        or anchor.dense_score
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_RELEVANCE_SCORE
-        or anchor.dense_content_score
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONTENT_SCORE
-        or anchor.concept_coverage
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE
-        or anchor.content_concept_coverage
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MIN_CONCEPT_COVERAGE
-    ):
-        return []
-    anchor_sources = set(anchor.record.get("source_ids") or [])
-    if not anchor_sources:
-        return []
-    competitors = [
-        result
-        for result in results[1:]
-        if (
-            result.record.get("evidence_type") == "expert_annotation"
-            and _expert_record_is_finalized(result.record)
-            and not anchor_sources.intersection(
-                result.record.get("source_ids") or []
-            )
-            and result.dense_score > 0
-            and result.dense_content_score > 0
-        )
-    ]
-    if competitors and (
-        anchor.dense_score
-        - max(result.dense_score for result in competitors)
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN
-        or anchor.dense_content_score
-        - max(result.dense_content_score for result in competitors)
-        < NO_RANGE_GENERAL_DENSE_AUTHORITY_MARGIN
-    ):
-        return []
-    return [anchor]
 
 
 def select_generation_evidence(
@@ -2323,279 +1344,6 @@ def generation_evidence_payload(
                         item["question"] = "\n".join(dict.fromkeys(questions))
         evidence.append(item)
     return evidence
-
-
-def build_messages(
-    piece: str | None,
-    measures: str,
-    question: str,
-    results: List[Any],
-    *,
-    score_context: str = "",
-    language: str = "ko",
-) -> List[Dict[str, str]]:
-    screen_question(question)
-    screen_text(piece or "", source="piece")
-    screen_text(score_context, source="score_context")
-    measure_ranges = parse_measure_ranges(measures) if measures else []
-    try:
-        score_data = json.loads(score_context) if score_context else None
-    except ValueError:
-        # Keep callers supplying a plain excerpt compatible, with no parsing
-        # of pseudo-fields or instructions inside that excerpt.
-        score_data = score_context
-    payload = {
-        "answer_language": language,
-        "piece": piece or "(not specified)",
-        "measure_range": measures or "(none selected)",
-        "question": question,
-        "Score context": score_data,
-        "Retrieved evidence": generation_evidence_payload(results, measure_ranges),
-    }
-    # JSON encoding prevents text fields from forging new fields/delimiters.
-    # It is a provenance cue, not a security boundary understood by every LLM.
-    return [
-        {"role": "system", "content": system_prompt(language)},
-        {"role": "user", "content": serialize_untrusted(payload)},
-    ]
-
-
-KOREAN_GROUNDING_TERM_PATTERN = (
-    r"(?:정보|근거|자료|내용|문맥|단서|증거)"
-)
-KOREAN_QUALIFIED_GROUNDING_TERM_PATTERN = (
-    r"(?:제공된|주어진|검색된|확인된|제시된|전달받은|"
-    r"현재\s*확인된|관련)\s*"
-    + KOREAN_GROUNDING_TERM_PATTERN
-)
-KOREAN_MISSING_ENDING_PATTERN = (
-    r"없(?:어|어서|으니|으므로|기\s*때문|습니다|다|고|는|음|$)"
-)
-KOREAN_GROUNDING_SHORTFALL_RE = re.compile(
-    r"(?:"
-    + KOREAN_GROUNDING_TERM_PATTERN
-    + r"\s*만으로(?:는)?"
-    r"|"
-    + KOREAN_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s*(?:으)?로(?:는)?"
-    r"|"
-    + KOREAN_GROUNDING_TERM_PATTERN
-    + r"(?:가|이|은|는|을|를|에는?|에서)?\s*"
-    r"(?:(?![.!?。！？\n]).){0,28}?"
-    r"(?:"
-    r"부족|불충분|충분하지\s*않|충분치\s*않|누락|"
-    r"(?:포함|제공|제시|확인|검색)(?:되어|돼)?\s*있지\s*않|"
-    r"(?:포함|제공|제시|확인|검색)되지\s*않|"
-    r"찾(?:을|아볼)\s*수\s*없|찾지\s*못"
-    r")"
-    r"|"
-    + KOREAN_GROUNDING_TERM_PATTERN
-    + r"(?:가|이|은|는)?\s*"
-    + KOREAN_MISSING_ENDING_PATTERN
-    + r"|"
-    + KOREAN_GROUNDING_TERM_PATTERN
-    + r"(?:에는?|에서)\s*"
-    r"(?:(?:관련|필요한|해당|그에\s*대한)\s*)?"
-    r"(?:정보|근거|자료|내용|문맥|단서|증거|답)(?:가|이)?\s*"
-    + KOREAN_MISSING_ENDING_PATTERN
-    + r"|(?:부족|불충분)한\s*"
-    + KOREAN_GROUNDING_TERM_PATTERN
-    + r")"
-)
-KOREAN_ANSWER_INABILITY_RE = re.compile(
-    r"(?:"
-    r"(?:대답|답변|응답|답)(?:을|이|은|는)?\s*"
-    r"(?:드리|하|제공하)?기\s*(?:어렵|힘들|불가능)"
-    r"|(?:대답|답변|응답|답)(?:을)?\s*"
-    r"(?:드릴|할|제공할)?\s*수(?:가)?\s*없"
-    r"|(?:대답|답변|응답)(?:이|은|는)?\s*(?:어렵|불가능)"
-    r"|(?:알|판단하|결정하|확인하|파악하|판별하|특정하|확정하)기\s*"
-    r"(?:어렵|힘들|불가능)"
-    r"|(?:알|판단할|결정할|확인할|파악할|판별할|특정할|확정할)\s*"
-    r"수(?:가)?\s*없"
-    r"|결론(?:을)?\s*내리기\s*(?:어렵|힘들|불가능)"
-    r"|결론(?:을)?\s*내릴\s*수\s*없"
-    r")"
-)
-ENGLISH_GROUNDING_TERM_PATTERN = (
-    r"(?:evidence|information|context|details?|data|material|sources?)"
-)
-ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN = (
-    r"(?:(?:the|this|that)\s+)?"
-    r"(?:(?:provided|available|given|retrieved|supplied|current|existing)\s+)?"
-    + ENGLISH_GROUNDING_TERM_PATTERN
-    + r"(?:\s+(?:provided|available|given|retrieved|supplied))?"
-)
-ENGLISH_GROUNDING_SHORTFALL_RE = re.compile(
-    r"(?:"
-    r"(?:no|not\s+enough|insufficient|inadequate|incomplete|missing|absent)\s+"
-    r"(?:relevant\s+)?"
-    + ENGLISH_GROUNDING_TERM_PATTERN
-    + r"\b"
-    r"|"
-    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s+(?:because\s+it\s+)?(?:is|are|was|were|remains?)\s+"
-    r"(?:insufficient|inadequate|incomplete|limited|lacking|missing|"
-    r"absent|unavailable|not\s+(?:enough|sufficient|available|provided|"
-    r"included|present|found))\b"
-    r"|"
-    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s+(?:does|do)\s+not\s+"
-    r"(?:contain|provide|include|cover|address|support)\b"
-    r"|"
-    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s+(?:doesn't|don't)\s+"
-    r"(?:contain|provide|include|cover|address|support)\b"
-    r"|"
-    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s+lacks?\b"
-    r"|(?:lack|absence)\s+of\s+(?:relevant\s+)?"
-    + ENGLISH_GROUNDING_TERM_PATTERN
-    + r"\b"
-    r"|"
-    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
-    + r"\s+(?:alone|only)\b"
-    r")",
-    flags=re.IGNORECASE,
-)
-ENGLISH_ANSWER_INABILITY_RE = re.compile(
-    r"(?:"
-    r"(?:cannot|can't|can\s+not|unable\s+to|impossible\s+to|"
-    r"not\s+possible\s+to|difficult\s+to|hard\s+to)\s+"
-    r"(?:(?:confidently|accurately|reliably|definitively|fully)\s+)?"
-    r"(?:answer|respond|determine|know|conclude|infer|establish|verify|"
-    r"identify|tell|say|(?:provide|give)\s+(?:an?|the)\s+answer)\b"
-    r"|(?:do\s+not|don't|does\s+not|doesn't)\s+know\b"
-    r"|(?:answer|conclusion|question|result|it|this|that)\s+"
-    r"(?:cannot|can't|can\s+not)\s+be\s+"
-    r"(?:answered|determined|provided|known|established|verified|identified)\b"
-    r")",
-    flags=re.IGNORECASE,
-)
-ENGLISH_DIRECT_INSUFFICIENCY_RE = re.compile(
-    r"(?:"
-    r"there\s+(?:is|are)\s+(?:no|not\s+enough|insufficient)\s+"
-    r"(?:relevant\s+)?"
-    + ENGLISH_GROUNDING_TERM_PATTERN
-    + r"\s+to\s+"
-    r"(?:answer|determine|know|conclude|establish|verify|identify)\b"
-    r"|(?:i|we)\s+(?:do\s+not|don't)\s+have\s+enough\s+"
-    + ENGLISH_GROUNDING_TERM_PATTERN
-    + r"\s+to\s+"
-    r"(?:answer|determine|know|conclude|establish|verify|identify)\b"
-    r")",
-    flags=re.IGNORECASE,
-)
-
-
-def _nearby_signal_pair(
-    text: str,
-    first: re.Pattern[str],
-    second: re.Pattern[str],
-    *,
-    max_gap: int,
-) -> bool:
-    """Return whether two refusal signals occur in one short explanation."""
-
-    first_matches = list(first.finditer(text))
-    second_matches = list(second.finditer(text))
-    for first_match in first_matches:
-        for second_match in second_matches:
-            gap = max(
-                0,
-                first_match.start() - second_match.end(),
-                second_match.start() - first_match.end(),
-            )
-            if gap <= max_gap:
-                return True
-    return False
-
-
-def is_grounded_insufficiency_answer(answer: str) -> bool:
-    """Recognize a wholly insufficient answer, preserving supported partial prose.
-
-    A bare word such as ``부족`` or a general discussion of missing score
-    information is not a refusal. Natural-language detection requires both a
-    grounding-information shortfall and an inability to answer, know, or
-    determine something within one short explanation. A substantive answer can
-    coexist with a limitation, including in a contrasting clause of the same
-    sentence. Its support is checked by the output guard and citation/scope
-    validators, not by this text detector. Clarification requests alone do not
-    supply an answer.
-    """
-
-    without_footer = _remove_evidence_footer(answer)
-    if answer.strip() and not without_footer:
-        return True
-    compact = re.sub(r"\s+", "", answer)
-    if NO_GROUNDED_ANSWER_SENTINEL.casefold() in compact.casefold():
-        return True
-
-    normalized = unicodedata.normalize("NFKC", without_footer)
-    has_refusal = _nearby_signal_pair(
-        normalized,
-        KOREAN_GROUNDING_SHORTFALL_RE,
-        KOREAN_ANSWER_INABILITY_RE,
-        max_gap=80,
-    ) or bool(ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized)) or _nearby_signal_pair(
-        normalized,
-        ENGLISH_GROUNDING_SHORTFALL_RE,
-        ENGLISH_ANSWER_INABILITY_RE,
-        max_gap=120,
-    )
-    if not has_refusal:
-        return False
-    signals = (
-        KOREAN_GROUNDING_SHORTFALL_RE, KOREAN_ANSWER_INABILITY_RE,
-        ENGLISH_GROUNDING_SHORTFALL_RE, ENGLISH_ANSWER_INABILITY_RE,
-        ENGLISH_DIRECT_INSUFFICIENCY_RE,
-    )
-    boilerplate = re.compile(
-        r"(?:sorry|i(?:['’]m| am) sorry|thank you|thanks|죄송합니다|감사합니다)",
-        re.IGNORECASE,
-    )
-    clarification = re.compile(
-        r"(?:"
-        r"(?:(?:could|can|would)\s+you\s+)?(?:please\s+)?"
-        r"(?:(?:provide|share|supply|give|add|send)\s+(?:me\s+)?"
-        r"(?:(?:some|more|additional|further|relevant)\s+)*"
-        r"(?:details?|information|context|evidence)"
-        r"(?:\s+(?:about|on|for)\s+(?:(?:your|the|this)\s+)?"
-        r"(?:question|request|passage|issue))?"
-        r"|(?:clarify|rephrase|specify)"
-        r"(?:\s+(?:(?:your|the|this)\s+)?(?:question|request))?"
-        r"|elaborate(?:\s+on\s+(?:(?:your|the|this)\s+)?(?:question|request))?)"
-        r"(?:,?\s+please)?"
-        r"|(?:(?:좀\s*더|더)\s*)?"
-        r"(?:(?:자세한|구체적인|추가적인|추가|관련)\s*)?"
-        r"(?:내용|정보|자료|문맥|근거|질문|상황)(?:을|를)?\s*"
-        r"(?:(?:좀\s*더|더)\s*)?(?:구체적으로\s*)?"
-        r"(?:알려|제공해|설명해|구체화해)\s*(?:주세요|주십시오|주시겠습니까)"
-        r")",
-        re.IGNORECASE,
-    )
-    # Split explicit contrasts, not every comma: a parenthetical fragment in
-    # a refusal is not itself a supported answer. Keep Korean negative stems
-    # intact so the limitation side still matches the existing signals.
-    contrast = re.compile(
-        r"\s*;\s*|\s+(?:but|however|nevertheless|yet)\b[,，]?\s*"
-        r"|(?<=없)(?:지만|으나)[,，]?\s*"
-        r"|(?<=어렵)지만[,，]?\s*|(?<=힘들)지만[,，]?\s*"
-        r"|\s+(?:하지만|그러나|다만)[,，]?\s*",
-        re.IGNORECASE,
-    )
-    for claim in _answer_claims(normalized):
-        for clause in contrast.split(ANSWER_EVIDENCE_LABEL_RE.sub("", claim)):
-            prose = clause.strip(" \t\r\n.!?。！？,，;")
-            if (
-                not _claim_has_substantive_text(prose)
-                or boilerplate.fullmatch(prose)
-                or clarification.fullmatch(prose)
-            ):
-                continue
-            if not any(pattern.search(prose) for pattern in signals):
-                return False
-    return True
 
 
 def _has_direct_query_signal(result: Any) -> bool:
@@ -3443,7 +2191,9 @@ def retrieve_generation_evidence(
     """
 
     from soprano_qa.source_priority import SourcePriorityIndex, merge_evidence
-    make_messages = message_builder or build_messages
+    if message_builder is None:
+        from soprano_qa.single_pass import build_messages as message_builder
+    make_messages = message_builder
     priority_index = index if isinstance(index, SourcePriorityIndex) else None
     if priority_index is not None:
         index = priority_index.base_index
@@ -3771,343 +2521,295 @@ def format_evidence_notice(notice: Dict[str, Any]) -> str:
     return "\n".join(lines)
 
 
-def answer_references_secondary_evidence(
-    answer: str,
-    results: List[Any],
+
+# Checks used by the evaluation runners (evaluation/run_qualitative.py and
+# others) to flag answers that only state missing evidence.
+NO_GROUNDED_ANSWER_SENTINEL = "<NO_GROUNDED_ANSWER>"
+
+ANSWER_LIST_PREFIX_RE = re.compile(r"^\s*(?:[-*•]|\d+[.)])\s*")
+
+ANSWER_CLAIM_END_RE = re.compile(
+    r"[.!?。！？]+[\"'”’」』】)]*"
+    r"(?:[ \t]*[\[【][^\]】]+[\]】])*"
+    r"(?=[ \t]+|$|[가-힣])"
+)
+
+ANSWER_EVIDENCE_LABEL_RE = re.compile(
+    r"[\[【]([^\]】]+)[\]】]",
+    flags=re.IGNORECASE,
+)
+
+def _answer_claims(answer: str) -> List[str]:
+    """Split generated prose into citation-bearing claim-sized lines."""
+
+    claims: List[str] = []
+    sanitized_answer = _remove_evidence_footer(answer)
+    for line in unicodedata.normalize("NFKC", sanitized_answer).splitlines():
+        line = ANSWER_LIST_PREFIX_RE.sub("", line.strip())
+        if not line or line.startswith("제공된 검색 근거:"):
+            continue
+        claim_start = 0
+        for match in ANSWER_CLAIM_END_RE.finditer(line):
+            claim = line[claim_start : match.end()].strip()
+            if claim:
+                claims.append(claim)
+            claim_start = match.end()
+            while claim_start < len(line) and line[claim_start].isspace():
+                claim_start += 1
+        trailing_claim = line[claim_start:].strip()
+        if trailing_claim:
+            claims.append(trailing_claim)
+    return claims
+
+def _claim_has_substantive_text(claim: str) -> bool:
+    """Return whether a claim contains user-facing prose beyond citations."""
+
+    without_citations = ANSWER_EVIDENCE_LABEL_RE.sub("", claim)
+    return bool(re.search(r"[A-Za-z0-9가-힣]", without_citations))
+
+KOREAN_GROUNDING_TERM_PATTERN = (
+    r"(?:정보|근거|자료|내용|문맥|단서|증거)"
+)
+
+KOREAN_QUALIFIED_GROUNDING_TERM_PATTERN = (
+    r"(?:제공된|주어진|검색된|확인된|제시된|전달받은|"
+    r"현재\s*확인된|관련)\s*"
+    + KOREAN_GROUNDING_TERM_PATTERN
+)
+
+KOREAN_MISSING_ENDING_PATTERN = (
+    r"없(?:어|어서|으니|으므로|기\s*때문|습니다|다|고|는|음|$)"
+)
+
+KOREAN_GROUNDING_SHORTFALL_RE = re.compile(
+    r"(?:"
+    + KOREAN_GROUNDING_TERM_PATTERN
+    + r"\s*만으로(?:는)?"
+    r"|"
+    + KOREAN_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s*(?:으)?로(?:는)?"
+    r"|"
+    + KOREAN_GROUNDING_TERM_PATTERN
+    + r"(?:가|이|은|는|을|를|에는?|에서)?\s*"
+    r"(?:(?![.!?。！？\n]).){0,28}?"
+    r"(?:"
+    r"부족|불충분|충분하지\s*않|충분치\s*않|누락|"
+    r"(?:포함|제공|제시|확인|검색)(?:되어|돼)?\s*있지\s*않|"
+    r"(?:포함|제공|제시|확인|검색)되지\s*않|"
+    r"찾(?:을|아볼)\s*수\s*없|찾지\s*못"
+    r")"
+    r"|"
+    + KOREAN_GROUNDING_TERM_PATTERN
+    + r"(?:가|이|은|는)?\s*"
+    + KOREAN_MISSING_ENDING_PATTERN
+    + r"|"
+    + KOREAN_GROUNDING_TERM_PATTERN
+    + r"(?:에는?|에서)\s*"
+    r"(?:(?:관련|필요한|해당|그에\s*대한)\s*)?"
+    r"(?:정보|근거|자료|내용|문맥|단서|증거|답)(?:가|이)?\s*"
+    + KOREAN_MISSING_ENDING_PATTERN
+    + r"|(?:부족|불충분)한\s*"
+    + KOREAN_GROUNDING_TERM_PATTERN
+    + r")"
+)
+
+KOREAN_ANSWER_INABILITY_RE = re.compile(
+    r"(?:"
+    r"(?:대답|답변|응답|답)(?:을|이|은|는)?\s*"
+    r"(?:드리|하|제공하)?기\s*(?:어렵|힘들|불가능)"
+    r"|(?:대답|답변|응답|답)(?:을)?\s*"
+    r"(?:드릴|할|제공할)?\s*수(?:가)?\s*없"
+    r"|(?:대답|답변|응답)(?:이|은|는)?\s*(?:어렵|불가능)"
+    r"|(?:알|판단하|결정하|확인하|파악하|판별하|특정하|확정하)기\s*"
+    r"(?:어렵|힘들|불가능)"
+    r"|(?:알|판단할|결정할|확인할|파악할|판별할|특정할|확정할)\s*"
+    r"수(?:가)?\s*없"
+    r"|결론(?:을)?\s*내리기\s*(?:어렵|힘들|불가능)"
+    r"|결론(?:을)?\s*내릴\s*수\s*없"
+    r")"
+)
+
+ENGLISH_GROUNDING_TERM_PATTERN = (
+    r"(?:evidence|information|context|details?|data|material|sources?)"
+)
+
+ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN = (
+    r"(?:(?:the|this|that)\s+)?"
+    r"(?:(?:provided|available|given|retrieved|supplied|current|existing)\s+)?"
+    + ENGLISH_GROUNDING_TERM_PATTERN
+    + r"(?:\s+(?:provided|available|given|retrieved|supplied))?"
+)
+
+ENGLISH_GROUNDING_SHORTFALL_RE = re.compile(
+    r"(?:"
+    r"(?:no|not\s+enough|insufficient|inadequate|incomplete|missing|absent)\s+"
+    r"(?:relevant\s+)?"
+    + ENGLISH_GROUNDING_TERM_PATTERN
+    + r"\b"
+    r"|"
+    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s+(?:because\s+it\s+)?(?:is|are|was|were|remains?)\s+"
+    r"(?:insufficient|inadequate|incomplete|limited|lacking|missing|"
+    r"absent|unavailable|not\s+(?:enough|sufficient|available|provided|"
+    r"included|present|found))\b"
+    r"|"
+    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s+(?:does|do)\s+not\s+"
+    r"(?:contain|provide|include|cover|address|support)\b"
+    r"|"
+    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s+(?:doesn't|don't)\s+"
+    r"(?:contain|provide|include|cover|address|support)\b"
+    r"|"
+    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s+lacks?\b"
+    r"|(?:lack|absence)\s+of\s+(?:relevant\s+)?"
+    + ENGLISH_GROUNDING_TERM_PATTERN
+    + r"\b"
+    r"|"
+    + ENGLISH_QUALIFIED_GROUNDING_TERM_PATTERN
+    + r"\s+(?:alone|only)\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+
+ENGLISH_ANSWER_INABILITY_RE = re.compile(
+    r"(?:"
+    r"(?:cannot|can't|can\s+not|unable\s+to|impossible\s+to|"
+    r"not\s+possible\s+to|difficult\s+to|hard\s+to)\s+"
+    r"(?:(?:confidently|accurately|reliably|definitively|fully)\s+)?"
+    r"(?:answer|respond|determine|know|conclude|infer|establish|verify|"
+    r"identify|tell|say|(?:provide|give)\s+(?:an?|the)\s+answer)\b"
+    r"|(?:do\s+not|don't|does\s+not|doesn't)\s+know\b"
+    r"|(?:answer|conclusion|question|result|it|this|that)\s+"
+    r"(?:cannot|can't|can\s+not)\s+be\s+"
+    r"(?:answered|determined|provided|known|established|verified|identified)\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+
+ENGLISH_DIRECT_INSUFFICIENCY_RE = re.compile(
+    r"(?:"
+    r"there\s+(?:is|are)\s+(?:no|not\s+enough|insufficient)\s+"
+    r"(?:relevant\s+)?"
+    + ENGLISH_GROUNDING_TERM_PATTERN
+    + r"\s+to\s+"
+    r"(?:answer|determine|know|conclude|establish|verify|identify)\b"
+    r"|(?:i|we)\s+(?:do\s+not|don't)\s+have\s+enough\s+"
+    + ENGLISH_GROUNDING_TERM_PATTERN
+    + r"\s+to\s+"
+    r"(?:answer|determine|know|conclude|establish|verify|identify)\b"
+    r")",
+    flags=re.IGNORECASE,
+)
+
+def _nearby_signal_pair(
+    text: str,
+    first: re.Pattern[str],
+    second: re.Pattern[str],
+    *,
+    max_gap: int,
 ) -> bool:
-    """Detect an explicit reference to context that cannot ground the answer."""
+    """Return whether two refusal signals occur in one short explanation."""
 
-    answer = _remove_evidence_footer(answer)
-    primary_results = primary_grounding_results(results)
-    record_id_by_label = [
-        (
-            result.record["id"]
-            if result in primary_results
-            else None
-        )
-        for result in results
-    ]
-    secondary_ids = {
-        result.record["id"]
-        for result in results
-        if result not in primary_results
-    }
-    secondary_label_numbers = {
-        index
-        for index, record_id in enumerate(
-            record_id_by_label,
-            start=1,
-        )
-        if record_id is None
-    }
-    normalized_answer = unicodedata.normalize("NFKC", answer)
-    bracket_contents = re.findall(
-        r"[\[【]([^\]】]+)[\]】]",
-        normalized_answer,
-    )
-    cited_label_numbers = {
-        int(label_number)
-        for content in bracket_contents
-        for label_number in re.findall(
-            r"(?<![A-Za-z0-9])"
-            r"(?:E(?:vidence)?|근거|출처)"
-            r"\s*(?:(?:no\.?|number|번호)\s*)?"
-            r"(?:[:：#._–—-]\s*)?([0-9]+)(?![0-9])",
-            content,
-            flags=re.IGNORECASE,
-        )
-    }
-    # Outside brackets, accept only unambiguous citation forms. Bare E2 is a
-    # pitch in this domain, and phrases such as "근거 2가지" are ordinary
-    # Korean. Require the full "Evidence" label, or explicit punctuation /
-    # an E token after a Korean citation noun.
-    outside_brackets = re.sub(
-        r"[\[【][^\]】]*[\]】]",
-        " ",
-        normalized_answer,
-    )
-    for pattern in (
-        r"(?<![A-Za-z0-9])Evidence\s*"
-        r"(?:(?:no\.?|number)\s*)?(?:[:：#._–—-]\s*)?"
-        r"([0-9]+)(?![0-9])",
-        r"(?:근거|출처)\s*(?:(?:[:：#._–—-]\s*)"
-        r"(?:E(?:vidence)?\s*)?|E(?:vidence)?\s*)"
-        r"([0-9]+)(?![0-9])",
-    ):
-        cited_label_numbers.update(
-            int(label_number)
-            for label_number in re.findall(
-                pattern,
-                outside_brackets,
-                flags=re.IGNORECASE,
+    first_matches = list(first.finditer(text))
+    second_matches = list(second.finditer(text))
+    for first_match in first_matches:
+        for second_match in second_matches:
+            gap = max(
+                0,
+                first_match.start() - second_match.end(),
+                second_match.start() - first_match.end(),
             )
-        )
-    secondary_id_patterns = [
-        re.compile(
-            r"(?<![A-Za-z0-9_-])"
-            + re.escape(secondary_id)
-            + r"(?![A-Za-z0-9_-])",
-            flags=re.IGNORECASE,
-        )
-        for secondary_id in secondary_ids
-    ]
-    return bool(
-        secondary_label_numbers
-        & cited_label_numbers
-    ) or any(
-        pattern.search(normalized_answer)
-        for pattern in secondary_id_patterns
+            if gap <= max_gap:
+                return True
+    return False
+
+def is_grounded_insufficiency_answer(answer: str) -> bool:
+    """Recognize a wholly insufficient answer, preserving supported partial prose.
+
+    A bare word such as ``부족`` or a general discussion of missing score
+    information is not a refusal. Natural-language detection requires both a
+    grounding-information shortfall and an inability to answer, know, or
+    determine something within one short explanation. A substantive answer can
+    coexist with a limitation, including in a contrasting clause of the same
+    sentence. Its support is checked by the output guard and citation/scope
+    validators, not by this text detector. Clarification requests alone do not
+    supply an answer.
+    """
+
+    without_footer = _remove_evidence_footer(answer)
+    if answer.strip() and not without_footer:
+        return True
+    compact = re.sub(r"\s+", "", answer)
+    if NO_GROUNDED_ANSWER_SENTINEL.casefold() in compact.casefold():
+        return True
+
+    normalized = unicodedata.normalize("NFKC", without_footer)
+    has_refusal = _nearby_signal_pair(
+        normalized,
+        KOREAN_GROUNDING_SHORTFALL_RE,
+        KOREAN_ANSWER_INABILITY_RE,
+        max_gap=80,
+    ) or bool(ENGLISH_DIRECT_INSUFFICIENCY_RE.search(normalized)) or _nearby_signal_pair(
+        normalized,
+        ENGLISH_GROUNDING_SHORTFALL_RE,
+        ENGLISH_ANSWER_INABILITY_RE,
+        max_gap=120,
     )
-
-
-def finalize_answer_citations(
-    answer: str,
-    results: List[Any],
-    *,
-    language: str = "ko",
-) -> str:
-    """Validate internal citations, then remove them from displayed prose."""
-
-    answer = _remove_evidence_footer(answer)
-    all_record_ids = [result.record["id"] for result in results]
-    if not all_record_ids:
-        return finalize_user_visible_answer(answer, results, language=language)
-    primary_results = primary_grounding_results(results)
-    record_ids = [result.record["id"] for result in primary_results]
-    record_id_by_label = [
-        (
-            result.record["id"]
-            if result in primary_results
-            else None
-        )
-        for result in results
-    ]
-    if answer_references_secondary_evidence(answer, results):
-        raise GeneratedAnswerRejected(
-            "Generated answer cites context-only evidence"
-        )
-    _validate_primary_citation_per_claim(answer, results)
-    provenance_ids = {
-        provenance_id
-        for result in results
-        for key in ("source_ids", "web_source_ids", "claim_ids")
-        for provenance_id in result.record.get(key, [])
-    }
-
-    def label_to_citation(label_number: int) -> str:
-        result_index = label_number - 1
-        if (
-            0 <= result_index < len(record_id_by_label)
-            and record_id_by_label[result_index]
-        ):
-            return "[%s]" % record_id_by_label[result_index]
-        return ""
-
-    def replace_short_label_group(match: re.Match[str]) -> str:
-        citations = [
-            label_to_citation(int(label_number))
-            for label_number in re.findall(r"E([0-9]+)", match.group(1), flags=re.IGNORECASE)
-        ]
-        return " ".join(citation for citation in citations if citation)
-
-    finalized = re.sub(
-        r"\[((?:\s*E[0-9]+\s*)(?:[,;]\s*E[0-9]+\s*)+)(?:[,;]\s*)?\]",
-        replace_short_label_group,
-        answer,
-        flags=re.IGNORECASE,
+    if not has_refusal:
+        return False
+    signals = (
+        KOREAN_GROUNDING_SHORTFALL_RE, KOREAN_ANSWER_INABILITY_RE,
+        ENGLISH_GROUNDING_SHORTFALL_RE, ENGLISH_ANSWER_INABILITY_RE,
+        ENGLISH_DIRECT_INSUFFICIENCY_RE,
     )
-
-    def replace_short_label(match: re.Match[str]) -> str:
-        return label_to_citation(int(match.group(1)))
-
-    finalized = re.sub(
-        r"\[\s*E([0-9]+)\s*[,;]?\s*\]",
-        replace_short_label,
-        finalized,
-        flags=re.IGNORECASE,
+    boilerplate = re.compile(
+        r"(?:sorry|i(?:['’]m| am) sorry|thank you|thanks|죄송합니다|감사합니다)",
+        re.IGNORECASE,
     )
-    valid_ids = set(record_ids)
-
-    def repair_opaque_id(match: re.Match[str]) -> str:
-        cited_id = match.group(1)
-        if cited_id in valid_ids:
-            return match.group(0)
-        raise GeneratedAnswerRejected(
-            "Generated answer contains an unknown or context-only evidence ID"
-        )
-
-    finalized = re.sub(
-        r"\[(" + OPAQUE_CITATION_ID_PATTERN + r")\]",
-        repair_opaque_id,
-        finalized,
-        flags=re.IGNORECASE,
+    clarification = re.compile(
+        r"(?:"
+        r"(?:(?:could|can|would)\s+you\s+)?(?:please\s+)?"
+        r"(?:(?:provide|share|supply|give|add|send)\s+(?:me\s+)?"
+        r"(?:(?:some|more|additional|further|relevant)\s+)*"
+        r"(?:details?|information|context|evidence)"
+        r"(?:\s+(?:about|on|for)\s+(?:(?:your|the|this)\s+)?"
+        r"(?:question|request|passage|issue))?"
+        r"|(?:clarify|rephrase|specify)"
+        r"(?:\s+(?:(?:your|the|this)\s+)?(?:question|request))?"
+        r"|elaborate(?:\s+on\s+(?:(?:your|the|this)\s+)?(?:question|request))?)"
+        r"(?:,?\s+please)?"
+        r"|(?:(?:좀\s*더|더)\s*)?"
+        r"(?:(?:자세한|구체적인|추가적인|추가|관련)\s*)?"
+        r"(?:내용|정보|자료|문맥|근거|질문|상황)(?:을|를)?\s*"
+        r"(?:(?:좀\s*더|더)\s*)?(?:구체적으로\s*)?"
+        r"(?:알려|제공해|설명해|구체화해)\s*(?:주세요|주십시오|주시겠습니까)"
+        r")",
+        re.IGNORECASE,
     )
-
-    def remove_unknown_citation_like_bracket(match: re.Match[str]) -> str:
-        content = match.group(1).strip()
-        if content in valid_ids:
-            return "[%s]" % content
-        if any(provenance_id in content for provenance_id in provenance_ids):
-            raise GeneratedAnswerRejected(
-                "Generated answer exposes provenance metadata"
-            )
-        if re.fullmatch(r"[0-9]+(?:\s*[,;]\s*[0-9]+)*", content):
-            raise GeneratedAnswerRejected(
-                "Generated answer contains an unresolvable citation"
-            )
-        if re.match(
-            r"^(?:출처|근거|source|citation)\s*(?::|：|-)?",
-            content,
-            flags=re.IGNORECASE,
-        ):
-            raise GeneratedAnswerRejected(
-                "Generated answer contains an unresolvable citation"
-            )
-        if re.match(
-            r"^(?:E\s*[0-9]|Evidence\b|"
-            r"(?:[a-z0-9]+-)+ku(?:[-_]|[0-9])|sqa(?:[-_]|[0-9])|"
-            r"web(?:chunk|src|source|claim)(?:[-_])|source[_ -]?id\b)",
-            content,
-            flags=re.IGNORECASE,
-        ):
-            raise GeneratedAnswerRejected(
-                "Generated answer contains an unresolvable citation"
-            )
-        return match.group(0)
-
-    finalized = re.sub(
-        r"\[([^\[\]]+)\]",
-        remove_unknown_citation_like_bracket,
-        finalized,
+    # Split explicit contrasts, not every comma: a parenthetical fragment in
+    # a refusal is not itself a supported answer. Keep Korean negative stems
+    # intact so the limitation side still matches the existing signals.
+    contrast = re.compile(
+        r"\s*;\s*|\s+(?:but|however|nevertheless|yet)\b[,，]?\s*"
+        r"|(?<=없)(?:지만|으나)[,，]?\s*"
+        r"|(?<=어렵)지만[,，]?\s*|(?<=힘들)지만[,，]?\s*"
+        r"|\s+(?:하지만|그러나|다만)[,，]?\s*",
+        re.IGNORECASE,
     )
-    if not record_ids:
-        return finalize_user_visible_answer(finalized, results, language=language)
-    if not any("[%s]" % record_id in finalized for record_id in record_ids):
-        raise GeneratedAnswerRejected(
-            "Generated answer does not cite primary retrieved evidence"
-        )
-    return finalize_user_visible_answer(finalized, results, language=language)
-
-
-def finalize_grounded_generated_answer(
-    answer: str,
-    results: List[Any],
-    messages: List[Dict[str, str]],
-    measure_ranges: List[List[int]],
-    *,
-    language: str = "ko",
-) -> str:
-    """Validate the reviewed draft without repairing or substituting its claims."""
-
-    screen_text(answer, source="answer")
-    if not answer.strip() or is_grounded_insufficiency_answer(answer):
-        raise GeneratedAnswerRejected(
-            "Grounded model returned no usable answer"
-        )
-    suspicious = suspicious_generation_tokens(answer, messages)
-    if suspicious:
-        raise GeneratedAnswerRejected(
-            "Generated answer contains unsupported tokens: %s"
-            % ", ".join(suspicious)
-        )
-    if isinstance(answer, RenderedAnswer) and any(p.get("source_quotation") for p in answer.parts):
-        if language != "ko":
-            raise GeneratedAnswerRejected("Native source quotation has the wrong language")
-        quotations = []
-        remaining = []
-        primary = primary_grounding_results(results)
-        for part in answer.parts:
-            if not part.get("source_quotation"):
-                remaining.append(part)
+    for claim in _answer_claims(normalized):
+        for clause in contrast.split(ANSWER_EVIDENCE_LABEL_RE.sub("", claim)):
+            prose = clause.strip(" \t\r\n.!?。！？,，;")
+            if (
+                not _claim_has_substantive_text(prose)
+                or boilerplate.fullmatch(prose)
+                or clarification.fullmatch(prose)
+            ):
                 continue
-            labels = part["evidence"]
-            if len(labels) != 1 or not re.fullmatch(r"E[1-9][0-9]*", labels[0]):
-                raise GeneratedAnswerRejected("Invalid quotation attribution")
-            index = int(labels[0][1:]) - 1
-            if (not 0 <= index < len(results) or results[index] not in primary
-                    or part["text"] != results[index].record.get("answer")):
-                raise GeneratedAnswerRejected("Quotation differs from its complete primary source")
-            if has_forbidden_user_visible_artifact(part["text"], results):
-                raise GeneratedAnswerRejected("Quotation contains forbidden presentation data")
-            quotations.append(part["text"])
-        # Quoted prose still receives the ordinary citation and scope checks.
-        # Only grammatical rewriting of the already verified source is skipped.
-        quote_parts = [p for p in answer.parts if p.get("source_quotation")]
-        cited = RenderedAnswer(quote_parts, language).grounded_text
-        if (answer_references_secondary_evidence(cited, results)
-                or answer_overgeneralizes_local_examples(cited, results, measure_ranges)):
-            raise GeneratedAnswerRejected("Invalid source quotation scope")
-        _validate_primary_citation_per_claim(cited, results)
-        addition = finalize_grounded_generated_answer(
-            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
-        ) if remaining else ""
-        quoted = "참고 자료의 원문입니다.\n" + "\n\n".join(quotations)
-        return PreservedSourceAnswer("\n\n".join(x for x in (quoted, addition) if x))
-    if isinstance(answer, RenderedAnswer) and any(p.get("source_translation") for p in answer.parts):
-        if language != "en":
-            raise GeneratedAnswerRejected("Source translation has the wrong language")
-        # This app-created flag only supplies visible attribution. Remove it
-        # before ordinary finalization: translated text has no native-quotation
-        # exemption and still receives every citation, scope and display check.
-        plain_parts = [{key: value for key, value in part.items() if key != "source_translation"}
-                       for part in answer.parts]
-        checked = finalize_grounded_generated_answer(
-            RenderedAnswer(plain_parts, language), results, messages, measure_ranges, language=language,
-        )
-        return "Translated reference text:\n" + checked
-    if isinstance(answer, RenderedAnswer) and any(p["kind"] == "score_lyrics" for p in answer.parts):
-        # A lyric transcription has its own provenance. Requiring a KU label
-        # for these words falsely rejects a valid mixed answer, or encourages
-        # the writer to misattribute score text to an expert. The output guard
-        # has reviewed each typed part under the existing lyrics-only policy.
-        payload = json.loads(messages[1]["content"])
-        if not payload.get("Score context"):
-            raise GeneratedAnswerRejected("Score lyric text has no supplied score context")
-        lyrics = "\n".join(p["text"] for p in answer.parts if p["kind"] == "score_lyrics")
-        if _claim_has_unauthorized_measure_locator(lyrics, results, set(), measure_ranges):
-            raise GeneratedAnswerRejected("Score lyric text includes an unselected measure")
-        visible_lyrics = finalize_user_visible_answer(lyrics, results, language=language)
-        if visible_lyrics == no_corpus_evidence_message(language):
-            raise GeneratedAnswerRejected("Invalid score lyric presentation")
-        remaining = [p for p in answer.parts if p["kind"] != "score_lyrics"]
-        source = finalize_grounded_generated_answer(
-            RenderedAnswer(remaining, language), results, messages, measure_ranges, language=language,
-        ) if remaining else ""
-        return "\n\n".join(part for part in (source, visible_lyrics) if part)
-    if isinstance(answer, RenderedAnswer) and answer.background_text:
-        # Provenance comes from validated structured output, not a guessed
-        # heading in model prose. Source claims retain all existing checks.
-        source = (
-            finalize_grounded_generated_answer(
-                answer.grounded_text, results, messages, measure_ranges,
-                language=language,
-            ) if answer.grounded_text else ""
-        )
-        background = finalize_user_visible_answer(
-            answer.background_text, results, language=language,
-        )
-        if background == no_corpus_evidence_message(language):
-            raise GeneratedAnswerRejected("Invalid general explanation")
-        prefix = "General explanation: " if language == "en" else "일반적인 음악 설명입니다.\n"
-        return "\n\n".join(part for part in (source, prefix + background) if part)
-    if answer_references_secondary_evidence(answer, results):
-        raise GeneratedAnswerRejected(
-            "Generated answer cites context-only evidence"
-        )
-    if answer_overgeneralizes_local_examples(
-        answer,
-        results,
-        measure_ranges,
-    ):
-        raise GeneratedAnswerRejected(
-            "Generated answer overgeneralizes local evidence"
-        )
-    finalized = finalize_answer_citations(answer, results, language=language)
-    if finalized == no_corpus_evidence_message(language):
-        raise GeneratedAnswerRejected(
-            "Generated answer contains forbidden internal metadata"
-        )
-    return finalized
+            if not any(pattern.search(prose) for pattern in signals):
+                return False
+    return True
 
 
 def ensure_corpus(settings: Dict[str, Any], rebuild: bool) -> None:
@@ -4148,296 +2850,65 @@ def parse_args() -> argparse.Namespace:
         "--measures",
         default="",
         help=(
-            'Optional inclusive measure query like "28-30" or "12, 35"; '
+            'Optional inclusive measure range like "28-30" or "12"; '
             "omit when no score range is selected"
         ),
     )
-    parser.add_argument("--topic", help="Optional topic substring filter")
     parser.add_argument("--question", required=True, help="Singer/user question")
+    parser.add_argument("--language", default="ko", choices=("ko", "en"), help="Answer language")
     parser.add_argument("--top-k", type=positive_int, default=6, help="Number of chunks to retrieve")
     parser.add_argument("--no-generate", action="store_true", help="Only retrieve evidence")
     parser.add_argument("--rebuild-corpus", action="store_true", help="Rebuild corpus before asking")
     parser.add_argument("--json", action="store_true", help="Print machine-readable JSON")
     args = parser.parse_args()
     try:
-        selected_measure_ranges = parse_measure_ranges(args.measures)
-        question_measure_ranges = validate_question_measure_contract(
-            args.question,
-            selected_measure_ranges,
-        )
-        args.selected_measure_ranges = selected_measure_ranges
-        args.measure_ranges = (
-            question_measure_ranges or selected_measure_ranges
-        )
-        args.measures = (
-            format_measure_range(args.measure_ranges)
-            if args.measure_ranges
-            else ""
-        )
+        ranges = parse_measure_ranges(args.measures)
     except ValueError as exc:
         parser.error(str(exc))
+    if len(ranges) > 1:
+        parser.error("--measures takes one range, like 28-30")
+    args.measure_range = tuple(ranges[0]) if ranges else None
     return args
 
 
-def _retrieval_unavailable_reason(
-    index: SearchIndex,
-    *,
-    question: str,
-    piece: str,
-    measure_ranges: List[List[int]],
-    results: List[Any],
-) -> str:
-    if retrieval_abstained_for_ambiguity(index):
-        return "ambiguous_dense_grounding"
-    if retrieval_abstained_for_missing_causal_authority(index):
-        return "missing_scoped_causal_authority"
-    if (
-        not results
-        and is_underspecified_ranged_query(
-            question,
-            piece,
-            measure_ranges,
-        )
-    ):
-        return "underspecified_ranged_question"
-    return "no_corpus_evidence"
+def main() -> None:
+    """Ask one question through soprano_qa.service and print the result."""
+    args = parse_args()
+    from soprano_qa import service
 
-
-def _run_cli(args: argparse.Namespace) -> None:
-    from soprano_qa import single_pass
-    from soprano_qa.security import validate_question_input
-    settings = load_settings(
-        args.settings,
-        use_legacy_dataset_env=False,
-    ) if args.settings else load_settings(use_legacy_dataset_env=False)
-    direct = single_pass.enabled(settings.get('llm', {}))
-    make_messages = single_pass.build_messages if direct else build_messages
-    (validate_question_input if direct else screen_question)(args.question)
-    screen_text(args.topic or "", source="topic")
-    try:
-        validate_retrieval_requirements(settings)
-        if not args.no_generate:
-            validate_generation_requirements(
-                settings["model_path"],
-                settings["llm"],
-            )
-    except (DenseRetrievalUnavailable, GenerationBackendUnavailable) as exc:
-        raise SystemExit(str(exc)) from exc
-
-    ensure_corpus(settings, args.rebuild_corpus)
-    records = load_corpus(settings["corpus_path"])
-    index = build_retrieval_index(records, settings)
-    unavailable_reason: str | None = None
-    generation_validation_warning: str | None = None
-
-    if args.no_generate:
-        results = index.search(
-            query=args.question,
-            piece=args.piece,
-            measure_ranges=args.measure_ranges,
-            topic=args.topic,
-            top_k=args.top_k,
-        )
-        for result in results:
-            screen_text(json.dumps(result.record, ensure_ascii=False), source="evidence")
-        answer = ""
-        generation_mode = (
-            "retrieval_only" if results else "unavailable"
-        )
-        answer_basis = (
-            "retrieved_evidence" if results else "no_corpus_evidence"
-        )
-        if not results:
-            unavailable_reason = _retrieval_unavailable_reason(
-                index,
-                question=args.question,
-                piece=args.piece,
-                measure_ranges=args.measure_ranges,
-                results=results,
-            )
-    else:
-        results, messages = retrieve_generation_evidence(
-            index,
-            query=args.question,
-            piece=args.piece,
-            measure_ranges=args.measure_ranges,
-            measures=args.measures,
-            topic=args.topic,
-            top_k=args.top_k,
-            **({'message_builder': make_messages} if direct else {}),
-        )
-        results = sanitize_generation_results(results)
-        grounded = bool(results) and (not args.measure_ranges or has_primary_grounding(results))
-        generation_results = results if grounded else []
-        if not grounded:
-            messages = make_messages(args.piece, args.measures, args.question, [])
-        from soprano_qa.response_policy import compose_music_answer
-        raw_answer = compose_music_answer(
-            settings["model_path"], messages, settings["llm"], generation_results, args.measure_ranges,
-            language="ko", generate_fn=generate,
-            finalizer_fn=finalize_grounded_generated_answer,
-        )
-        answer = str(raw_answer) if direct else getattr(raw_answer, "validated_text", None)
-        if answer is None:
-            answer = finalize_grounded_generated_answer(
-                raw_answer, generation_results, messages, args.measure_ranges,
-            )
-        generation_mode = getattr(raw_answer, "generation_mode", "llm")
-        generation_validation_warning = getattr(raw_answer, "generation_validation_warning", None)
-        answer_basis = getattr(raw_answer, "answer_basis",
-                               "retrieved_evidence" if grounded else "general_music_knowledge")
-
-    if not (direct and not args.no_generate):
-        answer = finalize_user_visible_answer(answer, results)
-    if (
-        not (direct and not args.no_generate)
-        and answer == NO_CORPUS_EVIDENCE_MESSAGE
-        and answer_basis not in {
-            "no_corpus_evidence",
-            "retrieved_secondary_context",
-        }
-    ):
-        generation_mode = "unavailable"
-        answer_basis = "no_corpus_evidence"
-        unavailable_reason = "forbidden_internal_metadata"
-    evidence_notices = build_evidence_notices(results)
-
+    if args.settings:
+        service.SETTINGS = load_settings(args.settings, use_legacy_dataset_env=False)
+    if args.rebuild_corpus:
+        ensure_corpus(service.SETTINGS, rebuild=True)
+    result = service.ask(
+        piece_id=args.piece,
+        question=args.question,
+        measure_range=args.measure_range,
+        generate=not args.no_generate,
+        top_k=args.top_k,
+        language=args.language,
+    )
     if args.json:
-        print(
-            json.dumps(
-                {
-                    "query": {
-                        "piece": args.piece,
-                        "measure_range": getattr(
-                            args,
-                            "selected_measure_ranges",
-                            args.measure_ranges,
-                        ),
-                        "effective_measure_range": args.measure_ranges,
-                        "question": args.question,
-                        "topic": args.topic,
-                        "top_k": args.top_k,
-                    },
-                    "answer": answer,
-                    "generation_mode": generation_mode,
-                    "answer_basis": answer_basis,
-                    "unavailable_reason": unavailable_reason,
-                    "generation_validation_warning": (
-                        generation_validation_warning
-                    ),
-                    "retrieval": retrieval_diagnostics(index),
-                    "has_primary_grounding": has_primary_grounding(results),
-                    "has_selected_range_grounding": (
-                        has_selected_range_grounding(results)
-                        if args.measure_ranges
-                        else None
-                    ),
-                    "evidence_notices": evidence_notices,
-                    "results": [
-                        {
-                            "rank": idx,
-                            "score": result.score,
-                            "text_score": result.text_score,
-                            "dense_score": result.dense_score,
-                            "dense_content_score": (
-                                result.dense_content_score
-                            ),
-                            "fusion_score": result.fusion_score,
-                            "retrieval_mode": result.retrieval_mode,
-                            "measure_score": result.measure_score,
-                            "piece_score": result.piece_score,
-                            "concept_coverage": result.concept_coverage,
-                            "content_concept_coverage": (
-                                result.content_concept_coverage
-                            ),
-                            "answer_relation_score": (
-                                result.answer_relation_score
-                            ),
-                            "semantic_match_type": (
-                                result.semantic_match_type
-                            ),
-                            "scope_match": result.scope_match,
-                            "generation_role": scope_evidence_role(
-                                result.scope_match
-                            ),
-                            "selected_range_claim_authority": (
-                                result.scope_match
-                                == "overlaps_query_range"
-                                if args.measure_ranges
-                                else None
-                            ),
-                            "record": result.record,
-                        }
-                        for idx, result in enumerate(results, start=1)
-                    ],
-                },
-                ensure_ascii=False,
-                indent=2,
-            )
-        )
+        print(json.dumps(result, ensure_ascii=False, indent=2))
         return
-
-    print("Retrieved chunks")
-    print("================")
-    for idx, result in enumerate(results, start=1):
-        print(format_result(result, idx))
+    print("Retrieved evidence")
+    print("==================")
+    for idx, item in enumerate(result["evidence"], 1):
+        ranges = format_measure_range(item["measure_ranges"]) if item["measure_ranges"] else "whole piece"
+        print(f"[{idx}] {item['kind']} {item['id']} ({ranges})")
+        print(item["text"])
         print()
     if args.no_generate:
         print("Generation skipped by --no-generate.")
-    else:
-        print("Answer")
-        print("======")
-        print(answer)
-    if evidence_notices:
+    print("Answer")
+    print("======")
+    print(result["answer"])
+    if result["evidence_notices"]:
         print()
         print("Evidence notices")
         print("================")
-        for notice in evidence_notices:
+        for notice in result["evidence_notices"]:
             print(format_evidence_notice(notice))
-            print()
-
-
-def main() -> None:
-    args = parse_args()
-    try:
-        _run_cli(args)
-    except (SecurityViolation, GeneratedAnswerRejected) as exc:
-        reason = (
-            exc.reason
-            if isinstance(exc, SecurityViolation)
-            else "answer_validation_failed"
-        )
-        from soprano_qa.response_policy import compose_music_answer, domain_guidance, failure_guidance, is_scope_rejection
-        recovered = None
-        if not args.no_generate and reason in {'unsafe_retrieved_evidence', 'unsafe_score_context', 'unsafe_translation'}:
-            from soprano_qa import single_pass
-            settings = load_settings(args.settings, use_legacy_dataset_env=False) if args.settings else load_settings(use_legacy_dataset_env=False)
-            make_messages = single_pass.build_messages if single_pass.enabled(settings['llm']) else build_messages
-            messages = make_messages(args.piece, args.measures, args.question, [])
-            try:
-                recovered = compose_music_answer(settings['model_path'], messages, settings['llm'], [], args.measure_ranges,
-                    language='ko', generate_fn=generate)
-            except (SecurityViolation, GeneratedAnswerRejected) as fallback_error:
-                if isinstance(fallback_error, SecurityViolation):
-                    reason = fallback_error.reason
-        domain = is_scope_rejection(reason)
-        direct_recovery = recovered is not None and single_pass.enabled(settings['llm'])
-        guidance = str(recovered) if recovered is not None else domain_guidance("ko") if domain else failure_guidance("ko")
-        if args.json:
-            print(json.dumps({
-                "answer": guidance,
-                "generation_mode": recovered.generation_mode if direct_recovery else "llm_general_fallback" if recovered is not None else "domain_guidance" if domain else "response_error",
-                "answer_basis": recovered.answer_basis if direct_recovery else "general_music_knowledge" if recovered is not None else "service_scope" if domain else "service_status",
-                "unavailable_reason": None if recovered is not None else reason,
-                "generation_validation_warning": "unsafe_source_excluded" if recovered is not None else None,
-                "results": [],
-                "evidence_notices": [],
-                "retrieval": {},
-                "has_primary_grounding": False,
-                "has_selected_range_grounding": False if args.measure_ranges else None,
-            }, ensure_ascii=False, indent=2))
-        else:
-            print(guidance)
 
 
 if __name__ == "__main__":

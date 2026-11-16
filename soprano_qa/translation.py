@@ -2,7 +2,7 @@
 
 The reviewed corpus, lexical concepts, aliases, and dense-retrieval
 calibration are Korean. An English question is therefore translated once,
-with the same local model and settings used for answer generation, and only
+with the same answer model and settings used for answer generation, and only
 the translation is used for retrieval and Korean-oriented gating. The
 original English question remains authoritative for measure-contract
 validation and for the generation prompt.
@@ -14,7 +14,7 @@ import re
 from typing import Any, Callable, Dict, List
 
 from soprano_qa.llm import generate
-from soprano_qa.security import screen_question, screen_text, serialize_untrusted, validate_question_input
+from soprano_qa.security import screen_question, screen_text, serialize_untrusted
 
 
 SUPPORTED_LANGUAGES = ("ko", "en")
@@ -64,10 +64,10 @@ def validate_language(language: str) -> str:
     return language
 
 
-def build_translation_messages(question: str, *, prompt_only: bool = False) -> List[Dict[str, str]]:
+def build_translation_messages(question: str) -> List[Dict[str, str]]:
     """Return the strict chat prompt for one English-to-Korean translation."""
 
-    (validate_question_input if prompt_only else screen_question)(question)
+    screen_question(question)
     return [
         {"role": "system", "content": QUERY_TRANSLATION_SYSTEM_PROMPT},
         {"role": "user", "content": serialize_untrusted({"question": question.strip()})},
@@ -98,32 +98,6 @@ def _clean_translation(text: str) -> str:
     return cleaned
 
 
-def query_translation_generate_fn(
-    llm_settings: Dict[str, Any],
-    local_generate: Callable[..., str] = generate,
-) -> Callable[..., str]:
-    """Return the generator used to translate English questions.
-
-    The default is the local model, also when the answer writer is remote.
-    ``query_translation_provider: "vertex_gemini"`` sends the same translation
-    prompt to the configured Vertex model instead, for hosts without the local
-    GGUF such as the web demo.
-    """
-
-    provider = llm_settings.get("query_translation_provider", "local")
-    if provider == "local":
-        return local_generate
-    if provider == "vertex_gemini":
-        from soprano_qa.vertex_gemini import generate as vertex_generate
-
-        def remote(_model_path: str, messages: List[Dict[str, str]],
-                   settings: Dict[str, Any]) -> str:
-            return vertex_generate(messages, settings)
-
-        return remote
-    raise ValueError("Unknown query_translation_provider: " + str(provider))
-
-
 def translate_question_to_korean(
     question: str,
     *,
@@ -131,7 +105,7 @@ def translate_question_to_korean(
     llm_settings: Dict[str, Any],
     generate_fn: Callable[..., str] = generate,
 ) -> str:
-    """Translate ``question`` with exactly one local-model call.
+    """Translate ``question`` with exactly one answer-model call.
 
     The call uses the configured generation settings (temperature 0 in the
     production configuration). A translation without Hangul is rejected
@@ -141,10 +115,9 @@ def translate_question_to_korean(
 
     if not question.strip():
         raise QueryTranslationFailed("Cannot translate an empty question")
-    prompt_only = llm_settings.get('pipeline') == 'single_pass'
     raw = generate_fn(
         model_path,
-        build_translation_messages(question, prompt_only=prompt_only),
+        build_translation_messages(question),
         llm_settings,
     )
     translation = _clean_translation(raw)
@@ -152,9 +125,7 @@ def translate_question_to_korean(
         raise QueryTranslationFailed(
             "Question translation returned no Korean text"
         )
-    if prompt_only:
-        validate_question_input(translation)
-    else:
-        screen_text(raw, source="translation")
-        screen_question(translation)
+    # The same rule-based screen as the question; no model call.
+    screen_text(raw, source="translation")
+    screen_question(translation)
     return translation

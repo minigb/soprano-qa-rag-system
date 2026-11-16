@@ -1,5 +1,14 @@
 # RAG prompt-injection defenses and research
 
+> **Current state (2026-11-16).** The model-based checks described below,
+> admission before writing and output review after it, were removed with the
+> reviewed pipeline. The single-pass pipeline keeps the rule-based screens:
+> known control instructions in the question, its English-to-Korean
+> translation, retrieved evidence and score context are rejected or excluded
+> before the one writing call, and untrusted data is serialized as JSON. Task
+> scope and embedded instructions are otherwise handled by the writing prompt.
+> The rest of this document records the earlier design and its evaluation.
+
 Research initially reviewed on **2026-10-25**, with refinement references checked
 on **2026-10-31**. The BERTScore, FaithfulRAG and two 2026 preprint pages were
 rechecked on **2026-11-02** while evaluation resumed. This document records the security

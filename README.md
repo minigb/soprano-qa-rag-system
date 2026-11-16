@@ -1,50 +1,46 @@
 # Soprano QA RAG System
 
-Local, measure-aware hybrid retrieval and answer generation for five soprano
-works. The experimental `llm.pipeline="single_pass"` uses the existing BM25 + embedding
-retriever, then one Qwen3-14B completion. There is no model-based input admission,
-KU reselection, output review, quality rewrite, or source-text substitution.
-The generation prompt handles service scope and untrusted instructions, asks for
-faithful use of relevant passages, and permits general music knowledge when useful.
-Unrelated requests should receive a friendly explanation of the assistant's scope.
-This prompt is guidance, not a guarantee that every answer is correct or attack-proof.
+Measure-aware hybrid retrieval and answer generation for five soprano works.
+Each question is answered in one pass. The BM25 + embedding retriever selects
+reviewed expert passages, Sumi Jo's direct feedback and web coaching notes, and
+one model call writes the answer from them. An English question adds one call
+that translates it into Korean for retrieval.
 
-An optional [Vertex Gemini writer](docs/gemini-vertex.md) is available through
-`config/settings.gemini.json`. It preserves the same retrieval and prompt while
-using `gemini-3.8-flash` for answer generation. The local configurations remain
-available; English retrieval-query translation still uses Qwen3-14B.
+The answer model is the one setting that differs between hosts:
 
-The model remains Qwen3-14B-Q6_K. The candidate prompt and one-call writer are in
-[`soprano_qa/single_pass.py`](soprano_qa/single_pass.py); the library and CLI
-both enter through `response_policy.compose_music_answer`. The historical
-reviewed path remains available with `llm.pipeline="reviewed"` for comparison.
-The live web demo in soprano-lab runs `config/settings.web.json`.
+| `llm.provider` | Answer model | Used by |
+| --- | --- | --- |
+| `local`, the default | Qwen3-14B-Q6_K through llama-cpp-python | local runs and the demo application |
+| `vertex_gemini` | `gemini-3.8-flash` on Vertex AI | the soprano-lab web demo, which has no GPU |
 
-Input shape validation and inexpensive source-text screening remain. No model
-is used for these checks. Classification `topic` metadata stays in retrieval
-but is omitted from generation inputs. Unsafe retrieved material is excluded
-before the one writing call; it does not trigger a second answer-generation
-attempt. The answer itself is not evaluated or rewritten before delivery.
+Set it in `config/settings.json` or with the `SOPRANO_QA_LLM_PROVIDER`
+environment variable, which overrides the file. Retrieval, prompts and source
+priority are the same for both; [docs/gemini-vertex.md](docs/gemini-vertex.md)
+describes the Gemini setup.
+
+The writing prompt, in [`soprano_qa/single_pass.py`](soprano_qa/single_pass.py)
+and [`soprano_qa/single_pass_prompt.py`](soprano_qa/single_pass_prompt.py),
+handles service scope and untrusted instructions, asks for faithful use of the
+passages, and permits general music knowledge when useful. Unrelated requests
+should receive a friendly explanation of the assistant's scope. Rule-based
+screens, which call no model, reject known prompt-injection phrases in the
+question and its translation and exclude retrieved material that carries them.
+The answer itself is not evaluated or rewritten. The prompt is guidance, not a
+guarantee that every answer is correct or attack-proof.
+
+Until 2026-11-16 the default was a reviewed pipeline of several model calls:
+model-based admission, evidence selection, output review and rewriting. It was
+removed so that every host runs the same pipeline. Commit `bbb84da` is its last
+version; its evaluations stay under `evaluation/`, and
+[docs/pipeline-evolution-log.md](docs/pipeline-evolution-log.md) records why.
 
 This repository is the RAG/LLM layer. It reads reviewed expert content from the
 sibling dataset repository and is consumed by the sibling demo application.
 
 It is a Python library with a CLI, not a deployable service: HTTP transport,
-process management, and authentication are the caller's responsibility.
-Answer inference runs locally, and two GGUF checkpoints totalling about 12.8 GB must
-be on disk before a grounded request can be served.
-
-The validated default configuration is preserved. The single-pass candidate
-is opt-in through `config/settings.single-pass.json`: its speed improved, but
-expert meaning errors increased in offline regression checks. The following
-single-pass behavior describes that candidate, not a replacement of the tested
-reviewed default. See [the timing and quality report](evaluation/single_pass_2026-11-04/report.md).
-
-To try the candidate with the CLI, add
-`--settings config/settings.single-pass.json`. For the Python API, set
-`SOPRANO_QA_SETTINGS` to that file's absolute path **before** importing the service.
-The previous default and its evaluations are documented in
-[evaluation/helpful_responses_2026-11-04/README.md](evaluation/helpful_responses_2026-11-04/README.md).
+process management, and authentication are the caller's responsibility. With
+the local model, two GGUF checkpoints totalling about 12.8 GB must be on disk
+before a grounded request can be served.
 
 ## Setup
 
@@ -140,7 +136,8 @@ python scripts/ask.py \
   --question "28마디부터 분위기 변화를 어떻게 표현해야 하나요?"
 ```
 
-Omit `--measures` when no score range is selected. This does not declare that
+`--measures` takes one range; omit it when no score range is selected, and
+add `--language en` for an English answer. This does not declare that
 every retrieved claim applies to the whole work: a directly matching local
 expert unit may answer the question, but its confirmed range still constrains
 internal routing while ranges and provenance stay in structured evidence
@@ -182,8 +179,7 @@ With `language="en"` the question is English and a generated answer is
 English. The extractive `generate=False` path still returns the Korean
 evidence text (`answer_language: "ko"`). English adds a query-translation call.
 Korean generation makes one writing call; English adds one query translation,
-then one writing call. Both use the same 14B checkpoint. No source-translation
-catalog or separate relevance/quality model runs in the candidate path.
+then one writing call. Both calls use the configured answer model.
 
 `ask()` returns a `dict`. The fields to branch on:
 
@@ -192,10 +188,10 @@ catalog or separate relevance/quality model runs in the candidate path.
 | `answer` | Generated prose (not quality-reviewed) (Korean, or English for a generated `language="en"` answer) |
 | `language` / `answer_language` | Requested language / language of `answer` |
 | `retrieval_query` | The text used for retrieval, or `null` when recovery excludes unsafe material |
-| `generation_mode` | `llm_single_pass`, `response_error`; `retrieval_only` / `unavailable` for the extractive path. The historical reviewed path has additional modes |
+| `generation_mode` | `llm_single_pass`, `domain_guidance`, `response_error`; `retrieval_only` / `unavailable` for the extractive path |
 | `answer_basis` | Retrieved evidence, score context, general music knowledge (possibly combined), or `service_scope` / `service_status` |
 | `unavailable_reason` | Machine-readable reason for domain guidance, service errors or unavailable extractive results; `null` for a delivered music answer |
-| `generation_validation_warning` | `null` or `unsafe_source_excluded` in the candidate path; legacy quality-warning values only in the historical reviewed path |
+| `generation_validation_warning` | `null`, or `unsafe_source_excluded` when unsafe retrieved material was left out |
 
 `llm_single_pass` identifies generated text, not a quality or scope verdict.
 `answer_basis` describes the supplied context; it does not verify each generated
@@ -207,11 +203,11 @@ Record IDs and evidence labels are not intended for end-user display.
 `model_status()` and `corpus_stats()` report checkpoint and corpus state.
 `corpus_stats()` initializes the retrieval index, so prefer it at startup.
 
-`GenerationBackendUnavailable`, `DenseRetrievalUnavailable`, and invalid-argument
-`ValueError` exceptions still propagate; the first two indicate a misconfigured
-installation. Unsafe retrieved material can lead to a one-call general music
-answer; invalid inputs remain explicit service errors. Ordinary answer content
-never enters the historical deterministic or model-based output finalizers.
+`GenerationBackendUnavailable`, `DenseRetrievalUnavailable`, `GenerationFailed`
+and invalid-argument `ValueError` exceptions propagate. The first two indicate a
+misconfigured installation; `GenerationFailed` is a remote model's error,
+timeout or incomplete answer. Unsafe retrieved material can lead to a one-call
+general music answer; invalid inputs remain explicit service errors.
 
 Each local-model completion holds a process-wide lock, so concurrent requests
 may wait. Loaded models are cached for the process lifetime; a long-lived
@@ -220,11 +216,10 @@ loading from warmed requests and include English query translation.
 
 ## Configuration
 
-`llm.pipeline="single_pass"` selects the one-call writer. Historical controls
-such as `source_preservation`, `synthesis_prompt`, `synthesis_reasoning` and
-`evidence_translation` belong to the reviewed path; they do not add steps to
-single-pass generation. The model, context length, sampling and token limits
-still use the common `llm` settings.
+`llm.provider` selects the answer model, as described above. Context length,
+sampling and token limits are the common `llm` settings; an optional
+`llm.vertex_gemini` object overrides the Gemini model, thinking level, timeout
+and output token limit.
 
 `config/settings.json` holds corpus, model, retrieval, and generation defaults.
 Its relative paths resolve against the settings file's own directory
@@ -289,7 +284,7 @@ every claim's excerpt verbatim against its stored page or transcript.
 For a selected range, the sung text of those bars (model-transcribed,
 labelled unverified in the prompt) is added as score context. It may only
 identify the words sung there, not establish pitches, rhythm or dynamics.
-The single-pass response metadata describes the supplied retrieval context;
+The response metadata describes the supplied retrieval context;
 it does not judge whether a generated claim used lyrics or background knowledge.
 
 Corpus construction is fail-closed: every knowledge unit must have
@@ -299,8 +294,7 @@ source answers, legacy range hints, and editorial notes stay in the dataset
 repository and are never serialized into `data/corpus.json`.
 
 The existing retriever, source priority, measure filters and supplement logic
-select the context. Their BM25 and dense scores are unchanged by the single-pass
-update. No 14B model reranks or selects a second subset. The complete selected
+select the context. No model reranks or selects a second subset. The complete selected
 source answer texts reach the writing prompt along with question, work, scope,
 source type and available attribution. Nonessential internal metadata is omitted.
 
@@ -318,14 +312,11 @@ English questions add one Korean translation before retrieval. The original
 English question remains the writing task; only the search query is translated.
 The output writer translates relevant source content itself in the same call.
 
-The previous reviewed implementations and their limitations are recorded in
+The removed reviewed implementations and their limitations are recorded in
 [evaluation/helpful_responses_2026-11-04/README.md](evaluation/helpful_responses_2026-11-04/README.md)
-and the frozen E37 experiments. Their multi-call checks, structured citation
-rendering, original-text substitution and translation catalog do not describe
-the single-pass candidate's unreviewed delivery. The single-pass writer uses the preserved
-initial writing instructions in `soprano_qa/single_pass_prompt.py`, with no
-constrained JSON draft or historical source renderer. Development evaluation is separate from serving: fixed-setting
-BERTScore and offline Claude checks never block or replace a user's answer.
+and the frozen E37 experiments. Development evaluation is separate from serving:
+fixed-setting BERTScore and offline Claude checks never block or replace a
+user's answer.
 
 ## Evaluation
 
