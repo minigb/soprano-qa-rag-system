@@ -4,14 +4,11 @@ This small Korean-source extractor is not a general contradiction detector or
 an answer cache. It recognizes affirmative accompaniment markings and quiet
 vocal-entrance advice independently in each selected source. Unrecognized,
 conditional, ambiguous or local cases keep the ordinary source-preserving path.
-The caller must still run admission, output, citation and scope checks.
 """
 from __future__ import annotations
 
-import json
 import re
 
-from soprano_qa.structured_answer import render_structured_answer
 
 _OPENING = re.compile(r"처음|첫\s*(?:소리|음|반주)|시작|\b(?:open\w*|begin\w*|start\w*|first)\b", re.I)
 _TOPIC = re.compile(r"셈여림|다이?나믹|다이내믹|표기|\b(?:dynamics?|markings?)\b|(?<![a-z])(?:ppp|pp|mp|mf|fff|ff|p|f)(?![a-z])", re.I)
@@ -69,31 +66,3 @@ def opening_dynamics_accounts(payload: dict):
     return [{"evidence": label, "mark": value} for label, value in zip(labels, values)]
 
 
-def opening_dynamics_comparison(payload: dict):
-    """Legacy quotation-mode renderer; the semantic writer uses only accounts."""
-    accounts = opening_dynamics_accounts(payload)
-    if accounts is None:
-        return None
-    labels = [a["evidence"] for a in accounts]
-    values = [a["mark"] for a in accounts]
-    if payload.get("answer_language", "ko") == "ko":
-        prose = [
-            f"첫 번째 자료는 시작 반주의 셈여림을 {values[0]}로, 두 번째 자료는 {values[1]}로 설명합니다.",
-            "두 설명이 다른 이유는 이 자료만으로 확정할 수 없습니다.",
-            "두 자료 모두 노래의 첫소리를 너무 크게 시작하지 않는 방향을 권합니다.",
-        ]
-    else:
-        prose = [
-            f"The first source describes the opening accompaniment as {values[0]}.",
-            f"The second source describes the opening accompaniment as {values[1]}.",
-            "These sources do not establish why their accounts differ.",
-            "Both suggest avoiding an overly loud first vocal note.",
-        ]
-    # Separate English accounts carry their own citations. The common advice
-    # and the statement of unresolved cause are reviewed against both sources.
-    citations = [[labels[0]], [labels[1]], labels, labels] if len(prose) == 4 else [labels] * 3
-    context = {k: v for k, v in payload.items()
-               if k not in ("source_preservation", "separate_source_translation")}
-    return render_structured_answer(json.dumps({"sentences": [
-        {"kind": "evidence", "evidence": cited, "text": text} for text, cited in zip(prose, citations)
-    ]}, ensure_ascii=False), context)

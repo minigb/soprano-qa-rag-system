@@ -1,13 +1,15 @@
-"""Hybrid-retrieved context followed by one answer-generation call.
+"""The answer step: hybrid-retrieved context followed by one model call.
 
-Task scope and handling of untrusted instructions belong to the writing prompt.
-This path has no model-based admission, evidence selection, output review or
-quality-driven retry. The historical reviewed path remains available explicitly.
+Task scope and handling of untrusted instructions belong to the writing prompt,
+and rule-based screens run on the question, its translation and the retrieved
+sources before it. There is no model-based admission, evidence selection,
+output review or retry. The model is whichever ``llm.provider`` selects.
 """
 from __future__ import annotations
 
 import json
 
+from soprano_qa.response_policy import failure_guidance
 from soprano_qa.security import serialize_untrusted, validate_question_input
 
 
@@ -32,10 +34,6 @@ General music knowledge is allowed when useful; unknown score facts remain unkno
 Do not end with only a missing-evidence refusal: explain what can usefully be said.
 measure_range denotes bars, not verses, chapters, or individual beats.
 """
-
-
-def enabled(settings):
-    return settings.get('pipeline') == 'single_pass'
 
 
 def build_messages(piece, measures, question, results, *, score_context='', language='ko'):
@@ -104,21 +102,13 @@ class SinglePassAnswer(str):
 
 
 def compose(model_path, messages, settings, results, *, language, generate_fn):
-    # The raw writer returns final prose in one completion. No schema, quality
+    # The writer returns final prose in one completion. No schema, quality
     # finalizer, second composition, or source-text substitution is invoked.
-    provider = settings.get('answer_provider', 'local')
-    if provider == 'vertex_gemini':
-        from soprano_qa.vertex_gemini import generate
-        raw = generate(messages, settings)
-    elif provider == 'local':
-        raw = generate_fn(model_path, messages, settings)
-    else:
-        raise ValueError('Unknown answer_provider: ' + str(provider))
+    raw = generate_fn(model_path, messages, settings)
     text = raw.strip() if isinstance(raw, str) else ''
     mode = 'llm_single_pass'
     basis = 'retrieved_evidence' if results else 'general_music_knowledge'
     if not text:
-        from soprano_qa.response_policy import failure_guidance
         text = failure_guidance(language)
         mode, basis = 'response_error', 'service_status'
     value = SinglePassAnswer(text)

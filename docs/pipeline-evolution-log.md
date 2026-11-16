@@ -10,6 +10,35 @@ The stable method description remains in
 [`rag-llm-pipeline-method.md`](rag-llm-pipeline-method.md). This file is the
 chronological engineering record, including unsuccessful approaches.
 
+## One pipeline for every host (2026-11-16)
+
+The development team runs the local Qwen3-14B; the soprano-lab web demo needs
+Gemini because its host has no GPU. Both must share the same retrieval, data,
+Sumi Jo priority and prompts. The user chose to keep only the single-pass
+pipeline and make the answer model the one setting that differs.
+
+- The reviewed pipeline was removed: model-based admission, evidence selection,
+  output review, rewriting, the general-knowledge retry, structured JSON
+  composition, the source-translation catalog and their tests. Commit
+  `bbb84da` is its last version; its evaluation records stay in `evaluation/`.
+- `llm.provider` selects `local` (default) or `vertex_gemini`, for both the
+  answer and the English query translation; `SOPRANO_QA_LLM_PROVIDER`
+  overrides it. `config/settings.gemini.json`, `settings.web.json` and
+  `settings.single-pass.json` were removed.
+- The rule-based question screen, which single-pass had skipped, runs again on
+  the question and its translation. It calls no model.
+- A remote model's errors, timeouts and incomplete answers raise
+  `soprano_qa.llm.GenerationFailed`.
+- An answer informed only by the selected bars' lyrics is labelled
+  `score_context` again, so the demo's lyrics-only notice can appear.
+- `scripts/ask.py` now calls `soprano_qa.service.ask`; `--topic` was removed
+  and `--measures` takes one range.
+
+Known cost: on 2026-11-04 the single-pass candidate made more expert-meaning
+errors than the reviewed default in offline regression checks with Qwen3-14B
+(`evaluation/single_pass_2026-11-04/report.md`). The development team's local
+answers change accordingly.
+
 ## Single-pass service and stage timing (2026-11-04)
 
 The user requested existing hybrid retrieval, prompt-based task scope, a fixed

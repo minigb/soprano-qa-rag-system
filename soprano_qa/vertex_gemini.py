@@ -1,7 +1,9 @@
-"""Optional Vertex AI answer writer, authenticated with the user's Google ADC.
+"""Gemini on Vertex AI as the answer model, authenticated with Google ADC.
 
-Only the writer is remote. Retrieval and English query translation retain their
-existing implementations. There is no answer review, repair or model fallback.
+Selected by ``llm.provider: "vertex_gemini"`` (or SOPRANO_QA_LLM_PROVIDER);
+soprano_qa.llm dispatches to it. Retrieval stays local, and the prompts and
+evidence are the same as for the local model. Needs requirements-vertex.txt,
+GOOGLE_CLOUD_PROJECT and, optionally, GOOGLE_CLOUD_LOCATION (default global).
 """
 from __future__ import annotations
 
@@ -9,8 +11,13 @@ from functools import lru_cache
 import os
 import time
 
+from soprano_qa.llm import GenerationFailed
 
-class VertexGenerationError(RuntimeError):
+
+DEFAULT_MODEL = "gemini-3.8-flash"
+
+
+class VertexGenerationError(GenerationFailed):
     """The provider did not return a complete text answer."""
 
     def __init__(self, message, *, metadata=None, partial_text=""):
@@ -24,10 +31,9 @@ class VertexText(str):
 
 
 def options(settings):
-    if settings.get("pipeline") != "single_pass":
-        raise ValueError("Vertex Gemini requires the single_pass pipeline")
+    """Model options from ``llm.vertex_gemini``, with defaults for each."""
     config = settings.get("vertex_gemini") or {}
-    model = str(config.get("model", "")).strip()
+    model = str(config.get("model", DEFAULT_MODEL)).strip()
     project = os.environ.get("GOOGLE_CLOUD_PROJECT", "").strip()
     location = os.environ.get("GOOGLE_CLOUD_LOCATION", "global").strip()
     if not model or not project or not location:
@@ -36,7 +42,7 @@ def options(settings):
     if level not in {"LOW", "MEDIUM", "HIGH"}:
         raise ValueError("thinking_level must be LOW, MEDIUM or HIGH")
     timeout_ms = int(config.get("timeout_ms", 180000))
-    max_tokens = int(config.get("max_output_tokens", settings.get("max_tokens", 768)))
+    max_tokens = int(config.get("max_output_tokens", 2048))
     if timeout_ms <= 0 or not 0 < max_tokens <= 32768:
         raise ValueError("Use a positive timeout and 1..32768 output tokens")
     return model, project, location, level, timeout_ms, max_tokens
@@ -128,6 +134,16 @@ def generate(messages, settings):
     request = build_request(messages, settings)
     client = get_client(settings)
     started = time.perf_counter()
-    response = client.models.generate_content(**request)
+    from google.genai.errors import APIError
+    import httpx
+    try:
+        response = client.models.generate_content(**request)
+    except (APIError, httpx.TimeoutException) as exc:
+        # Provider errors and timeouts are reported as one failure type.
+        raise VertexGenerationError(
+            "Vertex request failed: " + type(exc).__name__,
+            metadata={"provider": "vertex_gemini", "requested_model": request["model"],
+                      "elapsed_seconds": time.perf_counter() - started},
+        ) from exc
     return parse_response(response, requested_model=request["model"],
                           elapsed_seconds=time.perf_counter() - started)

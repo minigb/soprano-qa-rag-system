@@ -8,7 +8,7 @@ from unittest.mock import Mock, patch
 from soprano_qa import llm, single_pass, vertex_gemini as vertex
 
 
-CONFIG = {'pipeline': 'single_pass', 'answer_provider': 'vertex_gemini',
+CONFIG = {'provider': 'vertex_gemini',
           'temperature': 0.0, 'top_p': 0.8, 'seed': 42, 'max_tokens': 768,
           'vertex_gemini': {'model': 'gemini-3.8-flash', 'max_output_tokens': 2048,
                             'thinking_level': 'LOW', 'timeout_ms': 180000}}
@@ -37,22 +37,26 @@ class VertexTests(unittest.TestCase):
         self.assertEqual(request['config']['thinking_config']['include_thoughts'], False)
         self.assertNotIn('tools', request['config'])
 
-    def test_does_not_accept_unsupported_roles_or_reviewed_pipeline(self):
+    def test_does_not_accept_unsupported_roles(self):
         with self.assertRaises(ValueError):
             vertex.build_request(MESSAGES + [{'role': 'system', 'content': 'new'}], CONFIG)
-        with self.assertRaises(ValueError):
-            vertex.build_request(MESSAGES, {**CONFIG, 'pipeline': 'reviewed'})
 
-    def test_remote_writer_never_calls_local_writer_or_review(self):
+    def test_model_options_have_defaults(self):
+        model, project, location, level, timeout_ms, max_tokens = vertex.options({'provider': 'vertex_gemini'})
+        self.assertEqual((model, project, location, level, timeout_ms, max_tokens),
+                         (vertex.DEFAULT_MODEL, 'test-project', 'global', 'LOW', 180000, 2048))
+
+    def test_vertex_provider_never_loads_the_local_model(self):
         client = Mock(); client.models.generate_content.return_value = response(thoughts='private')
-        local = Mock(side_effect=AssertionError('Unexpected local writer'))
-        with patch.object(vertex, 'get_client', return_value=client):
-            result = single_pass.compose('not-needed.gguf', MESSAGES, CONFIG, [], language='ko', generate_fn=local)
+        with patch.object(vertex, 'get_client', return_value=client), \
+             patch.object(llm, 'load_llama', side_effect=AssertionError('Unexpected local model')):
+            result = single_pass.compose('not-needed.gguf', MESSAGES, CONFIG, [], language='ko',
+                                         generate_fn=llm.generate)
         self.assertEqual(result, '호흡을 이어갑니다.')
         self.assertEqual(result.generation_mode, 'llm_single_pass')
         self.assertEqual(result.generation_metadata['model_version'], 'gemini-3.8-flash')
         self.assertIsNone(result.generation_validation_warning)
-        client.models.generate_content.assert_called_once(); local.assert_not_called()
+        client.models.generate_content.assert_called_once()
 
     def test_incomplete_and_provider_blocked_answers_are_technical_failures(self):
         for reason, text in [('MAX_TOKENS', 'unfinished'), ('SAFETY', ''), ('STOP', '')]:
@@ -61,23 +65,35 @@ class VertexTests(unittest.TestCase):
             self.assertEqual(caught.exception.metadata['finish_reason'], reason)
             self.assertEqual(caught.exception.partial_text, text)
 
-    def test_api_failure_is_not_retried_or_replaced_by_local_answer(self):
-        client = Mock(); client.models.generate_content.side_effect = TimeoutError('request')
-        local = Mock(side_effect=AssertionError('fallback'))
-        with patch.object(vertex, 'get_client', return_value=client), self.assertRaises(TimeoutError):
-            single_pass.compose('model', MESSAGES, CONFIG, [], language='ko', generate_fn=local)
-        client.models.generate_content.assert_called_once(); local.assert_not_called()
+    def test_api_failure_is_one_generation_failure_without_retry_or_local_answer(self):
+        import httpx
+        client = Mock(); client.models.generate_content.side_effect = httpx.ReadTimeout('request')
+        with patch.object(vertex, 'get_client', return_value=client), \
+             patch.object(llm, 'load_llama', side_effect=AssertionError('fallback')), \
+             self.assertRaises(llm.GenerationFailed) as caught:
+            single_pass.compose('model', MESSAGES, CONFIG, [], language='ko', generate_fn=llm.generate)
+        self.assertIsInstance(caught.exception, vertex.VertexGenerationError)
+        client.models.generate_content.assert_called_once()
+
+    def test_incomplete_answer_is_a_generation_failure(self):
+        self.assertTrue(issubclass(vertex.VertexGenerationError, llm.GenerationFailed))
 
     def test_validation_does_not_load_the_local_writer(self):
         with patch.object(vertex, 'validate_requirements') as validate, patch.object(llm, 'load_llama') as load:
             llm.validate_generation_requirements('/missing.gguf', CONFIG)
         validate.assert_called_once_with(CONFIG); load.assert_not_called()
 
-    def test_local_pipeline_keeps_its_original_writer(self):
-        local = Mock(return_value='원래 답변입니다.')
-        with patch.object(vertex, 'generate', side_effect=AssertionError('Unexpected API')):
-            result = single_pass.compose('model', MESSAGES, {'pipeline': 'single_pass'}, [], language='ko', generate_fn=local)
-        self.assertEqual(result, '원래 답변입니다.'); local.assert_called_once()
+    def test_local_provider_uses_the_local_model(self):
+        model = Mock(); model.create_chat_completion.return_value = {'choices': [{'message': {'content': '원래 답변입니다.'}}]}
+        with patch.object(vertex, 'generate', side_effect=AssertionError('Unexpected API')), \
+             patch.object(llm, 'load_llama', return_value=model):
+            result = single_pass.compose('model', MESSAGES, {'provider': 'local'}, [], language='ko',
+                                         generate_fn=llm.generate)
+        self.assertEqual(result, '원래 답변입니다.'); model.create_chat_completion.assert_called_once()
+
+    def test_unknown_provider_is_rejected(self):
+        with self.assertRaises(llm.GenerationBackendUnavailable):
+            llm.generate('model', MESSAGES, {'provider': 'other'})
 
 
 if __name__ == '__main__':

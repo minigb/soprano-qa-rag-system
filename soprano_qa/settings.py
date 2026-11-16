@@ -68,8 +68,11 @@ def load_settings(
         settings["embedding_model_path"] = _resolve_repo_relative_path(
             embedding_model_override
         )
+    # The answer model is the one setting a host changes: the web demo runs
+    # these settings with SOPRANO_QA_LLM_PROVIDER=vertex_gemini.
+    provider_override = os.environ.get("SOPRANO_QA_LLM_PROVIDER", "").strip()
+    if provider_override:
+        settings.setdefault("llm", {})["provider"] = provider_override
     return settings
 
 
-def project_path(*parts: str) -> str:
-    return os.path.join(PROJECT_ROOT, *parts)

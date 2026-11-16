@@ -76,7 +76,6 @@ def make_result(
 class NoRangeSemanticFocusTests(unittest.TestCase):
 
 
-
     def test_disagreeing_dense_views_do_not_overpromote_local_detail(
         self,
     ) -> None:
@@ -344,7 +343,6 @@ class NoRangeSemanticFocusTests(unittest.TestCase):
         )
 
 
-
     def test_whole_piece_semantic_winner_keeps_normal_bundle(self) -> None:
         whole = make_result(
             "direct-whole-piece",
@@ -397,11 +395,6 @@ class NoRangeSemanticFocusTests(unittest.TestCase):
 
 
 class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
-    def setUp(self):
-        pipeline = mock.patch.dict(qa.SETTINGS['llm'], {'pipeline': 'reviewed'})
-        pipeline.start()
-        self.addCleanup(pipeline.stop)
-
     @staticmethod
     def _index_with_results(results: list[SearchResult]) -> Any:
         class FixedIndex:
@@ -484,7 +477,7 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
                 return_value=(
                     "악보와 음원의 페르마타 길이가 다르더라도 편곡 "
                     "차이일 수 있으므로, 두 경우를 모두 허용해 해석할 "
-                    "수 있습니다. [E1]"
+                    "수 있습니다."
                 ),
             ) as generate,
         ):
@@ -500,13 +493,12 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             )
 
         generate.assert_called_once()
-        self.assertEqual(response["generation_mode"], "llm")
+        self.assertEqual(response["generation_mode"], "llm_single_pass")
         self.assertEqual(response["answer_basis"], "retrieved_evidence")
         self.assertIsNone(response["unavailable_reason"])
         self.assertIsNone(response["generation_validation_warning"])
         self.assertIn("페르마타", response["answer"])
         self.assertIn("두 경우를 모두 허용", response["answer"])
-        self.assertNotIn("[E1]", response["answer"])
         self.assertNotIn("범위 안내", response["answer"])
         self.assertNotIn("확인된 국소 예시", response["answer"])
         self.assertEqual(
@@ -514,59 +506,6 @@ class NoRangeSemanticAuthorityServiceTests(unittest.TestCase):
             ["in-flowery-clouds-ku-001"],
         )
         self.assertEqual(response["evidence"][0]["measure_ranges"], [[1, 2]])
-
-    def test_scope_warning_preserves_draft_for_user_review(
-        self,
-    ) -> None:
-        results = self._case_results(
-            piece="una-voce-poco-fa",
-            local_id="una-voce-poco-fa-ku-016",
-            local_range=[[44, 55]],
-            local_answer=(
-                "긴 간주는 극적 전환 구간일 수 있다. 성악가는 앞뒤 "
-                "가사의 흐름에 맞추어 표정과 움직임으로 반응해야 한다."
-            ),
-        )
-        available = {
-            "path": "/tmp/model.gguf",
-            "checkpoint_exists": True,
-            "llama_cpp_available": True,
-        }
-        overgeneralized = (
-            "이 곡 전반의 모든 간주에서는 항상 같은 연기를 해야 "
-            "한다. [E1]"
-        )
-        with (
-            mock.patch.object(qa, "validate_generation_requirements"),
-            mock.patch.object(
-                qa,
-                "_get_index",
-                return_value=self._index_with_results(results),
-            ),
-            mock.patch.object(qa, "model_status", return_value=available),
-            mock.patch.object(
-                qa,
-                "generate_llm",
-                return_value=overgeneralized,
-            ) as generate,
-        ):
-            with mock.patch("soprano_qa.response_policy.instruction_guard"):
-                response = qa.ask(
-                piece_id="una-voce-poco-fa",
-                question="이 곡에 간주가 너무 길어서 그동안 뭘 해야할지 모르겠다",
-                measure_range=None,
-                generate=True,
-                top_k=6,
-            )
-
-        generate.assert_called_once()
-        self.assertEqual(response["generation_mode"], "llm_with_warning")
-        self.assertEqual(response["answer_basis"], "retrieved_evidence")
-        self.assertIsNone(response["unavailable_reason"])
-        self.assertTrue(response["generation_validation_warning"])
-        self.assertIn("추가 확인", response["answer"])
-        self.assertTrue(response["evidence"])
-
 
 
 if __name__ == "__main__":

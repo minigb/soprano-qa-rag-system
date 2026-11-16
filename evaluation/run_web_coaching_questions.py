@@ -25,7 +25,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
-from soprano_qa.answer import GeneratedAnswerRejected  # noqa: E402
 from soprano_qa.service import SETTINGS, ask  # noqa: E402
 
 
@@ -97,18 +96,13 @@ def main() -> None:
             rows.append(done[question["qid"]])
             continue
         started = time.time()
-        try:
-            result = ask(
-                piece_id=question["piece_id"],
-                question=question["question"],
-                measure_range=None,
-                generate=not args.no_generate,
-                top_k=args.top_k,
-            )
-        except GeneratedAnswerRejected as exc:
-            # The answer-required service re-raises when the only draft is an
-            # insufficiency statement; record it as that question's outcome.
-            result = {"generation_mode": "rejected", "error": "%s: %s" % (type(exc).__name__, exc)}
+        result = ask(
+            piece_id=question["piece_id"],
+            question=question["question"],
+            measure_range=None,
+            generate=not args.no_generate,
+            top_k=args.top_k,
+        )
         evidence_ids = [item["id"] for item in result.get("evidence", [])]
         rows.append({
             **question,

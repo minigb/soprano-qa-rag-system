@@ -1,21 +1,22 @@
 # RAG+LLM pipeline
 
-## Experimental single-pass generation (2026-11-04)
+## Single-pass generation
 
-The opt-in `config/settings.single-pass.json`
-sets `llm.pipeline="single_pass"` and selects the
-existing hybrid retriever followed by one Qwen3-14B writing call. English adds
-one Korean query-translation call. There is no model-based admission, KU
-reselection, output assessment, quality retry, or source-text replacement.
+Since 2026-11-16 this is the only pipeline. The hybrid retriever is followed by
+one writing call to the answer model that `llm.provider` selects: the local
+Qwen3-14B by default, or Gemini on Vertex AI for the web demo. English adds one
+Korean query-translation call to the same model. There is no model-based
+admission, KU reselection, output assessment, quality retry, or source-text
+replacement. It was introduced as an opt-in candidate on 2026-11-04.
 
 ```mermaid
 flowchart LR
-    A[Question and optional bars] --> B[Input shape validation]
+    A[Question and optional bars] --> B[Input validation and rule-based screen]
     B --> C[English only: Korean query translation]
     B --> D[Existing BM25 + embedding retrieval]
     C --> D
     D --> E[Source screening and prompt preparation]
-    E --> F[One 14B answer-generation call]
+    E --> F[One answer-generation call]
     F --> G[Deliver generated prose]
 ```
 
@@ -28,18 +29,21 @@ source-derived meaning hints and the narrow opening-dynamics comparison
 instructions remain prompt aids; neither assesses an answer nor selects KUs.
 No reference answers or evaluation scores enter the serving path.
 
-Input length/type checks, cheap source screening and technical error handling
-remain. Blank model output produces an explicit technical-error message with
+Input length/type checks, a rule-based screen for known prompt-injection
+phrases in the question and its translation, cheap source screening and
+technical error handling remain; none of them calls a model. Blank model output produces an explicit technical-error message with
 no second writing attempt. The initial natural-prose writing instructions are
 preserved in `single_pass_prompt.py`, adapted for general knowledge and direct
 delivery. No JSON schema, citation validator, source-text renderer or content
 quality filter runs; only existing private-reasoning tag removal remains. Development
 regression evaluation occurs separately and does not delay user requests.
 
-The old reviewed path is retained explicitly for historical comparisons. The
-following sections describe that older implementation. The tested default
-configuration is retained because the single-pass candidate has meaning regressions;
-see `evaluation/single_pass_2026-11-04/report.md`.
+The sections below describe the reviewed pipeline that was the default until
+2026-11-16. Its code was removed then, so that every host runs one pipeline;
+commit `bbb84da` is its last version. Corpus building, retrieval and the
+evidence bundle described in sections 1 to 4 still apply. The single-pass
+candidate's measured meaning regressions against it are in
+`evaluation/single_pass_2026-11-04/report.md`.
 
 ## Historical reviewed pipeline (E25/E37)
 

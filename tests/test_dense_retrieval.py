@@ -671,33 +671,6 @@ def source_question_led_index(
 
 
 class DenseRetrievalTests(unittest.TestCase):
-    def test_cli_missing_hybrid_model_exits_before_corpus_work(self) -> None:
-        settings = {
-            "embedding_model_path": "/does/not/exist.gguf",
-            "retrieval": {"mode": "hybrid"},
-        }
-        with (
-            mock.patch.object(
-                answer_cli,
-                "parse_args",
-                return_value=SimpleNamespace(
-                    settings=None, question="호흡을 어떻게 유지하나요?", topic=None,
-                ),
-            ),
-            mock.patch.object(
-                answer_cli,
-                "load_settings",
-                return_value=settings,
-            ),
-            mock.patch.object(answer_cli, "ensure_corpus") as ensure_corpus,
-        ):
-            with self.assertRaisesRegex(
-                SystemExit,
-                r"download_embedding_model\.py.*never falls back silently",
-            ):
-                answer_cli.main()
-
-        ensure_corpus.assert_not_called()
 
     def test_dense_lane_rescues_unseen_korean_paraphrase(self) -> None:
         relevant = make_record(

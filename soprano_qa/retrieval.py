@@ -1123,13 +1123,6 @@ def query_components(query: str, piece: str | None) -> tuple[str, List[str]]:
     return stripped, intent_anchors
 
 
-def strip_piece_aliases(query: str, piece: str | None) -> str:
-    stripped, intent_anchors = query_components(query, piece)
-    if intent_anchors:
-        stripped += " " + " ".join(intent_anchors)
-    return stripped
-
-
 def canonical_concept_word(word: str) -> str:
     def finish(value: str) -> str:
         value = QUERY_TOKEN_NORMALIZATIONS.get(value, value)
@@ -1676,19 +1669,6 @@ def ranges_overlap(a: Sequence[Sequence[int]], b: Sequence[Sequence[int]]) -> bo
             if a_start <= b_end and b_start <= a_end:
                 return True
     return False
-
-
-def range_distance(a: Sequence[Sequence[int]], b: Sequence[Sequence[int]]) -> int | None:
-    if not a or not b:
-        return None
-    best = None
-    for a_start, a_end in a:
-        for b_start, b_end in b:
-            if a_start <= b_end and b_start <= a_end:
-                return 0
-            dist = b_start - a_end if a_end < b_start else a_start - b_end
-            best = dist if best is None else min(best, dist)
-    return best
 
 
 @dataclass
@@ -2372,48 +2352,3 @@ def format_measure_range(ranges: Sequence[Sequence[int]]) -> str:
     return ", ".join(parts)
 
 
-def format_result(result: SearchResult, rank: int) -> str:
-    record = result.record
-    return (
-        "[%d] %s | %s | %s | %s | score %.2f "
-        "(text %.2f, dense %.2f, dense-content %.2f, fusion %.2f, scope %.2f, "
-        "concepts %.2f, content %.2f, relation %.2f, %s/%s)"
-        "\nQ: %s\nA: %s%s"
-        % (
-            rank,
-            record["id"],
-            record.get("evidence_type", "unknown"),
-            record["piece"],
-            format_measure_range(record.get("measure_range") or []),
-            result.score,
-            result.text_score,
-            result.dense_score,
-            result.dense_content_score,
-            result.fusion_score,
-            result.measure_score,
-            result.concept_coverage,
-            result.content_concept_coverage,
-            result.answer_relation_score,
-            result.retrieval_mode,
-            result.semantic_match_type,
-            record.get("question") or "(standalone tip)",
-            record["answer"],
-            format_web_sources(record),
-        )
-    )
-
-
-def format_web_sources(record: Dict[str, Any]) -> str:
-    sources = record.get("sources") or []
-    if not sources:
-        return ""
-    lines = []
-    for source in sources:
-        lines.append(
-            "%s (%s)"
-            % (
-                source.get("title") or source["web_source_id"],
-                source.get("url") or "no URL",
-            )
-        )
-    return "\nSources: " + "; ".join(lines)
